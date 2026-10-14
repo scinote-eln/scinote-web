@@ -3,10 +3,14 @@
 class RepositorySerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
-  attributes :urls, :id, :team_id, :repository_columns, :name, :export_actions, :team_name
+  attributes :urls, :id, :team_id, :repository_columns, :name, :export_actions, :team_name, :has_active_reminders
 
   def repository_columns
     object.repository_columns.pluck(:id, :name, :data_type)
+  end
+
+  def has_active_reminders
+    object.has_reminders? && object.repository_rows.with_active_reminders(object, current_user).any?
   end
 
   def team_name

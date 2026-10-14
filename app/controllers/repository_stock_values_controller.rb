@@ -23,15 +23,16 @@ class RepositoryStockValuesController < ApplicationController
       )
     end
 
-    render json: {
-      stock_managable: true,
-      stock_status: @repository_stock_value.status,
-    }.merge(
-      serialize_repository_cell_value(
-        @repository_stock_value.repository_cell, current_team, @repository,
-        reminders_enabled: Repository.reminders_enabled?
-      )
-    )
+    @repository_row.reload
+
+    render json: @repository_row,
+           serializer: Lists::RepositoryRowSerializer,
+           user: current_user,
+           can_read_repository: can_read_repository?(@repository),
+           with_reminders: Repository.reminders_enabled?,
+           with_stock_management: @repository.has_stock_management?,
+           can_manage_stock: can_manage_repository_stock?(@repository),
+           can_manage_repository_rows: can_manage_repository_rows?(@repository)
   end
 
   private

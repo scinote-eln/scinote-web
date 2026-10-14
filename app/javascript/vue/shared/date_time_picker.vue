@@ -15,20 +15,29 @@
       v-model="value"
       :teleport="teleport"
       :no-today="true"
-      :clearable="clearable"
-      :format="format"
-      :month-change-on-scroll="false"
+      :formats="{ input: format }"
       :six-weeks="true"
       :disabled="disabled"
-      :auto-apply="true"
-      :partial-flow="true"
+      :config="{
+        monthChangeOnScroll: false
+      }"
+      :input-attrs="{
+        clearable: this.clearable,
+        hideInputIcon: this.noIcons
+      }"
+      :time-picker="mode == 'time'"
+      :time-config="{
+       timePickerInline: mode == 'datetime',
+       startTime: startTime,
+       enableTimePicker: mode == 'datetime'
+      }"
+      :flow="{
+        partial: true,
+      }"
+      :auto-apply="!range"
       :markers="markers"
       :range="range"
-      :start-time="{ hours: 0, minutes: 0, seconds: 0 }"
       week-start="0"
-      :hide-input-icon="noIcons"
-      :enable-time-picker="mode == 'datetime'"
-      :time-picker="mode == 'time'"
       :placeholder="placeholder" >
         <template #arrow-right>
             <img class="slot-icon" src="/images/calendar/navigate_next.svg"/>
@@ -37,7 +46,7 @@
             <img class="slot-icon" src="/images/calendar/navigate_before.svg"/>
         </template>
         <template v-if="customIcon" #input-icon>
-            <i :class="customIcon + ' -ml-1'"></i>
+            <i :class="customIcon + ' -ml-1'" :title="customIconTitle" @click.stop="toggleMenu"></i>
         </template>
         <template v-else-if="mode == 'time'" #input-icon>
             <img class="input-slot-image" src="/images/calendar/clock.svg"/>
@@ -62,7 +71,7 @@
 </template>
 
 <script>
-import VueDatePicker from '@vuepic/vue-datepicker';
+import { VueDatePicker } from '@vuepic/vue-datepicker';
 
 export default {
   name: 'DateTimePicker',
@@ -77,6 +86,7 @@ export default {
     timeClassName: { type: String, default: '' },
     disabled: { type: Boolean, default: false },
     customIcon: { type: String },
+    customIconTitle: { type: String },
     size: { type: String, default: 'xs' },
     dataE2e: { type: String, default: '' },
     valueType: { type: String, default: 'object' },
@@ -87,14 +97,7 @@ export default {
   },
   data() {
     return {
-      value: null,
-      markers: [
-        {
-          date: new Date(),
-          type: 'dot',
-          color: '#3B99FD'
-        }
-      ]
+      value: null
     };
   },
   created() {
@@ -109,6 +112,22 @@ export default {
     }
   },
   computed: {
+    // moved from data() because it cant't clone maker for today's date
+    markers() {
+      return [
+        {
+          date: new Date(),
+          type: 'dot',
+          color: '#3B99FD'
+        }
+      ];
+    },
+    startTime() {
+      if (this.mode === 'time') return null;
+
+      const midnight = { hours: 0, minutes: 0, seconds: 0 };
+      return this.range ? [midnight, midnight] : midnight;
+    },
     format() {
       if (this.mode === 'time') return 'HH:mm';
       if (this.mode === 'date') return document.body.dataset.datetimePickerFormatVue;
@@ -171,7 +190,7 @@ export default {
     },
     initializeValue() {
       if (!this.defaultValue) return;
-      
+
       if (this.range) {
         const start = this.defaultValue[0];
         const end = this.defaultValue[1];
@@ -199,6 +218,12 @@ export default {
           this.value = new Date(this.defaultValue.replace(/([^!\s])-/g, '$1/'));
         }
       }
+    },
+    // vue-datepicker binds toggle on both the icon span and its wrapper, so a bare icon click toggles twice
+    toggleMenu() {
+      if (this.disabled) return;
+
+      this.$refs.datetimePicker.toggleMenu();
     },
     close() {
       this.$refs.datetimePicker.closeMenu();

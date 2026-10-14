@@ -2,11 +2,11 @@
 
 class RepositoriesController < ApplicationController
   include InventoriesHelper
+  include InputSanitizeHelper
   include ActionView::Helpers::TagHelper
   include ActionView::Context
   include IconsHelper
   include TeamsHelper
-  include RepositoriesDatatableHelper
   include MyModulesHelper
   include UserRolesHelper
   include TeamAssignmentsActions
@@ -357,14 +357,14 @@ class RepositoriesController < ApplicationController
   end
 
   def import_records
-    render_403 unless can_create_repository_rows?(Repository.readable_by_user(current_user)
-                                                            .find_by(id: import_params[:id]))
+    return render_403 unless can_create_repository_rows?(@repository)
+
     # Check if there exist mapping for repository record (it's mandatory)
     if import_params[:mappings].present? && import_params[:mappings].value?('-1')
       status = ImportRepository::ImportRecords
                .new(
                  temp_file: TempFile.find_by(id: import_params[:file_id]),
-                 repository: Repository.readable_by_user(current_user).find_by(id: import_params[:id]),
+                 repository: @repository,
                  mappings: import_params[:mappings],
                  session: session,
                  user: current_user,
@@ -396,9 +396,27 @@ class RepositoriesController < ApplicationController
   end
 
   def export_empty_repository
-    col_ids = [-3, -4, -5, -6, -7, -8, -9, -10]
-    col_ids << -11 if Repository.repository_row_connections_enabled?
-    col_ids += @repository.repository_columns.map(&:id)
+    legacy_mapping = Repository::REPOSITORY_LEGACY_COLUMNS_MAPPING.dup
+    legacy_mapping[:connections_count] = -11 if Repository.repository_row_connections_enabled?
+    @repository.repository_columns.each do |column|
+      if column.data_type == 'RepositoryStockValue'
+        legacy_mapping[:stock] = column.id
+      else
+        legacy_mapping["col_#{column.id}".to_sym] = column.id
+      end
+    end
+
+    user_settings = current_user.user_settings.find_by(key: "repository_table_#{@repository.id}_active_table_state")
+
+    col_ids = []
+    if user_settings.present? && user_settings.value.present?
+      pinned_sorted = user_settings.value['columnsState'].select { |column_state| column_state['pinned'] == 'left' }.concat(user_settings.value['columnsState'].reject { |column_state| column_state['pinned'] == 'left' })
+      pinned_sorted.each do |column_state|
+        col_ids << legacy_mapping[column_state['colId'].to_sym]
+      end
+    else
+      col_ids = legacy_mapping.map { |_k, v| v }
+    end
 
     xlsx = RepositoryXlsxExport.to_empty_xlsx(@repository, col_ids)
 
@@ -462,7 +480,7 @@ class RepositoriesController < ApplicationController
 
   def export_repository_stock_items_modal
     render json: {
-      export_consumption_url: export_repository_stock_items_team_path(@repository),
+      export_consumption_url: export_repository_stock_items_repository_path(@repository),
       name: @repository.name
     }
   end
@@ -600,7 +618,7 @@ class RepositoriesController < ApplicationController
   end
 
   def import_params
-    params.permit(:id, :file, :file_id, :preview, :can_edit_existing_items,
+    params.permit(:file, :file_id, :preview, :can_edit_existing_items,
                   :should_overwrite_with_empty_cells, :preview, mappings: {}).to_h
   end
 

@@ -74,7 +74,7 @@ export default {
       }
     },
     closeMenu(e) {
-      if (e && e.target.closest(`.sn-dropdown#${this.randomId}, .sn-select-dropdown, .sn-menu-dropdown, .dp__instance_calendar`)) return;
+      if (e && e.target.closest(`.sn-dropdown#${this.randomId}, .sn-select-dropdown, .sn-menu-dropdown, .dp--instance-calendar`)) return;
       this.isOpen = false;
     },
     registerFlyoutForTooltips() {

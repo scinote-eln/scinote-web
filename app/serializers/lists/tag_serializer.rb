@@ -13,7 +13,7 @@ module Lists
     end
 
     def taggings_count
-      object['taggings_count']
+      object['taggings_count'] || object.taggings.count # Fallback when only one tag loaded with count
     end
 
     def last_modified_by

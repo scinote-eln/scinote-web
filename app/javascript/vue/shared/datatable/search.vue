@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex items-center flex-nowrap relative"
+    class="flex items-center flex-nowrap relative h-10"
     v-click-outside="closeSearchInputs"
   >
     <button :class="{hidden: searchOpened}" ref='searchInputBtn' class="btn btn-light btn-black icon-btn" data-e2e="e2e-BT-topToolbar-search" :title="i18n.t('repositories.show.search_button_tooltip')" @click="openSearch">

@@ -13,7 +13,9 @@ RUN \
   nodejs \
   npm \
   yarnpkg \
-  postgresql-client-18
+  postgresql-client-18 \
+  libvips42 && \
+  ln -s /usr/lib/x86_64-linux-gnu/libvips.so.42 /usr/lib/x86_64-linux-gnu/libvips.so
 
 ENV APP_HOME=/usr/src/app
 ENV RAILS_ENV=production

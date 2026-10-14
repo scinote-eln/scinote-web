@@ -12,7 +12,6 @@
         :repositoryRowId="repositoryRowId"
         :repositoryId="repositoryId"
         :permissions="permissions"
-        :updatePath="updatePath"
         :optionsPath="column.options_path"
         :inArchivedRepositoryRow="inArchivedRepositoryRow"
         :decimals="column.decimals"
@@ -64,7 +63,6 @@ export default {
   props: {
     customColumns: { type: Array, default: () => [] },
     permissions: { type: Object, default: () => {} },
-    updatePath: { type: String, default: '' },
     repositoryRowId: { type: Number, default: null },
     repositoryId: { type: Number, default: null },
     inArchivedRepositoryRow: { type: Boolean, default: false },

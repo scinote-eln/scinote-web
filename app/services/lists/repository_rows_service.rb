@@ -8,9 +8,10 @@ module Lists
   end
 
   class RepositoryRowsService < BaseService
-    PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_on archived_by assigned relationships updated_on updated_by).freeze
+    PREDEFINED_COLUMNS = %w(row_id row_name added_on added_by archived_on archived_by assigned relationships updated_on updated_by active_reminders_count).freeze
 
-    def initialize(raw_data, params, user: nil, my_module: nil, disable_reminders: false, preload_cells: true, unassigned_to_task: nil)
+    def initialize(raw_data, params, user: nil, my_module: nil, disable_reminders: false, preload_cells: true,
+                   unassigned_to_task: nil, filter_by_view_mode: false)
       super(raw_data, params, user: user)
       @repository = @raw_data
       @my_module = my_module
@@ -18,6 +19,7 @@ module Lists
       @preload_cells = preload_cells
       @is_snapshot = @repository.is_a?(RepositorySnapshot)
       @unassigned_to_task = unassigned_to_task
+      @filter_by_view_mode = filter_by_view_mode
     end
 
     def call
@@ -58,14 +60,9 @@ module Lists
         @records =
           if @repository.archived? || @is_snapshot
             # don't load reminders for archived repositories or snapshots
-            @records.select('FALSE AS has_active_reminders')
+            @records.select('0 AS active_reminders_count')
           else
-            @records.select("EXISTS (#{RepositoryCell.with_active_reminder(@user)
-                                                     .joins(:repository_column)
-                                                     .where(repository_column: { repository: @repository })
-                                                     .where('repository_cells.repository_row_id = repository_rows.id')
-                                                     .select(1)
-                                                     .to_sql}) AS has_active_reminders")
+            @records.select("#{active_reminders_count_sql} AS active_reminders_count")
           end
       end
 
@@ -90,7 +87,11 @@ module Lists
     # Filtering logic
 
     def filter_records
-      @records = @records.where(archived: @params[:archived]) if @params[:archived] && !@repository.archived?
+      if @filter_by_view_mode && !@repository.archived?
+        view_mode = @params[:view_mode] || 'active'
+        @records = @records.archived if view_mode == 'archived'
+        @records = @records.active if view_mode == 'active'
+      end
       @records = @records.where(external_id: @params[:external_ids]) if @params[:external_ids]
 
       # filter only rows with reminders if filter param is present
@@ -478,6 +479,17 @@ module Lists
 
     # Sorting logic
 
+    def active_reminders_count_sql
+      return '0' if !Repository.reminders_enabled? || @disable_reminders || @repository.archived? || @is_snapshot
+
+      "(#{RepositoryCell.with_active_reminder(@user)
+                        .joins(:repository_column)
+                        .where(repository_column: { repository: @repository })
+                        .where('repository_cells.repository_row_id = repository_rows.id')
+                        .select('COUNT(repository_cells.id)')
+                        .to_sql})"
+    end
+
     def sort_column
       default_sortable_column = 'repository_rows.id'
       column = @params.dig(:order, :column)
@@ -498,6 +510,8 @@ module Lists
         'repository_rows.id'
       when 'consumed_stock'
         'SUM(DISTINCT my_module_repository_rows.stock_consumption)'
+      when 'active_reminders_count'
+        active_reminders_count_sql
       when /^col_[1-9]\d*\z/, 'stock'
         'values.value'
       else
@@ -539,6 +553,8 @@ module Lists
         sort_by_custom_repository_column(sorting_column)
       when 'connections_count'
         @records.select('COALESCE(repository_rows.parent_connections_count, 0) + COALESCE(repository_rows.child_connections_count, 0) AS "connections_count"')
+      when 'active_reminders_count'
+        @records
       else
         sorting_column = sortable_columns_map(column)
         return unless sortable_columns.include?(sorting_column)

@@ -14,6 +14,7 @@ describe StepsController, type: :controller do
     create :protocol, :in_repository_draft, team: team, added_by: user
   end
   let(:step_repo) { create :step, protocol: protocol_repo }
+  let(:step_task) { create :step, protocol: my_module.protocol }
   let(:archived_step) { create :step, protocol: my_module.protocol, user: user, archived: true, archived_by: user, archived_on: Time.zone.now }
 
   describe 'POST create' do
@@ -129,6 +130,71 @@ describe StepsController, type: :controller do
       it 'adds activity in DB' do
         expect { action }
           .to(change { Activity.count })
+      end
+    end
+  end
+
+  describe 'POST duplicate' do
+    let(:action) { post :duplicate, params: params, format: :json }
+
+    context 'when in protocol repository' do
+      let(:params) do
+        { id: step_repo.id }
+      end
+
+      it 'calls create activity for creating step in protocol repository' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call)
+                .with(hash_including(activity_type: :protocol_step_duplicated)))
+        action
+      end
+
+      it 'adds activity in DB' do
+        expect { action }
+          .to(change { Activity.count })
+      end
+    end
+
+    context 'when in protocol repository and user does not have permissions' do
+      let(:params) do
+        { id: step_repo.id }
+      end
+
+      it 'renders 403' do
+        UserAssignment.where(user: user, assignable: protocol_repo).destroy_all
+        action
+
+        expect(response).to have_http_status 403
+      end
+    end
+
+    context 'when in protocol on task' do
+      let(:params) do
+        { id: step_task.id }
+      end
+
+      it 'calls create activity for creating step in protocol on task' do
+        expect(Activities::CreateActivityService)
+          .to(receive(:call).with(hash_including(activity_type: :task_step_duplicated)))
+        action
+      end
+
+      it 'adds activity in DB' do
+        expect { action }
+          .to(change { Activity.count })
+      end
+    end
+
+    context 'when in protocol on task and user does not have permissions' do
+      let(:params) do
+        { id: step_task.id }
+      end
+
+      it 'renders 403' do
+        UserAssignment.where(user: user, assignable: my_module).destroy_all
+        action
+
+        expect(response).to have_http_status 403
       end
     end
   end

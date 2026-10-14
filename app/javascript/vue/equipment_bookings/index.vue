@@ -91,7 +91,7 @@ export default {
   },
   computed: {
     listRepositoriesUrl() {
-      return list_repositories_path
+      return list_repositories_path({ active: true });
     },
     permissionsUrl() {
       if (this.selectedRepository) {
@@ -112,8 +112,7 @@ export default {
       }
     },
     fetchRepositories() {
-      axios
-      axios.get(this.listRepositoriesUrl())
+      axios.get(this.listRepositoriesUrl)
         .then(response => {
           this.repositories = response.data.data;
           this.$nextTick(async() => {

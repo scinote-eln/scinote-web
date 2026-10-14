@@ -22,6 +22,7 @@
       </div>
       <div v-if="repositoryVersion" :key="repositoryVersion.id" style="height: 540px">
         <DataTable
+          ref="repositoryTable"
           v-if="repositoryColumnsDef.length > 0"
           :columnDefs="repositoryColumnsDef"
           :tableId="`my_module_unassigned_repository_rows_my_module_${myModuleId}_repository_${repositoryVersion.id}`"
@@ -30,12 +31,20 @@
           :toolbarActions="toolbarActions"
           :actionsUrl="toolbarActionsUrl"
           :hideColumnsManagment="true"
+          loadMethod="post"
+          :postParams="{
+            advanced_search: {
+              filter_elements: activeFilter
+            }
+          }"
+          @showTextCell="showTextCellModal"
           :filters="[]"
           :tableOnly="true"
           :skipSaveTableState="true"
           :enableBarcodeSearch="true"
           :fetchColumnsOnReload="true"
           @tableReloaded="reloadingTable = false"
+          @applyFilters="applyFilters"
           @assign="assignItems"
           @assign_downstream="assignItemsDownstream"
         ></DataTable>
@@ -46,6 +55,13 @@
         </span>
       </div>
     </div>
+    <teleport to="body">
+      <TextCellModal
+        v-if="textCellModalObject"
+        :row="textCellModalObject.row"
+        :colDef="textCellModalObject.colDef"
+        @close="textCellModalObject = null"/>
+    </teleport>
   </div>
 </template>
 
@@ -54,6 +70,8 @@ import axios from '../../../../packs/custom_axios.js';
 import SelectDropdown from '../../../shared/select_dropdown.vue';
 import DataTable from '../../../shared/datatable/table.vue';
 import ColumnsMixin from '../../../repository/columns_mixin.js';
+import TextCellModal from '../../../repository/modals/text_cell.vue';
+import RepositoryFilters from '../../../repository/filters.vue';
 import {
   list_repositories_path,
   unassigned_rows_my_module_repository_path,
@@ -74,7 +92,9 @@ export default {
   mixins: [ColumnsMixin],
   components: {
     SelectDropdown,
-    DataTable
+    DataTable,
+    TextCellModal,
+    RepositoryFilters
   },
   created() {
     this.teamId = document.body.dataset.currentTeamId;
@@ -88,6 +108,12 @@ export default {
              this.selectedRepositoryName = response.data.data.find(repo => repo[0] == this.selectedRepositoryId)[1];
            });
     }
+  },
+  mounted() {
+    window.repositoryAssignTable = this;
+  },
+  unmounted() {
+    window.repositoryAssignTable = null;
   },
   watch: {
     repositoryVersion() {
@@ -105,6 +131,16 @@ export default {
     toolbarActions() {
       const left = [];
       const right = [];
+
+      right.push({
+        name: 'filters',
+        type: 'component',
+        params: {
+          componentRenderer: RepositoryFilters,
+          repositoryId: parseInt(this.selectedRepositoryId, 10)
+        }
+      });
+
       return {
         left: left,
         right: right
@@ -131,15 +167,30 @@ export default {
       teamId: null,
       disabledRepositoryDropdown: false,
       reloadingTable: false,
-      selectedRepositoryName: ''
+      selectedRepositoryName: '',
+      textCellModalObject: null,
+      activeFilter: []
     };
   },
   methods: {
+    updateRowData(row) {
+      this.$refs.repositoryTable.updateRowData(row);
+    },
     changeRepository(repositoryId) {
       this.repositoryVersion = {
         id: repositoryId,
         attributes: {}
       };
+    },
+    showTextCellModal(_e, rows, colDef) {
+      this.textCellModalObject = {
+        row: rows[0],
+        colDef
+      }
+    },
+    applyFilters(filters) {
+      this.activeFilter = filters.data
+      this.reloadingTable = true
     },
     assignItems(event, rowIds) {
       this.$emit('assign', event, rowIds, this.repositoryVersion.id);

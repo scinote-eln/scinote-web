@@ -3,7 +3,9 @@
     <div class="text-sm font-bold truncate" :title="colName">
       {{ colName }}
     </div>
-    <div v-if="colVal.reminder" class="bg-sn-alert-passion w-1.5 h-1.5 min-w-[0.375rem] min-h-[0.375rem] rounded hover:cursor-pointer" :title="colVal.reminder_text"></div>
+    <div v-if="reminderValue.reminder"
+         :class="reminderValue.days_left > 0 ? 'bg-sn-alert-brittlebush' : 'bg-sn-alert-passion'"
+         class="w-1.5 h-1.5 min-w-[0.375rem] min-h-[0.375rem] rounded hover:cursor-pointer" :title="reminderValue.reminder_text"></div>
   </div>
   <div class="flex flex-col gap-2">
     <template v-if="!canEdit">
@@ -39,6 +41,8 @@
 </template>
 
 <script>
+import axios from '../../../packs/custom_axios.js';
+import { repository_repository_row_repository_cell_path } from '../../../routes.js';
 import DateTimePicker from '../../shared/date_time_picker.vue';
 import Reminder from '../reminder.vue';
 
@@ -54,7 +58,8 @@ export default {
       endDate: null,
       error: null,
       defaultStartDate: null,
-      defaultEndDate: null
+      defaultEndDate: null,
+      reminderValue: {}
     };
   },
   inject: ['reloadRepoItemSidebar'],
@@ -63,7 +68,8 @@ export default {
     range: { type: Boolean, default: false },
     colVal: { type: Object, default: {} },
     colId: Number,
-    updatePath: String,
+    repositoryId: Number,
+    repositoryRowId: Number,
     canEdit: { type: Boolean, default: false },
     colName: String
   },
@@ -75,6 +81,11 @@ export default {
 
     this.defaultStartDate = this.startDate;
     this.defaultEndDate = this.endDate;
+    this.reminderValue = {
+      reminder: this.colVal.reminder,
+      reminder_text: this.colVal.reminder_text,
+      days_left: this.colVal.days_left
+    };
   },
   computed: {
     value() {
@@ -167,25 +178,25 @@ export default {
       return (t['hours'] * 60 * 60 + t['minutes'] * 60 + t['seconds'])
     },
     update() {
-      const params = {};
-
       if (!this.validateValue()) return;
 
-      params[this.colId] = this.value;
-
-      $.ajax({
-        method: 'PUT',
-        url: this.updatePath,
-        dataType: 'json',
-        data: { repository_cells: params },
-        success: () => {
-          this.defaultStartDate = this.startDate;
-          this.defaultEndDate = this.endDate;
-          if ($('.dataTable.repository-dataTable')[0]) {
-            $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
-          }
-          this.reloadRepoItemSidebar();
-        }
+      axios.post(
+        repository_repository_row_repository_cell_path({
+          repository_id: this.repositoryId,
+          repository_row_id: this.repositoryRowId,
+          repository_column_id: this.colId
+        }),
+        { value: this.value }
+      ).then((response) => {
+        this.defaultStartDate = this.startDate;
+        this.defaultEndDate = this.endDate;
+        const { cell, active_reminders_count: activeRemindersCount } = response.data;
+        this.reminderValue = cell?.value || {};
+        const updatedRow = { id: this.repositoryRowId, [`col_${this.colId}`]: cell };
+        if (activeRemindersCount !== undefined) updatedRow.active_reminders_count = activeRemindersCount;
+        window.repositoryTable?.updateRowData(updatedRow);
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     }
   }

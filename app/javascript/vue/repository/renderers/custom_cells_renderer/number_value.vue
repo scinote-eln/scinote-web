@@ -1,15 +1,75 @@
 <template>
-  <div v-if="params.value">
-    {{ params.value.value }}
+  <div v-if="canManage" class="relative">
+    <input
+      ref="input"
+      v-model="newValue"
+      type="text"
+      :placeholder="(isFocused ? '' : i18n.t('repositories.table.number.enter_number'))"
+      @keydown.enter="saveValue"
+      @keydown.esc="cancelEdit"
+      @focus="isFocused = true"
+      @blur="onBlur"
+      @input="validateFormat"
+      class="sci-table-input-v2 !border-transparent !bg-transparent placeholder:text-sn-grey"
+    />
+  </div>
+  <div v-else>
+    {{ this.newValue }}
   </div>
 </template>
 
 <script>
+/* global GLOBAL_CONSTANTS */
 export default {
   name: 'NumberValue',
   props: {
     params: {
       required: true
+    }
+  },
+  created() {
+    this.newValue = this.params?.value?.value;
+  },
+  data() {
+    return {
+      newValue: null,
+      isFocused: false,
+    };
+  },
+  computed: {
+    canManage() {
+      return this.params?.data?.permissions?.manage || false;
+    }
+  },
+  methods: {
+    validateFormat() {
+      const decimals = this.params?.colDef?.cellRendererParams?.metadata?.decimals ?? GLOBAL_CONSTANTS.REPOSITORY_NUMBER_TYPE_DEFAULT_DECIMALS;
+      const regexp = decimals === 0 ? /[^-0-9]/g : /[^-0-9.]/g;
+      const decimalsRegex = new RegExp(`^-?\\d*(\\.\\d{0,${decimals}})?`);
+      let value = this.newValue;
+      value = value.replace(regexp, '');
+      value = value.match(decimalsRegex)[0];
+      this.newValue = value;
+    },
+    saveValue() {
+      if (this.newValue !== this.params?.value?.value) {
+        this.params.dtComponent.$emit(
+          'updateCell',
+          this.params.data,
+          this.params.colDef,
+          this.newValue
+        );
+      }
+    },
+    onBlur() {
+      this.isFocused = false;
+      this.saveValue();
+    },
+    cancelEdit() {
+      this.newValue = this.params?.value?.value;
+      this.$nextTick(() => {
+        this.$refs.input.blur();
+      });
     }
   }
 };

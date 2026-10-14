@@ -1,5 +1,5 @@
 <template>
-  <div v-if="params.value || params.data.consumed_stock">
+  <div>
     <component :is="params.columnDataType" :params="params" />
   </div>
 </template>

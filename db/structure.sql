@@ -11010,7 +11010,9 @@ ALTER TABLE ONLY public.projects
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261007123511'),
 ('20260907114439'),
+('20260828093032'),
 ('20260729082431'),
 ('20260715121739'),
 ('20260714101739'),

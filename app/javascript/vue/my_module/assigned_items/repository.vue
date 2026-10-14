@@ -35,6 +35,7 @@
     </div>
     <div style="height: 540px">
       <DataTable
+        ref="repositoryTable"
         v-if="repositoryColumnsDef.length > 0"
         :columnDefs="repositoryColumnsDef"
         :tableId="`my_module_repository_rows_my_module_${myModuleId}_repository_${repositoryVersion.id}`"
@@ -46,7 +47,14 @@
         :tableOnly="true"
         :enableBarcodeSearch="true"
         :fetchColumnsOnReload="true"
+        loadMethod="post"
+        :postParams="{
+          advanced_search: {
+            filter_elements: activeFilter
+          }
+        }"
         @openConsumeModal="consume"
+        @showTextCell="showTextCellModal"
         @export="exportRows"
         @export_consumption="exportConsumption"
         @print="printRows"
@@ -55,6 +63,7 @@
         @unassign_downstream="unassignModalDownstreamShow"
         @create="openCreateItemModal = true"
         @tableReloaded="reloadingTable = false"
+        @applyFilters="applyFilters"
         @selectVersion="loadVersion"
         @pinVersion="pinVersion"
       ></DataTable>
@@ -67,6 +76,11 @@
         :row="selectedRow"
         :e2eValue="'task-assignedItems-consumeModal'"
       />
+      <TextCellModal
+        v-if="textCellModalObject"
+        :row="textCellModalObject.row"
+        :colDef="textCellModalObject.colDef"
+        @close="textCellModalObject = null"/>
       <ConfirmationModal
         :title="i18n.t('my_modules.repository.stock_warning_modal.title')"
         :description="warningModalDescription"
@@ -75,6 +89,11 @@
         ref="warningModal"
         :e2eValue="'task-assignedItems-outOfStockModal'"
       ></ConfirmationModal>
+      <ExportConsumptionModal
+        v-if="exportStockConsumptionRows"
+        :repository="repositoryVersion"
+        :rows="exportStockConsumptionRows"
+        @close="exportStockConsumptionRows = null"/>
       <UnassignItemModal
         v-if="showUnassignModal"
         :myModuleId="myModuleId"
@@ -109,12 +128,15 @@ import DataTable from '../../shared/datatable/table.vue';
 import axios from '../../../packs/custom_axios.js';
 import ConsumeModal from './modals/consume.vue';
 import ConfirmationModal from '../../shared/confirmation_modal.vue';
+import ExportConsumptionModal from '../../repository/modals/export_stock_consumption_modal.vue';
 import ColumnsMixin from '../../repository/columns_mixin.js';
 import UserStateMixin from '../../mixins/user_state_mixin.js';
 import CreateItemModal from '../assigned_items/modals/new_item.vue';
 import AssignItemModal from './modals/assign_item.vue';
 import UnassignItemModal from './modals/unassign_item.vue';
-import VersionDropdown from './version_dropdown.vue'
+import VersionDropdown from './version_dropdown.vue';
+import TextCellModal from '../../repository/modals/text_cell.vue';
+import RepositoryFilters from '../../repository/filters.vue';
 
 import {
   index_ag_my_module_repository_path,
@@ -140,9 +162,12 @@ export default {
     ConsumeModal,
     ConfirmationModal,
     CreateItemModal,
+    ExportConsumptionModal,
     AssignItemModal,
     UnassignItemModal,
-    VersionDropdown
+    VersionDropdown,
+    TextCellModal,
+    RepositoryFilters
   },
   mixins: [ColumnsMixin, UserStateMixin],
   data: () => ({
@@ -156,7 +181,10 @@ export default {
     reloadingTable: false,
     openConsumeModal: false,
     openCreateItemModal: false,
-    repositoryVersion: null
+    repositoryVersion: null,
+    textCellModalObject: null,
+    activeFilter: [],
+    exportStockConsumptionRows: null
   }),
   watch: {
     sectionOpened() {
@@ -174,6 +202,11 @@ export default {
     if (!this.onlyRepository) {
       this.recalculateContainerSize();
     }
+
+    window.repositoryTable = this;
+  },
+  unmounted() {
+    window.repositoryTable = null;
   },
   computed: {
     openSize() {
@@ -226,6 +259,17 @@ export default {
         }
       });
 
+      if (!this.repositoryVersion.attributes.is_snapshot) {
+        right.push({
+          name: 'filters',
+          type: 'component',
+          params: {
+            componentRenderer: RepositoryFilters,
+            repositoryId: parseInt(this.repository.id, 10)
+          }
+        });
+      }
+
       right.push({
         name: 'export',
         icon: 'sn-icon sn-icon-export',
@@ -233,6 +277,7 @@ export default {
         tooltip: this.i18n.t('my_modules.repository.export'),
         buttonStyle: 'btn btn-light icon-btn btn-black',
       })
+
       return {
         left: left,
         right: right
@@ -252,6 +297,22 @@ export default {
     }
   },
   methods: {
+    // A method, not a computed: window globals aren't reactive, so a computed would cache a stale result
+    isSameRepository() {
+      const openedRepositoryId = window.repositoryItemSidebarComponent?.repository?.id;
+
+      if (openedRepositoryId) {
+        return String(this.repositoryVersion?.id) === String(openedRepositoryId);
+      }
+      return false;
+    },
+    updateRowData(row) {
+      if (!this.isSameRepository()) return;
+      // DataTable prepends unknown rows, so skip pushes for rows that aren't loaded
+      if (!this.$refs.repositoryTable?.rowData?.some((r) => String(r.id) === String(row.id))) return;
+
+      this.$refs.repositoryTable.updateRowData(row);
+    },
     assignRows(rowIds, repositoryId, assignToDownstream = false) {
       this.openAssignItemModal = false;
       this.$emit('assignRows', rowIds, repositoryId, assignToDownstream);
@@ -264,6 +325,8 @@ export default {
       }).then((response) => {
         HelperModule.flashAlertMsg(response.data.flash, 'success');
         this.reloadingTable = true;
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     unassignModalShow(_e, rows) {
@@ -322,13 +385,12 @@ export default {
         });
     },
     exportConsumption(_e, rows) {
-      window.initExportStockConsumptionModal();
-
-      if (window.exportStockConsumptionModalComponent) {
-        window.exportStockConsumptionModalComponent.fetchRepositoryData(
-          rows.map(row => row.id),
-          { repository_id: this.repositoryVersion.id }
-        );
+     this.exportStockConsumptionRows = rows.map((row) => ( row.id ));
+    },
+    showTextCellModal(_e, rows, colDef) {
+      this.textCellModalObject = {
+        row: rows[0],
+        colDef
       }
     },
     loadVersion(data){
@@ -342,6 +404,8 @@ export default {
       const params = data.data ? { repository_snapshot_id : data.data } : { repository_id: (this.repositoryVersion.attributes.parent_id || this.repositoryVersion.id) };
       axios.post(this.pinVersionUrl, params).then((response) => {
         this.versionLoaded(response.data.data);
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     versionLoaded(data){
@@ -384,8 +448,15 @@ export default {
         }).then(() => {
           this.reloadingTable = true;
           this.submitting = false;
+        }).catch(() => {
+          this.submitting = false;
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
       }
+    },
+    applyFilters(filters) {
+      this.activeFilter = filters.data
+      this.reloadingTable = true
     }
   }
 };

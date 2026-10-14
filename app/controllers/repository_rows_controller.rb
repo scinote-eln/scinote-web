@@ -3,59 +3,59 @@ class RepositoryRowsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
   include MyModulesHelper
-  include RepositoryDatatableHelper
   include StorageLocationsHelper
   include EquipmentBookingHelper
 
   before_action :load_repository, except: %i(show print rows_to_print print_zpl validate_label_template_columns)
   before_action :load_repository_or_snapshot, only: %i(show print rows_to_print print_zpl
                                                        validate_label_template_columns)
-  before_action :load_repository_row, only: %i(show update update_cell assigned_task_list assigned_counters
+  before_action :load_repository_row, only: %i(show update assigned_task_list assigned_counters
                                                active_reminder_repository_cells relationships equipment_booking_events)
   before_action :load_repository_rows, only: %i(print rows_to_print print_zpl validate_label_template_columns)
 
-  before_action :check_read_permissions, except: %i(create update update_cell delete_records
+  before_action :check_read_permissions, except: %i(create update delete_records
                                                     copy_records archive_records restore_records)
   before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
   before_action :check_create_permissions, only: :create
   before_action :check_delete_permissions, only: :delete_records
-  before_action :check_manage_permissions, only: %i(update update_cell archive_records restore_records copy_records)
+  before_action :check_manage_permissions, only: %i(update archive_records restore_records copy_records)
 
   def index_ag
-    repository_rows = Lists::RepositoryRowsService.new(@repository, params, user: current_user).call.load
+    repository_rows = Lists::RepositoryRowsService.new(@repository, params, user: current_user, filter_by_view_mode: true).call.load
+
+    total_count = if @repository.archived?
+                    @repository.repository_rows.count
+                  elsif params[:view_mode] == 'archived'
+                    @repository.repository_rows.archived.count
+                  else
+                    @repository.repository_rows.active.count
+                  end
+
+    can_manage_repository_rows = if params[:view_mode] == 'archived'
+                                   false
+                                 else
+                                   can_manage_repository_rows?(@repository)
+                                 end
+
+    filtered_count = repository_rows.take&.filtered_count.to_i
+    total_pages = (filtered_count.to_f / params[:per_page].to_i).ceil
+
     render json: repository_rows,
-           adapter: :json,
-           root: 'data',
            each_serializer: Lists::RepositoryRowSerializer,
            user: current_user,
+           can_read_repository: can_read_repository?(@repository),
            with_reminders: Repository.reminders_enabled?,
            with_stock_management: @repository.has_stock_management?,
            can_manage_stock: can_manage_repository_stock?(@repository),
-           meta:  {
-             total_count: @repository.repository_rows_count,
-             filtered_count: repository_rows.take&.filtered_count.to_i
+           can_manage_repository_rows: can_manage_repository_rows,
+           meta: {
+             total_pages: total_pages,
+             total_count: total_count,
+             filtered_count: filtered_count
            }
   rescue Lists::RepositoryFilters::ColumnNotFoundException
     render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.column_not_found') }
   rescue Lists::RepositoryFilters::ValueNotFoundException
-    render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.value_not_found') }
-  end
-
-  def index
-    @draw = params[:draw].to_i
-    per_page = params[:length] == '-1' ? 100 : params[:length].to_i
-    page = (params[:start].to_i / per_page) + 1
-    datatable_service = RepositoryDatatableService.new(@repository, params, current_user)
-
-    @all_rows_count = datatable_service.all_count
-    @filtered_rows_count = datatable_service.filtered_count
-    @columns_mappings = datatable_service.mappings
-    repository_rows = datatable_service.repository_rows
-    repository_rows = repository_rows.where(archived: params[:archived]) unless @repository.archived?
-    @repository_rows = repository_rows.page(page).per(per_page)
-  rescue RepositoryFilters::ColumnNotFoundException
-    render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.column_not_found') }
-  rescue RepositoryFilters::ValueNotFoundException
     render json: { custom_error: I18n.t('repositories.show.repository_filter.errors.value_not_found') }
   end
 
@@ -132,11 +132,14 @@ class RepositoryRowsController < ApplicationController
         end
       end
 
-      render json: { id: service.repository_row.id, flash: t('repositories.create.success_flash',
-                                                             record: escape_input(repository_row.name),
-                                                             repository: escape_input(@repository.name)),
-                     repository_row_url: repository_repository_row_path(@repository, repository_row) },
-             status: :ok
+      render json: repository_row,
+             serializer: Lists::RepositoryRowSerializer,
+             user: current_user,
+             can_read_repository: can_read_repository?(@repository),
+             with_reminders: Repository.reminders_enabled?,
+             with_stock_management: @repository.has_stock_management?,
+             can_manage_stock: can_manage_repository_stock?(@repository),
+             can_manage_repository_rows: can_manage_repository_rows?(@repository)
     else
       render json: service.errors, status: :bad_request
     end
@@ -224,6 +227,7 @@ class RepositoryRowsController < ApplicationController
     render json: {
       html: render_to_string(
         partial: 'label_printers/print_progress_modal',
+        formats: :html,
         locals: { starting_item_count: label_printer.current_print_job_ids.length,
                   label_printer: label_printer }
       )
@@ -243,57 +247,16 @@ class RepositoryRowsController < ApplicationController
         end
       end
 
-      render json: {
-        id: @repository_row.id,
-        flash: t(
-          'repositories.update.success_flash',
-          record: escape_input(@repository_row.name),
-          repository: escape_input(@repository.name)
-        )
-      }, status: :ok
+      render json: @repository_row,
+             serializer: Lists::RepositoryRowSerializer,
+             user: current_user,
+             can_read_repository: can_read_repository?(@repository),
+             with_reminders: Repository.reminders_enabled?,
+             with_stock_management: @repository.has_stock_management?,
+             can_manage_stock: can_manage_repository_stock?(@repository),
+             can_manage_repository_rows: can_manage_repository_rows?(@repository)
     else
       render json: row_update.errors, status: :bad_request
-    end
-  end
-
-  def update_cell
-    return render_422(t('.invalid_params')) if
-      update_params['repository_row'].present? && update_params['repository_cells'].present?
-    return render_422(t('.invalid_params')) if
-      update_params['repository_cells'] && update_params['repository_cells'].size != 1
-
-    row_cell_update =
-      RepositoryRows::UpdateRepositoryRowService.call(
-        repository_row: @repository_row, user: current_user, params: update_params
-      )
-
-    if row_cell_update.succeed?
-      if row_cell_update.record_updated
-        log_activity(:edit_item_field_inventory, @repository_row,
-                     { repository_row: @repository_row.id,
-                       repository_column: update_params['repository_cells']&.keys&.first ||
-                       I18n.t('repositories.table.row_name') })
-
-        record_annotation_notification(@repository_row, row_cell_update.cell) if row_cell_update.cell && row_cell_update.cell.value_type == 'RepositoryTextValue'
-      end
-      @reminders_present = Repository.reminders_enabled?
-
-      return render json: { name: @repository_row.name } if update_params['repository_row'].present?
-
-      column = row_cell_update.column
-      cell = row_cell_update.cell&.reload || row_cell_update.cell
-      data = { value_type: column.data_type, id: column.id, value: nil }
-
-      return render json: data if cell.blank?
-
-      data['hasActiveReminders'] = @reminders_present
-      data.merge! serialize_repository_cell_value(cell,
-                                                  @repository.team,
-                                                  @repository,
-                                                  reminders_enabled: @reminders_present)
-      render json: data
-    else
-      render json: row_cell_update.errors, status: :bad_request
     end
   end
 
@@ -400,12 +363,7 @@ class RepositoryRowsController < ApplicationController
   end
 
   def active_reminder_repository_cells
-    reminder_cells = @repository_row.repository_cells.with_active_reminder(current_user).distinct
-    render json: {
-      html: render_to_string(partial: 'shared/repository_row_reminder', formats: :html, locals: {
-                               reminders: reminder_cells
-                             })
-    }
+    @reminder_cells = @repository_row.repository_cells.with_active_reminder(current_user).distinct
   end
 
   def actions_toolbar
@@ -413,7 +371,7 @@ class RepositoryRowsController < ApplicationController
       actions:
         Toolbars::RepositoryRowsService.new(
           current_user,
-          repository_row_ids: params[:repository_row_ids].split(',')
+          repository_row_ids: JSON.parse(params[:items]).map { |i| i['id'] }
         ).actions
     }
   end

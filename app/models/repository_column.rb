@@ -24,7 +24,7 @@ class RepositoryColumn < ApplicationRecord
   accepts_nested_attributes_for :repository_checklist_items, allow_destroy: true
   accepts_nested_attributes_for :repository_stock_unit_items, allow_destroy: true
 
-  enum data_type: Extends::REPOSITORY_DATA_TYPES
+  enum :data_type, Extends::REPOSITORY_DATA_TYPES
 
   store_accessor :metadata, %i(reminder_value reminder_unit reminder_message)
 
@@ -36,10 +36,9 @@ class RepositoryColumn < ApplicationRecord
             uniqueness: { scope: :repository_id, case_sensitive: true }
   validates :name, :data_type, :repository, :created_by, presence: true
 
-  after_create :update_repository_table_states_with_new_column
+
   after_update :clear_hidden_repository_cell_reminders
 
-  around_destroy :update_repository_table_states_with_removed_column
   before_destroy :nulify_stock_consumption
 
   scope :list_type, -> { where(data_type: 'RepositoryListValue') }
@@ -58,32 +57,6 @@ class RepositoryColumn < ApplicationRecord
     define_method "#{k.underscore}?" do
       public_send "#{k}?"
     end
-  end
-
-  def update_repository_table_states_with_new_column
-    service = RepositoryTableStateColumnUpdateService.new
-    service.update_states_with_new_column(repository)
-  end
-
-  def update_repository_table_states_with_removed_column
-    # Calculate old_column_index - this can only be done before
-    # record is deleted when we still have its index
-    old_column_index = (
-      repository.default_columns_count +
-      repository.repository_columns
-                .order(id: :asc)
-                .pluck(:id)
-                .index(id)
-    )
-
-    # Perform the destroy itself
-    yield
-
-    # Update repository table states
-    service = RepositoryTableStateColumnUpdateService.new
-    service.update_states_with_removed_column(
-      repository, old_column_index
-    )
   end
 
   def importable?

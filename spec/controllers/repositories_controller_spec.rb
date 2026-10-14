@@ -65,6 +65,12 @@ describe RepositoriesController, type: :controller do
       expect(response.content_type).to eq('application/json; charset=utf-8')
       expect(response.body).not_to be_empty
     end
+
+    it 'includes has_active_reminders in the response' do
+      action
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response['data']['attributes']).to have_key('has_active_reminders')
+    end
   end
 
   describe 'GET show HTML' do
@@ -314,6 +320,22 @@ describe RepositoriesController, type: :controller do
         mappings: mappings }
     end
     let(:action) { post :import_records, params: params, format: :json }
+
+    it 'returns 403 and halts when user cannot create repository rows' do
+      allow(controller).to receive(:can_create_repository_rows?).and_return(false)
+
+      action
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'does not call ImportRecords when user cannot create repository rows' do
+      allow(controller).to receive(:can_create_repository_rows?).and_return(false)
+
+      expect(ImportRepository::ImportRecords).not_to receive(:new)
+
+      action
+    end
 
     it 'calls create activity for importing inventory items' do
       allow_any_instance_of(ImportRepository::ImportRecords)

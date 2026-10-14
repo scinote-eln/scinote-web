@@ -8,27 +8,6 @@ class MyModuleRepositorySnapshotsController < ApplicationController
   before_action :check_create_permissions, only: %i(create)
   before_action :check_manage_permissions, only: %i(destroy select)
 
-  def index_dt
-    @draw = params[:draw].to_i
-    per_page = params[:length].to_i < 1 ? Constants::REPOSITORY_DEFAULT_PAGE_SIZE : params[:length].to_i
-    page = (params[:start].to_i / per_page) + 1
-    datatable_service = RepositorySnapshotDatatableService.new(@repository_snapshot, params, current_user, @my_module)
-
-    @all_rows_count = datatable_service.all_count
-    @filtered_rows_count = datatable_service.filtered_count
-    @columns_mappings = datatable_service.mappings
-    repository_rows = datatable_service.repository_rows
-
-    if params[:simple_view]
-      @repository = @repository_snapshot
-      rows_view = 'repository_rows/simple_view_index'
-    else
-      rows_view = 'repository_rows/snapshot_index'
-    end
-    @repository_rows = repository_rows.page(page).per(per_page)
-    render rows_view
-  end
-
   def create
     ActiveRecord::Base.transaction do
       @repository_snapshot = RepositorySnapshot.create_preliminary!(@repository, @my_module, current_user)
