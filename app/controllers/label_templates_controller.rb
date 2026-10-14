@@ -108,9 +108,10 @@ class LabelTemplatesController < ApplicationController
 
   def set_default
     ActiveRecord::Base.transaction do
-      LabelTemplate.find_by(team_id: current_team.id,
-                            type: @label_template.type,
-                            default: true)&.update!(default: false)
+      @label_template.team.label_templates
+                     .where(type: @label_template.type, default: true)
+                     .where.not(id: @label_template.id)
+                     .update!(default: false)
       @label_template.update!(default: true)
       render json: { message: I18n.t('label_templates.index.template_set_as_default') }
     end
@@ -121,7 +122,7 @@ class LabelTemplatesController < ApplicationController
   end
 
   def template_tags
-    render json: LabelTemplates::TagService.new(current_team, @label_template).tags
+    render json: LabelTemplates::TagService.new(@label_template.team, @label_template).tags
   end
 
   def zpl_preview
@@ -163,11 +164,11 @@ class LabelTemplatesController < ApplicationController
   end
 
   def check_view_permissions
-    render_403 unless can_view_label_templates?(current_team)
+    render_403 unless can_view_label_templates?(@label_template&.team || current_team)
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_label_templates?(current_team)
+    render_403 unless can_manage_label_templates?(@label_template&.team || current_team)
   end
 
   def load_label_templates
