@@ -1,10 +1,6 @@
 <template>
   <div>
     <div v-if="canManage" class="flex items-center gap-1">
-      <i v-if="hasReminder"
-        :class="reminderClass"
-        :title="reminderTitle"
-        class="sn-icon sn-icon-alert-warning shrink-0"></i>
       <DateTimePicker
         class="borderless-input -mt-[1px]"
         :defaultValue="value"
@@ -13,6 +9,7 @@
         :mode="mode"
         :placeholder="placeholder"
         :customIcon="icon"
+        :customIconTitle="hasReminder ? reminderTitle : null"
         :range="isRange"
         valueType="stringWithoutTimezone"
         :clearable="true"/>
@@ -97,6 +94,10 @@ export default {
       }
     },
     icon() {
+      if (this.hasReminder) {
+        return `sn-icon sn-icon-alert-warning ${this.reminderClass}`;
+      }
+
       if (this.valueType.includes('RepositoryTime')) {
         return 'sn-icon sn-icon-created';
       } else {
