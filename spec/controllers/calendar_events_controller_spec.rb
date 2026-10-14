@@ -42,6 +42,33 @@ describe CalendarEventsController, type: :controller do
       expect(response.content_type).to eq('application/json; charset=utf-8')
       expect(response_body['data'].length).to eq 0
     end
+
+    context 'when inventory is archived' do
+      before { repository.archive!(user) }
+
+      it 'returns no events' do
+        get :index, params: params, format: :json
+
+        expect(response).to have_http_status(:success)
+        expect(response.parsed_body['data']).to be_empty
+      end
+    end
+
+    context 'when item is archived' do
+      let(:archived_repository_row) { create :repository_row, :archived, repository: repository }
+
+      before do
+        create_list(:calendar_event, 2, created_by: user, team: team, subject: archived_repository_row, event_type: event_type)
+      end
+
+      it 'returns only events of active items' do
+        get :index, params: params, format: :json
+
+        expect(response).to have_http_status(:success)
+        response_ids = response.parsed_body['data'].map { |event| event['id'].to_i }
+        expect(response_ids).to match_array(calendar_events.map(&:id))
+      end
+    end
   end
 
   describe '#show' do
