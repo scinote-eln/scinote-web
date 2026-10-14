@@ -2009,7 +2009,7 @@ en:
           title: "Step 2: Add attachment information"
           label: "Step 2"
           description: "Add additional information such as  header and footer text for report attachment."
-          form: 
+          form:
             header:
               label: "Header"
               placeholder: "Maximum 3 rows, 140 characters"
@@ -2584,6 +2584,7 @@ en:
       archived_inventory_items: "%{repository_name} archived items"
       archived_inventory: "Archived %{repository_name}"
       inventory_archived_items: "%{repository_name} archived items"
+      laoding_table_configuration: "Loading table configuration..."
       subtitle: "Owned by %{team_name}"
       your_team: "your Workspace"
       show_active_items: "Show active items"
@@ -2608,7 +2609,12 @@ en:
         filters: "Filters"
         search: "Quick search"
       filters:
-        save_filters: "Save filters"
+        title: "Filters"
+        create_new_filter: "Create new filter"
+        active_filter: "Active filter"
+        clear_filter: "Clear filter"
+        filter_name: "Filter name"
+        save_filter: "Save filter"
         new_filter: "New filter"
         overwrite_filter: "Overwrite"
         title: "Filters"
@@ -2706,6 +2712,7 @@ en:
       assigned_search: 'Search...'
       assigned_tooltip: "%{tasks} tasks in &#10;%{experiments} experiments,&#10;%{projects} projects"
       row_name: "Name"
+      reminders: "Reminders"
       added_on: "Created on"
       added_by: "Added by"
       updated_on: "Updated on"
@@ -2720,8 +2727,11 @@ en:
       enter_row_name: "Enter name"
       locked_item: "This is read-only item."
       assets:
-        select_file_btn: "Select File (Max %{max_size} MB)..."
+        add_file: "Add file"
+        uploading: "Uploading..."
       text:
+        add_text: "Add text"
+        more: more
         errors:
           too_long: "Text is too long (maximum is %{max_length} characters)"
         enter_text: "Enter text"
@@ -2736,10 +2746,15 @@ en:
       checklist:
         set_checklist: "Set Checklist..."
       date_time:
+        add_date: "Add date"
+        add_time: "Add time"
+        add_date_range: "Add date range"
+        add_time_range: "Add time range"
         errors:
           set_all_or_none: 'Needs to set both or none'
           not_valid_range: 'Range is not valid.'
       name:
+        placeholder: "Enter name"
         errors:
           too_long: "Item name is too long (maximum is %{max_length} characters)"
           is_empty: "Item name should be filled"
@@ -3380,7 +3395,7 @@ en:
 
   libraries:
     manange_modal_column_index:
-      title: "Manage columns"
+      title: "Edit columns"
       add_column: "Add column"
     manange_modal_column:
       button_tooltip: "Manage columns"
@@ -3475,6 +3490,8 @@ en:
     repository_columns:
       head_title: '%{repository} | Manage Columns'
       repository_list_items_limit: "Dropdown items limit reached max. %{limit}"
+      empty_placeholder: "There are no custom columns yet. Click the button below to add the first one."
+      button_tooltip: "Add or Edit columns"
       no_permissions: "You don't have permissions on that repository"
       update:
         success_flash: "Column %{name} was successfully updated."
@@ -5354,6 +5371,7 @@ en:
     webhooks:
       errors:
         subject_not_serializable: "Subject not serializable."
+        subject_not_exist: "Subject does not exist."
     core:
       status_ok: "Ok"
       invalid_api_key: "API key is invalid or expired"

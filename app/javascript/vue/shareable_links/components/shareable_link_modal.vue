@@ -90,6 +90,7 @@
 </template>
 
 <script>
+import axios from '../../../packs/custom_axios.js';
 import deleteShareableLinkModal from './delete_shareable_link.vue';
 
 export default {
@@ -146,7 +147,8 @@ export default {
   created() {
     this.sharedEnabled = this.shared;
     if (this.sharedEnabled) {
-      $.get(this.shareableLinkUrl, (result) => {
+      axios.get(this.shareableLinkUrl).then((response) => {
+        const result = response.data;
         this.shareableData = result.data;
         this.description = this.shareableData.attributes.description || '';
         this.$nextTick(() => {
@@ -179,15 +181,14 @@ export default {
     },
     saveDescription() {
       this.dirty = true;
-      $.ajax({
-        url: this.shareableLinkUrl,
-        type: 'PATCH',
-        data: { description: this.description },
-        success: (result) => {
-          this.shareableData = result.data;
-          this.dirty = false;
-          this.editing = false;
-        }
+      axios.patch(this.shareableLinkUrl, { description: this.description }).then((response) => {
+        const result = response.data;
+        this.shareableData = result.data;
+        this.dirty = false;
+        this.editing = false;
+      }).catch(() => {
+        this.dirty = false;
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     cancelDescriptionEdit() {
@@ -201,10 +202,14 @@ export default {
     },
     checkboxChange() {
       if (!this.sharedEnabled) {
-        $.post(this.shareableLinkUrl, { description: this.description }, (result) => {
+        axios.post(this.shareableLinkUrl, { description: this.description }).then((response) => {
+          const result = response.data;
           this.shareableData = result.data;
           this.$emit('enable');
           this.copy(this.shareableData.attributes.shareable_url);
+        }).catch(() => {
+          this.sharedEnabled = false;
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
       } else {
         this.hideModal();
@@ -213,21 +218,16 @@ export default {
     },
     deleteLink() {
       this.dirty = true;
-      $.ajax({
-        url: this.shareableLinkUrl,
-        type: 'DELETE',
-        success: () => {
-          this.shareableData = {};
-          this.description = '';
-          this.dirty = false;
-          this.sharedEnabled = false;
+      axios.delete(this.shareableLinkUrl).then(() => {
+        this.shareableData = {};
+        this.description = '';
+        this.dirty = false;
+        this.sharedEnabled = false;
 
-          this.$emit('disable');
-          this.$emit('close');
-        },
-        error: () => {
-          this.dirty = false;
-        }
+        this.$emit('disable');
+        this.$emit('close');
+      }).catch(() => {
+        this.dirty = false;
       });
     },
     closeDeleteModal() {

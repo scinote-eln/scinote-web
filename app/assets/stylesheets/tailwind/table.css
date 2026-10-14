@@ -9,4 +9,15 @@
   .sci-table-input.error {
     @apply !border-sn-alert-passion h-6;
   }
+
+  .sci-table-input-v2 {
+    @apply bg-white !border-sn-science-blue border h-10 w-full;
+  }
+  .sci-table-input-v2:focus {
+    @apply  !border-sn-science-blue outline-none shadow-none;
+  }
+
+  .sci-table-input-v2.error {
+    @apply !border-sn-alert-passion;
+  }
 }

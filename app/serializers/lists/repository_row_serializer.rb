@@ -6,16 +6,16 @@ module Lists
     include RepositoryDatatableHelper
 
     attributes :code, :created_at, :name, :created_by, :updated_at, :last_modified_by, :archived, :archived_on, :archived_by,
-               :assigned_tasks_count, :connections_count, :repository_id, :output
-    attribute :has_active_reminders, if: -> { instance_options[:with_reminders] }
+               :assigned_tasks_count, :connections_count, :repository_id, :output, :permissions
+    attribute :active_reminders_count, if: -> { instance_options[:with_reminders] }
     attribute :assigned, if: -> { instance_options[:my_module] && !instance_options[:assigned_view] }
     attribute :stock, if: -> { instance_options[:with_stock_management] }
     attribute :consumed_stock, if: -> { instance_options[:with_stock_management] && instance_options[:my_module] }
 
     def attributes(requested_attrs = nil, reload = false)
-      data = super(requested_attrs, reload)
+      data = super
       repository = object.repository
-      reminders_enabled = instance_options[:reminders_enabled]
+      reminders_enabled = instance_options[:with_reminders]
       custom_cells = object.repository_cells
       custom_cells = custom_cells.filter { |cell| cell.value_type != 'RepositoryStockValue' } if instance_options[:with_stock_management]
 
@@ -34,8 +34,14 @@ module Lists
       object.my_module_id.present? && object.my_module_id == instance_options[:my_module]&.id
     end
 
+    def permissions
+      {
+        manage: instance_options[:can_manage_repository_rows]
+      }
+    end
+
     def created_by
-      object[:created_by_full_name]
+      object[:created_by_full_name] || object.created_by&.name
     end
 
     def updated_at
@@ -43,7 +49,7 @@ module Lists
     end
 
     def last_modified_by
-      object[:last_modified_by_full_name]
+      object[:last_modified_by_full_name] || object.last_modified_by&.name
     end
 
     def archived
@@ -59,15 +65,15 @@ module Lists
     end
 
     def assigned_tasks_count
-      object.assigned_my_modules_count
+      object[:assigned_my_modules_count] || object.my_modules.count
     end
 
     def connections_count
       "#{object.parent_connections_count || 0} / #{object.child_connections_count || 0}"
     end
 
-    def has_active_reminders
-      object.has_active_reminders
+    def active_reminders_count
+      object[:active_reminders_count] || object.repository_cells.with_active_reminder(current_user).count
     end
 
     def stock
@@ -76,9 +82,11 @@ module Lists
 
       stock_object =
         if stock_cell.present?
-          serialize_repository_cell_value(stock_cell, repository.team, repository)
+          serialize_repository_cell_value(stock_cell, repository.team, repository, reminders_enabled: instance_options[:with_reminders])
         else
-          { stock_url: Rails.application.routes.url_helpers.new_repository_stock_repository_repository_row_url(repository, object) }
+          { value: {
+            stock_url: Rails.application.routes.url_helpers.new_repository_stock_repository_repository_row_url(repository, object)
+          } }
         end
       stock_object[:display_warnings] = display_stock_warnings?(repository)
       stock_object[:stock_status] = object.repository_stock_cell&.value&.status

@@ -97,18 +97,6 @@ describe MyModulesController, type: :controller do
     end
   end
 
-  describe 'GET current_status' do
-    let(:action) { get :current_status, params: { id: my_module.id }, format: :json }
-    it 'returns http success' do
-      action
-      expect(response).to have_http_status(:success)
-      expect(response.content_type).to eq('application/json; charset=utf-8')
-      expect(response.body).not_to be_empty
-      expect(JSON.parse(response.body)["my_module_status_id"])
-        .to be_eql(my_module.my_module_status_id)
-    end
-  end
-
   describe 'GET status_state' do
     let(:action) { get :status_state, params: { id: my_module.id }, format: :json }
     it 'returns http success' do
@@ -117,6 +105,32 @@ describe MyModulesController, type: :controller do
       expect(response.content_type).to eq('application/json; charset=utf-8')
       expect(response.body).not_to be_empty
       expect(JSON.parse(response.body)["status_changing"]).to be_eql(false)
+    end
+  end
+
+  describe 'GET status_partial' do
+    let(:action) { get :status_partial, params: { id: my_module.id } }
+
+    it 'returns http success' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to eq('application/json; charset=utf-8')
+      expect(JSON.parse(response.body)).to have_key('html')
+    end
+
+    context 'when the user switched to another team in a different tab' do
+      let(:other_team) { create :team, created_by: user, skip_user_assignments: true }
+
+      before do
+        create :user_assignment, user: user, assignable: other_team, user_role: owner_role
+        user.update!(current_team_id: other_team.id)
+      end
+
+      it 'returns forbidden without switching the current team' do
+        action
+        expect(response).to have_http_status(:forbidden)
+        expect(user.reload.current_team_id).to eq(other_team.id)
+      end
     end
   end
 

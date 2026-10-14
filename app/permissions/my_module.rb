@@ -212,7 +212,8 @@ Canaid::Permissions.register_for(StepComment) do
     .each do |perm|
     can perm do |_, comment|
       my_module = comment.step.my_module
-      my_module.active? &&
+      comment.step.active? &&
+        my_module.active? &&
         !my_module.archived_branch? &&
         my_module.experiment.active? &&
         my_module.experiment.project.active?

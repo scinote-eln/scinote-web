@@ -55,9 +55,6 @@ export default {
       loading: false
     };
   },
-  created() {
-    window.importRepositoryModalComponent = this;
-  },
   methods: {
     open() {
       this.activeStep = 'UploadStep';
@@ -127,7 +124,7 @@ export default {
             HelperModule.flashAlertMsg(response.data.message, 'success');
             this.modalOpened = false;
             this.activeStep = null;
-            $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
+            this.$emit('import-success');
           }
 
           this.loading = false;

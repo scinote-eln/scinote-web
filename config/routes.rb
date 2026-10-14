@@ -283,7 +283,6 @@ Rails.application.routes.draw do
       member do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'export_repository', to: 'repositories#export_repository'
-        post 'export_repository_stock_items', to: 'repositories#export_repository_stock_items'
         post 'export_projects'
         get 'sidebar'
         get 'export_projects_modal'
@@ -564,7 +563,6 @@ Rails.application.routes.draw do
         post :tag_resource
         post :untag_resource
         post :tag_resource_with_new_tag
-        get :current_status
         get :status_partial
       end
       resources :user_my_modules, path: '/users', only: %i(index create destroy) do
@@ -588,9 +586,8 @@ Rails.application.routes.draw do
       resources :repositories, controller: :my_module_repositories, only: %i(index show update create) do
         member do
           get :full_view_table
-          post :index_dt, defaults: { format: 'json' }
-          get :index_ag, defaults: { format: 'json' }
-          get :unassigned_rows, defaults: { format: 'json' }
+          post :index_ag, defaults: { format: 'json' }
+          post :unassigned_rows, defaults: { format: 'json' }
           post :export_repository
           get :assign_repository_records_modal, as: :assign_modal
           post :update_repository_records_modal, as: :update_modal
@@ -611,7 +608,6 @@ Rails.application.routes.draw do
       resources :repository_snapshots, controller: :my_module_repository_snapshots, only: %i(destroy show) do
         member do
           get :full_view_table
-          post :index_dt, defaults: { format: 'json' }
           post :export_repository_snapshot
           get :status
         end
@@ -918,7 +914,7 @@ Rails.application.routes.draw do
            to: 'repository_rows#index',
            as: 'table_index',
            defaults: { format: 'json' }
-      get 'repository_index_ag',
+      post 'repository_index_ag',
            to: 'repository_rows#index_ag',
            as: 'table_index_ag',
            defaults: { format: 'json' }
@@ -994,10 +990,13 @@ Rails.application.routes.draw do
           post 'repository_stock_value', to: 'repository_stock_values#create_or_update', as: 'update_repository_stock'
         end
         resources :repository_stock_values, only: %i(new create edit update)
-        resources :repository_cells, only: :hide_reminder do
+        resources :repository_cells, only: [] do
           post :hide_reminder, to: 'hidden_repository_cell_reminders#create'
           post :hide_reminders, to: 'hidden_repository_cell_reminders#create_all'
         end
+        post 'repository_cells/:repository_column_id',
+             to: 'repository_cells#update',
+             as: 'repository_cell'
       end
 
       collection do
@@ -1014,6 +1013,7 @@ Rails.application.routes.draw do
       member do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'import_records'
+        get :export_repository_stock_items
       end
       namespace :repository_columns do
         resources :text_columns, only: %i(create update)

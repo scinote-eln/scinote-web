@@ -115,23 +115,6 @@ class MyModuleShareableLinksController < ApplicationController
            }
   end
 
-  def repository_snapshot_index_ag
-    @draw = params[:draw].to_i
-    per_page = params[:length].to_i < 1 ? Constants::REPOSITORY_DEFAULT_PAGE_SIZE : params[:length].to_i
-    page = (params[:start].to_i / per_page) + 1
-    datatable_service = RepositorySnapshotDatatableService.new(@repository_snapshot, params, nil, @my_module, preload_cells: false)
-
-    @datatable_params = { shareable_link_view: true }
-    @all_rows_count = datatable_service.all_count
-    @filtered_rows_count = datatable_service.filtered_count
-    @columns_mappings = datatable_service.mappings
-
-    @repository = @repository_snapshot
-    @repository_rows = datatable_service.repository_rows.page(page).per(per_page)
-
-    render 'repository_rows/simple_view_index'
-  end
-
   def download_asset
     @asset = @my_module.assets_in_steps.find_by(id: params[:id]) ||
              @my_module.assets_in_results.find_by(id: params[:id])

@@ -1,7 +1,10 @@
 import axios from '../../packs/custom_axios.js';
 import cellRenderer from './renderers/cell_renderer.vue';
 import nameRenderer from './renderers/name_renderer.vue';
+import assignedRenderer from './renderers/assigned_renderer.vue';
+import connectionsRenderer from './renderers/connections_renderer.vue';
 import consumeRenderer from './renderers/consume_renderer.vue';
+import remindersRenderer from './renderers/reminders_renderer.vue';
 import {
   index_new_repository_repository_columns_path
 } from '../../routes.js';
@@ -10,16 +13,33 @@ export default {
   components: {
     cellRenderer,
     nameRenderer,
-    consumeRenderer
+    consumeRenderer,
+    assignedRenderer,
+    remindersRenderer,
+    connectionsRenderer
   },
   data() {
     return {
-      repositoryColumnsDef: []
+      repositoryColumnsDef: [],
+      customColumns: []
     };
   },
   computed: {
     defaultRepositoryColumnsDef() {
       let columns = [];
+      columns.push({
+        field: 'active_reminders_count',
+        headerComponentParams: {
+          html: '<div class="sn-icon sn-icon-notifications"></div>'
+        },
+        headerName: this.i18n.t('repositories.table.reminders'),
+        sortable: true,
+        suppressColumnsToolPanel: true,
+        cellRenderer: 'remindersRenderer',
+        maxWidth: 80,
+        minWidth: 80,
+        pinned: 'left'
+      });
       columns.push({
         field: 'name',
         headerName: this.i18n.t('repositories.table.row_name'),
@@ -44,7 +64,8 @@ export default {
           field: 'assigned_tasks_count',
           headerName: this.i18n.t('repositories.table.assigned'),
           sortable: true,
-          hide: this.columnHidden
+          hide: this.columnHidden,
+          cellRenderer: 'assignedRenderer'
         });
       }
 
@@ -52,6 +73,7 @@ export default {
         field: 'connections_count',
         headerName: this.i18n.t('repositories.table.relationships'),
         hide: this.columnHidden,
+        cellRenderer: 'connectionsRenderer',
         cellRendererParams: {
           legacyId: -11
         }
@@ -74,8 +96,56 @@ export default {
           legacyId: -5
         },
       });
+      columns.push({
+        field: 'updated_at',
+        headerName: this.i18n.t('repositories.table.updated_on'),
+        sortable: true,
+        hide: this.columnHidden,
+        cellRendererParams: {
+          legacyId: -7
+        },
+      });
+      columns.push({
+        field: 'last_modified_by',
+        headerName: this.i18n.t('repositories.table.updated_by'),
+        sortable: true,
+        hide: this.columnHidden,
+        cellRendererParams: {
+          legacyId: -8
+        },
+      });
+      if (this.currentViewMode === 'archived') {
+        columns.push({
+          field: 'archived_on',
+          headerName: this.i18n.t('repositories.table.archived_on'),
+          sortable: true,
+          hide: this.columnHidden,
+          cellRendererParams: {
+            legacyId: -9
+          },
+        });
+        columns.push({
+          field: 'archived_by',
+          headerName: this.i18n.t('repositories.table.archived_by'),
+          sortable: true,
+          hide: this.columnHidden,
+          cellRendererParams: {
+            legacyId: -10
+          },
+        });
+      }
       return columns;
     },
+    minWidth() {
+      return {
+        'RepositoryDateTimeValue': 220,
+        'RepositoryTimeValue': 160,
+        'RepositoryDateValue': 180,
+        'RepositoryDateTimeRangeValue': 350,
+        'RepositoryTimeRangeValue': 200,
+        'RepositoryDateRangeValue': 250
+      }
+    }
   },
   mounted() {
     if (this.repositoryVersion) {
@@ -83,10 +153,27 @@ export default {
     }
   },
   methods: {
+    legacyColumnIds() {
+      const headerIDs = [];
+      const activeConfig = this.$refs.repositoryTable.gridApi?.getColumnState();
+
+      if (activeConfig) {
+        const pinnedSorted = activeConfig.filter(column => column.pinned === 'left').concat(activeConfig.filter(column => column.pinned !== 'left'));
+        pinnedSorted.forEach((column) => {
+          const legacyId = this.repositoryColumnsDef.find((col) => col.field == column.colId)?.cellRendererParams?.legacyId;
+          if (legacyId) {
+            headerIDs.push(legacyId);
+          }
+        });
+      }
+
+      return headerIDs;
+    },
     loadRepositoryColumns() {
       axios.get(index_new_repository_repository_columns_path(this.repositoryVersion.id))
         .then((response) => {
           let columns = [...this.defaultRepositoryColumnsDef];
+          this.customColumns = response.data.data
           response.data.data.forEach((column) => {
             let field = `col_${column.id}`;
             if (column.attributes.data_type == 'RepositoryStockValue') {
@@ -98,11 +185,14 @@ export default {
               sortable: true,
               cellRenderer: 'cellRenderer',
               hide: !(field == 'stock') && this.columnHidden,
+              minWidth: this.minWidth[column.attributes.data_type] || 150,
               cellRendererParams: {
                 repositoryId: this.repositoryVersion.id,
                 columnId: column.id,
                 columnDataType: column.attributes.data_type,
-                legacyId: parseInt(column.id, 10)
+                legacyId: parseInt(column.id, 10),
+                columnItems: column.attributes.column_items,
+                metadata: column.attributes.metadata
               },
               suppressColumnsToolPanel: true
             });

@@ -96,7 +96,8 @@ export default {
       this.$emit('stepUpdated');
     },
     loadElements() {
-      $.get(this.urls.elements_url, (result) => {
+      axios.get(this.urls.elements_url).then((response) => {
+        const result = response.data;
         this.elements = result.data;
         this.$emit('step:elements:loaded');
       });
@@ -104,7 +105,8 @@ export default {
     loadAttachments() {
       this.attachmentsReady = false;
 
-      $.get(this.urls.attachments_url, (result) => {
+      axios.get(this.urls.attachments_url).then((response) => {
+        const result = response.data;
         this.attachments = result.data
         this.$emit('step:attachments:loaded');
         if (this.attachments.findIndex((e) => e.attributes.attached === false) >= 0) {

@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import axios from '../../../packs/custom_axios';
 import SelectDropdown from '../../shared/select_dropdown.vue';
 import repositoryValueMixin from './mixins/repository_value.js';
 
@@ -70,14 +71,15 @@ export default {
     fetchChecklistItems() {
       this.isLoading = true;
 
-      $.get(this.optionsPath, (data) => {
+      axios.get(this.optionsPath).then((response) => {
+        const data = response.data;
         if (Array.isArray(data)) {
           this.availableChecklistItems = data.map((option) => [String(option.value), option.label]);
           return false;
         }
 
         this.availableChecklistItems = [];
-      }).always(() => {
+      }).finally(() => {
         this.isLoading = false;
       });
     },

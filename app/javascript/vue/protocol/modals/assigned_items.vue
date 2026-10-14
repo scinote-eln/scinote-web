@@ -160,6 +160,8 @@ export default {
         HelperModule.flashAlertMsg(response.data.flash, 'success');
         this.reloadKey = this.reloadKey + 1;
         this.loadAssignedRepositories(repositoryId);
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     closeAssignModal() {

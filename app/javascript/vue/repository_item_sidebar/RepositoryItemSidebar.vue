@@ -16,7 +16,7 @@
               :editable="permissions.can_manage && !defaultColumns?.archived"
               :name="defaultColumns.name"
               :archived="defaultColumns.archived"
-              @update="update"
+              @update="updateTitle"
               data-e2e="e2e-TX-itemCard-title">
             </repository-item-sidebar-title>
             <i id="close-icon" data-e2e="e2e-BT-itemCard-close" @click="toggleShowHideSidebar(null)"
@@ -162,7 +162,7 @@
                   </div>
                   <CustomColumns :customColumns="customColumns" :repositoryRowId="repositoryRowId"
                     :repositoryId="repository?.id" :inArchivedRepositoryRow="defaultColumns?.archived"
-                    :permissions="permissions" :updatePath="updatePath" :actions="actions" @update="update" />
+                    :permissions="permissions" :actions="actions" @update="updateCustomColumn" />
                 </section>
 
                 <div id="divider" class="bg-sn-light-grey flex px-8 items-center self-stretch h-px"></div>
@@ -390,6 +390,10 @@ import UnlinkModal from './unlink_modal.vue';
 import Locations from './locations.vue';
 import Schedule from './schedule.vue';
 import axios from '../../packs/custom_axios.js';
+import {
+  repository_repository_row_repository_cell_path,
+  repository_repository_row_path
+} from '../../routes.js';
 
 const items = [
   {
@@ -467,7 +471,6 @@ export default {
   data() {
     return {
       currentItemUrl: null,
-      updatePath: null,
       dataLoading: false,
       repositoryRowId: null,
       repository: null,
@@ -509,6 +512,14 @@ export default {
   computed: {
     repositoryRowName() {
       return this.defaultColumns?.archived ? `${I18n.t('labels.archived')} ${this.defaultColumns?.name}` : this.defaultColumns?.name;
+    },
+    isSameRepository() {
+      const openedRepositoryId = window.repositoryAssignTable?.repository?.id || window.repositoryTable?.repositoryId;
+
+      if (openedRepositoryId) {
+        return this.repository?.id === openedRepositoryId;
+      }
+      return false;
     }
   },
   watch: {
@@ -549,6 +560,20 @@ export default {
           this.childrenCount = data.children.length;
           this.children = data.children;
         }
+        if (this.isSameRepository) {
+          if (window.repositoryAssignTable) {
+            window.repositoryAssignTable.updateRowData({
+              id: this.repositoryRowId,
+              connections_count: `${this.parentsCount || 0} / ${this.childrenCount || 0}`
+            });
+          } else {
+            window.repositoryTable?.updateRowData({
+              id: this.repositoryRowId,
+              connections_count: `${this.parentsCount || 0} / ${this.childrenCount || 0}`
+            });
+          }
+        }
+
       };
       window.repositoryItemRelationshipsModal.show(
         {
@@ -567,7 +592,7 @@ export default {
       const allowedSelectors = [
         'a',
         '.modal',
-        '.dp__instance_calendar',
+        '.dp--instance-calendar',
         '.label-printing-progress-modal',
         '.atwho-view',
         '.sn-select-dropdown'
@@ -629,7 +654,7 @@ export default {
       if (this.defaultColumns?.name) {
         this.defaultColumns.name = '';
       }
-      axios.get(
+      return axios.get(
         repositoryRowUrl,
         { params: { my_module_id: this.myModuleId } }
       ).then((response) => {
@@ -638,7 +663,6 @@ export default {
         this.repositoryRowId = result.id;
         this.repository = result.repository;
         this.optionsPath = result.options_path;
-        this.updatePath = result.update_path;
         this.defaultColumns = result.default_columns;
         this.parentsCount = result.relationships.parents_count;
         this.childrenCount = result.relationships.children_count;
@@ -692,19 +716,48 @@ export default {
     privateModuleSize() {
       return this.assignedModules.total_assigned_size - this.assignedModules.viewable_modules.length;
     },
-    update(params) {
-      axios.put(
-        this.updatePath,
-        {
-          id: this.id,
-          ...params
-        }
+    updateTitle(params) {
+      axios.patch(
+        repository_repository_row_path(this.repository.id, this.repositoryRowId),
+        params
       ).then((response) => {
-        const result = response.data;
-        if (result) {
-          this.customColumns = this.customColumns.map((col) => (col.id === result.id ? { ...col, ...result } : col));
-          if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
-          window.assignedItemsTable.$refs.assignedItems.loadAssingedRepositories();
+        const row = response.data.data;
+        if (this.defaultColumns) this.defaultColumns.name = row.attributes.name;
+        if (this.isSameRepository) {
+          if (window.repositoryAssignTable) {
+            window.repositoryAssignTable.updateRowData(row);
+          } else {
+            window.repositoryTable?.updateRowData(row);
+          }
+          window.assignedItemsTable?.$refs?.assignedItems?.loadAssingedRepositories();
+        }
+      });
+    },
+    updateCustomColumn(params) {
+      const colId = Object.keys(params.repository_cells)[0];
+      const value = params.repository_cells[colId];
+
+      axios.post(
+        repository_repository_row_repository_cell_path({
+          repository_id: this.repository.id,
+          repository_row_id: this.repositoryRowId,
+          repository_column_id: colId
+        }),
+        { value }
+      ).then((response) => {
+        const result = response.data.cell;
+        this.customColumns = this.customColumns.map((col) => (String(col.id) === String(colId) ? { ...col, ...result } : col));
+        if (this.isSameRepository) {
+          if (window.repositoryAssignTable) {
+            window.repositoryAssignTable.updateRowData({ id: this.repositoryRowId, [`col_${colId}`]: result });
+          } else {
+            const updatedRow = { id: this.repositoryRowId, [`col_${colId}`]: result };
+            if (response.data.active_reminders_count !== undefined) {
+              updatedRow.active_reminders_count = response.data.active_reminders_count;
+            }
+            window.repositoryTable?.updateRowData(updatedRow);
+          }
+          window.assignedItemsTable?.$refs?.assignedItems?.loadAssingedRepositories();
         }
       });
     },
@@ -727,7 +780,21 @@ export default {
           ),
           'success'
         );
-        this.loadRepositoryRow(this.currentItemUrl);
+        await this.loadRepositoryRow(this.currentItemUrl);
+        if (this.isSameRepository) {
+          if (window.repositoryAssignTable) {
+            window.repositoryAssignTable?.updateRowData({
+              id: this.repositoryRowId,
+              connections_count: `${this.parentsCount || 0} / ${this.childrenCount || 0}`
+            });
+          } else {
+            window.repositoryTable?.updateRowData({
+              id: this.repositoryRowId,
+              connections_count: `${this.parentsCount || 0} / ${this.childrenCount || 0}`
+            });
+          }
+        }
+
         if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
       } catch {
         HelperModule.flashAlertMsg(

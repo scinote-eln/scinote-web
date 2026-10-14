@@ -117,7 +117,6 @@
     .col-list-el {
       align-items: center;
       background: $color-white;
-      border-bottom: 1px solid $color-alto;
       display: flex;
       gap: .5rem;
       min-height: 3.5rem;
@@ -125,7 +124,6 @@
       vertical-align: middle;
 
       .manage-controls {
-        display: none;
         white-space: nowrap;
       }
 
@@ -133,29 +131,9 @@
         margin-right: auto;
       }
 
-      &:hover {
-        &.editable.has-permissions {
-          .manage-controls {
-            display: inline-block;
-          }
-
-          .column-type {
-            display: none;
-          }
-        }
-
-        .grippy {
-          opacity: 1;
-        }
-      }
-
       &:last-of-type {
         border-bottom: 0;
       }
-    }
-
-    [data-position] {
-      cursor: grab;
     }
 
     .ui-sortable-helper {

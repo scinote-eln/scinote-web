@@ -80,6 +80,7 @@ class LabelPrintersController < ApplicationController
         html:
           render_to_string(
             partial: 'label_printers/print_progress_modal',
+            formats: :html,
             locals: {
               starting_item_count: params[:starting_item_count].to_i,
               label_printer: LabelPrinter.find(params[:id])

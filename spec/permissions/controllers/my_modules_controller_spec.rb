@@ -9,6 +9,7 @@ describe MyModulesController, type: :controller do
     show: { id: 1 },
     description: { id: 1 },
     status_state: { id: 1 },
+    status_partial: { id: 1 },
     activities: { id: 1 },
     activities_tab: { id: 1 },
     due_date: { id: 1 },
@@ -49,6 +50,12 @@ describe MyModulesController, type: :controller do
     end
 
     it_behaves_like "a controller action with permissions checking", :get, :status_state do
+      let(:testable) { my_module }
+      let(:permissions) { [MyModulePermissions::READ] }
+      let(:action_params) { { id: my_module.id } }
+    end
+
+    it_behaves_like "a controller action with permissions checking", :get, :status_partial do
       let(:testable) { my_module }
       let(:permissions) { [MyModulePermissions::READ] }
       let(:action_params) { { id: my_module.id } }

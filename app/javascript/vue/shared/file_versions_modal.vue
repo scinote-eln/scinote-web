@@ -136,6 +136,8 @@ export default {
       axios.post(this.restoreVersionUrl, { version: version }).then(() => {
         this.loadVersions();
         this.$emit('fileVersionRestored');
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     }
   }

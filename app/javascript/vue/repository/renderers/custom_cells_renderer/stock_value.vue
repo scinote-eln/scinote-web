@@ -1,15 +1,35 @@
 <template>
-  <div class="flex items-center gap-1">
-    <i v-if="params.data.stock.stock_status && params.data.stock.stock_status !== 'normal'"
-       :class="{
-         'text-sn-alert-passion': params.data.stock.stock_status === 'empty',
-         'text-sn-alert-brittlebush': params.data.stock.stock_status === 'low'
-       }"
-       class="sn-icon sn-icon-alert-warning shrink-0"></i>
-    <span v-if="params.data.stock.value" class="truncate">
-      {{ params.data.stock.value.stock_formatted }}
-    </span>
-    <span v-else class="text-sn-grey-500">{{ i18n.t('libraries.manange_modal_column.stock_type.no_item_stock') }}</span>
+  <div v-if="params.data.stock">
+    <div v-if="canManage" class="relative">
+      <span class="cursor-pointer text-sn-blue" @click="openStockModal">
+        <div v-if="params.data.stock.value.stock_formatted" class="flex items-center gap-1">
+          <i v-if="params.data.stock.stock_status && params.data.stock.stock_status !== 'normal'"
+            :class="{
+              'text-sn-alert-passion': params.data.stock.stock_status === 'empty',
+              'text-sn-alert-brittlebush': params.data.stock.stock_status === 'low'
+            }"
+            class="sn-icon sn-icon-alert-warning shrink-0"></i>
+          <span class="truncate">
+            {{ params.data.stock.value.stock_formatted }}
+          </span>
+        </div>
+        <span v-else class="flex items-center gap-1">
+          {{ i18n.t('libraries.manange_modal_column.stock_type.add_stock') }}
+        </span>
+      </span>
+    </div>
+    <div v-else class="flex items-center gap-1">
+      <i v-if="params.data.stock.stock_status && params.data.stock.stock_status !== 'normal'"
+        :class="{
+          'text-sn-alert-passion': params.data.stock.stock_status === 'empty',
+          'text-sn-alert-brittlebush': params.data.stock.stock_status === 'low'
+        }"
+        class="sn-icon sn-icon-alert-warning shrink-0"></i>
+      <span v-if="params.data.stock.value.stock_formatted" class="truncate">
+        {{ params.data.stock.value.stock_formatted }}
+      </span>
+      <span v-else class="text-sn-grey-500">{{ i18n.t('libraries.manange_modal_column.stock_type.no_item_stock') }}</span>
+    </div>
   </div>
 </template>
 
@@ -19,6 +39,16 @@ export default {
     params: {
       type: Object,
       required: true
+    }
+  },
+  computed: {
+    canManage() {
+      return this.params?.data?.permissions?.manage || false;
+    }
+  },
+  methods: {
+    openStockModal() {
+      this.params.dtComponent.$emit('openStockModal', this.params.data);
     }
   }
 };

@@ -93,12 +93,20 @@
       let updateCallback;
       if (stockValueUrl) {
         updateCallback = (data) => {
-          if (!data?.value) return;
+          const row = data?.data;
+          const stock = row?.attributes?.stock;
+          if (!stock?.value) return;
           // reload dataTable
           if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
+          // update table stock and reminders count
+          const updatedRow = { id: row.id, stock };
+          if (row.attributes.active_reminders_count != null) {
+            updatedRow.active_reminders_count = row.attributes.active_reminders_count;
+          }
+          window.repositoryTable?.updateRowData?.(updatedRow);
           // update item card stock column
-          window.manageStockCallback && window.manageStockCallback(data.value);
-          $link.data('manageStockUrl', data.value.stock_url)
+          window.manageStockCallback && window.manageStockCallback(stock.value);
+          $link.data('manageStockUrl', stock.value.stock_url);
         };
         window.manageStockModalComponent.showModal(stockValueUrl, updateCallback);
       }

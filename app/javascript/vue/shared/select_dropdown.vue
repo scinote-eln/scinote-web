@@ -7,7 +7,7 @@
   >
     <div
       ref="field"
-      class="px-3 py-1 rounded flex items-center cursor-pointer"
+      class="px-3 py-1 rounded flex items-center cursor-pointer grow"
       @click="open"
       :class="[{
         'border border-solid': !borderless,
@@ -458,6 +458,10 @@ export default {
             this.$nextTick(() => {
               this.setPosition();
             });
+          })
+          .catch(() => {
+            this.loadingOptions = false;
+            HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
           });
       }
     },

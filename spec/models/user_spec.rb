@@ -172,7 +172,7 @@ describe User, type: :model do
         expect { user.increase_daily_exports_counter! }
           .to change {
             user.reload.export_vars['last_export_timestamp']
-          }.to(Time.now.utc.beginning_of_day.to_i..Time.now.utc.end_of_day.to_i)
+          }.to(a_value_between(Time.now.utc.beginning_of_day.to_i, Time.now.utc.end_of_day.to_i))
       end
 
       it 'sets new counter for today' do
@@ -197,7 +197,7 @@ describe User, type: :model do
         expect { user.increase_daily_exports_counter! }
           .to change {
             user.reload.export_vars['last_export_timestamp']
-          }.from(nil).to(Time.now.utc.beginning_of_day.to_i..Time.now.utc.end_of_day.to_i)
+          }.from(nil).to(a_value_between(Time.now.utc.beginning_of_day.to_i, Time.now.utc.end_of_day.to_i))
       end
 
       it 'starts count reports with 1' do

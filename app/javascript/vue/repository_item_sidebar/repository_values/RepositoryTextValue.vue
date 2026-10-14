@@ -15,6 +15,7 @@
     </div>
     <div v-if="canEdit || colVal?.edit.length > 0" class="w-full contents">
       <text-area :initialValue="colVal?.edit"
+                  :sanitizedValue="colVal?.view_sanitized"
                   :noContentPlaceholder="i18n.t('repositories.item_card.repository_text_value.placeholder')"
                   :placeholder="i18n.t('repositories.item_card.repository_text_value.placeholder')"
                   :unEditableRef="`textRef`"

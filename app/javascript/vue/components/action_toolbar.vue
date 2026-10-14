@@ -112,6 +112,9 @@ export default {
         this.loading = false;
         this.setButtonOverflow();
         if (this.actionsLoadedCallback) this.$nextTick(this.actionsLoadedCallback);
+      }).catch(() => {
+        this.loading = false;
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     }, 10);
   },
@@ -196,15 +199,16 @@ export default {
           event.stopPropagation();
           this.submitting = true;
 
-          $.ajax({
-            type: action.request_method,
+          axios({
+            method: action.request_method,
             url: action.path,
             data: this.params
-          }).done((data) => {
+          }).then((response) => {
+            const data = response.data;
             HelperModule.flashAlertMsg(data.responseJSON && data.responseJSON.message || data.message, 'success');
-          }).fail((data) => {
-            HelperModule.flashAlertMsg(data.responseJSON && data.responseJSON.message || data.message, 'danger');
-          }).always(() => {
+          }).catch((error) => {
+            HelperModule.flashAlertMsg(error.response?.data && error.response?.data.message || error.message, 'danger');
+          }).finally(() => {
             this.submitting = false;
             if (this.reloadCallback) this.reloadCallback();
           });
