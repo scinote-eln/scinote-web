@@ -175,7 +175,7 @@ class LabelTemplatesController < ApplicationController
   end
 
   def load_label_template
-    @label_template = current_team.label_templates.find(params[:id])
+    @label_template = LabelTemplate.find(params[:id])
 
     current_team_switch(@label_template.team) if current_team != @label_template.team
   end
