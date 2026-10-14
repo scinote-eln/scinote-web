@@ -260,7 +260,14 @@ export default {
   },
   methods: {
     updateRowData(row) {
+      // DataTable prepends unknown rows, so skip pushes for rows that aren't loaded
+      if (!this.findLoadedRow(row.id)) return;
+
       this.$refs.repositoryTable.updateRowData(row);
+      if ((row.attributes || row).active_reminders_count > 0) this.hasActiveReminders = true;
+    },
+    findLoadedRow(rowId) {
+      return this.$refs.repositoryTable?.rowData?.find((r) => String(r.id) === String(rowId));
     },
     loadRepository() {
       axios.get(this.repositoryUrl)
@@ -407,12 +414,15 @@ export default {
         const updatedRow = {
           id: row.id,
         }
-        updatedRow[columnDef.field] = response.data;
-        this.$refs.repositoryTable.updateRowData(updatedRow);
+        updatedRow[columnDef.field] = response.data.cell;
+        if (response.data.active_reminders_count !== undefined) {
+          updatedRow.active_reminders_count = response.data.active_reminders_count;
+        }
+        this.updateRowData(updatedRow);
         this.textCellModalObject = null;
       }).catch(() => {
         HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
-        textCellModalObject = null;
+        this.textCellModalObject = null;
       });
     },
     openStockModal(row) {
@@ -421,6 +431,7 @@ export default {
     updateStock(row) {
       this.stockValueModalUrl = null;
       this.$refs.repositoryTable.updateRowData(row);
+      if (row.attributes?.active_reminders_count > 0) this.hasActiveReminders = true;
     },
     updateRemindersCount(row, count) {
       const updatedRow = {
@@ -428,6 +439,7 @@ export default {
       }
       updatedRow['active_reminders_count'] = count;
       this.$refs.repositoryTable.updateRowData(updatedRow);
+      if (count > 0) this.hasActiveReminders = true;
     },
     openManageColumnsModal() {
       this.$refs.legacyManageColumns.click();

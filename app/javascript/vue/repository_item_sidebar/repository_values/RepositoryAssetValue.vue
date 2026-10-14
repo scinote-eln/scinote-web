@@ -167,7 +167,7 @@ export default {
         }),
         { value }
       ).then((response) => {
-        const result = response.data;
+        const result = response.data.cell;
         const assetRepositoryCell = result?.value;
         this.uploading = false;
 

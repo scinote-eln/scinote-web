@@ -745,13 +745,17 @@ export default {
         }),
         { value }
       ).then((response) => {
-        const result = response.data;
+        const result = response.data.cell;
         this.customColumns = this.customColumns.map((col) => (String(col.id) === String(colId) ? { ...col, ...result } : col));
         if (this.isSameRepository) {
           if (window.repositoryAssignTable) {
             window.repositoryAssignTable.updateRowData({ id: this.repositoryRowId, [`col_${colId}`]: result });
           } else {
-            window.repositoryTable?.updateRowData({ id: this.repositoryRowId, [`col_${colId}`]: result });
+            const updatedRow = { id: this.repositoryRowId, [`col_${colId}`]: result };
+            if (response.data.active_reminders_count !== undefined) {
+              updatedRow.active_reminders_count = response.data.active_reminders_count;
+            }
+            window.repositoryTable?.updateRowData(updatedRow);
           }
           window.assignedItemsTable?.$refs?.assignedItems?.loadAssingedRepositories();
         }

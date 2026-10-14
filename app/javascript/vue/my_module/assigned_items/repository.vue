@@ -297,7 +297,20 @@ export default {
     }
   },
   methods: {
+    // A method, not a computed: window globals aren't reactive, so a computed would cache a stale result
+    isSameRepository() {
+      const openedRepositoryId = window.repositoryItemSidebarComponent?.repository?.id;
+
+      if (openedRepositoryId) {
+        return String(this.repositoryVersion?.id) === String(openedRepositoryId);
+      }
+      return false;
+    },
     updateRowData(row) {
+      if (!this.isSameRepository()) return;
+      // DataTable prepends unknown rows, so skip pushes for rows that aren't loaded
+      if (!this.$refs.repositoryTable?.rowData?.some((r) => String(r.id) === String(row.id))) return;
+
       this.$refs.repositoryTable.updateRowData(row);
     },
     assignRows(rowIds, repositoryId, assignToDownstream = false) {

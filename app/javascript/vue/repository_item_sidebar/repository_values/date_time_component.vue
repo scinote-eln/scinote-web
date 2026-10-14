@@ -3,7 +3,9 @@
     <div class="text-sm font-bold truncate" :title="colName">
       {{ colName }}
     </div>
-    <div v-if="colVal.reminder" class="bg-sn-alert-passion w-1.5 h-1.5 min-w-[0.375rem] min-h-[0.375rem] rounded hover:cursor-pointer" :title="colVal.reminder_text"></div>
+    <div v-if="reminderValue.reminder"
+         :class="reminderValue.days_left > 0 ? 'bg-sn-alert-brittlebush' : 'bg-sn-alert-passion'"
+         class="w-1.5 h-1.5 min-w-[0.375rem] min-h-[0.375rem] rounded hover:cursor-pointer" :title="reminderValue.reminder_text"></div>
   </div>
   <div class="flex flex-col gap-2">
     <template v-if="!canEdit">
@@ -56,7 +58,8 @@ export default {
       endDate: null,
       error: null,
       defaultStartDate: null,
-      defaultEndDate: null
+      defaultEndDate: null,
+      reminderValue: {}
     };
   },
   inject: ['reloadRepoItemSidebar'],
@@ -78,6 +81,11 @@ export default {
 
     this.defaultStartDate = this.startDate;
     this.defaultEndDate = this.endDate;
+    this.reminderValue = {
+      reminder: this.colVal.reminder,
+      reminder_text: this.colVal.reminder_text,
+      days_left: this.colVal.days_left
+    };
   },
   computed: {
     value() {
@@ -182,10 +190,11 @@ export default {
       ).then((response) => {
         this.defaultStartDate = this.startDate;
         this.defaultEndDate = this.endDate;
-        window.repositoryTable?.updateRowData({
-          id: this.repositoryRowId,
-          [`col_${this.colId}`]: response.data
-        });
+        const { cell, active_reminders_count: activeRemindersCount } = response.data;
+        this.reminderValue = cell?.value || {};
+        const updatedRow = { id: this.repositoryRowId, [`col_${this.colId}`]: cell };
+        if (activeRemindersCount !== undefined) updatedRow.active_reminders_count = activeRemindersCount;
+        window.repositoryTable?.updateRowData(updatedRow);
       }).catch(() => {
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });

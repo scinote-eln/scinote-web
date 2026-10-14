@@ -1,6 +1,10 @@
 <template>
   <div>
-    <div v-if="canManage">
+    <div v-if="canManage" class="flex items-center gap-1">
+      <i v-if="hasReminder"
+        :class="reminderClass"
+        :title="reminderTitle"
+        class="sn-icon sn-icon-alert-warning shrink-0"></i>
       <DateTimePicker
         class="borderless-input -mt-[1px]"
         :defaultValue="value"
@@ -19,7 +23,11 @@
         <span> - </span>
         {{ params.value.value.end_time.formatted }}
       </div>
-      <div v-else>
+      <div v-else class="flex items-center gap-1">
+        <i v-if="hasReminder"
+          :class="reminderClass"
+          :title="reminderTitle"
+          class="sn-icon sn-icon-alert-warning shrink-0"></i>
         {{ params.value.value.formatted }}
       </div>
     </div>
@@ -94,6 +102,17 @@ export default {
       } else {
         return 'sn-icon sn-icon-calendar';
       }
+    },
+    hasReminder() {
+      return !this.isRange && !!this.params.value?.value?.reminder;
+    },
+    reminderClass() {
+      return this.params.value?.value?.days_left > 0 ? 'text-sn-alert-brittlebush' : 'text-sn-alert-passion';
+    },
+    reminderTitle() {
+      const cellValue = this.params.value?.value;
+
+      return [cellValue?.reminder_text, cellValue?.reminder_message].filter(Boolean).join('\n');
     }
   },
   methods: {
