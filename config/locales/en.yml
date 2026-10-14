@@ -3395,7 +3395,7 @@ en:
 
   libraries:
     manange_modal_column_index:
-      title: "Manage columns"
+      title: "Edit columns"
       add_column: "Add column"
     manange_modal_column:
       button_tooltip: "Manage columns"
