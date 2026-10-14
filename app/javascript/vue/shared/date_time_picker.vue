@@ -23,7 +23,7 @@
       }"
       :input-attrs="{
         clearable: this.clearable,
-        hideInputIcon: true
+        hideInputIcon: this.noIcons
       }"
       :time-picker="mode == 'time'"
       :time-config="{
