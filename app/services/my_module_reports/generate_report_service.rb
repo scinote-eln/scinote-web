@@ -3,6 +3,9 @@
 module MyModuleReports
   class GenerateReportService
     include FormFieldValuesHelper
+    include ApplicationHelper
+    include ActionView::Helpers::TextHelper
+    include InputSanitizeHelper
 
     PROTOCOL_TAG = :PROTOCOL
     CHECKED_SYMBOL = "\u22A0"
@@ -106,7 +109,8 @@ module MyModuleReports
     end
 
     def render_table(report, table_tag, table, block_element)
-      table_data = table.table_data.merge(table_name: table.name)
+      data = JSON.parse(add_smart_annotations(table.contents_utf_8).presence || '{}')
+      table_data = table.table_data.merge(table_name: table.name, contents: (data['data'] if data.is_a?(Hash)) || [])
 
       # Specific element placeholder
       add_block_text(report, table_tag, "<div>#{table.name}</div><div>{{#{table_tag}}}</div>")
@@ -121,7 +125,7 @@ module MyModuleReports
     end
 
     def render_checklist(report, checklist_tag, checklist, checklist_items, block_element)
-      checklist_items_pairs = checklist_items&.map { |item| [item[:text], item[:checked]] }
+      checklist_items_pairs = checklist_items&.map { |item| [add_smart_annotations(item[:text]), item[:checked]] }
       checklist_name_div = checklist ? "<div>#{checklist.name}</div>" : ''
 
       # Specific element placeholder
@@ -224,7 +228,7 @@ module MyModuleReports
     # Protocol, text, table, checklist and form content always starts on its own line,
     # even when its tag is placed inline in the template
     def add_block_text(report, tag, html)
-      report.add_text tag, html, display: :block
+      report.add_text tag, add_smart_annotations(html), display: :block
     end
 
     def build_tag(type, id)
@@ -237,6 +241,10 @@ module MyModuleReports
 
     def clear_tags(report, *tags)
       tags.each { |tag| report.add_field tag, '' }
+    end
+
+    def add_smart_annotations(text)
+      smart_annotation_text(text, user: @user, team: @team, is_shared_object: false, add_prefix_type: true)
     end
   end
 end
