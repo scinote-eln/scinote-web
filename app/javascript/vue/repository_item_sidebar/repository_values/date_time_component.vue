@@ -190,12 +190,11 @@ export default {
       ).then((response) => {
         this.defaultStartDate = this.startDate;
         this.defaultEndDate = this.endDate;
-        this.reminderValue = response.data?.value || {};
-        window.repositoryTable?.updateRowData({
-          id: this.repositoryRowId,
-          [`col_${this.colId}`]: response.data
-        });
-        window.repositoryTable?.refreshRemindersCount?.(this.repositoryRowId, this.colId);
+        const { cell, active_reminders_count: activeRemindersCount } = response.data;
+        this.reminderValue = cell?.value || {};
+        const updatedRow = { id: this.repositoryRowId, [`col_${this.colId}`]: cell };
+        if (activeRemindersCount !== undefined) updatedRow.active_reminders_count = activeRemindersCount;
+        window.repositoryTable?.updateRowData(updatedRow);
       }).catch(() => {
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });

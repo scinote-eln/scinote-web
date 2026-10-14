@@ -73,10 +73,7 @@ module Lists
     end
 
     def active_reminders_count
-      # Return active reminders count if it is already preloaded from service, otherwise calculate it.
-      return object[:active_reminders_count] if object.has_attribute?(:active_reminders_count)
-
-      object.repository_cells.with_active_reminder(current_user).count
+      object[:active_reminders_count] || object.repository_cells.with_active_reminder(current_user).count
     end
 
     def stock

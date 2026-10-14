@@ -30,11 +30,17 @@ class RepositoryCellsController < ApplicationController
       end
     end
 
-    return head :no_content if @cell.blank?
+    cell = if @cell.present?
+             serialize_repository_cell_value(@cell.reload, current_team, @repository,
+                                             reminders_enabled: Repository.reminders_enabled?)
+           end
 
-    render json: serialize_repository_cell_value(@cell.reload, current_team, @repository, reminders_enabled: Repository.reminders_enabled?)
+    response_json = { cell: cell }
+    response_json[:active_reminders_count] = @repository_row.repository_cells.with_active_reminder(current_user).count if Repository.reminders_enabled?
+
+    render json: response_json
   rescue ActiveRecord::RecordInvalid => e
-    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
+    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_content
   end
 
   private
