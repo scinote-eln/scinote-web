@@ -49,4 +49,13 @@ describe ExperimentDueDateReminderJob, type: :job do
       expect(values).to_not include(experiment_notifcation_sent)
     end
   end
+
+  describe '#perform' do
+    it 'sends a notification only for the experiment that is due' do
+      expect(ExperimentDueDateNotification).to receive(:send_notifications).once
+                                                                          .with({ experiment_id: experiment_due_in_one_day.id })
+
+      described_class.perform_now
+    end
+  end
 end
