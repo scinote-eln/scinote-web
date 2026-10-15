@@ -1013,7 +1013,7 @@ Rails.application.routes.draw do
       member do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'import_records'
-        get :export_repository_stock_items
+        post :export_repository_stock_items
       end
       namespace :repository_columns do
         resources :text_columns, only: %i(create update)

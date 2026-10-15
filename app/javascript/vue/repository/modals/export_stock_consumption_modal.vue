@@ -52,8 +52,8 @@ export default {
   mixins: [modalMixin],
   methods: {
     exportConsumption() {
-      axios.get(export_repository_stock_items_repository_path(this.repository.id), {
-        params: { row_ids: this.rows }
+      axios.post(export_repository_stock_items_repository_path(this.repository.id), {
+        row_ids: this.rows
       })
         .then((response) => {
           HelperModule.flashAlertMsg(response.data.message, 'success');
