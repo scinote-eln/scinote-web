@@ -62,8 +62,6 @@
 </template>
 
 <script>
-import { markRaw } from 'vue';
-import consumer from '../../../../channels/consumer';
 import OpenLocallyMixin from './mixins/open_locally.js';
 import MenuDropdown from '../../menu_dropdown.vue';
 import UpdateVersionModal from '../modal/update_version_modal.vue';
@@ -79,19 +77,14 @@ export default {
   },
   data() {
     return {
-      fileVersionsModal: false,
-      fileChangesSubscription: null
+      fileVersionsModal: false
     };
   },
   created() {
     this.fetchLocalAppInfo();
     window.openLocallyMenu = this;
   },
-  mounted() {
-    this.subscribeFileChanges();
-  },
   beforeUnmount() {
-    this.unsubscribeFileChanges();
     delete window.openLocallyMenuComponent;
   },
   computed: {
@@ -139,28 +132,6 @@ export default {
   methods: {
     openImageEditor() {
       document.getElementById('editImageButton').click();
-    },
-    subscribeFileChanges() {
-      if (this.fileChangesSubscription || !this.attachment.attributes.urls.open_locally) return;
-
-      // markRaw, because ActionCable forgets a subscription by identity and would
-      // never match a reactive proxy of it - so unsubscribing would silently no-op.
-      this.fileChangesSubscription = markRaw(consumer.subscriptions.create(
-        { channel: 'AssetSyncChannel', asset_id: this.attachment.attributes.id },
-        {
-          received: (data) => {
-            if (data.checksum === this.attachment.attributes.checksum) return;
-            this.refreshPreview();
-          },
-          rejected: () => this.unsubscribeFileChanges()
-        }
-      ));
-    },
-    unsubscribeFileChanges() {
-      if (!this.fileChangesSubscription) return;
-
-      consumer.subscriptions.remove(this.fileChangesSubscription);
-      this.fileChangesSubscription = null;
     },
     refreshPreview() {
       const filePreview = document.querySelector('.file-preview-container');

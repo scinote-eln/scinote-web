@@ -16,7 +16,7 @@
         :data-preview-url="attachment.attributes.urls.preview"
         :data-e2e="`e2e-BT-attachment-${attachment.id}`"
     >
-      <div class="attachment-preview" :class="[attachment.attributes.asset_type, { processing: previewLoading }]">
+      <div class="attachment-preview" :class= "attachment.attributes.asset_type">
         <div class="absolute top-2 left-2 z-10 flex items-center gap-1">
           <div v-if="attachment.attributes.archived" class="sci-tag bg-sn-alert-brittlebush pointer-events-none text-sn-black">
             {{ i18n.t('my_modules.results.archived') }}
@@ -24,13 +24,13 @@
           </div>
           <LockedTag v-if="attachment.attributes.locked" />
         </div>
-        <img v-if="previewSrc"
+        <img v-if="attachment.attributes.medium_preview !== null"
             class="rounded-sm"
-            :src="previewSrc"
-            :style="{ opacity: previewVisible ? 1 : 0 }"
-            @error="onPreviewError"
-            @load="onPreviewLoad">
-        <div v-else-if="!previewProcessing" class="w-[186px] h-[186px] bg-sn-super-light-grey rounded-sm"></div>
+            :src="attachment.attributes.medium_preview"
+            style='opacity: 0'
+            @error="ActiveStoragePreviews.reCheckPreview"
+            @load="ActiveStoragePreviews.showPreview">
+        <div v-else class="w-[186px] h-[186px] bg-sn-super-light-grey rounded-sm"></div>
       </div>
       <div class="attachment-label"
            data-toggle="tooltip"
@@ -74,6 +74,7 @@
           @attachment:moved="attachmentMoved"
           @attachment:uploaded="reloadAttachments"
           @attachment:versionRestored="reloadAttachments"
+          @attachment:changed="$emit('attachment:changed', $event)"
           @attachment:update="$emit('attachment:update', $event)"
           @attachment:toggle_menu="toggleMenu"
           @attachment:move_modal="showMoveModal"
@@ -117,19 +118,20 @@ import deleteAttachmentModal from './delete_modal.vue';
 import MenuDropdown from '../../../shared/menu_dropdown.vue';
 import MoveAssetModal from '../modal/move.vue';
 import MoveMixin from './mixins/move.js';
-import PreviewStatusMixin from './mixins/preview_status.js';
+import OpenMenu from './open_menu.vue';
 import AttachmentActions from './attachment_actions.vue';
 import { vOnClickOutside } from '@vueuse/components';
 import LockedTag from '../../snippets/locked_tag.vue';
 
 export default {
   name: 'thumbnailAttachment',
-  mixins: [ContextMenuMixin, AttachmentMovedMixin, MoveMixin, PreviewStatusMixin],
+  mixins: [ContextMenuMixin, AttachmentMovedMixin, MoveMixin],
   components: {
     ContextMenu,
     deleteAttachmentModal,
     MoveAssetModal,
     MenuDropdown,
+    OpenMenu,
     AttachmentActions,
     LockedTag
   },
