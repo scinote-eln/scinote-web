@@ -2,6 +2,7 @@
   <div ref="stepContainer"
        class="step-container p-4 mb-4 rounded pr-8 relative locked"
        :data-id="step.id"
+       :id="`stepContainer${step.id}`"
        :class="{
         'bg-white': !step.attributes.archived,
         '!bg-sn-background-brittlebush': step.attributes.archived
