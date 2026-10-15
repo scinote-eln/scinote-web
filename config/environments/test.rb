@@ -28,6 +28,11 @@ Rails.application.configure do
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false
 
+  # Don't verify that assets referenced via asset helpers (e.g. image_path) are in the
+  # precompile list. The check compiles all precompile targets (application.js etc.), which
+  # requires node_modules, and those are not installed in the CI test image.
+  config.assets.check_precompiled_asset = false
+
   # Store uploaded files on the local file system in a temporary directory.
   config.active_storage.service = :test
 
