@@ -363,7 +363,7 @@ class RepositoriesController < ApplicationController
     if import_params[:mappings].present? && import_params[:mappings].value?('-1')
       status = ImportRepository::ImportRecords
                .new(
-                 temp_file: TempFile.find_by(id: import_params[:file_id]),
+                 temp_file: TempFile.find_by(id: import_params[:file_id], session_id: session.id.to_s),
                  repository: @repository,
                  mappings: import_params[:mappings],
                  session: session,
