@@ -514,4 +514,525 @@ describe MyModulesController, type: :controller do
       expect(user.favorites.exists?(item: my_module )).to eq(false)
     end
   end
+
+  describe 'GET index (HTML)' do
+    let(:action) { get :index, params: { experiment_id: experiment.id } }
+
+    it 'saves table view type and sets navigator for the experiment' do
+      action
+      expect(response).to have_http_status(:success)
+      expect(experiment.current_view_state(user).state['my_modules']['view_type']).to eq('table')
+      expect(assigns(:navigator)).to include(id: experiment.code, archived: false)
+      expect(assigns(:inline_editable_title_config)).to include(params_group: 'experiment', item_id: experiment.id)
+    end
+
+    context 'when user cannot read the experiment' do
+      before { allow(controller).to receive(:can_read_experiment?).and_return(false) }
+
+      it 'returns forbidden' do
+        action
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
+
+  describe 'GET index (missing experiment)' do
+    it 'returns not found' do
+      # load_experiment calls render_404 but continues and calls @experiment.project on nil.
+      pending 'bug: MyModulesController#load_experiment does not halt after render_404 (NoMethodError on nil)'
+      get :index, params: { experiment_id: -1 }, format: :json
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe 'GET assigned_users (forbidden)' do
+    before { allow(controller).to receive(:can_read_my_module?).and_return(false) }
+
+    it 'returns forbidden' do
+      get :assigned_users, params: { id: my_module.id }, format: :json
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
+  describe 'POST create (extra cases)' do
+    let(:other_user) { create :user }
+    let(:params) do
+      { experiment_id: experiment.id, my_module: { name: 'Designated task', user_ids: [other_user.id] } }
+    end
+
+    context 'when designating another experiment member' do
+      before { create_user_assignment(experiment, owner_role, other_user, user) }
+
+      it 'designates the user and logs designation activity' do
+        expect { post :create, params: params, format: :json }
+          .to change { Activity.where(type_of: Activity.type_ofs[:designate_user_to_my_module]).count }.by(1)
+        new_module = MyModule.find_by(name: 'Designated task')
+        expect(new_module.designated_users).to include(other_user)
+      end
+    end
+
+    context 'when user cannot designate users' do
+      before { allow(controller).to receive(:can_designate_users_to_new_task?).and_return(false) }
+
+      it 'designates only the current user' do
+        post :create, params: params, format: :json
+        expect(response).to have_http_status(:success)
+        expect(MyModule.find_by(name: 'Designated task').designated_users).to contain_exactly(user)
+      end
+    end
+
+    context 'when the name is invalid' do
+      let(:params) { { experiment_id: experiment.id, my_module: { name: 'a' * 300 } } }
+
+      it 'returns unprocessable entity and does not create a task' do
+        expect { post :create, params: params, format: :json }.not_to(change { MyModule.count })
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(JSON.parse(response.body)).to have_key('name')
+      end
+    end
+
+    context 'when user has no create permissions' do
+      before { allow(controller).to receive(:can_create_experiment_tasks?).and_return(false) }
+
+      it 'returns forbidden' do
+        expect { post :create, params: params, format: :json }.not_to(change { MyModule.count })
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
+
+  describe 'GET show (HTML)' do
+    it 'returns JSON with html key' do
+      get :show, params: { id: my_module.id }, format: :html
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)).to have_key('html')
+    end
+
+    it 'returns 404 for unknown task' do
+      get :show, params: { id: -1 }, format: :json
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it 'returns forbidden without read permission' do
+      allow(controller).to receive(:can_read_my_module?).and_return(false)
+      get :show, params: { id: my_module.id }, format: :json
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
+  describe 'GET description' do
+    let(:action) { get :description, params: { id: my_module.id }, format: :json }
+
+    it 'returns html and title' do
+      # The action renders partial 'my_modules/_description', which no longer exists in app/views,
+      # so it raises ActionView::MissingTemplate (500) for any format.
+      pending 'bug: my_modules#description renders missing partial my_modules/_description'
+      get :description, params: { id: my_module.id }
+      expect(response).to have_http_status(:success)
+      body = JSON.parse(response.body)
+      expect(body.keys).to include('html', 'title')
+      expect(body['title']).to include(my_module.name)
+    end
+
+    it 'returns forbidden without manage permission' do
+      allow(controller).to receive(:can_manage_my_module?).and_return(false)
+      action
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
+  describe 'GET current_status (forbidden)' do
+    it 'returns forbidden without read permission' do
+      allow(controller).to receive(:can_read_my_module?).and_return(false)
+      get :current_status, params: { id: my_module.id }, format: :json
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
+  describe 'GET status_partial' do
+    it 'returns html' do
+      get :status_partial, params: { id: my_module.id }
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)).to have_key('html')
+    end
+  end
+
+  describe 'GET status_state with repository snapshot error' do
+    before do
+      my_module.update_column(:last_transition_error, { 'type' => 'repository_snapshot', 'message' => 'boom' })
+    end
+
+    it 'puts the error into flash' do
+      get :status_state, params: { id: my_module.id }, format: :json
+      expect(response).to have_http_status(:success)
+      expect(flash[:repository_snapshot_error]).to include('type' => 'repository_snapshot')
+      expect(JSON.parse(response.body)['status_changing']).to eq(false)
+    end
+  end
+
+  describe 'GET canvas_dropdown_menu' do
+    it 'returns html and computes experiment manageability' do
+      get :canvas_dropdown_menu, params: { id: my_module.id }
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)).to have_key('html')
+      expect(assigns(:experiment_managable)).to eq(true)
+    end
+  end
+
+  describe 'GET activities' do
+    before do
+      Activities::CreateActivityService.call(activity_type: :rename_task, owner: user, team: team,
+                                             project: project, subject: my_module,
+                                             message_items: { my_module: my_module.id })
+    end
+
+    it 'renders HTML and groups activities by date' do
+      get :activities, params: { id: my_module.id }
+      expect(response).to have_http_status(:success)
+      expect(assigns(:grouped_activities).values.flatten.map(&:subject)).to include(my_module)
+      expect(assigns(:navigator)).to include(id: my_module.code)
+      expect(assigns(:inline_editable_title_config)).to include(params_group: 'my_module', item_id: my_module.id)
+    end
+
+    it 'returns JSON with activities html and next page' do
+      get :activities, params: { id: my_module.id }, format: :json
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body).keys).to include('activities_html', 'next_page')
+    end
+
+    it 'returns forbidden without read permission' do
+      allow(controller).to receive(:can_read_my_module?).and_return(false)
+      get :activities, params: { id: my_module.id }, format: :json
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
+  describe 'GET activities_tab' do
+    it 'returns html with last activities' do
+      # MyModule#last_activities only finds legacy activities linked via my_module_id
+      # (new activities use subject and fail validation with my_module_id set).
+      legacy = Activity.new(type_of: :create_module, owner: user, team: team, project: project,
+                            my_module: my_module, message_items: {})
+      legacy.save!(validate: false)
+      get :activities_tab, params: { id: my_module.id }
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)).to have_key('html')
+      expect(assigns(:activities)).to include(legacy)
+    end
+  end
+
+  describe 'GET due_date' do
+    it 'returns html and title' do
+      get :due_date, params: { id: my_module.id }, format: :json
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body).keys).to include('html', 'title')
+    end
+
+    it 'returns forbidden without manage permission' do
+      allow(controller).to receive(:can_manage_my_module?).and_return(false)
+      get :due_date, params: { id: my_module.id }, format: :json
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
+  describe 'PUT update (extra cases)' do
+    let(:action) { put :update, params: params, format: :json }
+
+    context 'when archiving the task' do
+      let(:params) { { id: my_module.id, my_module: { archived: 'true' } } }
+
+      it 'archives the task' do
+        action
+        expect(response).to have_http_status(:success)
+        expect(my_module.reload.archived?).to eq(true)
+        expect(JSON.parse(response.body)['alerts']).to be_an(Array)
+      end
+
+      it 'returns forbidden without archive permission' do
+        allow(controller).to receive(:can_archive_my_module?).and_return(false)
+        action
+        expect(response).to have_http_status(:forbidden)
+        expect(my_module.reload.archived?).to eq(false)
+      end
+    end
+
+    context 'when output is object' do
+      let(:params) { { id: my_module.id, output: 'object', my_module: { name: 'Renamed task' } } }
+
+      it 'renames the task, logs activity and returns serialized task' do
+        expect { action }.to change { Activity.where(type_of: Activity.type_ofs[:rename_task]).count }.by(1)
+        expect(my_module.reload.name).to eq('Renamed task')
+        expect(JSON.parse(response.body)['data']).to include('id' => my_module.id.to_s)
+      end
+    end
+
+    context 'when name is invalid' do
+      let(:params) { { id: my_module.id, my_module: { name: 'a' * 300 } } }
+
+      it 'returns unprocessable entity' do
+        action
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(JSON.parse(response.body)).to have_key('name')
+      end
+    end
+
+    context 'when user cannot manage the task' do
+      let(:params) { { id: my_module.id, my_module: { name: 'Renamed task' } } }
+
+      it 'returns forbidden' do
+        allow(controller).to receive(:can_manage_my_module?).and_return(false)
+        action
+        expect(response).to have_http_status(:forbidden)
+        expect(my_module.reload.name).not_to eq('Renamed task')
+      end
+    end
+
+    context 'when start date is set' do
+      let(:params) { { id: my_module.id, my_module: { started_on: '2024-03-21 10:00' } } }
+
+      it 'logs set start date activity' do
+        expect { action }.to change { Activity.where(type_of: Activity.type_ofs[:set_task_start_date]).count }.by(1)
+        expect(my_module.reload.started_on.strftime('%Y-%m-%d')).to eq('2024-03-21')
+      end
+    end
+
+    context 'when start date is changed' do
+      let(:params) { { id: my_module.id, my_module: { started_on: '2024-03-22 10:00' } } }
+
+      before { my_module.update_column(:started_on, Time.zone.parse('2024-03-01 10:00')) }
+
+      it 'logs change start date activity' do
+        expect { action }
+          .to change { Activity.where(type_of: Activity.type_ofs[:change_task_start_date]).count }.by(1)
+      end
+    end
+
+    context 'when start date is removed' do
+      let(:params) { { id: my_module.id, my_module: { started_on: '' } } }
+
+      before { my_module.update_column(:started_on, Time.zone.parse('2024-03-01 10:00')) }
+
+      it 'logs remove start date activity' do
+        expect { action }
+          .to change { Activity.where(type_of: Activity.type_ofs[:remove_task_start_date]).count }.by(1)
+        expect(my_module.reload.started_on).to be_nil
+      end
+    end
+
+    context 'when user cannot update start date' do
+      let(:params) { { id: my_module.id, my_module: { started_on: '2024-03-21 10:00' } } }
+
+      it 'returns forbidden' do
+        allow(controller).to receive(:can_update_my_module_start_date?).and_return(false)
+        action
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
+
+  describe 'PATCH update_description (extra cases)' do
+    let(:action) do
+      patch :update_description, params: { id: my_module.id, my_module: { description: 'new' } }, format: :json
+    end
+
+    it 'returns rendered html and updates description' do
+      action
+      expect(JSON.parse(response.body)).to have_key('html')
+      expect(my_module.reload.description).to eq('new')
+    end
+
+    it 'returns unprocessable entity when update fails' do
+      allow_any_instance_of(MyModule).to receive(:update).and_return(false)
+      action
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it 'returns forbidden without description permission' do
+      allow(controller).to receive(:can_update_my_module_description?).and_return(false)
+      action
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
+  describe 'PATCH update_protocol_description (failure)' do
+    it 'returns unprocessable entity when update fails' do
+      allow_any_instance_of(Protocol).to receive(:update).and_return(false)
+      patch :update_protocol_description,
+            params: { id: my_module.id, protocol: { description: 'x' } }, format: :json
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+  end
+
+  describe 'PATCH update_protocol (invalid)' do
+    it 'returns unprocessable entity for too long name' do
+      patch :update_protocol, params: { id: my_module.id, protocol: { name: 'a' * 300 } }, format: :json
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(JSON.parse(response.body)).to have_key('name')
+      expect(my_module.protocol.reload.name).not_to eq('a' * 300)
+    end
+
+    it 'returns forbidden without manage permission' do
+      allow(controller).to receive(:can_manage_my_module?).and_return(false)
+      patch :update_protocol, params: { id: my_module.id, protocol: { name: 'x' } }, format: :json
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
+  describe 'GET protocols' do
+    it 'renders the protocols page with protocol and experiment tasks' do
+      get :protocols, params: { id: my_module.id }
+      expect(response).to have_http_status(:success)
+      expect(assigns(:protocol)).to eq(my_module.protocol)
+      expect(assigns(:experiment_my_modules)).to include(my_module)
+      expect(assigns(:breadcrumbs_items).map { |i| i[:label] }).to include(project.name, experiment.name)
+    end
+
+    context 'when experiment is archived' do
+      before { experiment.update_columns(archived: true, archived_on: Time.zone.now, archived_by_id: user.id) }
+
+      it 'loads all experiment tasks and marks navigator as archived' do
+        get :protocols, params: { id: my_module.id }
+        expect(assigns(:experiment_my_modules)).to include(my_module)
+        expect(assigns(:navigator)[:archived]).to eq(true)
+      end
+    end
+
+    it 'returns forbidden without read permission' do
+      allow(controller).to receive(:can_read_my_module?).and_return(false)
+      get :protocols, params: { id: my_module.id }
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
+  describe 'GET archive' do
+    let!(:archived_result) { create :result, :archived, my_module: my_module, user: user }
+
+    it 'renders archived results' do
+      get :archive, params: { id: my_module.id }
+      expect(response).to have_http_status(:success)
+      expect(assigns(:archived_results)).to include(archived_result)
+    end
+  end
+
+  describe 'POST restore_group (table view)' do
+    let(:archived_task) { create :my_module, :archived, experiment: experiment, created_by: user }
+
+    it 'returns JSON message when tasks are restored' do
+      post :restore_group, params: { id: experiment.id, my_modules_ids: [archived_task.id], view: 'table' }
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)).to have_key('message')
+      expect(archived_task.reload.active?).to eq(true)
+    end
+
+    it 'returns error when no task could be restored' do
+      allow(controller).to receive(:can_restore_my_module?).and_return(false)
+      post :restore_group, params: { id: experiment.id, my_modules_ids: [archived_task.id], view: 'table' }
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(JSON.parse(response.body)).to have_key('error')
+      expect(archived_task.reload.archived?).to eq(true)
+    end
+
+    it 'sets flash error and redirects when nothing restored in canvas view' do
+      allow(controller).to receive(:can_restore_my_module?).and_return(false)
+      post :restore_group, params: { id: experiment.id, my_modules_ids: [archived_task.id] }
+      expect(response).to redirect_to(module_archive_experiment_path(experiment))
+      expect(flash[:error]).to be_present
+    end
+
+    it 'returns forbidden without experiment read permission' do
+      allow(controller).to receive(:can_read_experiment?).and_return(false)
+      post :restore_group, params: { id: experiment.id, my_modules_ids: [archived_task.id], view: 'table' }
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
+  describe 'PUT update_state without status' do
+    it 'returns 404 when task has no status' do
+      my_module.update_column(:my_module_status_id, nil)
+      put :update_state, params: { id: my_module.id, my_module: { status_id: 1 } }, format: :json
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe 'GET permissions' do
+    it 'returns permissions for the task' do
+      get :permissions, params: { id: my_module.id }, format: :json
+      expect(response).to have_http_status(:success)
+      body = JSON.parse(response.body)
+      expect(body.keys).to contain_exactly('editable', 'moveable', 'archivable', 'restorable')
+      expect(body['editable']).to eq(true)
+      expect(body['restorable']).to eq(false)
+    end
+  end
+
+  describe 'POST actions_toolbar without items' do
+    it 'returns empty actions list' do
+      post :actions_toolbar, format: :json
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)['actions']).to eq([])
+    end
+  end
+
+  describe 'GET provisioning_status' do
+    it 'returns provisioning status' do
+      my_module.update_column(:provisioning_status, MyModule.provisioning_statuses[:in_progress])
+      get :provisioning_status, params: { id: my_module.id }, format: :json
+      expect(JSON.parse(response.body)['provisioning_status']).to eq('in_progress')
+    end
+  end
+
+  describe 'GET inventory_assigning_my_module_filter' do
+    it 'returns assignable tasks for the experiment' do
+      get :inventory_assigning_my_module_filter, params: { experiment_id: experiment.id }, format: :json
+      expect(response).to have_http_status(:success)
+      expect(JSON.parse(response.body)).to include([my_module.id, my_module.name])
+    end
+
+    it 'returns 404 for an experiment without assignable tasks' do
+      get :inventory_assigning_my_module_filter, params: { experiment_id: -1 }, format: :json
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe 'POST change_results_state with results' do
+    let!(:result) { create :result, my_module: my_module, user: user }
+
+    it 'stores collapsed state for each result' do
+      post :change_results_state, params: { id: my_module.id, collapsed: true }, format: :json
+      expect(JSON.parse(response.body)['status']).to eq('ok')
+      expect(user.user_settings.find_by(key: 'result_states').value).to include(result.id.to_s => true)
+    end
+
+    it 'stores expanded state when collapsed param missing' do
+      post :change_results_state, params: { id: my_module.id }, format: :json
+      expect(user.user_settings.find_by(key: 'result_states').value).to include(result.id.to_s => false)
+    end
+  end
+
+  describe 'tagging' do
+    let(:team_tag) { create :tag, team: team }
+
+    it 'tags the task and logs activity' do
+      expect do
+        post :tag_resource, params: { id: my_module.id, tag_id: team_tag.id }, format: :json
+      end.to change { Activity.where(type_of: Activity.type_ofs[:add_task_tag]).count }.by(1)
+      expect(JSON.parse(response.body)['tag']).to include('id' => team_tag.id)
+      expect(my_module.tags.reload).to include(team_tag)
+    end
+
+    it 'untags the task and logs activity' do
+      my_module.taggings.create!(tag: team_tag, created_by: user)
+      expect do
+        post :untag_resource, params: { id: my_module.id, tag_id: team_tag.id }, format: :json
+      end.to change { Activity.where(type_of: Activity.type_ofs[:remove_task_tag]).count }.by(1)
+      expect(my_module.tags.reload).not_to include(team_tag)
+    end
+
+    it 'returns forbidden without tag manage permission' do
+      allow(controller).to receive(:can_manage_my_module_tags?).and_return(false)
+      post :tag_resource, params: { id: my_module.id, tag_id: team_tag.id }, format: :json
+      expect(response).to have_http_status(:forbidden)
+      expect(my_module.tags.reload).not_to include(team_tag)
+    end
+  end
 end
