@@ -30,7 +30,7 @@
       <div class="attachments" :data-parent-id="parent.id">
         <component
           v-for="(attachment, index) in attachmentsOrdered"
-          :key="attachment.id"
+          :key="`${attachment.id}-${attachment.attributes.checksum}`"
           :is="attachment_view_mode(attachmentsOrdered[index])"
           :attachment="attachment"
           :parentId="parseInt(parent.id)"
@@ -42,7 +42,6 @@
           @attachment:archive="deleteAttachment(attachment.id)"
           @attachment:moved="attachmentMoved"
           @attachment:uploaded="$emit('attachment:uploaded')"
-          @attachment:changed="$emit('attachment:changed', $event)"
           @attachment:update="$emit('attachment:update', $event)"
         />
       </div>

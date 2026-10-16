@@ -44,6 +44,8 @@ class AssetSyncController < ApplicationController
       log_activity(:edit)
     end
 
+    AssetSyncChannel.broadcast_to(@asset, checksum: @asset.file.checksum)
+
     if asset_conflicts
       ActiveRecord::Base.transaction do
         conflict_response = AssetSyncTokenSerializer.new(@asset_sync_token).as_json
