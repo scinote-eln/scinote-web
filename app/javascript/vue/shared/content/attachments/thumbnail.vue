@@ -49,6 +49,9 @@
         :data-gallery-view-id="parentId"
         :data-preview-url="attachment.attributes.urls.preview"
       >
+        <div v-if="attachment.attributes.file_title" class=" text-sn-black">
+          {{ attachment.attributes.file_title }}
+        </div>
         {{ attachment.attributes.file_name }}<br>
         <div class=" text-sn-grey-700">{{ attachment.attributes.code }}</div>
       </a>
