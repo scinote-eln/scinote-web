@@ -18,7 +18,11 @@
         >
           <span data-toggle="tooltip"
                data-placement="bottom"
+               class="flex gap-2 items-center"
                :title="`${ attachment.attributes.file_name }`">
+            <div v-if="attachment.attributes.file_title" class=" text-sn-black">
+              {{ attachment.attributes.file_title }}
+            </div>
             {{ attachment.attributes.file_name }}
           </span>
         </a>
