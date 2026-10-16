@@ -6,43 +6,26 @@ class MarvinJsAssetsController < ApplicationController
 
   before_action :load_vars, except: :create
   before_action :load_create_vars, only: :create
-
-  before_action :check_read_permission
-  before_action :check_manage_permission, only: %i(update create start_editing)
+  before_action :check_create_permissions, only: :create
+  before_action :check_manage_permissions, except: :create
 
   def create
-    result = MarvinJsService.create_sketch(marvin_params, current_user, current_team)
+    asset = MarvinJsService.create_asset_sketch(@assoc, marvin_params, current_user, current_team)
+    create_create_marvinjs_activity(asset, current_user)
 
-    create_create_marvinjs_activity(result[:asset], current_user)
-
-    if result[:asset]
-      if %w(Step Result ResultTemplate).include?(marvin_params[:object_type])
-        render json: {
-          html: render_to_string(partial: 'assets/asset', locals: {
-                                   asset: result[:asset],
-                                   gallery_view_id: marvin_params[:object_id]
-                                 })
-        }
-      else
-        render json: result[:asset]
-      end
-    else
-      render json: result[:asset]&.errors, status: :unprocessable_entity
-    end
+    render json: {
+      html: render_to_string(partial: 'assets/asset',
+                             locals: { asset: asset, gallery_view_id: marvin_params[:object_id] })
+    }
   end
 
   def update
-    asset = MarvinJsService.update_sketch(marvin_params, current_user, current_team)
-
+    asset = MarvinJsService.update_asset_sketch(@asset, marvin_params, current_user)
     create_edit_marvinjs_activity(asset, current_user, :finish_editing)
 
-    if asset
-      render json: { url: rails_representation_url(asset.medium_preview),
-                     id: asset.id,
-                     file_name: asset.blob.metadata['name'] }
-    else
-      render json: { error: t('marvinjs.no_sketches_found') }, status: :unprocessable_entity
-    end
+    render json: { url: rails_representation_url(asset.medium_preview),
+                   id: asset.id,
+                   file_name: asset.blob.metadata['name'] }
   end
 
   def start_editing
@@ -53,47 +36,23 @@ class MarvinJsAssetsController < ApplicationController
 
   def load_vars
     @asset = current_team.assets.find_by(id: params[:id])
-    return render_404 unless @asset
-
-    @assoc ||= @asset.step
-    @assoc ||= @asset.result
-
-    if @assoc.class == Step
-      @protocol = @assoc.protocol
-    elsif @assoc.class == Result
-      @my_module = @assoc.my_module
-    end
+    render_404 unless @asset
   end
 
   def load_create_vars
-    @assoc = Step.find_by(id: marvin_params[:object_id]) if marvin_params[:object_type] == 'Step'
-    @assoc = Result.find_by(id: params[:object_id]) if marvin_params[:object_type] == 'Result'
-    @assoc = ResultTemplate.find_by(id: marvin_params[:object_id]) if marvin_params[:object_type] == 'ResultTemplate'
-
-    if @assoc.class == Step
-      @protocol = @assoc.protocol
-    elsif @assoc.class == Result
-      @my_module = @assoc.my_module
-    end
-  end
-
-  def check_read_permission
-    render_403 if @asset && !can_read_asset?(@asset)
-
-    case @assoc
-    when Step
-      render_403 unless can_read_protocol_in_module?(@protocol) ||
-                        can_read_protocol_in_repository?(@protocol)
-    when ResultBase
-      render_403 unless can_read_result?(@assoc)
+    case marvin_params[:object_type]
+    when 'Step'
+      @assoc = Step.find_by(id: marvin_params[:object_id])
+    when 'Result'
+      @assoc = Result.find_by(id: marvin_params[:object_id])
+    when 'ResultTemplate'
+      @assoc = ResultTemplate.find_by(id: marvin_params[:object_id])
     else
-      render_403
+      render_404
     end
   end
 
-  def check_manage_permission
-    render_403 if @asset && !can_manage_asset?(@asset)
-
+  def check_create_permissions
     case @assoc
     when Step
       render_403 unless can_manage_step_attachments?(@assoc)
@@ -102,6 +61,10 @@ class MarvinJsAssetsController < ApplicationController
     else
       render_403
     end
+  end
+
+  def check_manage_permissions
+    render_403 unless can_manage_asset?(@asset)
   end
 
   def marvin_params
