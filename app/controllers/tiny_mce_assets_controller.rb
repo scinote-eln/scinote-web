@@ -4,19 +4,18 @@ class TinyMceAssetsController < ApplicationController
   include MarvinJsActions
   include ActiveStorage::SetCurrent
 
-  before_action :load_vars, only: %i(marvinjs_show marvinjs_update download)
+  class UploadError < StandardError; end
 
-  before_action :check_read_permission, only: %i(marvinjs_show marvinjs_update download)
-  before_action :check_edit_permission, only: %i(marvinjs_update)
+  before_action :load_vars, only: %i(marvinjs_show marvinjs_update download)
+  before_action :check_read_permissions, except: %i(create marvinjs_create marvinjs_update)
+  before_action :check_edit_permissions, only: %i(marvinjs_update)
 
   def create
     status = :ok
     response_json = { images: [] }
 
     ActiveRecord::Base.transaction do
-      response_json = { images: [] }
-
-      images_params.each_with_index do |image, _i|
+      images_params.each do |image|
         tiny_mce_asset =
           case image
           when ActionDispatch::Http::UploadedFile
@@ -27,7 +26,7 @@ class TinyMceAssetsController < ApplicationController
 
         response_json[:images] << { url: rails_representation_url(tiny_mce_asset.image), token: Base62.encode(tiny_mce_asset.id) }
       end
-    rescue ActiveRecord::RecordInvalid => e
+    rescue ActiveRecord::RecordInvalid, UploadError => e
       response_json = { errors: e.message }
       status = :unprocessable_entity
 
@@ -46,71 +45,52 @@ class TinyMceAssetsController < ApplicationController
   end
 
   def marvinjs_show
-    asset = current_team.tiny_mce_assets.find_by(id: Base62.decode(params[:id]))
-    return render_404 unless asset
-
-    create_edit_marvinjs_activity(asset, current_user, :start_editing) if params[:show_action] == 'start_edit'
+    create_edit_marvinjs_activity(@asset, current_user, :start_editing) if params[:show_action] == 'start_edit'
 
     render json: {
-      name: asset.image.metadata[:name],
-      description: asset.image.metadata[:description]
+      name: @asset.image.metadata[:name],
+      description: @asset.image.metadata[:description]
     }
   end
 
   def marvinjs_create
-    result = MarvinJsService.create_sketch(marvin_params, current_user, current_team)
-    if result[:asset]
-      render json: {
-        image: {
-          url: rails_representation_url(result[:asset].preview),
-          token: Base62.encode(result[:asset].id),
-          source_type: result[:asset].image.metadata[:asset_type]
-        }
-      }, content_type: 'text/html'
-    else
-      render json: result[:asset].errors, status: :unprocessable_entity
-    end
+    tiny_mce_asset = MarvinJsService.create_tinymce_sketch(marvin_params, current_team)
+
+    render json: {
+      image: {
+        url: rails_representation_url(tiny_mce_asset.preview),
+        token: Base62.encode(tiny_mce_asset.id),
+        source_type: tiny_mce_asset.image.metadata[:asset_type]
+      }
+    }, content_type: 'text/html'
   end
 
   def marvinjs_update
-    asset = MarvinJsService.update_sketch(marvin_params, current_user, current_team)
-    if asset
-      create_edit_marvinjs_activity(asset, current_user, :finish_editing)
-      render json: { url: rails_representation_url(asset.preview), id: asset.id }
-    else
-      render json: { error: t('marvinjs.no_sketches_found') }, status: :unprocessable_entity
-    end
+    tiny_mce_asset = MarvinJsService.update_tinymce_sketch(@asset, marvin_params)
+    create_edit_marvinjs_activity(tiny_mce_asset, current_user, :finish_editing)
+
+    render json: { url: rails_representation_url(tiny_mce_asset.preview), id: tiny_mce_asset.id }
   end
 
   private
 
   def create_from_file(file)
-    response_json = {}
-
     unless file.content_type.match?(%r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}})
-      response_json = { errors: I18n.t('tiny_mce.unsupported_image_format') }
+      raise UploadError, I18n.t('tiny_mce.unsupported_image_format')
     end
 
     if file.size > Rails.configuration.x.file_max_size_mb.megabytes
-      response_json = { errors: t('general.file.size_exceeded', file_size: Rails.configuration.x.file_max_size_mb) }
+      raise UploadError, I18n.t('general.file.size_exceeded', file_size: Rails.configuration.x.file_max_size_mb)
     end
 
-    raise ActiveRecord::Rollback if response_json[:errors]
-
-    tiny_mce_asset = TinyMceAsset.new(team_id: current_team.id, saved: false)
-
-    tiny_mce_asset.save!
+    tiny_mce_asset = TinyMceAsset.create!(team_id: current_team.id, saved: false)
     tiny_mce_asset.image.attach(io: file, filename: file.original_filename)
-
     tiny_mce_asset
   end
 
   def create_from_blob(blob)
-    tiny_mce_asset = TinyMceAsset.new(team_id: current_team.id, saved: false)
-
-    tiny_mce_asset.save!
+    tiny_mce_asset = TinyMceAsset.create!(team_id: current_team.id, saved: false)
     tiny_mce_asset.image.attach(blob)
-
     tiny_mce_asset
   end
 
@@ -131,7 +111,7 @@ class TinyMceAssetsController < ApplicationController
     end
   end
 
-  def check_read_permission
+  def check_read_permissions
     if @assoc.class == StepText || @assoc.class == Protocol
       return render_403 unless can_read_protocol_in_module?(@protocol) ||
                                can_read_protocol_in_repository?(@protocol)
@@ -144,7 +124,7 @@ class TinyMceAssetsController < ApplicationController
     end
   end
 
-  def check_edit_permission
+  def check_edit_permissions
     if @assoc.nil?
       if current_team == @asset.team
         return
@@ -154,11 +134,13 @@ class TinyMceAssetsController < ApplicationController
     end
     case @assoc
     when StepText
-      return render_403 unless can_manage_step?(@assoc.step)
+      return render_403 unless can_manage_step_text?(@assoc)
     when Protocol
       return render_403 unless can_manage_protocol_in_module?(@protocol) ||
                                can_manage_protocol_draft_in_repository?(@protocol)
-    when ResultText, MyModule
+    when ResultText
+      return render_403 unless can_manage_result_text?(@assoc)
+    when MyModule
       return render_403 unless can_manage_my_module?(@my_module)
     else
       render_403
