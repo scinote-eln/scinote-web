@@ -10,68 +10,45 @@ class MarvinJsService
       !ENV['MARVINJS_URL'].nil? || !ENV['MARVINJS_API_KEY'].nil?
     end
 
-    def create_sketch(params, current_user, current_team)
-      file = generate_image(params)
-      if params[:object_type] == 'TinyMceAsset'
-        asset = TinyMceAsset.new(team_id: current_team.id)
-        attach_file(asset.image, file, params)
-        asset.save!
-        return { asset: asset }
-      end
-
-      asset = Asset.new(created_by: current_user,
-                          last_modified_by: current_user,
-                          team_id: current_team.id)
-      attach_file_version(asset, file, params)
-      asset.save!
+    def create_asset_sketch(object, params, current_user, current_team)
+      file = generate_image(params[:image])
+      asset = Asset.create!(created_by: current_user, last_modified_by: current_user, team_id: current_team.id)
+      asset_attach_file_version(asset, file, params)
       asset.post_process_file
-      connect_asset(asset, params, current_user)
+      asset.update!(view_mode: object.assets_view_mode)
+      object.assets << asset
+      asset
     end
 
-    def update_sketch(params, current_user, current_team)
-      if params[:object_type] == 'TinyMceAsset'
-        asset = current_team.tiny_mce_assets.find(Base62.decode(params[:id]))
-        attachment = asset&.image
-      else
-        asset = current_team.assets.find(params[:id])
-        attachment = asset&.file
-      end
-      return unless attachment
+    def create_tinymce_sketch(params, current_team)
+      file = generate_image(params[:image])
+      tiny_mce_asset = TinyMceAsset.create!(team_id: current_team.id)
+      tinymce_attach_file(tiny_mce_asset, file, params)
+      tiny_mce_asset
+    end
 
-      file = generate_image(params)
-      asset.update(last_modified_by: current_user) if asset.is_a?(Asset)
-
-      if params[:object_type] == 'TinyMceAsset'
-        attach_file(attachment, file, params)
-      else
-        attach_file_version(asset, file, params)
-      end
-
-      asset.post_process_file if asset.instance_of?(Asset)
+    def update_asset_sketch(asset, params, current_user)
+      file = generate_image(params[:image])
+      asset_attach_file_version(asset, file, params)
+      asset.update!(last_modified_by: current_user)
+      asset.post_process_file
       asset
+    end
+
+    def update_tinymce_sketch(tiny_mce_asset, params)
+      file = generate_image(params[:image])
+      tinymce_attach_file(tiny_mce_asset, file, params)
+      tiny_mce_asset
     end
 
     private
 
-    def connect_asset(asset, params, current_user)
-      object = case params[:object_type]
-               when 'Step'
-                 Step.find(params[:object_id])
-               when 'Result', 'ResultTemplate'
-                 ResultBase.find(params[:object_id])
-               end
-      asset.update!(view_mode: object.assets_view_mode)
-      object.assets << asset
-
-      { asset: asset, object: object }
+    def generate_image(image)
+      StringIO.new(Base64.decode64(image.split(',')[1]))
     end
 
-    def generate_image(params)
-      StringIO.new(Base64.decode64(params[:image].split(',')[1]))
-    end
-
-    def attach_file(asset, file, params)
-      asset.attach(
+    def tinymce_attach_file(tiny_mce_asset, file, params)
+      tiny_mce_asset.image.attach(
         io: file,
         filename: "#{prepare_name(params[:name])}.jpg",
         content_type: 'image/jpeg',
@@ -83,7 +60,7 @@ class MarvinJsService
       )
     end
 
-    def attach_file_version(asset, file, params)
+    def asset_attach_file_version(asset, file, params)
       asset.attach_file_version(
         io: file,
         filename: "#{prepare_name(params[:name])}.jpg",
