@@ -67,7 +67,9 @@ describe RepositoryDatatable::RepositoryAssetValueSerializer do
   end
 
   it 'escapes html in the file name' do
-    attach_file(asset, 'Q&A <draft>.jpg')
+    attach_file(asset, 'draft.jpg')
+    # ActiveStorage sanitizes characters like < and > out of stored filenames in newer Rails versions
+    allow(asset).to receive(:file_name).and_return('Q&A <draft>.jpg')
 
     expect(value_for[:file_name]).to eq 'Q&amp;A &lt;draft&gt;.jpg'
   end

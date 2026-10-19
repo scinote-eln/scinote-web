@@ -484,10 +484,10 @@ RSpec.describe Lists::RepositoryRowsService, 'filters, sorting and extra fields'
           create :repository_column, :stock_type, repository: repository, created_by: user, name: 'Stock'
         end
 
-        it 'selects consumed stock for the task and reminders flag' do
+        it 'selects consumed stock for the task and the reminders count' do
           record = call_service({}, { my_module: my_module }).first
           expect(record.consumed_stock).to eq 3
-          expect(record.has_active_reminders).to be false
+          expect(record.active_reminders_count).to eq 0
         end
 
         it 'sorts by stock column' do
@@ -496,7 +496,7 @@ RSpec.describe Lists::RepositoryRowsService, 'filters, sorting and extra fields'
 
         it 'does not look up reminders for archived repositories' do
           repository.update_columns(archived: true, archived_on: Time.zone.now, archived_by_id: user.id)
-          expect(call_service.map(&:has_active_reminders)).to all(be false)
+          expect(call_service.map(&:active_reminders_count)).to all(eq(0))
         end
       end
     end
@@ -691,7 +691,7 @@ RSpec.describe Lists::RepositoryRowsService, 'filters, sorting and extra fields'
       records = call_service({}, { my_module: my_module }, snapshot)
 
       expect(records.map(&:id)).to eq [snapshot_row.id]
-      expect(records.first.has_active_reminders).to be false
+      expect(records.first.active_reminders_count).to eq 0
     end
   end
 end

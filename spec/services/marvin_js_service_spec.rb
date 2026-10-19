@@ -49,16 +49,12 @@ describe MarvinJsService do
     end
   end
 
-  describe '.create_sketch' do
-    let(:params) do
-      ActionController::Parameters.new(
-        image: image, name: 'Benzene', description: 'Ring', object_id: step.id, object_type: 'Step'
-      )
-    end
+  describe '.create_asset_sketch' do
+    let(:params) { ActionController::Parameters.new(image: image, name: 'Benzene', description: 'Ring') }
 
     it 'creates a marvinjs asset attached to a step' do
-      expect { described_class.create_sketch(params, user, team) }.to change(Asset, :count).by(1)
-      asset = Asset.order(:id).last
+      asset = nil
+      expect { asset = described_class.create_asset_sketch(step, params, user, team) }.to change(Asset, :count).by(1)
 
       expect(asset.team).to eq team
       expect(asset.created_by).to eq user
@@ -69,57 +65,45 @@ describe MarvinJsService do
       expect(asset.view_mode).to eq step.assets_view_mode
     end
 
-    it 'returns the asset and the object' do
-      res = described_class.create_sketch(params, user, team)
-
-      expect(res[:asset]).to be_a Asset
-      expect(res[:object]).to eq step
-    end
-
     it 'uses the default sketch name when none is given' do
       params[:name] = ''
-      res = described_class.create_sketch(params, user, team)
+      asset = described_class.create_asset_sketch(step, params, user, team)
 
-      expect(res[:asset].file.filename.to_s).to eq "#{I18n.t('marvinjs.new_sketch')}.jpg"
-      expect(res[:asset].file.metadata['name']).to eq I18n.t('marvinjs.new_sketch')
+      expect(asset.file.filename.to_s).to eq "#{I18n.t('marvinjs.new_sketch')}.jpg"
+      expect(asset.file.metadata['name']).to eq I18n.t('marvinjs.new_sketch')
     end
 
     it 'attaches the asset to a result' do
-      params[:object_type] = 'Result'
-      params[:object_id] = result.id
-      res = described_class.create_sketch(params, user, team)
+      asset = described_class.create_asset_sketch(result, params, user, team)
 
-      expect(res[:object]).to eq result
-      expect(result.reload.assets).to include(res[:asset])
-    end
-
-    it 'creates a tiny mce asset for object type TinyMceAsset' do
-      params[:object_type] = 'TinyMceAsset'
-      assets_before = Asset.count
-      res = nil
-      expect { res = described_class.create_sketch(params, user, team) }.to change(TinyMceAsset, :count).by(1)
-      expect(Asset.count).to eq assets_before
-
-      asset = res[:asset]
-      expect(asset.team).to eq team
-      expect(asset.image).to be_attached
-      expect(asset.image.metadata).to include('name' => 'Benzene', 'asset_type' => 'marvinjs')
+      expect(result.reload.assets).to include(asset)
     end
   end
 
-  describe '.update_sketch' do
-    let(:create_params) do
-      ActionController::Parameters.new(image: image, name: 'Old', description: 'old', object_id: step.id,
-                                       object_type: 'Step')
+  describe '.create_tinymce_sketch' do
+    let(:params) { ActionController::Parameters.new(image: image, name: 'Benzene', description: 'Ring') }
+
+    it 'creates a tiny mce asset and no regular asset' do
+      assets_before = Asset.count
+      asset = nil
+      expect { asset = described_class.create_tinymce_sketch(params, team) }.to change(TinyMceAsset, :count).by(1)
+      expect(Asset.count).to eq assets_before
+
+      expect(asset.team).to eq team
+      expect(asset.image).to be_attached
+      expect(asset.image.filename.to_s).to eq 'Benzene.jpg'
+      expect(asset.image.metadata).to include('name' => 'Benzene', 'description' => 'Ring', 'asset_type' => 'marvinjs')
     end
-    let(:update_params) do
-      ActionController::Parameters.new(image: image, name: 'New', description: 'new', id: asset.id)
-    end
-    let(:asset) { described_class.create_sketch(create_params, user, team)[:asset] }
+  end
+
+  describe '.update_asset_sketch' do
+    let(:create_params) { ActionController::Parameters.new(image: image, name: 'Old', description: 'old') }
+    let(:update_params) { ActionController::Parameters.new(image: image, name: 'New', description: 'new') }
+    let(:asset) { described_class.create_asset_sketch(step, create_params, user, team) }
 
     it 'adds a new file version with the new metadata and updates the editor' do
       other_user = create :user
-      expect { described_class.update_sketch(update_params, other_user, team) }
+      expect { described_class.update_asset_sketch(asset, update_params, other_user) }
         .to(change { asset.reload.file.blob.id })
 
       asset.reload
@@ -129,36 +113,21 @@ describe MarvinJsService do
     end
 
     it 'returns the asset' do
-      expect(described_class.update_sketch(update_params, user, team)).to eq asset
+      expect(described_class.update_asset_sketch(asset, update_params, user)).to eq asset
     end
+  end
 
-    it 'raises not found for an asset of another team' do
-      update_params[:id] = asset.id
-      expect { described_class.update_sketch(update_params, user, create(:team)) }
-        .to raise_error(ActiveRecord::RecordNotFound)
-    end
+  describe '.update_tinymce_sketch' do
+    let(:create_params) { ActionController::Parameters.new(image: image, name: 'Old', description: 'old') }
+    let(:tiny_asset) { described_class.create_tinymce_sketch(create_params, team) }
+    let(:tiny_params) { ActionController::Parameters.new(image: image, name: 'Renamed', description: 'd') }
 
-    context 'with a tiny mce asset' do
-      let!(:tiny_asset) do
-        described_class.create_sketch(create_params.merge(object_type: 'TinyMceAsset'), user, team)[:asset]
-      end
-      let(:tiny_params) do
-        ActionController::Parameters.new(image: image, name: 'Renamed', description: 'd',
-                                         id: Base62.encode(tiny_asset.id), object_type: 'TinyMceAsset')
-      end
+    it 'replaces the image and returns the tiny mce asset' do
+      res = described_class.update_tinymce_sketch(tiny_asset, tiny_params)
 
-      it 'replaces the image and returns the tiny mce asset' do
-        res = described_class.update_sketch(tiny_params, user, team)
-
-        expect(res).to eq tiny_asset
-        expect(res.reload.image.filename.to_s).to eq 'Renamed.jpg'
-        expect(res.image.metadata).to include('name' => 'Renamed', 'asset_type' => 'marvinjs')
-      end
-
-      it 'raises not found for an unknown token' do
-        tiny_params[:id] = Base62.encode(TinyMceAsset.maximum(:id) + 1000)
-        expect { described_class.update_sketch(tiny_params, user, team) }.to raise_error(ActiveRecord::RecordNotFound)
-      end
+      expect(res).to eq tiny_asset
+      expect(res.reload.image.filename.to_s).to eq 'Renamed.jpg'
+      expect(res.image.metadata).to include('name' => 'Renamed', 'asset_type' => 'marvinjs')
     end
   end
 end

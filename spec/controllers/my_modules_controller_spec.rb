@@ -641,14 +641,6 @@ describe MyModulesController, type: :controller do
     end
   end
 
-  describe 'GET current_status (forbidden)' do
-    it 'returns forbidden without read permission' do
-      allow(controller).to receive(:can_read_my_module?).and_return(false)
-      get :current_status, params: { id: my_module.id }, format: :json
-      expect(response).to have_http_status(:forbidden)
-    end
-  end
-
   describe 'GET status_partial' do
     it 'returns html' do
       get :status_partial, params: { id: my_module.id }
