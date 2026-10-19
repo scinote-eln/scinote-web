@@ -366,7 +366,8 @@ CREATE TABLE public.assets (
     restored_on timestamp(6) without time zone,
     archived_by_id bigint,
     restored_by_id bigint,
-    locked boolean DEFAULT false NOT NULL
+    locked boolean DEFAULT false NOT NULL,
+    file_title character varying
 );
 
 
@@ -11010,6 +11011,7 @@ ALTER TABLE ONLY public.projects
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261016090734'),
 ('20261007123511'),
 ('20260907114439'),
 ('20260828093032'),
@@ -11358,3 +11360,4 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20150713071921'),
 ('20150713063224'),
 ('20150713060702');
+

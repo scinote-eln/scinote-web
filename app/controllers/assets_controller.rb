@@ -17,8 +17,8 @@ class AssetsController < ApplicationController
   helper_method :wopi_file_edit_button_status
 
   before_action :load_vars, except: :create_wopi_file
-  before_action :check_read_permission, except: %i(edit destroy update_image duplicate create_wopi_file toggle_view_mode archive restore lock unlock)
-  before_action :check_manage_permission, only: %i(edit duplicate update_image rename toggle_view_mode archive)
+  before_action :check_read_permission, except: %i(edit destroy update_image duplicate create_wopi_file toggle_view_mode archive restore lock unlock update_title)
+  before_action :check_manage_permission, only: %i(edit duplicate update_image rename toggle_view_mode archive update_title)
   before_action :check_restore_permission, only: :restore
   before_action :check_destroy_permission, only: :destroy
   before_action :check_restore_version_permission, only: :restore_version
@@ -227,6 +227,16 @@ class AssetsController < ApplicationController
 
   def create_start_edit_image_activity
     create_edit_image_activity(@asset, current_user, :start_editing)
+  end
+
+  def update_title
+    @asset.file_title = params.require(:asset).permit(:file_title)[:file_title]
+    @asset.last_modified_by = current_user
+    if @asset.save
+      render json: @asset, serializer: AssetSerializer, user: current_user
+    else
+      render json: @asset.errors, status: :unprocessable_entity
+    end
   end
 
   def update_image
