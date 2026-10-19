@@ -2589,6 +2589,7 @@ en:
       your_team: "your Workspace"
       show_active_items: "Show active items"
       show_archived_items: "Show archived items"
+      no_active_repository_rows_archived_repository: "This inventory is archived and can't have active items."
       archived_view_label:
         active: "These are individually archived items from the %{repository_name} inventory. The inventory itself is active."
         archived_on: "Inventory archived on"

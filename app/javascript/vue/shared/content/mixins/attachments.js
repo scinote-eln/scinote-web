@@ -1,5 +1,4 @@
 /* global ActiveStorage GLOBAL_CONSTANTS Promise I18n */
-import axios from '../../../../packs/custom_axios.js';
 
 import { markRaw } from 'vue';
 import axios from '../../../../packs/custom_axios.js';
