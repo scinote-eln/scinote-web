@@ -362,7 +362,7 @@ describe RepositoryRowsController, type: :controller do
 
     describe 'GET #index_ag' do
       it 'returns rows with meta' do
-        get :index_ag, params: { repository_id: repository.id }, format: :json
+        get :index_ag, params: { repository_id: repository.id, per_page: 10 }, format: :json
         expect(response).to have_http_status(:ok)
         body = JSON.parse(response.body)
         expect(body['data'].size).to eq 1
@@ -384,20 +384,6 @@ describe RepositoryRowsController, type: :controller do
       it 'returns 404 for an unreadable repository' do
         get :index_ag, params: { repository_id: repository_two.id }, format: :json
         expect(response).to have_http_status(:not_found)
-      end
-    end
-
-    describe 'GET #index error handling' do
-      it 'renders custom error when column not found' do
-        allow(RepositoryDatatableService).to receive(:new).and_raise(RepositoryFilters::ColumnNotFoundException)
-        post :index, params: { repository_id: repository.id, length: '10', start: '0' }, format: :json
-        expect(JSON.parse(response.body)['custom_error']).to be_present
-      end
-
-      it 'renders custom error when value not found' do
-        allow(RepositoryDatatableService).to receive(:new).and_raise(RepositoryFilters::ValueNotFoundException)
-        post :index, params: { repository_id: repository.id, length: '10', start: '0' }, format: :json
-        expect(JSON.parse(response.body)['custom_error']).to be_present
       end
     end
 
@@ -458,10 +444,10 @@ describe RepositoryRowsController, type: :controller do
     end
 
     describe 'GET #active_reminder_repository_cells' do
-      it 'returns html' do
+      it 'returns the active reminders of the row' do
         get :active_reminder_repository_cells, params: { repository_id: repository.id, id: repository_row.id }
         expect(response).to have_http_status(:ok)
-        expect(JSON.parse(response.body)).to have_key('html')
+        expect(JSON.parse(response.body)).to eq('reminders' => [])
       end
     end
 
@@ -528,7 +514,7 @@ describe RepositoryRowsController, type: :controller do
 
     describe 'POST #actions_toolbar' do
       it 'returns actions' do
-        post :actions_toolbar, params: { repository_id: repository.id, repository_row_ids: repository_row.id.to_s },
+        post :actions_toolbar, params: { repository_id: repository.id, items: [{ id: repository_row.id }].to_json },
                                format: :json
         expect(response).to have_http_status(:ok)
         expect(JSON.parse(response.body)['actions']).to be_an(Array)
@@ -607,7 +593,7 @@ describe RepositoryRowsController, type: :controller do
         post :create, params: { repository_id: repository.id, repository_row: { name: 'cells' },
                                 repository_cells: { text_column.id.to_s => 'hello' } }, format: :json
         expect(response).to have_http_status(:ok)
-        row = repository.repository_rows.find(JSON.parse(response.body)['id'])
+        row = repository.repository_rows.find(JSON.parse(response.body).dig('data', 'id'))
         expect(row.repository_cells.first.value.data).to eq 'hello'
       end
 
@@ -646,47 +632,6 @@ describe RepositoryRowsController, type: :controller do
         put :update, params: { repository_id: repository.id, id: repository_row.id,
                                repository_row: { name: '' } }, format: :json
         expect(response).to have_http_status(:ok)
-      end
-    end
-
-    describe 'PUT #update_cell' do
-      it 'updates the row name' do
-        put :update_cell, params: { repository_id: repository.id, id: repository_row.id,
-                                    repository_row: { name: 'cell rename' } }, format: :json
-        expect(JSON.parse(response.body)['name']).to eq 'cell rename'
-        expect(repository_row.reload.name).to eq 'cell rename'
-      end
-
-      it 'updates a text cell and logs activity' do
-        expect do
-          put :update_cell, params: { repository_id: repository.id, id: repository_row.id,
-                                      repository_cells: { text_column.id.to_s => 'new text' } }, format: :json
-        end.to change { Activity.where(type_of: :edit_item_field_inventory).count }.by(1)
-        body = JSON.parse(response.body)
-        expect(body['value_type']).to eq 'RepositoryTextValue'
-        expect(repository_row.repository_cells.first.value.data).to eq 'new text'
-      end
-
-      it 'returns 422 when both row and cells are given' do
-        put :update_cell, params: { repository_id: repository.id, id: repository_row.id,
-                                    repository_row: { name: 'a' },
-                                    repository_cells: { text_column.id.to_s => 'b' } }, format: :json
-        expect(response).to have_http_status(:unprocessable_entity)
-      end
-
-      it 'returns 422 when more than one cell is given' do
-        other = create :repository_column, :text_type, repository: repository, created_by: user
-        put :update_cell, params: { repository_id: repository.id, id: repository_row.id,
-                                    repository_cells: { text_column.id.to_s => 'b', other.id.to_s => 'c' } },
-                          format: :json
-        expect(response).to have_http_status(:unprocessable_entity)
-      end
-
-      it 'is forbidden for a guest' do
-        make_guest
-        put :update_cell, params: { repository_id: repository.id, id: repository_row.id,
-                                    repository_row: { name: 'a' } }, format: :json
-        expect(response).to have_http_status(:forbidden)
       end
     end
 

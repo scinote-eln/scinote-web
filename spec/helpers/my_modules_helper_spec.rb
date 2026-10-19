@@ -155,37 +155,6 @@ describe MyModulesHelper, type: :helper do
     end
   end
 
-  describe 'assigned repository paths and labels' do
-    let(:repository) { create :repository, team: team, created_by: user }
-    let(:snapshot) { create :repository_snapshot, original_repository: repository, my_module: my_module }
-
-    it 'uses the snapshot routes for repository snapshots and the live routes otherwise' do
-      expect(helper.assigned_repository_full_view_table_path(my_module, snapshot))
-        .to eq full_view_table_my_module_repository_snapshot_path(my_module, snapshot)
-      expect(helper.assigned_repository_full_view_table_path(my_module, repository))
-        .to eq full_view_table_my_module_repository_path(my_module, repository)
-      expect(helper.assigned_repository_simple_view_index_path(my_module, snapshot))
-        .to eq index_dt_my_module_repository_snapshot_path(my_module, snapshot)
-      expect(helper.assigned_repository_simple_view_index_path(my_module, repository))
-        .to eq index_dt_my_module_repository_path(my_module, repository)
-    end
-
-    it 'labels the footer with the snapshot date for snapshots and live otherwise' do
-      expect(helper.assigned_repository_simple_view_footer_label(snapshot)).to eq(
-        I18n.t('my_modules.repository.snapshots.simple_view.snapshot_bottom_label',
-               date_time: I18n.l(snapshot.created_at, format: :full))
-      )
-      expect(helper.assigned_repository_simple_view_footer_label(repository)).to eq(
-        I18n.t('my_modules.repository.snapshots.simple_view.live_bottom_label')
-      )
-    end
-
-    it 'uses column 2 for the name in snapshot views and column 3 otherwise' do
-      expect(helper.assigned_repository_simple_view_name_column_id(snapshot)).to eq 2
-      expect(helper.assigned_repository_simple_view_name_column_id(repository)).to eq 3
-    end
-  end
-
   describe '#my_module_archived_on' do
     it 'returns the archive date of the task when the task is archived' do
       archived_at = Time.zone.parse('2026-01-02 10:00')

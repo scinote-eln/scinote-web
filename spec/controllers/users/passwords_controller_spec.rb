@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 describe Users::PasswordsController, type: :controller do
+  include_context 'without compiled assets'
   render_views
 
   let(:user) { create :user, confirmed_at: Time.zone.now }

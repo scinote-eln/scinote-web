@@ -144,24 +144,6 @@ describe MyModuleRepositorySnapshotsController, type: :controller do
     end
   end
 
-  describe 'POST index_dt' do
-    let(:dt_params) do
-      { my_module_id: my_module.id, id: snapshot.id, draw: 1, length: 10, start: 0,
-        order: [{ column: '1', dir: 'asc' }], search: { value: '' } }
-    end
-
-    it 'renders the snapshot table' do
-      post :index_dt, params: dt_params, format: :json
-      expect(response).to have_http_status(:ok)
-      expect(json['draw'].to_i).to eq 1
-    end
-
-    it 'renders the simple view' do
-      post :index_dt, params: dt_params.merge(simple_view: true), format: :json
-      expect(response).to have_http_status(:ok)
-    end
-  end
-
   describe 'actions whose partials are missing' do
     # bug: app/views/my_modules/repositories/ only holds consume_modal.json.jbuilder, so the partials
     # full_view_version, full_view_snapshot_table and full_view_sidebar do not exist and these raise

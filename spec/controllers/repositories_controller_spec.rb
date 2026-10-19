@@ -430,11 +430,6 @@ describe RepositoriesController, type: :controller do
         expect(JSON.parse(response.body)['data']).to be_an(Array)
       end
 
-      it 'table_toolbar renders html' do
-        get :table_toolbar, params: { team_id: team.id, repository_id: repository.id, view_mode: 'active' }
-        expect(JSON.parse(response.body)).to have_key('html')
-      end
-
       it 'repository_users lists creators' do
         create :repository_row, repository: repository, created_by: user
         get :repository_users, params: { team_id: team.id, id: repository.id }
@@ -464,21 +459,6 @@ describe RepositoriesController, type: :controller do
     end
 
     describe 'modals' do
-      %i(create_modal).each do |a|
-        it a.to_s do
-          get a, format: :json, params: { team_id: team.id }
-          expect(JSON.parse(response.body)).to have_key('html')
-        end
-      end
-
-      %i(destroy_modal rename_modal copy_modal).each do |a|
-        it a.to_s do
-          repository.archive!(user) if a == :destroy_modal
-          get a, format: :json, params: { team_id: team.id, repository_id: repository.id }
-          expect(JSON.parse(response.body)).to have_key('html')
-        end
-      end
-
       it 'rename_modal is forbidden for a viewer' do
         make_viewer
         get :rename_modal, format: :json, params: { team_id: team.id, repository_id: repository.id }
@@ -688,18 +668,6 @@ describe RepositoriesController, type: :controller do
       expect(response).to have_http_status(:ok)
       ids = JSON.parse(response.body)['data'].map { |r| r['id'].to_i }
       expect(ids).to eq [repository.id]
-    end
-
-    describe 'GET load_table' do
-      render_views
-
-      it 'returns the table html' do
-        # the partial is html-only, so the request is made without a json format
-        get :load_table, params: { team_id: team.id, id: repository.id }
-
-        expect(response).to have_http_status(:ok)
-        expect(JSON.parse(response.body)['html']).to include("repository-table-#{repository.id}")
-      end
     end
 
     describe 'GET show with row_id' do

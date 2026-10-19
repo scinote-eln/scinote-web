@@ -417,6 +417,7 @@ describe ReportsController, type: :controller do
     end
 
     describe 'GET new repositories' do
+      include_context 'without compiled assets'
       render_views
 
       it 'lists live repositories and one snapshot per deleted repository, sorted by name' do

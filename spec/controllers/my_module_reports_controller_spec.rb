@@ -294,6 +294,7 @@ describe MyModuleReportsController, type: :controller do
   end
 
   describe 'GET preview' do
+    include_context 'without compiled assets'
     render_views
 
     let!(:analytical_report) { create_report(name: 'Preview me') }

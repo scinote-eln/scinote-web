@@ -133,6 +133,7 @@ RSpec.describe Users::SessionsController, type: :controller do
   end
 
   describe 'GET #new' do
+    include_context 'without compiled assets'
     before { @request.env['devise.mapping'] = Devise.mappings[:user] }
 
     render_views
@@ -213,6 +214,7 @@ RSpec.describe Users::SessionsController, type: :controller do
   end
 
   describe 'GET #two_factor_recovery' do
+    include_context 'without compiled assets'
     before { @request.env['devise.mapping'] = Devise.mappings[:user] }
 
     render_views
@@ -234,6 +236,7 @@ RSpec.describe Users::SessionsController, type: :controller do
   end
 
   describe 'GET #two_factor_auth' do
+    include_context 'without compiled assets'
     before { @request.env['devise.mapping'] = Devise.mappings[:user] }
 
     render_views

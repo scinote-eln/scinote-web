@@ -18,9 +18,8 @@ describe MarvinJsAssetsController, type: :controller do
   end
 
   def create_sketch_for(object, name: 'Benzene')
-    params = ActionController::Parameters.new(image: image, name: name, description: 'Ring',
-                                              object_id: object.id, object_type: object.class.name)
-    MarvinJsService.create_sketch(params, user, team)[:asset]
+    params = ActionController::Parameters.new(image: image, name: name, description: 'Ring')
+    MarvinJsService.create_asset_sketch(object, params, user, team)
   end
 
   def downgrade_to_viewer!
@@ -63,11 +62,11 @@ describe MarvinJsAssetsController, type: :controller do
       post :create, params: params.merge(object_id: result.id, object_type: 'Result')
     end
 
-    it 'is forbidden for an unknown object type' do
+    it 'returns 404 for an unknown object type' do
       expect { post :create, params: params.merge(object_type: 'Other') }
         .not_to change(Asset, :count)
 
-      expect(response).to have_http_status(:forbidden)
+      expect(response).to have_http_status(:not_found)
     end
 
     it 'is forbidden for an unknown step' do
@@ -135,8 +134,6 @@ describe MarvinJsAssetsController, type: :controller do
     end
 
     it 'is forbidden for a viewer' do
-      pending 'bug: render_403 is called twice, raising DoubleRenderError instead of returning 403'
-
       downgrade_to_viewer!
       put :update, params: params, format: :json
 
@@ -145,8 +142,6 @@ describe MarvinJsAssetsController, type: :controller do
     end
 
     it 'is forbidden for an asset not attached to anything' do
-      pending 'bug: render_403 is called twice, raising DoubleRenderError instead of returning 403'
-
       orphan = create :asset, team: team
 
       put :update, params: params.merge(id: orphan.id), format: :json
@@ -182,8 +177,6 @@ describe MarvinJsAssetsController, type: :controller do
     end
 
     it 'is forbidden for a viewer' do
-      pending 'bug: render_403 is called twice, raising DoubleRenderError instead of returning 403'
-
       downgrade_to_viewer!
       expect(Activities::CreateActivityService).not_to receive(:call)
 

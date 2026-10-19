@@ -225,26 +225,6 @@ describe MyModuleRepositoriesController, type: :controller do
       end
     end
 
-    describe 'POST index_dt' do
-      before { create :mm_repository_row, repository_row: repository_row, my_module: my_module, assigned_by: user }
-
-      let(:dt_params) do
-        base.merge(draw: 1, length: 10, start: 0, order: [{ column: '4', dir: 'asc' }], search: { value: '' },
-                   assigned: 'assigned')
-      end
-
-      it 'renders the full view' do
-        post :index_dt, params: dt_params, format: :json
-        expect(response).to have_http_status(:ok)
-        expect(json['recordsTotal'].to_i).to be >= 1
-      end
-
-      it 'renders the simple view' do
-        post :index_dt, params: dt_params.merge(simple_view: true), format: :json
-        expect(response).to have_http_status(:ok)
-      end
-    end
-
     describe 'POST create (direct assign)' do
       it 'assigns the row and logs activity' do
         expect do

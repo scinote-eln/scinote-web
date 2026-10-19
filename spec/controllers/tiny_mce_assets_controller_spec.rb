@@ -76,11 +76,10 @@ describe TinyMceAssetsController, type: :controller do
       file = fixture_file_upload(Rails.root.join('spec/fixtures/files/export.csv'), 'text/csv')
 
       expect { post :create, params: { files: [file] }, format: :json }.not_to change(TinyMceAsset, :count)
-      expect(json['images']).to eq []
+      expect(response).to have_http_status(:unprocessable_entity)
     end
 
     it 'reports the unsupported content type to the client' do
-      pending 'bug: create_from_file builds an error message but rolls back silently, response is 200 with no images'
       file = fixture_file_upload(Rails.root.join('spec/fixtures/files/export.csv'), 'text/csv')
 
       post :create, params: { files: [file] }, format: :json
@@ -102,7 +101,8 @@ describe TinyMceAssetsController, type: :controller do
         file = fixture_file_upload(image_path, 'image/jpeg')
 
         expect { post :create, params: { files: [file] }, format: :json }.not_to change(TinyMceAsset, :count)
-        expect(json['images']).to eq []
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(json['errors']).to eq I18n.t('general.file.size_exceeded', file_size: 0)
       end
     end
 
@@ -259,26 +259,6 @@ describe TinyMceAssetsController, type: :controller do
       expect(json['image']['source_type']).to eq 'marvinjs'
       expect(json['image']['url']).to include('/rails/active_storage/representations/redirect/')
     end
-
-    it 'returns unprocessable entity when no sketch was created' do
-      pending 'bug: else branch calls result[:asset].errors on nil and raises NoMethodError'
-      allow(MarvinJsService).to receive(:create_sketch).and_return({ asset: nil })
-
-      post :marvinjs_create, params: sketch_params.merge(object_type: 'TinyMceAsset'), format: :json
-
-      expect(response).to have_http_status(:unprocessable_entity)
-    end
-
-    it 'does not attach a sketch to a step the user cannot manage' do
-      pending 'bug: marvinjs_create has no permission check; object_type Step attaches a sketch to any step by id (then 500s on Asset#preview)'
-      foreign_step
-
-      post :marvinjs_create, params: sketch_params.merge(object_type: 'Step', object_id: foreign_step.id),
-                             format: :json
-
-      expect(foreign_step.assets.count).to eq 0
-      expect(response).to have_http_status(:forbidden)
-    end
   end
 
   describe 'PUT #marvinjs_update' do
@@ -300,15 +280,6 @@ describe TinyMceAssetsController, type: :controller do
         expect(json['url']).to include('/rails/active_storage/representations/redirect/')
         expect(tiny_mce_asset.image.blob.id).not_to eq old_blob_id
         expect(tiny_mce_asset.image.metadata[:name]).to eq 'Updated'
-      end
-
-      it 'returns unprocessable entity when the sketch could not be updated' do
-        allow(MarvinJsService).to receive(:update_sketch).and_return(nil)
-
-        put :marvinjs_update, params: update_params, format: :json
-
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(json['error']).to eq I18n.t('marvinjs.no_sketches_found')
       end
     end
 

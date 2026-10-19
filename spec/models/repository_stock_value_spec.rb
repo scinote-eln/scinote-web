@@ -91,9 +91,9 @@ describe RepositoryStockValue, type: :model do
       it 'formats amount with column decimals, unit and threshold' do
         unit = create :repository_stock_unit_item, repository_column: column, data: 'ml'
         value.assign_attributes(amount: 12.5, low_stock_threshold: 3, repository_stock_unit_item: unit)
-        expect(value.formatted_value).to eq '12.5'
-        expect(value.formatted).to eq '12.5 ml'
-        expect(value.formatted_treshold).to eq '3'
+        expect(value.formatted_value).to eq '12.50'
+        expect(value.formatted).to eq '12.50 ml'
+        expect(value.formatted_treshold).to eq '3.00'
         expect(value.export_formatted).to eq value.formatted
         expect(value.data).to eq value.amount
       end

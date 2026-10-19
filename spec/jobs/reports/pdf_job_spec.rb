@@ -28,6 +28,8 @@ describe Reports::PdfJob, type: :job do
     end
     allow(grover).to receive(:to_pdf) { |path| File.binwrite(path, '%PDF-1.4 fake') }
     allow(DeliveryNotification).to receive(:send_notifications)
+    # reports/report.html.erb inlines the compiled stylesheets from the assets manifest, which CI does not build
+    allow(Rails.application.assets_manifest).to receive(:find_sources) { [+'/* compiled stylesheet */'] }
   end
 
   def run_job(report_to_run = report)

@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 describe EquipmentBookingsController, type: :controller do
+  include_context 'without compiled assets'
   login_user
   render_views
 

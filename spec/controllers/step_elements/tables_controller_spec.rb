@@ -108,7 +108,7 @@ describe StepElements::TablesController, type: :controller do
     end
 
     it 'uses the plate default name for plate templates' do
-      post :create, params: params.merge(plateTemplate: 'true'), format: :json
+      post :create, params: params.merge(plateTemplate: true), as: :json
 
       new_table = step.tables.order(:id).last
       expect(new_table.name).to eq I18n.t('protocols.steps.plate.default_name', position: 2)

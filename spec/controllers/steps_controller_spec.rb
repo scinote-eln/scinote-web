@@ -862,7 +862,7 @@ describe StepsController, type: :controller do
         step.update!(skipped_at: Time.zone.now, completed: false)
 
         expect do
-          post :toggle_step_skip_state, params: { id: step.id, skipped: 'false' }, format: :json
+          post :toggle_step_skip_state, params: { id: step.id, skipped: false }, as: :json
         end.to change { Activity.where(type_of: :unskip_step).count }.by(1)
 
         expect(step.reload.skipped_at).to be_nil
