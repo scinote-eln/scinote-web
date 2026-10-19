@@ -442,10 +442,6 @@ class AssetsController < ApplicationController
     end
   end
 
-  def checksum
-    render json: { checksum: @asset.file.blob.checksum }
-  end
-
   def versions
     blobs =
       [@asset.file.blob] +
