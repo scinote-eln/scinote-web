@@ -94,7 +94,6 @@ tests-ci:
 					-e ENABLE_WEBHOOKS=true \
 					-e SECRET_KEY_BASE=$(shell openssl rand -hex 64) \
 					--rm web bash -c "rake parallel:create && rails db:schema:load && rake parallel:prepare && rake parallel:spec"
-# 					--rm web bash -c "rails db:create && rails db:schema:load && bundle exec rspec ./spec/"
 
 console:
 	@$(MAKE) rails cmd="rails console"
