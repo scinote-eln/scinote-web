@@ -1,7 +1,7 @@
 <template>
   <div class="h-full">
     <DataTable
-      v-if="repositoryColumnsDef.length > 0"
+      v-if="repositoryColumnsDef.length > 0 || (archived && currentViewMode == 'active')"
       :columnDefs="repositoryColumnsDef"
       :tableId="'repository_table_' + repositoryId"
       :dataUrl="dataSource"
@@ -25,6 +25,8 @@
       :customManageColumnsModal="ManageColumnsModal"
       :manageColumnsModalProps="{ repositoryId, canManageColumns: canManageRepository }"
       @reloadColumns="legacyReloadTableComponent"
+      :objectArchived="archived"
+      :hiddenDataMessage="i18n.t('repositories.show.no_active_repository_rows_archived_repository')"
       @cancelCreation="cancelCreation"
       @showTextCell="showTextCellModal"
       @updateCell="updateCell"
@@ -136,7 +138,8 @@ export default {
     archivedPageUrl: String,
     currentViewMode: { type: String, default: 'active' },
     canManageRepository: { type: Boolean, default: false },
-    canManageFilters: { type: Boolean, default: false }
+    canManageFilters: { type: Boolean, default: false },
+    archived: { type: Boolean }
   },
   components: {
     DataTable,
