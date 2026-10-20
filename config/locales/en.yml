@@ -5084,6 +5084,12 @@ en:
       archived: "(archived)"
       removed: "(removed)"
       deleted: "(deleted)"
+    tags:
+      prj: "[Pro]"
+      exp: "[Exp]"
+      tsk: "[Tsk]"
+      file: "[Fil]"
+      rep: "[Inv]"
 
   dropdown_selector:
     nothing_found: "Nothing found..."
