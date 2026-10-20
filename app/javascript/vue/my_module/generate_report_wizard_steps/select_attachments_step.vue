@@ -58,12 +58,15 @@
                 <div class="text-center flex items-center gap-2 list-attachment-container w-full min-w-0">
                   <i class="text-sn-grey asset-icon sn-icon sn-icon-file-pdf shrink-0"></i>
                   <a
-                    class="file-preview-link file-name flex-[2]"
+                    class="file-preview-link file-name flex-[2] gap-2"
                     :id="`modal_link${element.id}`"
                     data-no-turbolink="true"
                     :data-id="element.id"
                     :data-preview-url="element.preview"
                   >
+                    <span v-if="element.file_title" class="text-sn-black truncate">
+                      {{ element.file_title }}
+                    </span>
                     <span class="attachment-name truncate" data-toggle="tooltip" data-placement="bottom">
                       {{ element.file_name }}
                     </span>
