@@ -73,10 +73,7 @@ module MyModuleReports
         content_path = tempfile.path
 
         if @header_text.present? || @display_attachment_references || @display_attachment_groups
-          if @display_attachment_references
-            file_name = "#{I18n.t('atwho.tags.file')}#{asset.file_name}"
-            file_name += I18n.t('atwho.res.archived') if asset.archived? || asset.my_module.archived_branch?
-          end
+          file_name = "#{I18n.t('atwho.tags.file')}#{asset.file_title || asset.file_name}" if @display_attachment_references
 
           page_entries = Array.new(pages) do |i|
             {

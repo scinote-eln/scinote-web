@@ -10,6 +10,7 @@ json.data do
     json.assets group[:assets] do |asset|
       json.id asset.id
       json.file_name asset.render_file_name
+      json.file_title asset.file_title
       json.medium_preview rails_representation_url(asset.medium_preview)
       json.preview asset_file_preview_path(asset)
     end
