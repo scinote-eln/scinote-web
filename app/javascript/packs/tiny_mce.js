@@ -31,7 +31,6 @@ import 'tinymce/plugins/directionality';
 import './tinymce/custom_image_uploader/plugin';
 import './tinymce/marvinjs/plugin';
 import './tinymce/image_toolbar/plugin';
-import './tinymce/mathequation/plugin';
 
 // Content styles, including inline UI like fake cursors
 // All the above CSS files are loaded on to the page but these two must
@@ -271,7 +270,7 @@ window.TinyMCE = (() => {
 
         const plugins = `
           image table autosave autoresize link advlist codesample code autolink lists
-          charmap anchor searchreplace wordcount visualblocks visualchars mathequation
+          charmap anchor searchreplace wordcount visualblocks visualchars
           insertdatetime nonbreaking save directionality customimageuploader
           marvinjs custom_image_toolbar help quickbars ${window.extraTinyMcePlugins ? window.extraTinyMcePlugins : ''}
         `;
@@ -307,7 +306,7 @@ window.TinyMCE = (() => {
           },
           block_formats: 'Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3; Preformatted=pre',
           menubar: 'file edit view insert format table',
-          toolbar: window.customTinyMceToolbar || 'undo redo restoredraft | insert | styleselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | mathequation customimageuploader | marvinjs link codesample | help',
+          toolbar: window.customTinyMceToolbar || 'undo redo restoredraft | insert | styleselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | customimageuploader | marvinjs link codesample | help',
           plugins,
           contextmenu: '',
           autoresize_bottom_margin: 20,
