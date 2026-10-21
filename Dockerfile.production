@@ -51,8 +51,10 @@ RUN \
 FROM ruby:3.4-trixie AS runner
 MAINTAINER SciNote <info@scinote.net>
 
-ARG TIKA_DIST_URL="https://archive.apache.org/dist/tika/3.2.3/tika-app-3.2.3.jar"
-ENV TIKA_PATH=/usr/local/bin/tika-app.jar
+ARG TIKA_VERSION=4.1.0
+ARG TIKA_DIST_URL="https://archive.apache.org/dist/tika/${TIKA_VERSION}/tika-app-${TIKA_VERSION}.zip"
+ARG TIKA_HOME=/opt/tika-app
+ENV TIKA_PATH=${TIKA_HOME}/tika-app-${TIKA_VERSION}.jar
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 RUN \
@@ -91,9 +93,12 @@ RUN \
   chromium \
   chromium-sandbox \
   libfile-mimeinfo-perl \
-  npm && \
-  wget -O $TIKA_PATH $TIKA_DIST_URL && \
-  chmod +x $TIKA_PATH && \
+  npm \
+  unzip && \
+  mkdir -p $TIKA_HOME && \
+  wget -O /tmp/tika-app.zip $TIKA_DIST_URL && \
+  unzip -q /tmp/tika-app.zip -d $TIKA_HOME && \
+  rm /tmp/tika-app.zip && \
   ln -s /usr/bin/yarnpkg /usr/bin/yarn && \
   npm install -g npm:puppeteer-core@24.10.0 && \
   apt-get install -y libreoffice && \
@@ -106,6 +111,7 @@ RUN \
   touch /etc/build-${BUILD_TIMESTAMP} && \
   DEBIAN_FRONTEND=noninteractive \
   apt-get remove -y *-dev && \
+  apt-get remove -y unzip && \
   apt-get autoremove -y && \
   apt-get update -qq && \
   apt-get upgrade -y && \
