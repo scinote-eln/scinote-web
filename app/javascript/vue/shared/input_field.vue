@@ -3,7 +3,7 @@
     <label
       v-if="label"
       @click="$refs.input.click()"
-      class="text-sm font-bold mb-0 flex items-center gap-1"
+      class="sci-label flex items-center gap-1"
     >
       {{ label }}
       <span v-if="required" class="text-sn-alert-passion">*</span>

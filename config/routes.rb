@@ -948,9 +948,6 @@ Rails.application.routes.draw do
       post 'restore_records',
            to: 'repository_rows#restore_records',
            defaults: { format: 'json' }
-      get 'repository_columns/:id/destroy_html',
-          to: 'repository_columns#destroy_html',
-          as: 'columns_destroy_html'
       get 'available_columns',
           to: 'repository_columns#available_columns',
           as: 'available_columns',
@@ -958,7 +955,7 @@ Rails.application.routes.draw do
       get :table_toolbar
       get :status
 
-      resources :repository_columns, only: %i(index new edit destroy) do
+      resources :repository_columns, only: %i(destroy) do
         collection do
           get :index_new
           get :describe_all
