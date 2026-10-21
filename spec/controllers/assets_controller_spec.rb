@@ -221,6 +221,57 @@ describe AssetsController, type: :controller do
     end
   end
 
+  describe 'PATCH #update_title' do
+    let(:action) { patch :update_title, params: { id: element_id, asset: { file_title: new_title } }, format: :json }
+    let(:new_title) { Faker::Name.unique.name }
+
+    context 'when in task step' do
+      let(:element_id) { step_asset.asset.id }
+
+      it 'updates the file title' do
+        expect { action }.to change(Activity, :count).by(1)
+        expect_success_json
+        expect(step_asset.asset.reload.file_title).to eq(new_title)
+        expect(Activity.last.type_of).to eq('task_step_asset_title_changed')
+      end
+    end
+
+    context 'when in protocol step (protocol repository)' do
+      let(:element_id) { step_asset_in_repository.asset.id }
+
+      it 'updates the file title' do
+        expect { action }.to change(Activity, :count).by(1)
+        expect_success_json
+        expect(Activity.last.type_of).to eq('protocol_step_asset_title_changed')
+      end
+    end
+
+    context 'when in task result' do
+      let(:element_id) { result_asset.asset.id }
+
+      it 'updates the file title' do
+        expect { action }.to change(Activity, :count).by(1)
+        expect_success_json
+        expect(Activity.last.type_of).to eq('result_asset_title_changed')
+      end
+    end
+
+    context 'when on an inventory item' do
+      let(:repository) { create :repository, team: team, created_by: user }
+      let(:repository_row) { create :repository_row, repository: repository }
+      let(:repository_cell) { create :repository_cell, :asset_value, repository_row: repository_row }
+      let(:element_id) { repository_cell.value.asset.id }
+
+      before { user.update(current_team_id: team.id) }
+
+      it 'updates the file title' do
+        expect { action }.to change(Activity, :count).by(1)
+        expect_success_json
+        expect(Activity.last.type_of).to eq('item_asset_title_changed')
+      end
+    end
+  end
+
   describe 'POST #update_image' do
     let(:action) { post :update_image, params: { id: element_id, image: fixture_file_upload(Rails.root.join('spec/fixtures/files/apple.jpg'), 'image/jpeg') } }
 
