@@ -24,6 +24,9 @@ module GlobalActivitiesHelper
         parameters[key] = '<i class="sn-icon sn-icon-comments"></i>' + parameters[key]
       elsif parameters[key].blank? && key == 'step_position'
         parameters[key] = '<i class="sn-icon sn-icon-archived"></i>'
+      elsif key == 'record_names' && activity.type_of.in?(%w(assign_repository_record unassign_repository_record))
+        repository = Repository.find_by(id: activity.message_items.dig('repository', 'id'))
+        parameters[key] = I18n.t('protocols.repository_rows.table.private_item') unless repository && can_read_repository?(repository)
       end
     end
 
