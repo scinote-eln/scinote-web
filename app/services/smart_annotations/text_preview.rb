@@ -3,8 +3,8 @@
 module SmartAnnotations
   class TextPreview
     class << self
-      def text(name, type, object, add_prefix_type: false)
-        text = send("generate_#{type}_snippet", name, object)
+      def text(name, type, object, add_prefix_type: false, page: nil)
+        text = type == 'file' ? generate_file_snippet(name, object, page) : send("generate_#{type}_snippet", name, object)
         return text unless add_prefix_type
 
         prefix_text = case type
@@ -59,11 +59,16 @@ module SmartAnnotations
         object.name
       end
 
-      def generate_file_snippet(_, object)
-        return I18n.t('atwho.res.deleted') if object.nil?
-        return "#{object.file_name} #{I18n.t('atwho.res.archived')}" if object.archived? || file_my_module_archived?(object)
+      def generate_file_snippet(name, object, page = nil)
+        return "#{name} #{I18n.t('atwho.res.deleted')}" if object.nil?
+        return "#{file_label(object, page)} #{I18n.t('atwho.res.archived')}" if object.archived? || file_my_module_archived?(object)
 
-        object.file_name
+        file_label(object, page)
+      end
+
+      def file_label(object, page)
+        label = "#{object.file_title.presence || object.file_name}_#{object.code}"
+        page.present? ? "#{label}_p#{page}" : label
       end
 
       def file_my_module_archived?(object)

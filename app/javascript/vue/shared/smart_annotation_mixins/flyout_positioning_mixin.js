@@ -137,7 +137,7 @@ export default {
       if (field) field.focus();
     },
     onRootMousedown(e) {
-      if (e.target !== this.$refs.searchInput) e.preventDefault();
+      if (e.target !== this.$refs.searchInput && !e.target.classList.contains('page-number-input')) e.preventDefault();
     }
   }
 };

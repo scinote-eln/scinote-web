@@ -27,8 +27,24 @@ describe SmartAnnotations::TagToText do
     let(:text) { "File: [##{asset.file_name}~file~#{asset.id.base62_encode}]" }
     let(:subject) { described_class.new(user, team, text) }
 
-    it 'returns a string with the file name' do
-      expect(subject.text).to eq("File: #{asset.file_name}")
+    it 'returns a string with the file name and code' do
+      expect(subject.text).to eq("File: #{asset.file_name}_#{asset.code}")
+    end
+
+    context 'when a page is mentioned' do
+      let(:text) { "File: [##{asset.file_name}~file~#{asset.id.base62_encode}~12]" }
+
+      it 'includes the page number' do
+        expect(subject.text).to eq("File: #{asset.file_name}_#{asset.code}_p12")
+      end
+    end
+
+    context 'when the file was deleted' do
+      let(:text) { "File: [#old_file.pdf~file~#{(asset.id + 1000).base62_encode}]" }
+
+      it 'falls back to the tag-captured name' do
+        expect(subject.text).to eq("File: old_file.pdf #{I18n.t('atwho.res.deleted')}")
+      end
     end
   end
 
@@ -38,6 +54,12 @@ describe SmartAnnotations::TagToText do
       expect(values[:name]).to eq 'my project'
       expect(values[:object_id]).to eq 1
       expect(values[:object_type]).to eq 'prj'
+      expect(values[:page]).to be_nil
+    end
+
+    it 'extracts the page number when present' do
+      values = subject.send(:extract_values, '[#my file~file~1~12]')
+      expect(values[:page]).to eq '12'
     end
   end
 

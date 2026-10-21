@@ -43,8 +43,24 @@ describe SmartAnnotations::TagToHtml do
         "File: <a class='sa-link file-preview-link file-name' href='" \
         "#{Rails.application.routes.url_helpers.rails_blob_path(asset.file, disposition: 'attachment')}' " \
         "data-no-turbolink='true' data-id='#{asset.id}' data-preview-url='/files/#{asset.id}/preview?preview=true'>" \
-        "<span class='sa-type'>Fl</span>#{asset.file_name}</a>"
+        "<span class='sa-type'>Fl</span>#{asset.file_name}_#{asset.code}</a>"
       )
+    end
+
+    context 'when a page is mentioned' do
+      let(:text) { "File: [##{asset.file_name}~file~#{asset.id.base62_encode}~12]" }
+
+      it 'includes the page number in the label' do
+        expect(subject.html).to include("#{asset.file_name}_#{asset.code}_p12</a>")
+      end
+    end
+
+    context 'when the file was deleted' do
+      let(:text) { "File: [#old_file.pdf~file~#{(asset.id + 1000).base62_encode}]" }
+
+      it 'falls back to the tag-captured name' do
+        expect(subject.html).to eq("File: <span class='sa-type'>Fl</span>old_file.pdf #{I18n.t('atwho.res.deleted')}")
+      end
     end
   end
 
@@ -54,6 +70,12 @@ describe SmartAnnotations::TagToHtml do
       expect(values[:name]).to eq 'my project'
       expect(values[:object_id]).to eq 1
       expect(values[:object_type]).to eq 'prj'
+      expect(values[:page]).to be_nil
+    end
+
+    it 'extracts the page number when present' do
+      values = subject.send(:extract_values, '[#my file~file~1~12]')
+      expect(values[:page]).to eq '12'
     end
   end
 

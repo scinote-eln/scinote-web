@@ -50,14 +50,38 @@ describe SmartAnnotations::HtmlPreview do
     let(:step_asset) { create :step_asset, step: step }
     let(:asset) { Asset.find(step_asset.asset_id) }
 
-    it 'returns a html snippet' do
-      snippet = subject.html(nil, 'file', asset)
-      expect(snippet).to eq(
-        "<a class='sa-link file-preview-link file-name' href='" \
+    def file_link(asset, label)
+      "<a class='sa-link file-preview-link file-name' href='" \
         "#{Rails.application.routes.url_helpers.rails_blob_path(asset.file, disposition: 'attachment')}' " \
         "data-no-turbolink='true' data-id='#{asset.id}' data-preview-url='/files/#{asset.id}/preview?preview=true'>" \
-        "<span class='sa-type'>Fl</span>#{asset.file_name}</a>"
-      )
+        "<span class='sa-type'>Fl</span>#{label}</a>"
+    end
+
+    it 'returns a html snippet with the file name and code when there is no title' do
+      snippet = subject.html(nil, 'file', asset)
+      expect(snippet).to eq(file_link(asset, "#{asset.file_name}_#{asset.code}"))
+    end
+
+    it 'returns a html snippet with the file title when one is set' do
+      asset.update!(file_title: 'My file title')
+      snippet = subject.html(nil, 'file', asset)
+      expect(snippet).to eq(file_link(asset, "My file title_#{asset.code}"))
+    end
+
+    it 'appends the page number when a page is mentioned' do
+      snippet = subject.html(nil, 'file', asset, page: '12')
+      expect(snippet).to eq(file_link(asset, "#{asset.file_name}_#{asset.code}_p12"))
+    end
+
+    it 'returns an archived snippet when the file is archived' do
+      asset.archive!(user)
+      snippet = subject.html(nil, 'file', asset)
+      expect(snippet).to eq("<span class='sa-type'>Fl</span>#{asset.file_name}_#{asset.code} (archived)")
+    end
+
+    it 'falls back to the tag-captured name when the file was deleted' do
+      snippet = subject.html('old_file.pdf', 'file', nil)
+      expect(snippet).to eq("<span class='sa-type'>Fl</span>old_file.pdf (deleted)")
     end
   end
 
