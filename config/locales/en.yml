@@ -5063,6 +5063,8 @@ en:
     buttons:
       add: "Add"
       mention: "Mention"
+      mention_page: "Mention page"
+      add_page_number: "Add page number"
       assign: "Assign to task"
     navigate: "Navigate"
     projects: Projects

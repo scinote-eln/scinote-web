@@ -4,6 +4,11 @@ json.name item[:name]
 json.code item[:code]
 json.type item[:type]
 
+if item[:type] == 'file'
+  json.pdf item[:pdf]
+  json.display_name item[:display_name]
+end
+
 if item.key?(:my_module_id)
   json.row_assigned item[:row_assigned]
   json.my_module_id item[:my_module_id]

@@ -2,8 +2,8 @@
 
 module SmartAnnotations
   class TagToHtml
-    ALL_REGEX = /\[(@(.*?)|\#(.*?)~(prj|exp|tsk|rep_item|rep|file))~([0-9a-zA-Z]+)\]/
-    ITEMS_REGEX = /\[\#(.*?)~(prj|exp|tsk|rep_item|rep|file)~([0-9a-zA-Z]+)\]/
+    ALL_REGEX = /\[(@(.*?)|\#(.*?)~(prj|exp|tsk|rep_item|rep|file))~([0-9a-zA-Z]+)(?:~\d+)?\]/
+    ITEMS_REGEX = /\[\#(.*?)~(prj|exp|tsk|rep_item|rep|file)~([0-9a-zA-Z]+)(?:~(\d+))?\]/
     USER_REGEX = /\[@(.*?)~([0-9a-zA-Z]+)\]/
     attr_reader :html
 
@@ -31,6 +31,8 @@ module SmartAnnotations
             repository_item(value[:name], user, team, type, object, preview_repository)
           elsif type == 'rep'
             repository(value[:name], user, type, object)
+          elsif type == 'file'
+            file(value[:name], user, type, object, value[:page])
           else
             if object && SmartAnnotations::PermissionEval.check(user, type, object)
               SmartAnnotations::HtmlPreview.html(nil, type, object)
@@ -48,9 +50,9 @@ module SmartAnnotations
       if object&.repository
         return private_placeholder(object) unless SmartAnnotations::PermissionEval.check(user, type, object)
 
-        return SmartAnnotations::HtmlPreview.html(nil, type, object, preview_repository)
+        return SmartAnnotations::HtmlPreview.html(nil, type, object, preview_repository: preview_repository)
       end
-      SmartAnnotations::HtmlPreview.html(name, type, object, preview_repository)
+      SmartAnnotations::HtmlPreview.html(name, type, object, preview_repository: preview_repository)
     end
 
     def repository(name, user, type, object)
@@ -62,12 +64,22 @@ module SmartAnnotations
       SmartAnnotations::HtmlPreview.html(name, type, object)
     end
 
+    def file(name, user, type, object, page)
+      if object
+        return private_placeholder(object) unless SmartAnnotations::PermissionEval.check(user, type, object)
+
+        return SmartAnnotations::HtmlPreview.html(name, type, object, page: page)
+      end
+      SmartAnnotations::HtmlPreview.html(name, type, object, page: page)
+    end
+
     def extract_values(element)
       match = element.match(ITEMS_REGEX)
       {
         name: match[1],
         object_type: match[2],
-        object_id: match[3].base62_decode
+        object_id: match[3].base62_decode,
+        page: match[4]
       }
     end
 

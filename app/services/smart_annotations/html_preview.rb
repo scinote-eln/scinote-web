@@ -3,9 +3,11 @@
 module SmartAnnotations
   class HtmlPreview
     class << self
-      def html(name, type, object, preview_repository = false)
+      def html(name, type, object, preview_repository: false, page: nil)
         if preview_repository
-          send('generate_rep_item_print_snippet', name, object)
+          generate_rep_item_print_snippet(name, object)
+        elsif type == 'file'
+          generate_file_snippet(name, object, page)
         else
           send("generate_#{type}_snippet", name, object)
         end
@@ -74,13 +76,18 @@ module SmartAnnotations
           "<span class='sa-type'>Inv</span>#{object.name}</a>"
       end
 
-      def generate_file_snippet(_, object)
-        return "<span class='sa-type'>Fl</span> #{I18n.t('atwho.res.deleted')}" if object.nil?
-        return "<span class='sa-type'>Fl</span>#{object.file_name} #{I18n.t('atwho.res.archived')}" if object.archived? || file_my_module_archived?(object)
+      def generate_file_snippet(name, object, page = nil)
+        return "<span class='sa-type'>Fl</span>#{name} #{I18n.t('atwho.res.deleted')}" if object.nil?
+        return "<span class='sa-type'>Fl</span>#{file_label(object, page)} #{I18n.t('atwho.res.archived')}" if object.archived? || file_my_module_archived?(object)
 
         "<a class='sa-link file-preview-link file-name' href='#{ROUTES.rails_blob_path(object.file, disposition: 'attachment')}' " \
           "data-no-turbolink='true' data-id='#{object.id}' data-preview-url='#{ROUTES.asset_file_preview_path(object, preview: true)}'>" \
-          "<span class='sa-type'>Fl</span>#{object.file_name}</a>"
+          "<span class='sa-type'>Fl</span>#{file_label(object, page)}</a>"
+      end
+
+      def file_label(object, page)
+        label = "#{object.file_title.presence || object.file_name}_#{object.code}"
+        page.present? ? "#{label}_p#{page}" : label
       end
 
       def file_my_module_archived?(object)

@@ -3,7 +3,7 @@
 module SmartAnnotations
   class TagToText
     USER_REGEX = /\[@(.*?)~([0-9a-zA-Z]+)\]/
-    ITEMS_REGEX = /\[\#(.*?)~(prj|exp|tsk|rep_item|rep|file)~([0-9a-zA-Z]+)\]/
+    ITEMS_REGEX = /\[\#(.*?)~(prj|exp|tsk|rep_item|rep|file)~([0-9a-zA-Z]+)(?:~(\d+))?\]/
 
     attr_reader :text
 
@@ -32,6 +32,8 @@ module SmartAnnotations
             repository_item(value[:name], user, team, type, object, is_shared_object, add_prefix_type)
           elsif type == 'rep'
             repository(value[:name], user, type, object, is_shared_object, add_prefix_type)
+          elsif type == 'file'
+            file(value[:name], user, type, object, is_shared_object, add_prefix_type, value[:page])
           else
             if object && (is_shared_object || SmartAnnotations::PermissionEval.check(user, type, object))
               SmartAnnotations::TextPreview.text(nil, type, object, add_prefix_type: add_prefix_type)
@@ -79,12 +81,22 @@ module SmartAnnotations
       SmartAnnotations::TextPreview.text(name, type, object, add_prefix_type: add_prefix_type)
     end
 
+    def file(name, user, type, object, is_shared_object, add_prefix_type, page)
+      if object
+        return private_placeholder(object) unless is_shared_object || SmartAnnotations::PermissionEval.check(user, type, object)
+
+        return SmartAnnotations::TextPreview.text(name, type, object, add_prefix_type: add_prefix_type, page: page)
+      end
+      SmartAnnotations::TextPreview.text(name, type, object, add_prefix_type: add_prefix_type, page: page)
+    end
+
     def extract_values(element)
       match = element.match(ITEMS_REGEX)
       {
         name: match[1],
         object_type: match[2],
-        object_id: match[3].base62_decode
+        object_id: match[3].base62_decode,
+        page: match[4]
       }
     end
 

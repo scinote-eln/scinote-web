@@ -58,12 +58,25 @@
           <template v-else>
             <span class="text-[0.625rem] font-semibold uppercase text-sn-grey-700 shrink-0" v-html="highlightMatch(item.code)"></span>
             <span class="text-sn-grey-500">&middot;</span>
-            <span class="truncate" v-html="highlightMatch(item.name)"></span>
+            <span class="truncate" v-html="highlightMatch(itemDisplayName(item))"></span>
             <span v-if="isDrillable(item)" @click.stop="addToStack(item)" class="sn-icon sn-icon-arrow-right text-sn-grey-700 shrink-0"></span>
-            <span class="tw-hidden group-hover:flex items-center gap-1.5 shrink-0 ml-auto">
+            <span v-if="mentioningPageItem === item" class="flex items-center gap-1.5 shrink-0 ml-auto">
+              <input type="text" inputmode="numeric" pattern="[0-9]*" class="page-number-input w-32 border border-sn-light-grey rounded px-2 py-1 text-sm"
+                     :value="pageNumberInput" :placeholder="i18n.t('atwho.buttons.add_page_number')"
+                     @click.stop @input="onPageNumberInput" @keydown.stop="onPageInputKeydown($event, item)" />
+              <button type="button" class="btn btn-xs btn-light" :disabled="!pageNumberInput" @click.stop="confirmPageMention(item)">
+                <i class="sn-icon sn-icon-assign"></i>
+                {{ i18n.t('atwho.buttons.add') }}
+              </button>
+            </span>
+            <span v-else class="tw-hidden group-hover:flex items-center gap-1.5 shrink-0 ml-auto">
               <button type="button" class="btn btn-xs btn-light" @click.stop="selectItem(item)">
                 <i class="sn-icon sn-icon-assign"></i>
                 {{ i18n.t('atwho.buttons.add') }}
+              </button>
+              <button v-if="isPdfFile(item)" type="button" class="btn btn-xs btn-light" @click.stop="startPageMention(item)">
+                <i class="sn-icon sn-icon-page"></i>
+                {{ i18n.t('atwho.buttons.mention_page') }}
               </button>
               <button v-if="item.my_module_id && !item.row_assigned" type="button" class="btn btn-xs btn-light"
                       @click.stop="assignItem(item)">
@@ -125,7 +138,9 @@ export default {
       navStack: [],
       assignableMyModuleId: null,
       onInsert: null,
-      searchDebounceTimer: null
+      searchDebounceTimer: null,
+      mentioningPageItem: null,
+      pageNumberInput: ''
     };
   },
   beforeDestroy() {
@@ -167,6 +182,8 @@ export default {
       const teamId = this.teamId();
       if (!teamId) return;
 
+      this.mentioningPageItem = null;
+      this.pageNumberInput = '';
       this.loading = true;
       const request = this.flag === '@' ? this.fetchUsers(teamId) : this.fetchReference(teamId);
 
@@ -201,8 +218,44 @@ export default {
     isDrillable(item) {
       return this.flag === '#' && !!CHILD_TAG[item.type];
     },
+    isPdfFile(item) {
+      return this.flag === '#' && item.type === 'file' && !!item.pdf;
+    },
+    itemDisplayName(item) {
+      return item.type === 'file' ? (item.display_name || item.name) : item.name;
+    },
     rowClick(item) {
+      if (this.mentioningPageItem === item) return;
+
       this.selectItem(item);
+    },
+    startPageMention(item) {
+      this.mentioningPageItem = item;
+      this.pageNumberInput = '';
+      this.$nextTick(() => {
+        const input = this.$refs.flyout && this.$refs.flyout.querySelector('.page-number-input');
+        if (input) input.focus();
+      });
+    },
+    onPageNumberInput(e) {
+      this.pageNumberInput = e.target.value.replace(/\D/g, '');
+    },
+    onPageInputKeydown(e, item) {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        this.mentioningPageItem = null;
+        this.pageNumberInput = '';
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        this.confirmPageMention(item);
+      }
+    },
+    confirmPageMention(item) {
+      if (!this.pageNumberInput) return;
+
+      this.selectItem(item, this.pageNumberInput);
+      this.mentioningPageItem = null;
+      this.pageNumberInput = '';
     },
     addToStack(item) {
       this.navStack.push({ tag: CHILD_TAG[item.type], id: item.id, code: item.code });
@@ -223,12 +276,12 @@ export default {
       this.limitReached = false;
       this.resetActiveIndex();
     },
-    selectItem(item) {
+    selectItem(item, page) {
       if (!this.onInsert) return;
 
       const tag = this.flag === '@'
         ? `[@${item.full_name}~${item.id}]`
-        : `[#${item.name}~${item.type}~${item.id_encoded}]`;
+        : `[#${item.name}~${item.type}~${item.id_encoded}${page ? `~${page}` : ''}]`;
       this.onInsert(tag);
     },
     assignItem(item) {
@@ -256,7 +309,9 @@ export default {
       }
       this.handleNavigationKeydown(e);
     },
-    onSearchBlur() {
+    onSearchBlur(e) {
+      if (e.relatedTarget && this.$refs.flyout && this.$refs.flyout.contains(e.relatedTarget)) return;
+
       this.requestClose();
     }
   }

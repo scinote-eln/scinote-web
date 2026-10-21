@@ -209,8 +209,10 @@ class SmartAnnotation
         id: asset.id,
         id_encoded: asset.id.base62_encode,
         name: sanitize_input(asset.file_name),
+        display_name: sanitize_input(asset.file_title.presence || asset.file_name),
         code: asset.code,
         type: 'file',
+        pdf: asset.pdf?,
         updated_at: asset.updated_at
       }
     end
