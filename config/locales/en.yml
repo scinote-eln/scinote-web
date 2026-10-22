@@ -3466,6 +3466,7 @@ en:
         range_label: 'Range'
         reminder_message_limit: "Maximum number of characters reached (255)"
       stock_type:
+        one_per_inventory: "Only one per inventory allowed."
         multiple_options: 'selected'
         all_options: 'All options'
         stock_units: 'Stock units'

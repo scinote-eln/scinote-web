@@ -22,6 +22,7 @@ export const CREATABLE_TYPES = [
   'RepositoryListValue',
   'RepositoryChecklistValue',
   'RepositoryStatusValue',
+  'RepositoryStockValue',
   'RepositoryDateValue',
   'RepositoryTimeValue',
   'RepositoryDateTimeValue'
