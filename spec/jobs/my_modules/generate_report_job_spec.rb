@@ -51,23 +51,21 @@ describe MyModules::GenerateReportJob, type: :job do
       expect(analytical_report.reload).to be_done
     end
 
-    it 'does not merge any assets when none were requested' do
+    it 'does not merge any assets when no asset groups were requested' do
       run_job
 
       expect(MyModuleReports::MergePdfsWithWatermarkService).not_to have_received(:new)
     end
 
-    context 'with assets to append' do
+    context 'with asset groups to append' do
       let(:params) do
-        { 'asset_ids' => [1, 2], 'header' => 'Head', 'footer' => 'Foot',
-          'add_numarization' => true, 'add_blank_page' => false }
+        { 'asset_groups' => [{ 'type' => 'step', 'id' => 1, 'asset_ids' => [1, 2] }], 'header' => 'Head' }
       end
 
       it 'merges the assets with watermark using the report params' do
         run_job
 
-        expect(MyModuleReports::MergePdfsWithWatermarkService).to have_received(:new)
-          .with(user, analytical_report, [1, 2], 'Head', 'Foot', true, false)
+        expect(MyModuleReports::MergePdfsWithWatermarkService).to have_received(:new).with(user, analytical_report)
         expect(merge_service).to have_received(:generate!)
         expect(analytical_report.reload).to be_done
       end

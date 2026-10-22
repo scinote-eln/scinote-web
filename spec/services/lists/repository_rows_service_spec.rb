@@ -8,6 +8,7 @@ RSpec.describe Lists::RepositoryRowsService do
     team = create(:team)
     user = create(:user)
     repository = create(:repository, created_by: user)
+    @repository_id = repository.id
     text_column = create(:repository_column, :text_type, repository: repository, created_by: user)
 
     10.times do
@@ -22,7 +23,8 @@ RSpec.describe Lists::RepositoryRowsService do
     end
   end
 
-  let!(:repository) { Repository.take }
+  # not Repository.take: other specs of the same parallel worker can leave repositories behind
+  let!(:repository) { Repository.find(@repository_id) }
   let!(:text_column) { repository.repository_columns.find_by(data_type: 'RepositoryTextValue') }
   let!(:user) { repository.created_by }
   let!(:repository_rows) { repository.repository_rows.active }

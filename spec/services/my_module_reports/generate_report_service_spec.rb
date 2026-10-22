@@ -128,14 +128,15 @@ RSpec.describe MyModuleReports::GenerateReportService do
       archived_step = my_module.protocol.steps.find_by(archived: true)
       expect(step_fields).to include(tag('step', step_one.id), tag('step', step_two.id))
       expect(step_fields).not_to include(tag('step', archived_step.id))
-      expect(fields[tag('step', step_one.id)]).to eq 'Prepare'
       expect(calls[:add_field].count { |name, value| name == :PROTOCOL && value == '' }).to eq 2
+      expect(fields[tag('step', step_one.id)]).to eq ''
+      expect(texts_for(tag('step', step_one.id))).to eq ["<div>1. Prepare</div><div>{{#{tag('step', step_one.id)}}}</div>"]
     end
 
-    it 'adds the numbered step name to the full protocol text' do
+    it 'adds the numbered step name to the full protocol text, pointing at the step tag' do
       generate
-      expect(texts_for(:PROTOCOL)).to include("<div>1. Prepare</div><div>{{PROTOCOL}}</div>",
-                                              "<div>2. Run</div><div>{{PROTOCOL}}</div>")
+      expect(texts_for(:PROTOCOL)).to include("<div>1. Prepare</div><div>{{#{tag('step', step_one.id)}}}</div>",
+                                              "<div>2. Run</div><div>{{#{tag('step', step_two.id)}}}</div>")
     end
 
     context 'with a text element' do
@@ -153,6 +154,9 @@ RSpec.describe MyModuleReports::GenerateReportService do
                                            '<p>Mix <b>well</b></p>']
         expect(texts_for(:PROTOCOL)).to include("<div>Notes</div><div>{{PROTOCOL}}</div>",
                                                 '<div><p>Mix <b>well</b></p></div><div>{{PROTOCOL}}</div>')
+        step_tag = tag('step', step_one.id)
+        expect(texts_for(step_tag)).to include("<div>Notes</div><div>{{#{step_tag}}}</div>",
+                                               "<div><p>Mix <b>well</b></p></div><div>{{#{step_tag}}}</div>")
       end
 
       it 'skips archived elements' do
@@ -168,15 +172,18 @@ RSpec.describe MyModuleReports::GenerateReportService do
 
       before { add_step_element(step_one, create(:step_table, step: step_one, table: table), 0) }
 
-      it 'adds the table data with its name for the table tag and the protocol' do
+      it 'adds the table data with its name for the table tag, the protocol and the step' do
         generate
         table_tag = tag('step_table', table.id)
+        step_tag = tag('step', step_one.id)
 
         expect(texts_for(table_tag)).to eq ["<div>Grid</div><div>{{#{table_tag}}}</div>"]
-        expect(texts_for(:PROTOCOL)).to include("<div>Grid</div><div>{{PROTOCOL_TABLE_#{table_tag}}}</div><div>{{PROTOCOL}}</div>")
+        expect(texts_for(:PROTOCOL)).to include("<div>Grid</div><div>{{PROTOCOL_#{table_tag}}}</div><div>{{PROTOCOL}}</div>")
+        expect(texts_for(step_tag)).to include("<div>Grid</div><div>{{#{step_tag}_#{table_tag}}}</div><div>{{#{step_tag}}}</div>")
         names_and_data = calls[:add_table_from_data].map { |name, data| [name.to_s, data[:table_name], data[:contents]] }
         expect(names_and_data).to eq [[table_tag, 'Grid', [%w(A B), %w(C D)]],
-                                      ["PROTOCOL_TABLE_#{table_tag}", 'Grid', [%w(A B), %w(C D)]]]
+                                      ["PROTOCOL_#{table_tag}", 'Grid', [%w(A B), %w(C D)]],
+                                      ["#{step_tag}_#{table_tag}", 'Grid', [%w(A B), %w(C D)]]]
       end
     end
 
@@ -189,16 +196,19 @@ RSpec.describe MyModuleReports::GenerateReportService do
         add_step_element(step_one, checklist, 0)
       end
 
-      it 'adds the checklist items with checked flags under its tag and the protocol checklist tag' do
+      it 'adds the checklist items with checked flags under its tag, the protocol and the step' do
         generate
         checklist_tag = tag('checklist', checklist.id)
+        step_tag = tag('step', step_one.id)
 
         expect(texts_for(checklist_tag)).to eq ["<div>To do</div><div>{{#{checklist_tag}}}</div>"]
-        expect(texts_for(:PROTOCOL)).to include("<div>To do</div><div>{{PROTOCOL_CHECKLIST}}</div><div>{{PROTOCOL}}</div>")
+        expect(texts_for(:PROTOCOL)).to include("<div>To do</div><div>{{PROTOCOL_#{checklist_tag}}}</div><div>{{PROTOCOL}}</div>")
+        expect(texts_for(step_tag)).to include("<div>To do</div><div>{{#{step_tag}_#{checklist_tag}}}</div><div>{{#{step_tag}}}</div>")
         pairs = calls[:add_checklist].map { |name, items, opts| [name.to_s, items.sort, opts] }
         expected_items = [['one', true], ['two', false]]
         expect(pairs).to eq [[checklist_tag, expected_items, { checked_symbol: "⊠" }],
-                             ['PROTOCOL_CHECKLIST', expected_items, { checked_symbol: "⊠" }]]
+                             ["PROTOCOL_#{checklist_tag}", expected_items, { checked_symbol: "⊠" }],
+                             ["#{step_tag}_#{checklist_tag}", expected_items, { checked_symbol: "⊠" }]]
       end
     end
 
@@ -254,9 +264,14 @@ RSpec.describe MyModuleReports::GenerateReportService do
         generate
       end
 
-      it 'adds the form name under the form tag and in the protocol text' do
-        expect(fields[tag('form_response', form_response.id)]).to eq 'Quality form'
+      it 'adds the form name under the form tag, the step and in the protocol text, then clears the form tag' do
+        form_tag = tag('form_response', form_response.id)
+        step_tag = tag('step', step_one.id)
+
+        expect(texts_for(form_tag)).to include("<div>Quality form</div><div>{{#{form_tag}}}</div>")
+        expect(texts_for(step_tag)).to include("<div>Quality form</div><div>{{#{step_tag}}}</div>")
         expect(texts_for(:PROTOCOL)).to include('<div>Quality form</div><div>{{PROTOCOL}}</div>')
+        expect(fields[form_tag]).to eq ''
       end
 
       it 'adds text answers' do
@@ -305,13 +320,16 @@ RSpec.describe MyModuleReports::GenerateReportService do
       create(:result, my_module: my_module, user: user, name: 'Gone', archived: true, archived_on: Time.current)
       generate
 
-      names = calls[:add_field].map(&:last)
-      expect(names.index('Old result')).to be < names.index('New result')
-      expect(names).not_to include('Gone')
-      expect(fields[tag('result', old_result.id)]).to eq 'Old result'
+      old_tag = tag('result', old_result.id)
+      new_tag = tag('result', new_result.id)
+      titles = calls[:add_text].map { |args| args[1] }.select { |html| html.start_with?('<div>Old result', '<div>New result', '<div>Gone') }
+      expect(titles).to eq ["<div>Old result</div><div>{{#{old_tag}}}</div>", "<div>New result</div><div>{{#{new_tag}}}</div>"]
+      expect(texts_for(old_tag)).to eq [titles.first]
+      expect(fields[old_tag]).to eq ''
+      expect(fields[new_tag]).to eq ''
     end
 
-    it 'adds result text and tables without the protocol tags' do
+    it 'adds result text and tables to the result tag without the protocol tags' do
       result_text = create :result_text, result: new_result, name: 'Obs', text: '<p>Cells</p>'
       table = create :table, name: 'Res grid', contents: { data: [%w(1 2)] }.to_json
       add_result_element(new_result, result_text, 0)
@@ -321,9 +339,14 @@ RSpec.describe MyModuleReports::GenerateReportService do
 
       text_tag = tag('result_text', result_text.id)
       table_tag = tag('result_table', table.id)
+      result_tag = tag('result', new_result.id)
       expect(texts_for(text_tag)).to eq ["<div>Obs</div><div>{{#{text_tag}}}</div>", '<p>Cells</p>']
       expect(texts_for(table_tag)).to eq ["<div>Res grid</div><div>{{#{table_tag}}}</div>"]
-      expect(calls[:add_table_from_data].map { |name, data| [name.to_s, data[:table_name]] }).to eq [[table_tag, 'Res grid']]
+      expect(texts_for(result_tag)).to include("<div>Obs</div><div>{{#{result_tag}}}</div>",
+                                               "<div><p>Cells</p></div><div>{{#{result_tag}}}</div>",
+                                               "<div>Res grid</div><div>{{#{result_tag}_#{table_tag}}}</div><div>{{#{result_tag}}}</div>")
+      expect(calls[:add_table_from_data].map { |name, data| [name.to_s, data[:table_name]] })
+        .to eq [[table_tag, 'Res grid'], ["#{result_tag}_#{table_tag}", 'Res grid']]
       expect(texts_for(:PROTOCOL)).not_to include("<div>Obs</div><div>{{PROTOCOL}}</div>")
     end
 

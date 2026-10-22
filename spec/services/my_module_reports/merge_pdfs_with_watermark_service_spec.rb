@@ -10,16 +10,31 @@ RSpec.describe MyModuleReports::MergePdfsWithWatermarkService do
   let(:report_template) { ReportTemplate.create!(subject: my_module, name: 'Template') }
   let(:analytical_report) do
     AnalyticalReport.create!(name: 'Analytical', generating_status: :in_progress, reference: my_module,
-                             created_by: user, report_template: report_template).tap do |ar|
+                             created_by: user, report_template: report_template, params: report_params).tap do |ar|
       ar.report.attach(io: StringIO.new('%PDF-1.4 REPORT'), filename: 'generated.pdf', content_type: 'application/pdf')
     end
   end
+  let(:report_params) do
+    {
+      'asset_groups' => asset_groups,
+      'header' => header_text,
+      'display_attachment_references' => display_references,
+      'add_reference_page_numbers' => reference_numbering,
+      'display_attachment_groups' => display_groups,
+      'add_group_numeration' => group_numbering,
+      'add_blank_page_after_group' => blank_page
+    }
+  end
   let(:header_text) { nil }
-  let(:footer_text) { nil }
-  let(:numbering) { false }
+  let(:display_references) { false }
+  let(:reference_numbering) { false }
+  let(:display_groups) { false }
+  let(:group_numbering) { false }
   let(:blank_page) { false }
   let(:acting_user) { user }
-  let(:asset_ids) { [asset_a.id, asset_b.id] }
+  let(:step_group) { { 'type' => 'step', 'id' => step.id, 'asset_ids' => [asset_a.id] } }
+  let(:result_group) { { 'type' => 'result', 'id' => result.id, 'asset_ids' => [asset_b.id] } }
+  let(:asset_groups) { [step_group, result_group] }
   let(:commands) { [] }
   let(:united) { [] }
   let(:watermark_files) { [] }
@@ -48,9 +63,10 @@ RSpec.describe MyModuleReports::MergePdfsWithWatermarkService do
 
   let!(:asset_a) { pdf_asset(step, 'A', 'a.pdf') }
   let!(:asset_b) { pdf_asset(result, 'B', 'b.pdf') }
+  let(:asset_c) { pdf_asset(step, 'C', 'c.pdf') }
 
-  def service(ids = asset_ids)
-    described_class.new(acting_user, analytical_report, ids, header_text, footer_text, numbering, blank_page)
+  def service
+    described_class.new(acting_user, analytical_report)
   end
 
   def label(path)
@@ -115,9 +131,22 @@ RSpec.describe MyModuleReports::MergePdfsWithWatermarkService do
       expect(Reports::ConvertFileFormatService).not_to have_received(:convert_batch)
     end
 
-    it 'follows the order of the given asset ids' do
-      service([asset_b.id, asset_a.id]).generate!
-      expect(attached_content).to eq 'REPORT|B|A'
+    context 'with several assets in a group' do
+      let(:step_group) { { 'type' => 'step', 'id' => step.id, 'asset_ids' => [asset_c.id, asset_a.id] } }
+
+      it 'follows the order of the given asset ids' do
+        service.generate!
+        expect(attached_content).to eq 'REPORT|C|A|B'
+      end
+    end
+
+    context 'with the groups in another order' do
+      let(:asset_groups) { [result_group, step_group] }
+
+      it 'follows the order of the groups' do
+        service.generate!
+        expect(attached_content).to eq 'REPORT|B|A'
+      end
     end
 
     it 'ignores ids that are not active pdfs of an active step or result of the task' do
@@ -130,16 +159,31 @@ RSpec.describe MyModuleReports::MergePdfsWithWatermarkService do
       other_task = create :my_module, experiment: experiment, created_by: user, name: 'Other'
       foreign_asset = pdf_asset(add_step(protocol: other_task.protocol, name: 'Other step'), 'Z', 'z.pdf')
 
-      ids = [asset_a.id, image_asset.id, archived_step_asset.id, archived_asset.id, foreign_asset.id, asset_b.id]
-      service(ids).generate!
+      step_group['asset_ids'] =
+        [asset_a.id, image_asset.id, archived_step_asset.id, archived_asset.id, foreign_asset.id]
+      service.generate!
 
       expect(attached_content).to eq 'REPORT|A|B'
     end
 
-    it 'leaves the report unchanged when no asset is requested' do
-      service([]).generate!
-      expect(attached_content).to eq '%PDF-1.4 REPORT'
-      expect(commands).to be_empty
+    context 'when no asset is requested' do
+      let(:asset_groups) { [{ 'type' => 'step', 'id' => step.id, 'asset_ids' => [] }] }
+
+      it 'leaves the report unchanged' do
+        service.generate!
+        expect(attached_content).to eq '%PDF-1.4 REPORT'
+        expect(commands).to be_empty
+      end
+    end
+
+    context 'with an unknown group type' do
+      let(:asset_groups) { [{ 'type' => 'protocol', 'id' => step.id, 'asset_ids' => [asset_a.id] }] }
+
+      it 'skips the group' do
+        service.generate!
+        expect(attached_content).to eq '%PDF-1.4 REPORT'
+        expect(commands).to be_empty
+      end
     end
 
     context 'when the user cannot read the assets' do
@@ -239,7 +283,7 @@ RSpec.describe MyModuleReports::MergePdfsWithWatermarkService do
       }.each do |name, (output, template)|
         context "with #{name}" do
           let(:pdfinfo_output) { output }
-          let(:asset_ids) { [asset_a.id] }
+          let(:asset_groups) { [step_group] }
 
           it "appends the #{template} empty page" do
             service.generate!
@@ -253,19 +297,22 @@ RSpec.describe MyModuleReports::MergePdfsWithWatermarkService do
   end
 
   describe 'watermark' do
-    let(:asset_ids) { [asset_a.id] }
-    let(:footer_texts) { odt_fields.select { |name, _| name == :REPORT_FOOTER }.map(&:last) }
+    let(:asset_groups) { [step_group] }
+    let(:group_footers) { odt_fields.select { |name, _| name == :REPORT_FOOTER_GROUP }.map(&:last) }
+    let(:reference_footers) { odt_fields.select { |name, _| name == :REPORT_FOOTER_REFERENCE }.map(&:last) }
     let(:header_texts) { odt_fields.select { |name, _| name == :REPORT_HEADER }.map(&:last) }
+    let(:file_tag) { I18n.t('atwho.tags.file') }
 
-    context 'with header and footer text' do
+    context 'with header and group footer' do
       let(:header_text) { 'Confidential' }
-      let(:footer_text) { 'Lab' }
+      let(:display_groups) { true }
 
       it 'renders one watermark page per pdf page and overlays the merged watermark on the asset' do
         service.generate!
 
         expect(header_texts).to eq %w(Confidential Confidential)
-        expect(footer_texts).to eq %w(Lab Lab)
+        expect(group_footers).to eq ['Step with files', 'Step with files']
+        expect(reference_footers).to eq ['', '']
         expect(Reports::ConvertFileFormatService).to have_received(:convert_batch).once
         expect(united.first).to eq %w(WM1 WM2)
         qpdf = commands_named('qpdf').first
@@ -273,40 +320,66 @@ RSpec.describe MyModuleReports::MergePdfsWithWatermarkService do
         expect(qpdf[4]).to eq '--'
         expect(attached_content).to eq 'REPORT|overlay(A,WM1|WM2)'
       end
-    end
 
-    context 'with page numbering' do
-      let(:numbering) { true }
-
-      it 'uses the page index as the footer' do
+      it 'uses the name of the result for a result group' do
+        result_group['asset_ids'] = [asset_b.id]
+        asset_groups.replace([result_group])
         service.generate!
-        expect(footer_texts).to eq %w(1 2)
-        expect(header_texts).to eq [nil, nil]
+        expect(group_footers).to eq ['Result with files', 'Result with files']
       end
     end
 
-    context 'with numbering and footer text' do
-      let(:numbering) { true }
-      let(:footer_text) { 'Lab' }
+    context 'with group numeration' do
+      let(:display_groups) { true }
+      let(:group_numbering) { true }
+      let(:step_group) { { 'type' => 'step', 'id' => step.id, 'asset_ids' => [asset_a.id, asset_c.id] } }
 
-      it 'appends the page index to the footer text' do
+      it 'continues the page index across the assets of a group' do
         service.generate!
-        expect(footer_texts).to eq %w(Lab_1 Lab_2)
+        expect(group_footers).to eq (1..4).map { |i| "Step with files_#{i}" }
+        expect(header_texts).to eq [nil] * 4
+        expect(attached_content).to eq 'REPORT|overlay(A,WM1|WM2)|overlay(C,WM1|WM2)'
+      end
+    end
+
+    context 'with attachment references' do
+      let(:display_references) { true }
+
+      it 'shows the file name as the reference footer and no group footer' do
+        service.generate!
+        expect(reference_footers).to eq ["#{file_tag}a.pdf", "#{file_tag}a.pdf"]
+        expect(group_footers).to eq ['', '']
+      end
+
+      it 'prefers the file title' do
+        asset_a.update_columns(file_title: 'Gel image')
+        service.generate!
+        expect(reference_footers).to eq ["#{file_tag}Gel image", "#{file_tag}Gel image"]
+      end
+
+      context 'with page numbers' do
+        let(:reference_numbering) { true }
+
+        it 'appends the page number of the file' do
+          service.generate!
+          expect(reference_footers).to eq ["#{file_tag}a.pdf_1", "#{file_tag}a.pdf_2"]
+        end
       end
     end
 
     context 'with only a header' do
       let(:header_text) { 'Top secret' }
 
-      it 'renders the header without footer' do
+      it 'renders the header without footers' do
         service.generate!
         expect(header_texts).to eq ['Top secret', 'Top secret']
-        expect(footer_texts).to eq [nil, nil]
+        expect(group_footers).to eq ['', '']
+        expect(reference_footers).to eq ['', '']
       end
     end
 
     context 'with a single page pdf' do
-      let(:footer_text) { 'Only' }
+      let(:display_groups) { true }
       let(:pdfinfo_output) { "Pages: 1\nPage size: 612 x 792 pts (letter)\n" }
 
       it 'does not need to merge the watermark pages' do
@@ -316,14 +389,28 @@ RSpec.describe MyModuleReports::MergePdfsWithWatermarkService do
       end
     end
 
-    context 'with a blank page and header' do
+    context 'with a blank page after the group' do
       let(:blank_page) { true }
       let(:header_text) { 'H' }
+      let(:display_groups) { true }
+      let(:group_numbering) { true }
 
-      it 'counts the blank page in the watermark and overlays the merged content' do
+      it 'watermarks the blank page separately and numbers it after the last page' do
         service.generate!
+        expect(Reports::ConvertFileFormatService).to have_received(:convert_batch).twice
         expect(header_texts.size).to eq 3
-        expect(attached_content).to eq 'REPORT|overlay(A|BLANK,WM1|WM2|WM3)'
+        expect(group_footers.last).to eq 'Step with files_3'
+        expect(attached_content).to eq 'REPORT|overlay(A,WM1|WM2)|overlay(BLANK,WM1)'
+      end
+    end
+
+    context 'with a blank page and no watermark options' do
+      let(:blank_page) { true }
+
+      it 'appends the plain blank page' do
+        service.generate!
+        expect(Reports::ConvertFileFormatService).not_to have_received(:convert_batch)
+        expect(attached_content).to eq 'REPORT|A|BLANK'
       end
     end
 

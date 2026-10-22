@@ -15,13 +15,13 @@ describe AtWhoController, type: :controller do
 
   describe 'common filters' do
     it 'returns 404 for an unknown team' do
-      get :projects, params: { id: -1, query: query }, format: :json
+      get :search, params: { id: -1, query: query }, format: :json
       expect(response).to have_http_status(:not_found)
     end
 
     it 'returns 403 when the user cannot read the team' do
       other_team = create :team, created_by: create(:user)
-      get :projects, params: { id: other_team.id, query: query }, format: :json
+      get :search, params: { id: other_team.id, query: query }, format: :json
       expect(response).to have_http_status(:forbidden)
     end
   end
@@ -36,107 +36,93 @@ describe AtWhoController, type: :controller do
 
     it 'renders team users matching the query' do
       get :users, params: { id: team.id, query: 'zeppelin' }, format: :json
-      html = json['users'].first
       expect(response).to have_http_status(:ok)
-      expect(html).to include('Zeppelin Colleague', colleague.id.base62_encode)
-      expect(html).not_to include('Zeppelin Outsider')
+      expect(json['users'].map { |u| u['full_name'] }).to eq ['Zeppelin Colleague']
+      expect(json['users'].first).to include('id' => colleague.id.base62_encode, 'email' => 'zeppelin@example.com')
+      expect(json['limit_reached']).to be false
     end
 
-    it 'renders the no results block when nobody matches' do
+    it 'renders no users when nobody matches' do
       get :users, params: { id: team.id, query: 'no-such-person-xyz' }, format: :json
-      expect(json['users'].first).to include('atwho-no-results', I18n.t('atwho.no_results.users'))
+      expect(json['users']).to be_empty
     end
   end
 
-  describe 'GET menu_items' do
+  describe 'GET search' do
     let!(:other_project) { create :project, team: team, created_by: user, name: 'Zebra project' }
 
-    it 'returns projects, experiments and tasks' do
-      get :menu_items, params: { id: team.id, query: '' }, format: :json
-      expect(json['status']).to eq 'ok'
-      expect(json['prj'].map { |p| p['id'] }).to include(project.id)
-      expect(json['exp'].map { |e| e['id'] }).to include(experiment.id)
-      expect(json['tsk'].map { |t| t['id'] }).to include(my_module.id)
+    def ids_of(type)
+      json['items'].select { |i| i['type'] == type }.map { |i| i['id'] }
+    end
+
+    it 'searches across all types without a parent_type' do
+      get :search, params: { id: team.id, query: '' }, format: :json
+      expect(response).to have_http_status(:ok)
+      expect(ids_of('prj')).to include(project.id)
+      expect(ids_of('exp')).to include(experiment.id)
+      expect(ids_of('tsk')).to include(my_module.id)
+      expect(json['limit_reached']).to be false
     end
 
     it 'filters by query' do
-      get :menu_items, params: { id: team.id, query: 'Zebra' }, format: :json
-      expect(json['prj'].map { |p| p['id'] }).to eq [other_project.id]
-    end
-  end
-
-  describe 'GET projects' do
-    it 'renders matching projects' do
-      get :projects, params: { id: team.id, query: project.name }, format: :json
-      expect(response).to have_http_status(:ok)
-      expect(json['team']).to eq team.id
-      expect(json['res'].first).to include(project.name)
-    end
-  end
-
-  describe 'GET experiments' do
-    it 'renders matching experiments' do
-      get :experiments, params: { id: team.id, query: experiment.name }, format: :json
-      expect(json['team']).to eq team.id
-      expect(json['res'].first).to include(experiment.name)
-    end
-  end
-
-  describe 'GET my_modules' do
-    it 'renders matching tasks' do
-      get :my_modules, params: { id: team.id, query: my_module.name }, format: :json
-      expect(json['team']).to eq team.id
-      expect(json['res'].first).to include(my_module.name)
-    end
-  end
-
-  describe 'GET menu' do
-    let!(:repository) { create :repository, team: team, created_by: user, name: 'Menu inventory' }
-
-    before { create :repository, team: team, created_by: user, name: 'Second inventory' }
-
-    it 'lists readable repositories in the menu' do
-      get :menu, params: { id: team.id }, format: :json
-      expect(json['html']).to include('Menu inventory', 'Second inventory', "data-object-id=\"#{repository.id}\"")
-    end
-  end
-
-  describe 'GET rep_items' do
-    let!(:repository) { create :repository, team: team, created_by: user, name: 'Samples' }
-    let!(:row) { create :repository_row, repository: repository, created_by: user, name: 'Alpha sample' }
-    let!(:other_row) { create :repository_row, repository: repository, created_by: user, name: 'Beta sample' }
-
-    it 'returns rows of the given repository filtered by query' do
-      get :rep_items, params: { id: team.id, repository_id: repository.id, query: 'Alpha' }, format: :json
-      expect(json['repository']).to eq repository.id
-      expect(json['team']).to eq team.id
-      expect(json['res'].first).to include('Alpha sample')
-      expect(json['res'].first).not_to include('Beta sample')
+      get :search, params: { id: team.id, query: 'Zebra', parent_type: 'sa-projects' }, format: :json
+      expect(ids_of('prj')).to eq [other_project.id]
     end
 
-    it 'falls back to the first readable repository without repository_id' do
-      get :rep_items, params: { id: team.id, query: 'Alpha' }, format: :json
-      expect(json['repository']).to eq Repository.active.readable_by_user(user, team).first.id
+    it 'lists experiments of a project for a parent_id' do
+      get :search, params: { id: team.id, query: '', parent_type: 'sa-projects', parent_id: project.id },
+                   format: :json
+      expect(ids_of('exp')).to eq [experiment.id]
     end
 
-    it 'returns no repository when the repository does not exist' do
-      get :rep_items, params: { id: team.id, repository_id: -1, query: '' }, format: :json
-      expect(json['repository']).to be_nil
+    it 'lists tasks of an experiment for a parent_id' do
+      get :search, params: { id: team.id, query: '', parent_type: 'sa-experiments', parent_id: experiment.id },
+                   format: :json
+      expect(ids_of('tsk')).to eq [my_module.id]
     end
 
-    it 'returns no items when the repository cannot be read' do
-      foreign = create :repository, created_by: create(:user)
-      get :rep_items, params: { id: team.id, repository_id: foreign.id, query: '' }, format: :json
-      expect(json['repository']).to be_nil
+    it 'lists readable repositories at the root' do
+      repository = create :repository, team: team, created_by: user, name: 'Menu inventory'
+      get :search, params: { id: team.id, query: 'Menu', parent_type: 'sa-repositories' }, format: :json
+      expect(ids_of('rep')).to eq [repository.id]
     end
 
-    it 'passes the readable assignable task to the search' do
-      get :rep_items,
-          params: { id: team.id, repository_id: repository.id, assignable_my_module_id: my_module.id,
-                    query: 'Alpha' },
-          format: :json
-      expect(json['repository']).to eq repository.id
-      expect(json['res'].first).to include('Alpha sample')
+    describe 'sa-repositories with a parent_id' do
+      let!(:repository) { create :repository, team: team, created_by: user, name: 'Samples' }
+      let!(:row) { create :repository_row, repository: repository, created_by: user, name: 'Alpha sample' }
+
+      before { create :repository_row, repository: repository, created_by: user, name: 'Beta sample' }
+
+      it 'returns rows of the repository filtered by query' do
+        get :search, params: { id: team.id, query: 'Alpha', parent_type: 'sa-repositories',
+                               parent_id: repository.id },
+                     format: :json
+        expect(json['items'].map { |i| i['name'] }).to eq ['Alpha sample']
+        expect(json['items'].first).not_to have_key('row_assigned')
+      end
+
+      it 'returns no items when the repository cannot be read' do
+        foreign = create :repository, created_by: create(:user)
+        get :search, params: { id: team.id, query: '', parent_type: 'sa-repositories', parent_id: foreign.id },
+                     format: :json
+        expect(json['items']).to be_empty
+      end
+
+      it 'marks assignment for a readable assignable task' do
+        get :search, params: { id: team.id, query: 'Alpha', parent_type: 'sa-repositories',
+                               parent_id: repository.id, assignable_my_module_id: my_module.id },
+                     format: :json
+        expect(json['items'].first).to include('row_assigned' => false, 'my_module_id' => my_module.id,
+                                               'repository_row_id' => row.id)
+      end
+
+      it 'ignores an assignable task the user cannot read' do
+        foreign_task = create :my_module, created_by: create(:user)
+        get :search, params: { id: team.id, query: 'Alpha', parent_type: 'sa-repositories',
+                               parent_id: repository.id, assignable_my_module_id: foreign_task.id },
+                     format: :json
+        expect(json['items'].first).not_to have_key('row_assigned')
+      end
     end
   end
 end

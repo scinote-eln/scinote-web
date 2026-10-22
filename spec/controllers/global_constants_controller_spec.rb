@@ -38,12 +38,12 @@ describe GlobalConstantsController, type: :controller do
         )
       end
 
-      it 'exposes the report header and footer limits' do
+      it 'exposes the report header limits' do
         get :index, format: :js, xhr: true
 
         expect(constants).to include(
           'MY_MODULE_REPORT_HEADER_MAX_LENGTH' => Constants::MY_MODULE_REPORT_HEADER_MAX_LENGTH,
-          'MY_MODULE_REPORT_FOOTER_MAX_LENGTH' => Constants::MY_MODULE_REPORT_FOOTER_MAX_LENGTH
+          'MY_MODULE_REPORT_HEADER_MAX_LINES' => Constants::MY_MODULE_REPORT_HEADER_MAX_LINES
         )
       end
     end

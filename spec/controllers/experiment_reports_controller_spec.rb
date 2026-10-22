@@ -174,11 +174,19 @@ describe ExperimentReportsController, type: :controller do
     let!(:analytical_report) { create_report(name: 'Preview me') }
 
     it 'returns the rendered preview html with the download link' do
-      get :preview, params: { experiment_id: experiment.id, id: analytical_report.id }, format: :json
+      get :preview, params: { experiment_id: experiment.id, id: analytical_report.id,
+                              gallery: [analytical_report.id] }, format: :json
 
       expect(response).to have_http_status(:ok)
       expect(json['html']).to include('Preview me')
       expect(json['html']).to include(download_experiment_experiment_report_path(experiment.id, analytical_report))
+    end
+
+    it 'renders the preview without a gallery param' do
+      pending 'bug: preview calls in_order_of(:id, params[:gallery]) which raises NoMethodError when gallery is missing'
+      get :preview, params: { experiment_id: experiment.id, id: analytical_report.id }, format: :json
+
+      expect(response).to have_http_status(:ok)
     end
 
     it 'returns 404 for an unknown report' do

@@ -113,8 +113,10 @@ describe MyModuleReportsController, type: :controller do
 
   describe 'POST create' do
     let(:params) do
-      { my_module_id: my_module.id, report_template_id: report_template.id, header: 'Head', footer: 'Foot',
-        add_numarization: 'true', add_blank_page: 'false', asset_ids: %w(1 2) }
+      { my_module_id: my_module.id, report_template_id: report_template.id, header: 'Head',
+        display_attachment_references: 'true', add_reference_page_numbers: 'false',
+        display_attachment_groups: 'true', add_group_numeration: 'true', add_blank_page_after_group: 'false',
+        asset_groups: [{ type: 'step', id: '1', asset_ids: %w(1 2) }] }
     end
 
     it 'creates an in-progress report and enqueues the generation job' do
@@ -129,7 +131,11 @@ describe MyModuleReportsController, type: :controller do
       expect(response).to have_http_status(:no_content).or have_http_status(:ok)
       expect(report).to have_attributes(name: 'Template A', generating_status: 'in_progress',
                                         created_by: user, report_template_id: report_template.id)
-      expect(report.params).to include('header' => 'Head', 'footer' => 'Foot', 'asset_ids' => %w(1 2))
+      expect(report.params).to include(
+        'header' => 'Head', 'display_attachment_references' => 'true', 'add_reference_page_numbers' => 'false',
+        'display_attachment_groups' => 'true', 'add_group_numeration' => 'true', 'add_blank_page_after_group' => 'false',
+        'asset_groups' => [{ 'type' => 'step', 'id' => '1', 'asset_ids' => %w(1 2) }]
+      )
     end
 
     it 'returns 404 for a template of another protocol' do
@@ -191,21 +197,26 @@ describe MyModuleReportsController, type: :controller do
       asset
     end
 
-    it 'lists pdf assets of steps first and then of results with their origin' do
+    it 'lists pdf assets grouped by step first and then by result' do
       step_asset = attach_pdf(step, 'a_step.pdf')
+      step_asset_two = attach_pdf(step, 'b_step.pdf')
       result = create :result, my_module: my_module, user: user, name: 'Res 1'
       result_asset = attach_pdf(result, 'b_result.pdf')
       get :pdfs, params: { my_module_id: my_module.id }, format: :json
 
       expect(response).to have_http_status(:ok)
-      expect(json['data'].map { |a| a['id'] }).to eq [step_asset.id, result_asset.id]
-      expect(json['data'].map { |a| a['parent_name'] }).to eq [
-        I18n.t('my_modules.reports.wizard.first_step.asset_from_step', name: step.name),
-        I18n.t('my_modules.reports.wizard.first_step.asset_from_result', name: 'Res 1')
+      expect(json['data'].map { |g| [g['type'], g['id']] }).to eq [['step', step.id], ['result', result.id]]
+      expect(json['data'].map { |g| g['name'] }).to eq [
+        I18n.t('my_modules.reports.wizard.first_step.step_group', name: step.name),
+        I18n.t('my_modules.reports.wizard.first_step.result_group', name: 'Res 1')
       ]
-      expect(json['data'].first['medium_preview']).to include('/rails/active_storage/representations/')
-      expect(json['data'].first).to include('file_name' => 'a_step.pdf', 
-                                            'preview' => asset_file_preview_path(step_asset))
+      expect(json['data'].first['assets'].map { |a| a['id'] }).to eq [step_asset.id, step_asset_two.id]
+      expect(json['data'].last['assets'].map { |a| a['id'] }).to eq [result_asset.id]
+
+      first_asset = json['data'].first['assets'].first
+      expect(first_asset['medium_preview']).to include('/rails/active_storage/representations/')
+      expect(first_asset).to include('file_name' => 'a_step.pdf', 'file_title' => step_asset.file_title,
+                                     'preview' => asset_file_preview_path(step_asset))
     end
 
     it 'returns an empty list when there are no pdf assets' do

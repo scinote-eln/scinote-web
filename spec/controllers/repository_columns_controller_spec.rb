@@ -46,33 +46,11 @@ describe RepositoryColumnsController, type: :controller do
       JSON.parse(response.body)
     end
 
-    # these partials are html-only, so the requests are made without a json format
-    it 'index renders the modal html' do
-      get :index, params: { repository_id: repository.id }
-      expect(json['id']).to eq repository.id
-      expect(json['html']).to be_present
-    end
-
     it 'index_new serializes the columns' do
       text_column
       get :index_new, params: { repository_id: repository.id }, format: :json
       expect(response).to have_http_status(:ok)
       expect(json['data'].size).to eq 1
-    end
-
-    it 'new renders the modal' do
-      get :new, params: { repository_id: repository.id }
-      expect(json['html']).to be_present
-    end
-
-    it 'edit renders the modal' do
-      get :edit, params: { repository_id: repository.id, id: text_column.id }
-      expect(json['html']).to be_present
-    end
-
-    it 'destroy_html renders the modal' do
-      get :destroy_html, params: { repository_id: repository.id, id: text_column.id }
-      expect(json['html']).to be_present
     end
 
     it 'describe_all lists searchable columns plus updated_on/updated_by' do
@@ -110,27 +88,17 @@ describe RepositoryColumnsController, type: :controller do
     end
 
     it 'returns 404 for an unknown repository' do
-      get :index, params: { repository_id: -1 }, format: :json
+      get :index_new, params: { repository_id: -1 }, format: :json
       expect(response).to have_http_status(:not_found)
     end
 
     it 'returns 404 for an unknown column' do
-      get :edit, params: { repository_id: repository.id, id: -1 }, format: :json
+      delete :destroy, params: { repository_id: repository.id, id: -1 }, format: :json
       expect(response).to have_http_status(:not_found)
     end
 
     context 'as a viewer' do
       before { make_viewer }
-
-      it 'forbids new' do
-        get :new, params: { repository_id: repository.id }, format: :json
-        expect(response).to have_http_status(:forbidden)
-      end
-
-      it 'forbids edit' do
-        get :edit, params: { repository_id: repository.id, id: text_column.id }, format: :json
-        expect(response).to have_http_status(:forbidden)
-      end
 
       it 'forbids destroy' do
         text_column
