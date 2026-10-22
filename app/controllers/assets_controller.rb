@@ -230,9 +230,13 @@ class AssetsController < ApplicationController
   end
 
   def update_title
-    @asset.file_title = params.require(:asset).permit(:file_title)[:file_title]
+    old_title = @asset.file_title
+    new_title = params.require(:asset).permit(:file_title)[:file_title]
+
+    @asset.file_title = new_title
     @asset.last_modified_by = current_user
     if @asset.save
+      log_asset_title_changed_activity(old_title, new_title)
       render json: @asset, serializer: AssetSerializer, user: current_user
     else
       render json: @asset.errors, status: :unprocessable_entity
@@ -486,25 +490,25 @@ class AssetsController < ApplicationController
     when Step
       if @asset.parent.protocol.in_module?
         message_items.merge!({ my_module: @assoc.protocol.my_module.id, step: @asset.parent.id })
-        log_restore_activity(:task_step_restore_asset_version, @assoc.protocol,
-                             @assoc.protocol.team, @assoc.my_module&.project, message_items)
+        log_asset_activity(:task_step_restore_asset_version, @assoc.protocol,
+                           @assoc.protocol.team, @assoc.my_module&.project, message_items)
       else
         message_items.merge!({ protocol: @assoc.protocol.id, step: @asset.parent.id })
-        log_restore_activity(:protocol_step_restore_asset_version, @assoc.protocol,
-                             @assoc.protocol.team, nil, message_items)
+        log_asset_activity(:protocol_step_restore_asset_version, @assoc.protocol,
+                           @assoc.protocol.team, nil, message_items)
       end
     when Result
       message_items.merge!({ result: @assoc.id, my_module: @assoc.my_module.id })
-      log_restore_activity(:task_result_restore_asset_version, @assoc,
-                           @assoc.my_module.team, @assoc.my_module.project, message_items)
+      log_asset_activity(:task_result_restore_asset_version, @assoc,
+                         @assoc.my_module.team, @assoc.my_module.project, message_items)
     when ResultTemplate
       message_items[:result_template] = @assoc.id
       message_items[:protocol] = @assoc.protocol.id
-      log_restore_activity(:result_template_restore_asset_version, @assoc, @assoc.team, nil, message_items)
+      log_asset_activity(:result_template_restore_asset_version, @assoc, @assoc.team, nil, message_items)
     when RepositoryCell
       message_items.merge!({ repository_column: @assoc.repository_column.id, repository: @repository.id })
-      log_restore_activity(:repository_column_restore_asset_version, @repository,
-                           @repository.team, nil, message_items)
+      log_asset_activity(:repository_column_restore_asset_version, @repository,
+                         @repository.team, nil, message_items)
     end
 
     @asset.save!
@@ -566,7 +570,7 @@ class AssetsController < ApplicationController
                         else
                           :task_step_file_restored
                         end
-        log_restore_activity(
+        log_asset_activity(
           activity_type,
           @assoc.protocol,
           @assoc.protocol.team,
@@ -583,7 +587,7 @@ class AssetsController < ApplicationController
                         else
                           :result_file_restored
                         end
-        log_restore_activity(
+        log_asset_activity(
           activity_type,
           @assoc,
           @assoc.team,
@@ -719,7 +723,7 @@ class AssetsController < ApplicationController
             }.merge(message_items))
   end
 
-  def log_restore_activity(type_of, subject, team, project = nil, message_items = {})
+  def log_asset_activity(type_of, subject, team, project = nil, message_items = {})
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
@@ -727,6 +731,42 @@ class AssetsController < ApplicationController
             team: team,
             project: project,
             message_items: message_items)
+  end
+
+  def log_asset_title_changed_activity(old_title, new_title)
+    message_items = {
+      file: @asset.file_name,
+      old_title: old_title.to_s,
+      new_title: new_title.to_s,
+      user: current_user.id
+    }
+
+    case @assoc
+    when Step
+      message_items[:my_module] = @assoc.my_module.id if @assoc.protocol.in_module?
+      log_step_activity(
+        "#{@assoc.protocol.in_module? ? 'task' : 'protocol'}_step_asset_title_changed",
+        @assoc,
+        @assoc.my_module&.project,
+        message_items
+      )
+    when Result
+      log_result_activity(
+        :result_asset_title_changed,
+        @assoc,
+        message_items.merge(my_module: @assoc.my_module.id)
+      )
+    when ResultTemplate
+      log_result_activity(
+        :result_template_asset_title_changed,
+        @assoc,
+        message_items
+      )
+    when RepositoryCell
+      message_items[:repository_column] = @assoc.repository_column.id
+      message_items[:repository_row] = @assoc.repository_row.id
+      log_asset_activity(:item_asset_title_changed, @repository, @repository.team, nil, message_items)
+    end
   end
 
   def type_of_delete_activity
