@@ -124,14 +124,22 @@ export default {
     hasStockColumn() {
       return this.columnDefs.some((col) => col.field === 'stock');
     },
+    stockDisabled() {
+      if (this.dataType === 'RepositoryStockValue') return false;
+
+      return !GLOBAL_CONSTANTS.STOCK_MANAGEMENT_ENABLED || this.hasStockColumn;
+    },
     typeOptions() {
-      const types = [...CREATABLE_TYPES];
-      if (GLOBAL_CONSTANTS.STOCK_MANAGEMENT_ENABLED && (!this.hasStockColumn || this.dataType === 'RepositoryStockValue')) {
-        types.push('RepositoryStockValue');
-      }
-      return types.map((type) => (
-        [type, typeLabel(this.i18n, type)]
-      ));
+      return CREATABLE_TYPES.map((type) => {
+        const meta = {};
+        if (type === 'RepositoryStockValue' && this.stockDisabled) {
+          meta.disabled = true;
+          if (this.hasStockColumn) {
+            meta.hint = this.i18n.t('libraries.manange_modal_column.stock_type.one_per_inventory');
+          }
+        }
+        return [type, typeLabel(this.i18n, type), meta];
+      });
     }
   },
   methods: {
