@@ -20,8 +20,7 @@ export default {
   },
   data() {
     return {
-      repositoryColumnsDef: [],
-      customColumns: []
+      repositoryColumnsDef: []
     };
   },
   computed: {
@@ -173,7 +172,6 @@ export default {
       axios.get(index_new_repository_repository_columns_path(this.repositoryVersion.id))
         .then((response) => {
           let columns = [...this.defaultRepositoryColumnsDef];
-          this.customColumns = response.data.data
           response.data.data.forEach((column) => {
             let field = `col_${column.id}`;
             if (column.attributes.data_type == 'RepositoryStockValue') {

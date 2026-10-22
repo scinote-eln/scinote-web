@@ -67,6 +67,7 @@
         :repository-id="<%= @repository.id %>"
         :can-manage-repository="<%= can_manage_repository?(@repository) %>"
         :can-manage-filters="<%= can_manage_repository_filters?(@repository)%>"
+        :archived="<%= @repository.archived? %>"
         create-url="<%= repository_repository_rows_path(@repository) if can_create_repository_rows?(@repository) %>"
         active-page-url="<%= repository_path(@repository) %>"
         archived-page-url="<%= repository_path(@repository, view_mode: :archived) %>"
@@ -77,10 +78,9 @@
   </div>
 </div>
 
-<%= render partial: 'repository_columns/manage_column_modal', locals: { my_module_page: false } %>
+<%= render partial: "assign_items_to_task_modal" %>
 
 <%= javascript_include_tag 'vue_components_action_toolbar' %>
 <%= javascript_include_tag 'inputmask' %>
-<%= javascript_include_tag 'emoji_button' %>
 <%= javascript_include_tag 'pdf_js' %>
 <%= stylesheet_link_tag 'pdf_js_styles' %>

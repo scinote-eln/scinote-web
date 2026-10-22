@@ -21,6 +21,8 @@
         :tableState="tableState"
         :hideColumnsManagment="hideColumnsManagment"
         :enableBarcodeSearch="enableBarcodeSearch"
+        :customManageColumnsModal="customManageColumnsModal"
+        :manageColumnsModalProps="manageColumnsModalProps"
         @applyFilters="applyFilters"
         @setTableView="switchViewRender('table')"
         @setCardsView="switchViewRender('cards')"
@@ -31,6 +33,7 @@
         @unPinColumn="unPinColumn"
         @reorderColumns="reorderColumns"
         @resetColumnsToDefault="resetColumnsToDefault"
+        @reloadColumns="$emit('reloadColumns')"
         :e2eValue="dataE2e"
       />
       <div v-else class="h-4 w-full"></div>
@@ -267,6 +270,13 @@ export default {
       type: Boolean,
       default: false
     },
+    customManageColumnsModal: {
+      type: Object
+    },
+    manageColumnsModalProps: {
+      type: Object,
+      default: () => ({})
+    }
   },
   data() {
     return {

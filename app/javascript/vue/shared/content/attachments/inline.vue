@@ -54,7 +54,6 @@
           @attachment:moved="attachmentMoved"
           @attachment:uploaded="reloadAttachments"
           @attachment:versionRestored="reloadAttachments"
-          @attachment:changed="$emit('attachment:changed', $event)"
           @attachment:update="$emit('attachment:update', $event)"
           @attachment:toggle_menu="toggleMenuDropdown"
           @attachment:move_modal="showMoveModal"
@@ -115,20 +114,17 @@ import ContextMenu from './context_menu.vue';
 import PdfViewer from '../../pdf_viewer.vue';
 import MoveAssetModal from '../modal/move.vue';
 import MoveMixin from './mixins/move.js';
-import OpenLocallyMixin from './mixins/open_locally.js';
 import AttachmentActions from './attachment_actions.vue';
-import OpenMenu from './open_menu.vue';
 import LockedTag from '../../snippets/locked_tag.vue';
 import axios from '../../../../packs/custom_axios.js';
 
 export default {
   name: 'inlineAttachment',
-  mixins: [ContextMenuMixin, AttachmentMovedMixin, MoveMixin, OpenLocallyMixin],
+  mixins: [ContextMenuMixin, AttachmentMovedMixin, MoveMixin],
   components: {
     ContextMenu,
     PdfViewer,
     MoveAssetModal,
-    OpenMenu,
     AttachmentActions,
     LockedTag
   },

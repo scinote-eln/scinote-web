@@ -121,15 +121,18 @@
       </GeneralDropdown>
     </div>
     <teleport to="body">
-      <ColumnsModal
+      <component
+        :is="ColumnsModalComponent"
         :tableState="tableState"
         :columnDefs="columnDefs"
+        v-bind="manageColumnsModalProps"
         @hideColumn="(column) => $emit('hideColumn', column)"
         @showColumn="(column) => $emit('showColumn', column)"
         @unPinColumn="(column) => $emit('unPinColumn', column)"
         @pinColumn="(column) => $emit('pinColumn', column)"
         @reorderColumns="(columns) => $emit('reorderColumns', columns)"
         @resetToDefault="resetToDefault"
+        @reloadColumns="$emit('reloadColumns')"
         v-if="showColumnsModal"
         @close="showColumnsModal = false" />
     </teleport>
@@ -209,6 +212,13 @@ export default {
     enableBarcodeSearch: {
       type: Boolean,
       default: false
+    },
+    customManageColumnsModal: {
+      type: Object
+    },
+    manageColumnsModalProps: {
+      type: Object,
+      default: () => ({})
     }
   },
   data() {
@@ -227,6 +237,9 @@ export default {
   },
   mixins: [tooltipMixin],
   computed: {
+    ColumnsModalComponent() {
+      return this.customManageColumnsModal || ColumnsModal;
+    },
     viewModesMenu() {
       return [
         {
