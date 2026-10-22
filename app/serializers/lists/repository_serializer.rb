@@ -62,7 +62,7 @@ module Lists
         show_user_group_assignments_access: show_user_group_assignments_access_permissions_repository_path(object)
       }
 
-      urls[:show] = repository_path(object) if can_read?
+      urls[:show] = repository_path(object, view_mode: object.archived? ? 'archived' : 'active') if can_read?
 
       if can_manage_repository_users?(object)
         urls[:update_access] = access_permissions_repository_path(id: object)

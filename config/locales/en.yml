@@ -445,6 +445,8 @@ en:
       experiment: "#private experiment"
       my_module: "#private task"
       repository_row: "#private inventory item"
+      repository: "#private inventory"
+      file: "#private file"
       object: "#private object"
 
   attachments:
@@ -1232,6 +1234,7 @@ en:
       not_valid_future_date: "Future dates not allowed"
       no_selection: "No options selected"
       mark_as_completed: "Mark as completed"
+      input_length: "%{length} characters"
     index:
       head_title: "Forms"
       head_title_archived: "Archived forms"
@@ -2003,8 +2006,8 @@ en:
           label: "Step 1"
           description:  "Select files you want to include into your report as attachment and define their order."
           no_assets: "Task contains no PDF attachments."
-          asset_from_result: "Result: %{name}"
-          asset_from_step: "Step: %{name}"
+          result_group: "Result: %{name}"
+          step_group: "Step: %{name}"
         second_step:
           title: "Step 2: Add attachment information"
           label: "Step 2"
@@ -2012,15 +2015,17 @@ en:
           form:
             header:
               label: "Header"
+              description: "Header text"
               placeholder: "Maximum 3 rows, 140 characters"
               error_rows: "Maximum 3 rows allowed"
               error_size: "Header is too long (maximum number is 140 characters)"
             footer:
               label: "Footer"
-              placeholder: "1 row, 80 characters"
-              error_size: "Footer is too long (maximum number is 80 characters)"
-            numarization_checkbox: "Add numerization after footer text"
-            blank_page_checkbox: "Add a blank page after attachments"
+              display_attachment_references: "Display attachment references"
+              add_reference_page_numbers: "Add page numbers for attachment references"
+              display_attachment_groups: "Display the attachment groups"
+              add_group_numeration: "Add numeration after attachment groups"
+              blank_page_after_group: "Add a blank page after attachment group"
         third_step:
           description: "Header and footer will appear on each page of the attachment section. If left empty, no header and footer will be added."
 
@@ -2589,6 +2594,7 @@ en:
       your_team: "your Workspace"
       show_active_items: "Show active items"
       show_archived_items: "Show archived items"
+      no_active_repository_rows_archived_repository: "This inventory is archived and can't have active items."
       archived_view_label:
         active: "These are individually archived items from the %{repository_name} inventory. The inventory itself is active."
         archived_on: "Inventory archived on"
@@ -4986,6 +4992,12 @@ en:
     file_preview:
       edit_in_scinote: "Open in image editor"
       edit_in_marvinjs: "Open in Marvin JS"
+      file_metadata: "File metadata"
+      file_title: "File title"
+      file_title_placeholder: "Enter file title"
+      file_title_max_length_error: "File title is too long (maximum number is %{max_length} characters)."
+      no_file_title: "No file title"
+      file_id: "File ID"
     context_menu:
       set_view_size: "SET PREVIEW SIZE"
       rename: "Rename"
@@ -5039,30 +5051,48 @@ en:
 
   atwho:
     no_results:
+      no_matches_html: "No matches for <b>%{query}</b>"
+      no_matches_hint: "Try an ID like IT42453, or part of a name."
       projects: "Projects with this name/ID were not found"
       experiments: "Experiments with this name/ID were not found"
       my_modules: "Tasks with this name/ID were not found"
       repository_rows: "This inventory is currently empty."
+      files: "Files with this name/code were not found"
       users: "Users with this name were not found"
+      mixed: "Nothing found"
       description: "Once you create items in the inventory, they will appear here."
     buttons:
-      insert: "Insert"
+      add: "Add"
+      mention: "Mention"
+      mention_page: "Mention page"
+      add_page_number: "Add page number"
       assign: "Assign to task"
-    projects: PROJECTS
-    experiments: EXPERIMENTS
-    tasks: TASKS
-    inventories: INVENTORIES
+    navigate: "Navigate"
+    projects: Projects
+    experiments: Experiments
+    tasks: Tasks
+    inventories: Inventories
     more_results: To get other results, please type more
+    search_placeholder: "Search"
+    search_placeholder_reference: "Assign anything"
+    search_placeholder_users: "Search for users"
+    search_placeholder_in: "Search in %{name}"
     users:
       title: "People"
       header: "Type the name or email of the user you want to mention (they will be notified)"
-      help: "Navigate: ↑ ↓    •    Insert: Enter / Tab    •    Dismiss: Esc"
+      help: "Insert: Click    •    Dismiss: Esc"
       not_in_this_team: 'Not in this workspace'
       popover_html: "<span class='silver'>Workspace:</span>&nbsp;%{team} <br> <span class='silver'>Role:</span>&nbsp;%{role} <br> <span class='silver'>Joined:</span>&nbsp;%{time}"
     res:
       archived: "(archived)"
       removed: "(removed)"
       deleted: "(deleted)"
+    tags:
+      prj: "[Pro]"
+      exp: "[Exp]"
+      tsk: "[Tsk]"
+      file: "[Fil]"
+      rep: "[Inv]"
 
   dropdown_selector:
     nothing_found: "Nothing found..."

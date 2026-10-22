@@ -1,7 +1,7 @@
 <template>
   <div class="h-full">
     <DataTable
-      v-if="repositoryColumnsDef.length > 0"
+      v-if="repositoryColumnsDef.length > 0 || (archived && currentViewMode == 'active')"
       :columnDefs="repositoryColumnsDef"
       :tableId="'repository_table_' + repositoryId"
       :dataUrl="dataSource"
@@ -22,13 +22,17 @@
       :activePageUrl="activePageUrl"
       :archivedPageUrl="archivedPageUrl"
       :currentViewMode="currentViewMode"
+      :customManageColumnsModal="ManageColumnsModal"
+      :manageColumnsModalProps="{ repositoryId, canManageColumns: canManageRepository }"
+      @reloadColumns="legacyReloadTableComponent"
+      :objectArchived="archived"
+      :hiddenDataMessage="i18n.t('repositories.show.no_active_repository_rows_archived_repository')"
       @cancelCreation="cancelCreation"
       @showTextCell="showTextCellModal"
       @updateCell="updateCell"
       @uploadFile="uploadFile"
       @openStockModal="openStockModal"
       @updateRemindersCount="updateRemindersCount"
-      @manageColumns="openManageColumnsModal"
       @createRow="createRow"
       @changeName="changeName"
       @tableReloaded="onTableReloaded"
@@ -93,10 +97,6 @@
         @event:created="createEventModalRow = null"
         @close="createEventModalRow = null"/>
     </teleport>
-    <button ref="legacyManageColumns" class="hidden manage-repo-column-index"
-            :data-modal-url="repositoriesUrl"
-            data-action="new">
-    </button>
   </div>
 </template>
 <script>
@@ -112,6 +112,7 @@ import ExportConsumptionModal from './modals/export_stock_consumption_modal.vue'
 import PrintModal from './modals/print_modal.vue';
 import CreateEventModal from '../equipment_bookings/manage_modal.vue';
 import RepositoryFilters from './filters.vue'
+import ManageColumnsModal from './modals/manage_columns.vue';
 
 import {
   repository_table_index_ag_path,
@@ -120,9 +121,6 @@ import {
   repository_repository_row_path,
   repository_repository_row_repository_cell_path,
   rails_direct_uploads_path,
-  repository_repository_columns_path,
-  edit_repository_repository_column_path,
-  repository_columns_destroy_html_path,
   team_repository_hide_reminders_path,
   actions_toolbar_repository_repository_rows_path,
   repository_copy_records_path,
@@ -140,7 +138,8 @@ export default {
     archivedPageUrl: String,
     currentViewMode: { type: String, default: 'active' },
     canManageRepository: { type: Boolean, default: false },
-    canManageFilters: { type: Boolean, default: false }
+    canManageFilters: { type: Boolean, default: false },
+    archived: { type: Boolean }
   },
   components: {
     DataTable,
@@ -156,6 +155,7 @@ export default {
   },
   mixins: [ColumnsMixin],
   data: () => ({
+    ManageColumnsModal,
     repositoryVersion: null,
     addingNewRow: false,
     reloadingTable: false,
@@ -184,9 +184,6 @@ export default {
     delete window.repositoryTable;
   },
   computed: {
-    repositoriesUrl() {
-      return repository_repository_columns_path(this.repositoryId)
-    },
     toolbarActions() {
       const left = [];
       const right = [];
@@ -229,16 +226,6 @@ export default {
           canManageFilters: this.canManageFilters
         }
       });
-
-      if (this.canManageRepository) {
-        right.push({
-          name: 'manageColumns',
-          icon: 'sn-icon sn-icon-add-columns',
-          type: 'emit',
-          tooltip: this.i18n.t('libraries.repository_columns.button_tooltip'),
-          buttonStyle: 'btn btn-light icon-btn btn-black'
-        })
-      }
 
       return {
         left: left,
@@ -441,48 +428,9 @@ export default {
       this.$refs.repositoryTable.updateRowData(updatedRow);
       if (count > 0) this.hasActiveReminders = true;
     },
-    openManageColumnsModal() {
-      this.$refs.legacyManageColumns.click();
-    },
     legacyReloadTableComponent() {
       this.repositoryColumnsDef = []
       this.loadRepositoryColumns();
-    },
-    legacyColumnsHTML() {
-      const columnsHTML = []
-      this.customColumns.forEach((column, index) => {
-
-        const name = column.attributes.name
-        const typeName = I18n.t('libraries.manange_modal_column.select.' + column.attributes.data_type.split(/(?=[A-Z])/).join('_').toLowerCase());
-        const editUrl = edit_repository_repository_column_path(this.repositoryId, column.id)
-        const destroyUrl = repository_columns_destroy_html_path(this.repositoryId, column.id)
-        const e2eName = name.toLowerCase().replace(' ', '_');
-
-        let listItem = `<li class="col-list-el editable has-permissions" data-position="${index}" data-id="${column.id}">
-          <div class="text truncate" title="${name}"  data-e2e="e2e-TX-invItems-manageColumnsModal-${e2eName}-columnName">
-            ${name}
-          </div>
-          <span class="column-type pull-right shrink-0">${
-            typeName
-          }</span>
-          <span class="sci-btn-group manage-controls pull-right" data-view-mode="active">
-            <button class="btn icon-btn btn-light btn-black btn-xs edit-repo-column manage-repo-column"
-                    data-action="edit"
-                    data-modal-url="${editUrl}">
-              <span class="sn-icon sn-icon-edit" title="Edit"  data-e2e="e2e-BT-invItems-manageColumnsModal-${e2eName}-edit"></span>
-            </button>
-            <button class="btn icon-btn btn-light btn-black btn-xs delete-repo-column manage-repo-column"
-                    data-action="destroy"
-                    data-modal-url="${destroyUrl}">
-                    <span class="sn-icon sn-icon-delete" title="Delete" data-e2e="e2e-BT-invItems-manageColumnsModal-${e2eName}-delete"></span>
-            </button>
-          </span>
-          <br>
-        </li>`;
-
-        columnsHTML.push(listItem)
-      });
-      return columnsHTML
     },
     applyFilters(filters) {
       this.activeFilter = filters.data

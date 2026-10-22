@@ -89,6 +89,7 @@ import SelectDropdown from '../../../shared/select_dropdown.vue';
 import modalMixin from '../../../shared/modal_mixin.js';
 import {
   repository_repository_rows_path,
+  repository_repository_row_path,
   list_repositories_path
 } from '../../../../routes.js';
 
@@ -137,7 +138,11 @@ export default {
         my_module_id: this.myModuleId,
         is_output: this.outputMarked
       }).then((data) => {
-        this.$emit('tableReloaded', data.data.repository_row_url, this.selectedRepository);
+        this.$emit(
+          'tableReloaded',
+          repository_repository_row_path(data.data.data.attributes.repository_id, data.data.data.id, { my_module_id: this.myModuleId }),
+          this.selectedRepository
+        );
         this.submitting = false;
         this.close();
       }).catch(() => {

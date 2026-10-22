@@ -10,6 +10,34 @@
   </span>
 
   <div class="sci-btn-group">
+    <div class="dropdown file-metadata-dropdown">
+      <button type="button" class="btn btn-light dropdown-toggle file-metadata-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <%= t('assets.file_preview.file_metadata') %>
+        <span class="sn-icon sn-icon-down"></span>
+      </button>
+      <div class="dropdown-menu dropdown-menu-left sci-flyout file-metadata-flyout" role="menu">
+        <div class="file-metadata-field mb-4">
+          <label class="block font-bold mb-2" for="fileTitleInput"><%= t('assets.file_preview.file_title') %></label>
+          <% if can_edit && !preview %>
+            <div class="sci-input-container-v2">
+              <input type="text"
+                id="fileTitleInput"
+                class="sci-input-field file-title-input w-full"
+                maxlength="50"
+                placeholder="<%= t('assets.file_preview.file_title_placeholder') %>"
+                value="<%= asset.file_title %>"
+                data-update-url="<%= update_asset_title_path(asset) %>">
+            </div>
+          <% else %>
+            <div class="text-sn-grey"><%= asset.file_title.presence || t('assets.file_preview.no_file_title') %></div>
+          <% end %>
+        </div>
+        <div class="file-metadata-field">
+          <div class="font-bold mb-2"><%= t('assets.file_preview.file_id') %></div>
+          <div class="text-sn-grey"><%= asset.code %></div>
+        </div>
+      </div>
+    </div>
     <% if can_edit && !preview %>
       <% if asset.file.metadata[:asset_type] == 'marvinjs' %>
         <button class="btn btn-light marvinjs-edit-button"

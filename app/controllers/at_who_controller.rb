@@ -1,95 +1,27 @@
 class AtWhoController < ApplicationController
-  include InputSanitizeHelper
-
   before_action :load_vars
   before_action :check_users_permissions
 
   def users
-    users = @team.search_users(@query).limit(Constants::ATWHO_SEARCH_LIMIT + 1)
-    render json: {
-      users: [render_to_string(partial: 'shared/smart_annotation/users', locals: { users: users }, formats: :html)]
-    }
+    scope = @team.search_users(@query).limit(Constants::ATWHO_SEARCH_LIMIT + 1)
+    @users = scope.limit(Constants::ATWHO_SEARCH_LIMIT)
+    @limit_reached = limit_reached?(scope)
   end
 
-  def menu_items
-    res = SmartAnnotation.new(current_user, current_team, @query)
+  # Unified '#' reference search: no `parent_type` -> cross-type search; `parent_type` alone ->
+  # root listing of that type; `parent_type` + `parent_id` -> that specific object's children
+  # (a drill-down step). See SmartAnnotation#search/#global_search for the dispatch.
+  def search
+    annotation = SmartAnnotation.new(current_user, current_team, @query)
+    result = if params[:parent_type].present?
+               annotation.search(parent_type: params[:parent_type], parent_id: params[:parent_id],
+                                  assignable_my_module_id: assignable_my_module_id)
+             else
+               annotation.global_search(assignable_my_module_id: assignable_my_module_id)
+             end
 
-    render json: {
-      prj: res.projects,
-      exp: res.experiments,
-      tsk: res.my_modules,
-      status: :ok
-    }
-  end
-
-  def rep_items
-    repository =
-      if params[:repository_id].present?
-        Repository.find_by(id: params[:repository_id])
-      else
-        Repository.active.readable_by_user(current_user, @team).first
-      end
-
-    items = []
-    repository_id = nil
-
-    if repository && can_read_repository?(repository)
-      assignable_my_module =
-        if params[:assignable_my_module_id].present?
-          MyModule.readable_by_user(current_user, @team).find_by(id: params[:assignable_my_module_id])
-        end
-      items = SmartAnnotation.new(current_user, current_team, @query)
-                             .repository_rows(repository, assignable_my_module&.id)
-      repository_id = repository.id
-    end
-    render json: {
-      res: [
-        render_to_string(partial: 'shared/smart_annotation/repository_items',
-                         locals: { repository_rows: items, repository: repository },
-                         formats: :html)
-      ],
-      repository: repository_id,
-      team: current_team.id
-    }
-  end
-
-  def menu
-    repositories = Repository.active.readable_by_user(current_user, @team)
-    render json: {
-      html: render_to_string(partial: 'shared/smart_annotation/menu',
-                             locals: { repositories: repositories },
-                             formats: :html)
-    }
-  end
-
-  def projects
-    res = SmartAnnotation.new(current_user, current_team, @query)
-    render json: {
-      res: [render_to_string(partial: 'shared/smart_annotation/project_items',
-                             locals: { projects: res.projects },
-                             formats: :html)],
-      team: current_team.id
-    }
-  end
-
-  def experiments
-    res = SmartAnnotation.new(current_user, current_team, @query)
-    render json: {
-      res: [render_to_string(partial: 'shared/smart_annotation/experiment_items',
-                             locals: { experiments: res.experiments },
-                             formats: :html)],
-      team: current_team.id
-    }
-  end
-
-  def my_modules
-    res = SmartAnnotation.new(current_user, current_team, @query)
-    render json: {
-      res: [render_to_string(partial: 'shared/smart_annotation/my_module_items',
-                             locals: { my_modules: res.my_modules },
-                             formats: :html)],
-      team: current_team.id
-    }
+    @items = result[:items]
+    @limit_reached = result[:limit_reached]
   end
 
   private
@@ -97,10 +29,21 @@ class AtWhoController < ApplicationController
   def load_vars
     @team = Team.find_by_id(params[:id])
     @query = params[:query]
+    @team_id = current_team&.id
     render_404 unless @team
   end
 
   def check_users_permissions
     render_403 unless can_read_team?(@team)
+  end
+
+  def limit_reached?(collection)
+    collection.length == Constants::ATWHO_SEARCH_LIMIT + 1
+  end
+
+  def assignable_my_module_id
+    return unless params[:assignable_my_module_id].present?
+
+    MyModule.readable_by_user(current_user, @team).find_by(id: params[:assignable_my_module_id])&.id
   end
 end

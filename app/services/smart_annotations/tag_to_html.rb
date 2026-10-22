@@ -2,8 +2,8 @@
 
 module SmartAnnotations
   class TagToHtml
-    ALL_REGEX = /\[(@(.*?)|\#(.*?)~(prj|exp|tsk|rep_item))~([0-9a-zA-Z]+)\]/
-    ITEMS_REGEX = /\[\#(.*?)~(prj|exp|tsk|rep_item)~([0-9a-zA-Z]+)\]/
+    ALL_REGEX = /\[(@(.*?)|\#(.*?)~(prj|exp|tsk|rep_item|rep|file))~([0-9a-zA-Z]+)(?:~\d+)?\]/
+    ITEMS_REGEX = /\[\#(.*?)~(prj|exp|tsk|rep_item|rep|file)~([0-9a-zA-Z]+)(?:~(\d+))?\]/
     USER_REGEX = /\[@(.*?)~([0-9a-zA-Z]+)\]/
     attr_reader :html
 
@@ -16,7 +16,9 @@ module SmartAnnotations
     OBJECT_MAPPINGS = { prj: Project,
                         exp: Experiment,
                         tsk: MyModule,
-                        rep_item: RepositoryRow }.freeze
+                        rep_item: RepositoryRow,
+                        rep: Repository,
+                        file: Asset }.freeze
 
     def parse(user, team, text, preview_repository = false)
       @html = text.gsub(ITEMS_REGEX) do |el|
@@ -27,6 +29,10 @@ module SmartAnnotations
           # handle repository_items edge case
           if type == 'rep_item'
             repository_item(value[:name], user, team, type, object, preview_repository)
+          elsif type == 'rep'
+            repository(value[:name], user, type, object)
+          elsif type == 'file'
+            file(value[:name], user, type, object, value[:page])
           else
             if object && SmartAnnotations::PermissionEval.check(user, type, object)
               SmartAnnotations::HtmlPreview.html(nil, type, object)
@@ -44,9 +50,27 @@ module SmartAnnotations
       if object&.repository
         return private_placeholder(object) unless SmartAnnotations::PermissionEval.check(user, type, object)
 
-        return SmartAnnotations::HtmlPreview.html(nil, type, object, preview_repository)
+        return SmartAnnotations::HtmlPreview.html(nil, type, object, preview_repository: preview_repository)
       end
-      SmartAnnotations::HtmlPreview.html(name, type, object, preview_repository)
+      SmartAnnotations::HtmlPreview.html(name, type, object, preview_repository: preview_repository)
+    end
+
+    def repository(name, user, type, object)
+      if object
+        return private_placeholder(object) unless SmartAnnotations::PermissionEval.check(user, type, object)
+
+        return SmartAnnotations::HtmlPreview.html(name, type, object)
+      end
+      SmartAnnotations::HtmlPreview.html(name, type, object)
+    end
+
+    def file(name, user, type, object, page)
+      if object
+        return private_placeholder(object) unless SmartAnnotations::PermissionEval.check(user, type, object)
+
+        return SmartAnnotations::HtmlPreview.html(name, type, object, page: page)
+      end
+      SmartAnnotations::HtmlPreview.html(name, type, object, page: page)
     end
 
     def extract_values(element)
@@ -54,7 +78,8 @@ module SmartAnnotations
       {
         name: match[1],
         object_type: match[2],
-        object_id: match[3].base62_decode
+        object_id: match[3].base62_decode,
+        page: match[4]
       }
     end
 
@@ -75,6 +100,10 @@ module SmartAnnotations
                 I18n.t('smart_annotations.private.my_module')
               when RepositoryRow
                 I18n.t('smart_annotations.private.repository_row')
+              when Repository
+                I18n.t('smart_annotations.private.repository')
+              when Asset
+                I18n.t('smart_annotations.private.file')
               else
                 I18n.t('smart_annotations.private.object')
               end

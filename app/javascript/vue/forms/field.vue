@@ -1,17 +1,26 @@
 <template>
 <div class="p-4 rounded bg-white text-sm mb-2">
   <div class="grow">
-    <div class="font-bold" :data-e2e="`e2e-TX-${dataE2e}-fieldName`">
-      {{ field.attributes.name }}
-      <span v-if="unit">({{ unit }})</span>
-      <span v-if="field.attributes.required" class="text-sn-delete-red">*</span>
+    <div class="font-bold flex items-end gap-1" :data-e2e="`e2e-TX-${dataE2e}-fieldName`">
+      <div>
+        {{ field.attributes.name }}
+        <span v-if="unit">({{ unit }})</span>
+        <span v-if="field.attributes.required" class="text-sn-delete-red">*</span>
+      </div>
+      <span v-if="inputLength != null && !field.attributes.description" class="text-xs ml-auto font-normal text-sn-grey shrink-0 whitespace-nowrap">
+        {{ i18n.t('forms.fields.input_length', { length: inputLength }) }}
+      </span>
     </div>
     <div
       ref="description"
       v-if="field.attributes.description"
+      class="flex items-end gap-1"
       :data-e2e="`e2e-TX-${dataE2e}-fieldDescription`"
     >
       <span>{{ field.attributes.description }}</span>
+      <span v-if="inputLength != null" class="text-xs ml-auto font-normal text-sn-grey shrink-0 whitespace-nowrap">
+        {{ i18n.t('forms.fields.input_length', { length: inputLength }) }}
+      </span>
     </div>
     <div class="mt-2">
       <component
@@ -22,6 +31,7 @@
         :marked_as_na="markAsNa"
         @save="saveValue"
         @validChanged="checkValidField"
+        @inputLengthUpdated="inputLengthUpdated"
         :dataE2e="dataE2e"
       />
     </div>
@@ -97,7 +107,8 @@ export default {
   data() {
     return {
       markAsNa: this.field.field_value?.not_applicable || false,
-      isValid: false
+      isValid: false,
+      inputLength: null
     };
   },
   watch: {
@@ -135,6 +146,9 @@ export default {
           this.markAsNa
         );
       }
+    },
+    inputLengthUpdated(value) {
+      this.inputLength = value;
     }
   }
 };

@@ -3,12 +3,12 @@
 module SmartAnnotations
   class TagToText
     USER_REGEX = /\[@(.*?)~([0-9a-zA-Z]+)\]/
-    ITEMS_REGEX = /\[\#(.*?)~(prj|exp|tsk|rep_item)~([0-9a-zA-Z]+)\]/
+    ITEMS_REGEX = /\[\#(.*?)~(prj|exp|tsk|rep_item|rep|file)~([0-9a-zA-Z]+)(?:~(\d+))?\]/
 
     attr_reader :text
 
-    def initialize(user, team, text, is_shared_object: false)
-      parse_items_annotations(user, team, text, is_shared_object)
+    def initialize(user, team, text, is_shared_object: false, add_prefix_type: false)
+      parse_items_annotations(user, team, text, is_shared_object, add_prefix_type)
       parse_users_annotations(user, team, @text, is_shared_object)
     end
 
@@ -17,9 +17,11 @@ module SmartAnnotations
     OBJECT_MAPPINGS = { prj: Project,
                         exp: Experiment,
                         tsk: MyModule,
-                        rep_item: RepositoryRow }.freeze
+                        rep_item: RepositoryRow,
+                        rep: Repository,
+                        file: Asset }.freeze
 
-    def parse_items_annotations(user, team, text, is_shared_object)
+    def parse_items_annotations(user, team, text, is_shared_object, add_prefix_type)
       @text = text.gsub(ITEMS_REGEX) do |el|
         value = extract_values(el)
         type = value[:object_type]
@@ -27,10 +29,14 @@ module SmartAnnotations
           object = fetch_object(type, value[:object_id])
           # handle repository_items edge case
           if type == 'rep_item'
-            repository_item(value[:name], user, team, type, object, is_shared_object)
+            repository_item(value[:name], user, team, type, object, is_shared_object, add_prefix_type)
+          elsif type == 'rep'
+            repository(value[:name], user, type, object, is_shared_object, add_prefix_type)
+          elsif type == 'file'
+            file(value[:name], user, type, object, is_shared_object, add_prefix_type, value[:page])
           else
             if object && (is_shared_object || SmartAnnotations::PermissionEval.check(user, type, object))
-              SmartAnnotations::TextPreview.text(nil, type, object)
+              SmartAnnotations::TextPreview.text(nil, type, object, add_prefix_type: add_prefix_type)
             else
               private_placeholder(object)
             end
@@ -56,13 +62,32 @@ module SmartAnnotations
       end
     end
 
-    def repository_item(name, user, team, type, object, is_shared_object)
+    def repository_item(name, user, _team, type, object, is_shared_object, add_prefix_type)
       if object
         return private_placeholder(object) unless is_shared_object || SmartAnnotations::PermissionEval.check(user, type, object)
 
-        return SmartAnnotations::TextPreview.text(nil, type, object)
+        return SmartAnnotations::TextPreview.text(nil, type, object, add_prefix_type: add_prefix_type)
       end
-      SmartAnnotations::TextPreview.text(name, type, object)
+      SmartAnnotations::TextPreview.text(name, type, object, add_prefix_type: add_prefix_type)
+    end
+
+    # Repository (inventory) itself, as opposed to a repository_item (row).
+    def repository(name, user, type, object, is_shared_object, add_prefix_type)
+      if object
+        return private_placeholder(object) unless is_shared_object || SmartAnnotations::PermissionEval.check(user, type, object)
+
+        return SmartAnnotations::TextPreview.text(name, type, object, add_prefix_type: add_prefix_type)
+      end
+      SmartAnnotations::TextPreview.text(name, type, object, add_prefix_type: add_prefix_type)
+    end
+
+    def file(name, user, type, object, is_shared_object, add_prefix_type, page)
+      if object
+        return private_placeholder(object) unless is_shared_object || SmartAnnotations::PermissionEval.check(user, type, object)
+
+        return SmartAnnotations::TextPreview.text(name, type, object, add_prefix_type: add_prefix_type, page: page)
+      end
+      SmartAnnotations::TextPreview.text(name, type, object, add_prefix_type: add_prefix_type, page: page)
     end
 
     def extract_values(element)
@@ -70,7 +95,8 @@ module SmartAnnotations
       {
         name: match[1],
         object_type: match[2],
-        object_id: match[3].base62_decode
+        object_id: match[3].base62_decode,
+        page: match[4]
       }
     end
 
@@ -91,6 +117,10 @@ module SmartAnnotations
         I18n.t('smart_annotations.private.my_module')
       when RepositoryRow
         I18n.t('smart_annotations.private.repository_row')
+      when Repository
+        I18n.t('smart_annotations.private.repository')
+      when Asset
+        I18n.t('smart_annotations.private.file')
       else
         I18n.t('smart_annotations.private.object')
       end
