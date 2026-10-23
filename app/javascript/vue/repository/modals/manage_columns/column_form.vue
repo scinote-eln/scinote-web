@@ -135,7 +135,7 @@ export default {
         if (type === 'RepositoryStockValue' && this.stockDisabled) {
           meta.disabled = true;
           if (this.hasStockColumn) {
-            meta.hint = this.i18n.t('libraries.manange_modal_column.stock_type.one_per_inventory');
+            meta.tooltip = this.i18n.t('libraries.manange_modal_column.stock_type.one_per_inventory');
           }
         }
         return [type, typeLabel(this.i18n, type), meta];
