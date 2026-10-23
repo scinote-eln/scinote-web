@@ -7,6 +7,7 @@
       :placeholder="(isFocused ? '' : i18n.t('repositories.table.number.enter_number'))"
       @keydown.enter="saveValue"
       @keydown.esc="cancelEdit"
+      @keydown="handleKeydown"
       @focus="isFocused = true"
       @blur="onBlur"
       @input="validateFormat"
@@ -42,6 +43,11 @@ export default {
     }
   },
   methods: {
+    handleKeydown(event) {
+      if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) {
+        event.stopPropagation();
+      }
+    },
     validateFormat() {
       const decimals = this.params?.colDef?.cellRendererParams?.metadata?.decimals ?? GLOBAL_CONSTANTS.REPOSITORY_NUMBER_TYPE_DEFAULT_DECIMALS;
       const regexp = decimals === 0 ? /[^-0-9]/g : /[^-0-9.]/g;
