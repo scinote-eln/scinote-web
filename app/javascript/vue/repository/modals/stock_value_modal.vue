@@ -1,12 +1,12 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-      <div class="modal-content" data-e2e="e2e-MD-manageStock">
+      <div class="modal-content" data-e2e="e2e-MD-invItems-manageStock">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <i class="sn-icon sn-icon-close"></i>
           </button>
-          <h4 class="modal-title" data-e2e="e2e-TX-manageStockModal-title">
+          <h4 class="modal-title" data-e2e="e2e-TX-invItems-manageStockModal-title">
             <template v-if="stockObject && stockObject.id">
               {{ i18n.t('repository_stock_values.manage_modal.edit_title', { item: repositoryRowName }) }}
             </template>
@@ -25,6 +25,7 @@
                   :disabled="!stockObject.id"
                   @change="setOperation"
                   :options="operations"
+                  e2eValue="e2e-DD-invItems-manageStockModal-operations"
                   :value="operation"
                 />
               </div>
@@ -36,6 +37,7 @@
                     class="sci-input-field"
                     v-model="stockObject.amount"
                     :placeholder="i18n.t('repository_stock_values.manage_modal.amount_placeholder_new')"
+                    data-e2e="e2e-IF-invItems-manageStockModal-amount"
                   >
                 </div>
               </div>
@@ -48,6 +50,7 @@
                   @change="stockObject.unit = $event; validateStockObject()"
                   :options="stockObject.units"
                   :placeholder="i18n.t('repository_stock_values.manage_modal.unit_prompt')"
+                  e2eValue="e2e-DD-invItems-manageStockModal-units"
                   :value="stockObject.unit"
                 />
                 <div class="text-sn-coral text-xs" :class="{ visible: errors.unit, invisible: !errors.unit }">
@@ -62,7 +65,7 @@
                   <span
                     class="text-2xl text-sn-black font-semibold leading-8"
                     :class="{ 'text-sn-delete-red': initialStockObject.amount < 0 }"
-                    data-e2e="e2e-LB-manageStockModal-currentStock"
+                    data-e2e="e2e-LB-invItems-manageStockModal-currentStock"
                   >
                     {{ initialStockObject.amount }}
                   </span>
@@ -74,7 +77,7 @@
                   <span
                     class="text-2xl text-sn-black font-semibold leading-8"
                     :class="{ 'text-sn-delete-red': newAmount < 0 }"
-                    data-e2e="e2e-LB-manageStockModal-newStock"
+                    data-e2e="e2e-LB-invItems-manageStockModal-newStock"
                   >
                     {{ (newAmount || newAmount === 0) ? newAmount : '-' }}
                   </span>
@@ -125,6 +128,7 @@
                   type="text"
                   v-model="this.stockObject.comment"
                   :placeholder="i18n.t('repository_stock_values.manage_modal.comment_placeholder')"
+                  data-e2e="e2e-IF-invItems-manageStockModal-comment"
                 >
               </div>
             </div>
