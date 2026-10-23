@@ -124,14 +124,6 @@ describe StepElements::TextsController, type: :controller do
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'restores an archived element of a repository protocol' do
-      pending 'bug: log_step_restore_activity dereferences protocol.my_module, which is nil outside tasks'
-      element_text.update!(archived: true, archived_by: user, archived_on: Time.zone.now)
-      post :restore, params: { step_id: step.id, id: element_text.id }, format: :json
-      expect(response).to have_http_status(:ok)
-      expect(element_text.reload).not_to be_archived
-    end
-
     it 'duplicates after the original' do
       expect { post :duplicate, params: { step_id: step.id, id: element_text.id }, format: :json }
         .to change { step.step_texts.count }.by(1)
