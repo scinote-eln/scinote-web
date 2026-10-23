@@ -115,6 +115,10 @@ describe Activity, type: :model do
     end
   end
   describe '.notifiable?' do
+    # Creating a notifiable activity enqueues CreateNotificationFromActivityJob, which crashes on these bare
+    # activities when it runs inline. This used to pass only because an earlier example left the :test adapter set.
+    before { ActiveJob::Base.queue_adapter = :test }
+
     context 'Creating notifiable activity' do
       let(:activity) do
         create  :activity,

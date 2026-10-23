@@ -3,77 +3,151 @@
 require 'rails_helper'
 
 describe SmartAnnotation do
-  let!(:user) { create :user }
-  let!(:team) { create :team, :change_user_team, created_by: user }
-  let!(:project) { create :project, name: 'my project', team: team, created_by: user }
-  let!(:experiment) { create :experiment, project: project, created_by: user }
-  let!(:task) { create :my_module, name: 'task', experiment: experiment, created_by: user }
-  let!(:other_task) { create :my_module, name: 'other task', experiment: experiment, created_by: user }
-
-  let!(:protocol) { create :protocol, team: team, my_module: task }
-  let!(:step) { create :step, protocol: protocol }
-  let!(:step_asset) { create :step_asset, step: step }
-  let!(:step_file) do
-    asset = Asset.find(step_asset.asset_id)
-    asset.file.attach(io: Rails.root.join('spec/fixtures/files/test.jpg').open, filename: 'unique_step_file.jpg')
-    asset
+  let(:user) { create :user }
+  let(:team) { create :team, created_by: user }
+  let(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
+  let!(:project) do
+    create :project, team: team, created_by: user, name: 'Alpha project',
+                     default_public_user_role_id: owner_role.id
   end
+  let!(:experiment) { create :experiment, project: project, created_by: user, name: 'Alpha experiment' }
+  let!(:my_module) { create :my_module, experiment: experiment, created_by: user, name: 'Alpha task' }
+  let(:query) { 'Alpha' }
+  let(:annotation) { described_class.new(user, team, query) }
 
-  let!(:result) { create :result, my_module: task, user: user }
-  let!(:result_asset) { create :result_asset, result: result }
-  let(:result_file) { Asset.find(result_asset.asset_id) }
+  before { user.update!(current_team_id: team.id) }
 
-  let!(:other_protocol) { create :protocol, team: team, my_module: other_task }
-  let!(:other_step) { create :step, protocol: other_protocol }
-  let!(:other_step_asset) { create :step_asset, step: other_step }
+  describe '#search' do
+    describe 'sa-projects' do
+      it 'finds readable projects by name' do
+        result = annotation.search(parent_type: 'sa-projects')
+        expect(result[:items].map { |i| i[:id] }).to contain_exactly(project.id)
+        expect(result[:items].first).to include(type: 'prj', id_encoded: project.id.base62_encode, code: project.code)
+        expect(result[:limit_reached]).to be false
+      end
 
-  subject { described_class.new(user, team, query) }
-  let(:query) { nil }
+      it 'skips archived projects' do
+        project.update!(archived: true, archived_on: Time.zone.now)
+        expect(annotation.search(parent_type: 'sa-projects')[:items]).to be_empty
+      end
 
-  describe '#search with parent_type sa-task-files' do
-    it 'returns files belonging to the task, through both its steps and its results' do
-      result_ids = subject.search(parent_type: 'sa-task-files', parent_id: task.id)[:items].pluck(:id)
-      expect(result_ids).to contain_exactly(step_file.id, result_file.id)
-    end
+      it 'does not match other names' do
+        expect(described_class.new(user, team, 'zzz').search(parent_type: 'sa-projects')[:items]).to be_empty
+      end
 
-    it 'does not return files belonging to a different task' do
-      result_ids = subject.search(parent_type: 'sa-task-files', parent_id: task.id)[:items].pluck(:id)
-      expect(result_ids).not_to include(other_step_asset.asset_id)
-    end
+      it 'lists the active experiments of a project when a parent is given' do
+        result = annotation.search(parent_type: 'sa-projects', parent_id: project.id)
+        expect(result[:items].map { |i| [i[:id], i[:type]] }).to contain_exactly([experiment.id, 'exp'])
+      end
 
-    context 'filtering by file name' do
-      let(:query) { 'unique_step' }
-
-      it 'returns only the matching file' do
-        result_ids = subject.search(parent_type: 'sa-task-files', parent_id: task.id)[:items].pluck(:id)
-        expect(result_ids).to eq([step_file.id])
+      it 'returns nothing for an archived parent project' do
+        project.update_columns(archived: true)
+        expect(annotation.search(parent_type: 'sa-projects', parent_id: project.id)[:items]).to be_empty
       end
     end
 
-    context 'filtering by asset code' do
-      let(:query) { step_file.code }
-
-      it 'returns only the matching file' do
-        result_ids = subject.search(parent_type: 'sa-task-files', parent_id: task.id)[:items].pluck(:id)
-        expect(result_ids).to eq([step_file.id])
+    describe 'sa-experiments' do
+      it 'finds experiments in active projects' do
+        result = annotation.search(parent_type: 'sa-experiments')
+        expect(result[:items].map { |i| i[:id] }).to contain_exactly(experiment.id)
       end
+
+      it 'skips archived experiments' do
+        experiment.update_columns(archived: true)
+        expect(annotation.search(parent_type: 'sa-experiments')[:items]).to be_empty
+      end
+
+      it 'skips experiments of archived projects' do
+        project.update_columns(archived: true)
+        expect(annotation.search(parent_type: 'sa-experiments')[:items]).to be_empty
+      end
+
+      it 'lists the active tasks of an experiment when a parent is given' do
+        result = annotation.search(parent_type: 'sa-experiments', parent_id: experiment.id)
+        expect(result[:items].map { |i| [i[:id], i[:type]] }).to contain_exactly([my_module.id, 'tsk'])
+      end
+
+      it 'returns nothing for an archived parent experiment' do
+        experiment.update_columns(archived: true)
+        expect(annotation.search(parent_type: 'sa-experiments', parent_id: experiment.id)[:items]).to be_empty
+      end
+    end
+
+    describe 'sa-tasks' do
+      it 'finds active tasks' do
+        result = annotation.search(parent_type: 'sa-tasks')
+        expect(result[:items].map { |i| i[:id] }).to contain_exactly(my_module.id)
+      end
+
+      it 'skips archived tasks' do
+        my_module.update_columns(archived: true)
+        expect(annotation.search(parent_type: 'sa-tasks')[:items]).to be_empty
+      end
+
+      it 'skips tasks of archived experiments' do
+        experiment.update_columns(archived: true)
+        expect(annotation.search(parent_type: 'sa-tasks')[:items]).to be_empty
+      end
+    end
+
+    describe 'sa-repositories' do
+      let(:repository) { create :repository, team: team, created_by: user, name: 'Alpha inventory' }
+      let!(:row) { create :repository_row, repository: repository, created_by: user, name: 'Alpha <script>alert(1)</script>row' }
+      let(:search) do
+        ->(**args) { annotation.search(parent_type: 'sa-repositories', parent_id: repository.id, **args) }
+      end
+
+      before do
+        create :repository_row, repository: repository, created_by: user, name: 'Other row'
+        create :repository_row, :archived, repository: repository, created_by: user, name: 'Alpha archived'
+      end
+
+      it 'lists active repositories at the root' do
+        result = annotation.search(parent_type: 'sa-repositories')
+        expect(result[:items].map { |i| [i[:id], i[:type]] }).to contain_exactly([repository.id, 'rep'])
+      end
+
+      it 'returns encoded, sanitized hashes of active matching rows' do
+        items = search.call[:items]
+        expect(items.size).to eq 1
+        expect(items.first).to include(id: row.id, id_encoded: row.id.base62_encode, code: row.code, type: 'rep_item')
+        expect(items.first[:name]).to include('Alpha')
+        expect(items.first[:name]).not_to include('<script>')
+        expect(items.first).not_to have_key(:row_assigned)
+      end
+
+      context 'with a task id' do
+        it 'marks rows as not assigned' do
+          item = search.call(assignable_my_module_id: my_module.id)[:items].first
+          expect(item).to include(row_assigned: false, my_module_id: my_module.id, repository_row_id: row.id)
+        end
+
+        it 'marks assigned rows' do
+          create :mm_repository_row, my_module: my_module, repository_row: row, assigned_by: user
+          item = search.call(assignable_my_module_id: my_module.id)[:items].first
+          expect(item[:row_assigned]).to be true
+        end
+      end
+    end
+
+    it 'returns no items for an unknown parent type' do
+      expect(annotation.search(parent_type: 'sa-unknown')).to eq(items: [], limit_reached: false)
     end
   end
 
   describe '#global_search' do
-    it 'includes files among the other annotatable types' do
-      result_ids = subject.global_search[:items].select { |i| i[:type] == 'file' }.pluck(:id)
-      expect(result_ids).to contain_exactly(step_file.id, result_file.id, other_step_asset.asset_id)
+    it 'combines matches of every type, newest first' do
+      result = annotation.global_search
+      expect(result[:items].map { |i| i[:type] }).to include('prj', 'exp', 'tsk')
+      timestamps = result[:items].map { |i| i[:updated_at] }
+      expect(timestamps).to eq(timestamps.sort.reverse)
     end
 
-    context 'filtering by asset code' do
-      let(:query) { step_file.code }
-
-      it 'returns only the matching file' do
-        items = subject.global_search[:items]
-        expect(items.pluck(:id)).to eq([step_file.id])
-        expect(items.first[:type]).to eq('file')
-      end
+    it 'flags when the result limit is exceeded' do
+      stub_const('SmartAnnotation::LIMIT', 1)
+      result = annotation.global_search
+      expect(result[:items].size).to eq 1
+      expect(result[:limit_reached]).to be true
     end
   end
 end
