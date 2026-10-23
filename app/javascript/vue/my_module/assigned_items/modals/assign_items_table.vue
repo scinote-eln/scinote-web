@@ -151,7 +151,7 @@ export default {
         return null;
       }
 
-      return unassigned_rows_my_module_repository_path(this.myModuleId, this.repositoryVersion.id, {archived: false});
+      return unassigned_rows_my_module_repository_path(this.myModuleId, this.repositoryVersion.id, {view_mode: 'active'});
     },
     toolbarActionsUrl() {
       if (!this.repositoryVersion) {
