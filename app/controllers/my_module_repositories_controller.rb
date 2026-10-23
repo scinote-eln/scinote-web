@@ -55,6 +55,7 @@ class MyModuleRepositoriesController < ApplicationController
     repository_rows = Lists::RepositoryRowsService.new(@repository,
                                                        params,
                                                        user: current_user,
+                                                       filter_by_view_mode: true,
                                                        unassigned_to_task: @my_module,
                                                        preload_cells: true).call.load
 

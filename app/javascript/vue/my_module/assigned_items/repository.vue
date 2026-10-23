@@ -57,6 +57,7 @@
         @showTextCell="showTextCellModal"
         @export="exportRows"
         @export_consumption="exportConsumption"
+        @updateRemindersCount="updateRemindersCount"
         @print="printRows"
         @assign="openAssignItemModal = true"
         @unassign="unassignModalShow"
@@ -305,6 +306,13 @@ export default {
         return String(this.repositoryVersion?.id) === String(openedRepositoryId);
       }
       return false;
+    },
+    updateRemindersCount(row, count) {
+      const updatedRow = {
+        id: row.id,
+      }
+      updatedRow['active_reminders_count'] = count;
+      this.$refs.repositoryTable.updateRowData(updatedRow);
     },
     updateRowData(row) {
       if (!this.isSameRepository()) return;
