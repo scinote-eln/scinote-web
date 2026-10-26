@@ -128,7 +128,7 @@ json.relationships do
 end
 
 json.custom_columns do
-  json.array! repository_columns_ordered_by_state(@repository_row.repository).each do |repository_column|
+  json.array! repository_columns_ordered_by_state(@repository_row).each do |repository_column|
     repository_cell = @repository_row.repository_cells.find { |c| c.repository_column_id == repository_column.id }
 
     options = case repository_column.data_type

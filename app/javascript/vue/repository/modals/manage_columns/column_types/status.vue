@@ -12,6 +12,8 @@
         <InputField
           v-model="item.status"
           :placeholder="i18n.t('libraries.manange_modal_column.name_placeholder')"
+          :error="!!errors[index]"
+          :errorMessage="errors[index]"
           class="grow"
         />
         <i class="sn-icon sn-icon-delete cursor-pointer" @click="removeItem(index)"></i>
@@ -56,7 +58,8 @@ export default {
     ));
     return {
       items: items.length > 0 ? items : [{ id: null, status: '', icon: null }],
-      removedIds: []
+      removedIds: [],
+      errors: []
     };
   },
   computed: {
@@ -76,6 +79,7 @@ export default {
     removeItem(index) {
       const [item] = this.items.splice(index, 1);
       if (item.id) this.removedIds.push(item.id);
+      this.errors.splice(index, 1);
     },
     openPicker(item, event) {
       const picker = new EmojiButton({ rootElement: this.$refs.container });
@@ -85,11 +89,17 @@ export default {
       picker.showPicker(event.currentTarget);
     },
     valid() {
-      return this.items.length > 0 && this.items.every((item) => (
-        !!item.icon &&
-        item.status.trim().length >= GLOBAL_CONSTANTS.NAME_MIN_LENGTH &&
-        item.status.trim().length <= GLOBAL_CONSTANTS.NAME_MAX_LENGTH
-      ));
+      this.errors = this.items.map((item) => {
+        const status = item.status.trim();
+        if (status.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH) {
+          return this.i18n.t('libraries.manange_modal_column.status_type.errors.text_too_long_error', { max_length: GLOBAL_CONSTANTS.NAME_MAX_LENGTH });
+        }
+        if (!item.icon || status.length < GLOBAL_CONSTANTS.NAME_MIN_LENGTH) {
+          return this.i18n.t('libraries.manange_modal_column.status_type.errors.icon_and_name_error');
+        }
+        return null;
+      });
+      return this.items.length > 0 && this.errors.every((error) => !error);
     },
     payload() {
       const attributes = this.items.map((item) => (

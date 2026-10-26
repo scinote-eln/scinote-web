@@ -3452,6 +3452,7 @@ en:
         add_status_label: "Add status option"
         errors:
           icon_and_name_error: "Status icon and status name should be filled"
+          text_too_long_error: "Status name is too long (maximum is %{max_length} characters)"
       datetime_type:
         options: 'Options'
         reminder: 'Reminder'
