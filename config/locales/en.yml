@@ -3449,7 +3449,7 @@ en:
           space: "Enter dropdown list options, separated by space..."
       status_type:
         status_options_label: "Status options"
-        add_status_label: "Add status option"
+        add_status_label: "Add status name"
         errors:
           icon_and_name_error: "Status icon and status name should be filled"
       datetime_type:
