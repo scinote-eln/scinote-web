@@ -61,7 +61,7 @@ export default {
       range: !!this.column && /RangeValue$/.test(this.column.cellRendererParams.columnDataType),
       reminderEnabled: !!metadata.reminder_value,
       reminderValue: String(metadata.reminder_value || GLOBAL_CONSTANTS.REPOSITORY_DATETIME_REMINDER_PRESET),
-      reminderUnit: metadata.reminder_unit ? parseInt(metadata.reminder_unit, 10) : 60 * 60 * 24,
+      reminderUnit: metadata.reminder_unit || (60 * 60 * 24).toString(), // defaults to 1 day unit
       reminderMessage: metadata.reminder_message || ''
     };
   },
@@ -76,9 +76,9 @@ export default {
     },
     reminderUnitOptions() {
       return [
-        [60 * 60 * 24, this.i18n.t('libraries.manange_modal_column.datetime_type.days')],
-        [60 * 60 * 24 * 7, this.i18n.t('libraries.manange_modal_column.datetime_type.weeks')],
-        [60 * 60 * 24 * 28, this.i18n.t('libraries.manange_modal_column.datetime_type.months')]
+        [(60 * 60 * 24).toString(), this.i18n.t('libraries.manange_modal_column.datetime_type.days')],
+        [(60 * 60 * 24 * 7).toString(), this.i18n.t('libraries.manange_modal_column.datetime_type.weeks')],
+        [(60 * 60 * 24 * 28).toString(), this.i18n.t('libraries.manange_modal_column.datetime_type.months')]
       ];
     }
   },

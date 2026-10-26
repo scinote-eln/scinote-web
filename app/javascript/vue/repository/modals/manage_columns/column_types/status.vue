@@ -11,9 +11,9 @@
         </div>
         <InputField
           v-model="item.status"
-          :placeholder="i18n.t('libraries.manange_modal_column.name_placeholder')"
           :error="!!errors[index]"
           :errorMessage="errors[index]"
+          :placeholder="i18n.t('libraries.manange_modal_column.status_type.add_status_label')"
           class="grow"
         />
         <i class="sn-icon sn-icon-delete cursor-pointer" @click="removeItem(index)"></i>
