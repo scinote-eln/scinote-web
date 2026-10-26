@@ -31,15 +31,16 @@ export default {
 
       this.resizeObserver.observe(this.secondaryNavigation);
     }
-    window.addEventListener('tinyMCEOpened', (e) => {
+    this.tinyMCEOpenedListener = (e) => {
       this.handleTinyMCEOpened(e.detail.target);
-    });
+    };
+    window.addEventListener('tinyMCEOpened', this.tinyMCEOpenedListener);
   },
   beforeUnmount() {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
     }
-    window.removeEventListener('tinyMCEOpened', this.handleTinyMCEOpened);
+    window.removeEventListener('tinyMCEOpened', this.tinyMCEOpenedListener);
   },
   methods: {
     handleTinyMCEOpened(target) {
@@ -121,11 +122,18 @@ export default {
         }
       } else if (headerTop < (visibleHeaderHeight + visibleSecondaryNavHeight)
         && target[0].getBoundingClientRect().top <= headerBottom) {
-        this.$nextTick(() => {
-          $('html, body').animate({
-            scrollTop: target.offset().top + (visibleHeaderHeight + visibleSecondaryNavHeight),
-          }, 100);
-        });
+        if (target[0].getBoundingClientRect().top < 0) {
+          // The editor already straddles the viewport: dock its toolbar instead of scrolling back to the editor top
+          window.dispatchEvent(new Event('scroll'));
+          // TinyMCE docks on a debounced scroll handler and sets its own top, so align the toolbar afterwards
+          setTimeout(() => this.initStackableHeaders(), 100);
+        } else {
+          this.$nextTick(() => {
+            $('html, body').animate({
+              scrollTop: target.offset().top + (visibleHeaderHeight + visibleSecondaryNavHeight),
+            }, 100);
+          });
+        }
       }
 
       target.focus();
