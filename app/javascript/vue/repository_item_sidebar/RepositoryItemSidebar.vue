@@ -595,7 +595,8 @@ export default {
         '.dp--instance-calendar',
         '.label-printing-progress-modal',
         '.atwho-view',
-        '.sn-select-dropdown'
+        '.sn-select-dropdown',
+        '.dp--action-button'
       ];
 
       const excludeSelectors = ['#myModuleRepositoryFullViewModal'];
