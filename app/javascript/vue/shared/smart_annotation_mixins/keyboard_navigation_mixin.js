@@ -11,7 +11,7 @@ export default {
   },
   methods: {
     resetActiveIndex() {
-      this.activeIndex = this.navigableItems.length > 0 ? 0 : -1;
+      this.activeIndex = (!this.showPills && this.navigableItems.length > 0) ? 0 : -1;
     },
     isActiveIndex(index) {
       return index === this.activeIndex;

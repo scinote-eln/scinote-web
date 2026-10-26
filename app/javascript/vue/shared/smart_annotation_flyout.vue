@@ -1,21 +1,21 @@
 <template>
   <div ref="flyout" class="atwho-view bg-sn-white rounded shadow-sn-classic-drop-shadow"
        :class="{ old: everOpened }" :style="positionStyle" @mousedown="onRootMousedown">
-    <div class="flex items-center gap-1 bg-sn-grey-100 min-h-10 px-3 py-2 text-sm border-b border-sn-light-grey">
+    <div class="flex items-center gap-1 bg-sn-grey-100 min-h-11 px-3 py-2 text-sm border-b border-sn-science-blue">
       <span v-if="navStack.length > 0" type="button" class="p-1 text-sn-grey-700 hover:text-sn-black shrink-0 cursor-pointer" @click="navBack">
         <i class="sn-icon sn-icon-close"></i>
       </span>
       <span v-for="(crumb, i) in navStack" :key="i" class="flex items-center gap-1 truncate">
         <i v-if="i > 0" class="text-sn-grey-500 sn-icon sn-icon-right"></i>
-        <span type="button" class="truncate hover:underline cursor-pointer"
-                :class="i === navStack.length - 1 ? 'text-sn-black font-medium' : 'text-sn-grey-700'"
+        <span type="button" class="truncate hover:underline cursor-pointer text-sn-black font-medium"
                 @click="navTo(i)">{{ crumb.code }}</span>
       </span>
-      <div>
+      <div class="flex items-center gap-1 min-w-0 flex-1">
+        <i class="sn-icon sn-icon-search text-sn-grey-700 shrink-0"></i>
         <i v-if="navStack.length > 0" class="text-sn-grey-500 sn-icon sn-icon-right"></i>
         <input ref="searchInput" type="text" :value="query"
               :placeholder="searchPlaceholder"
-              class="border-0 bg-transparent focus:!outline-none focus:ring-0 focus:!border-0"
+              class="border-0 bg-transparent focus:!outline-none focus:ring-0 focus:!border-0 w-full min-w-0 text-base"
               autocomplete="off"
               @input="onSearchInput" @keydown="onSearchKeydown" @blur="onSearchBlur" />
       </div>
@@ -25,8 +25,8 @@
       <div class="text-xs font-semibold text-sn-grey-700 mb-1.5">{{ i18n.t('atwho.navigate') }}</div>
       <div class="flex flex-wrap gap-1.5">
         <span v-for="(pill, index) in pills" :key="pill.tag" type="button"
-                class="px-3 py-1.5 cursor-pointer rounded-full text-sm text-sn-black hover:bg-sn-light-grey"
-                :class="isActiveIndex(index) ? 'bg-sn-light-grey' : 'bg-sn-super-light-grey'"
+                class="px-3 py-1.5 cursor-pointer rounded-full text-sm text-sn-black bg-sn-super-light-grey hover:bg-sn-light-grey"
+                :class="{ 'outline outline-4 outline-sn-science-blue-hover': isActiveIndex(index) }"
                 @click="openPill(pill)">
           {{ pill.label }}
         </span>
@@ -56,9 +56,9 @@
             </span>
           </template>
           <template v-else>
-            <span class="text-[0.625rem] font-semibold uppercase text-sn-grey-700 shrink-0" v-html="highlightMatch(item.code)"></span>
-            <span class="text-sn-grey-500">&middot;</span>
-            <span class="truncate" v-html="highlightMatch(itemDisplayName(item))"></span>
+            <span class="text-[0.625rem] font-semibold uppercase text-sn-grey-700 shrink-0 leading-none" v-html="highlightMatch(item.code)"></span>
+            <span class="text-sn-grey-500 leading-none">&middot;</span>
+            <span class="truncate leading-none" v-html="highlightMatch(itemDisplayName(item))"></span>
             <span v-if="isDrillable(item)" @click.stop="addToStack(item)" class="sn-icon sn-icon-arrow-right text-sn-grey-700 shrink-0"></span>
             <span v-if="mentioningPageItem === item" class="flex items-center gap-1.5 shrink-0 ml-auto">
               <input type="text" inputmode="numeric" pattern="[0-9]*" class="page-number-input w-32 border border-sn-light-grey rounded px-2 py-1 text-sm"
@@ -305,6 +305,11 @@ export default {
       if (e.key === 'Escape') {
         e.preventDefault();
         this.closeAndRefocus();
+        return;
+      }
+      if (e.key === 'Backspace' && !this.query && this.navStack.length > 0) {
+        e.preventDefault();
+        this.navTo(this.navStack.length - 2);
         return;
       }
       this.handleNavigationKeydown(e);
