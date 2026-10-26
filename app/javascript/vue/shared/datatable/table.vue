@@ -581,6 +581,8 @@ export default {
 
       if (this.order) {
         this.tableState.columnsState.forEach((column) => {
+          if (!column) return;
+
           const updatedColumn = column;
           updatedColumn.sort = this.order.column === column.colId ? this.order.dir : null;
           return updatedColumn;

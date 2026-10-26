@@ -7,24 +7,28 @@ module RepositoryColumnsHelper
       .inject(:merge)
   end
 
-  def repository_columns_ordered_by_state(repository)
+  def repository_columns_ordered_by_state(repository_row)
+    repository = repository_row.repository
     columns = repository.repository_columns.order(:id).to_a
     return columns if columns.blank?
 
-    table_state = current_user.repository_table_states.find_by(repository: repository)
-    return columns unless table_state && table_state.state['ColReorder'].present?
+    columns_by_id = columns.index_by(&:id)
+    stock_column = columns.find { |column| column.data_type == 'RepositoryStockValue' }
 
-    default_columns_count = repository.default_table_state['ColReorder'].length
-    columns_reorder = table_state.state['ColReorder'] - repository.default_table_state['ColReorder']
-    return columns if columns_reorder.blank?
+    view_mode = repository_row.archived? ? 'archived' : 'active'
+    table_state = current_user.user_settings.find_by(key: "repository_table_#{repository.id}_#{view_mode}_table_state")
+    columns_state = table_state&.value&.dig('columnsState')
+    return columns if columns_state.blank?
 
-    columns_reorder.map! { |position| position - default_columns_count }
-    reordered_columns = []
-
-    columns_reorder.each do |position|
-      column = columns.at(position)
-      reordered_columns << column if column.present?
+    ordered_columns = columns_state.filter_map do |column_state|
+      col_id = column_state['colId']
+      if col_id == 'stock'
+        stock_column
+      elsif col_id =~ /\Acol_(\d+)\z/
+        columns_by_id[Regexp.last_match(1).to_i]
+      end
     end
-    reordered_columns | columns
+
+    ordered_columns | columns
   end
 end

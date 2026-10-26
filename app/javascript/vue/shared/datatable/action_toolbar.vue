@@ -24,7 +24,7 @@
           </a>
         </div>
         <template v-if="action.type === 'group'">
-          <GeneralDropdown ref="dropdown" position="right">
+          <GeneralDropdown ref="dropdown" position="right" :closeOnClick="true">
             <template v-slot:field>
               <span
                 :class="`rounded flex gap-2 text-sn-blue items-center py-1.5 px-1.5 xl:px-2.5 hover:text-sn-white hover:bg-sn-blue
