@@ -68,13 +68,7 @@ module UserAssignments
             protocol.parent.sync_child_protocol_assignment(team_assignment, protocol.id)
           end
         end
-
-        return
       end
-
-      return unless protocol.visible?
-
-      protocol.create_or_update_team_assignment!(@assigned_by)
     end
 
     def assign_to_report(report)
