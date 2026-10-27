@@ -2110,6 +2110,7 @@ en:
       success_flash: 'Successfully duplicated experiment %{experiment} as template.'
       error_flash: 'Could not duplicate the experiment as template.'
       current_project: '(current project)'
+      copy_results: 'Include task results'
     duplicate_tasks:
       success: 'Successfully duplicated %{count} task(s) as template.'
       duplicating: 'Duplicating contents...'
@@ -2161,6 +2162,10 @@ en:
         no_experiments: "No experiments to move this task to."
         success_flash: "Successfully moved task(s) to experiment %{experiment}."
         error_flash: "Failed to move task(s) to experiment %{experiment}."
+      modal_duplicate_modules:
+        title: "Duplicate task(s)"
+        copy_results: "Include results"
+        confirm: "Duplicate"
       column_display_modal:
         title: 'Manage columns'
         description: 'Click the eye buttons to hide or show columns in the table'

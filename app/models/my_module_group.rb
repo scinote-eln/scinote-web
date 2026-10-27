@@ -14,7 +14,7 @@ class MyModuleGroup < ApplicationRecord
     joins(:my_modules).where('my_modules.archived = ?', false).distinct
   end)
 
-  def deep_clone_to_experiment(current_user, experiment)
+  def deep_clone_to_experiment(current_user, experiment, copy_results: false)
     clone = MyModuleGroup.new(
       created_by: created_by,
       experiment: experiment
@@ -22,7 +22,7 @@ class MyModuleGroup < ApplicationRecord
 
     # Get clones of modules from this group, save them as hash
     cloned_modules = my_modules.readable_by_user(current_user).workflow_ordered.each_with_object({}) do |m, h|
-      h[m.id] = m.deep_clone_to_experiment(current_user, experiment)
+      h[m.id] = m.deep_clone_to_experiment(current_user, experiment, copy_results: copy_results)
       h
     end
 
