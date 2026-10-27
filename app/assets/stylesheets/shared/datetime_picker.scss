@@ -259,7 +259,7 @@
   /*General*/
   --dp-font-family: inherit; /*Font family*/
   --dp-border-radius: .25rem; /*Configurable border-radius*/
-  --dp-cell-border-radius: .25rem; /*Specific border radius for the calendar cell*/
+  --dp-cell-border-radius: 0.75rem; /*Specific border radius for the calendar cell*/
   --dp-common-transition: all 0.1s ease-in; /*Generic transition applied on buttons and calendar cells*/
 
   /*Sizing*/
