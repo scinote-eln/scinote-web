@@ -439,7 +439,7 @@ class MyModule < ApplicationRecord
     raise InvalidContentError, invalid_content_error_message(invalid_element)
   end
 
-  def deep_clone_to_experiment(current_user, experiment_dest)
+  def deep_clone_to_experiment(current_user, experiment_dest, copy_results: false)
     raise_if_invalid_content!
 
     # Copy the module
@@ -461,12 +461,12 @@ class MyModule < ApplicationRecord
 
     clone.assign_user(current_user)
 
-    MyModules::CopyContentJob.perform_later(current_user.id, id, clone.id, skip_activities: true)
+    MyModules::CopyContentJob.perform_later(current_user.id, id, clone.id, skip_activities: true, copy_results: copy_results)
 
     clone
   end
 
-  def copy_content(current_user, target_my_module)
+  def copy_content(current_user, target_my_module, include_results: false)
     # Remove the automatically generated protocol,
     # & clone the protocol instead
     target_my_module.protocol.destroy
@@ -474,7 +474,7 @@ class MyModule < ApplicationRecord
 
     # Update the cloned protocol if neccesary
     clone_tinymce_assets(target_my_module, target_my_module.experiment.project.team)
-    protocol.deep_clone_my_module(target_my_module, current_user)
+    protocol.deep_clone_my_module(target_my_module, current_user, include_results: include_results)
     target_my_module.reload
   end
 
