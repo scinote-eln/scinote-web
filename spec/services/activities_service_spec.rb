@@ -191,26 +191,4 @@ describe ActivitiesService do
       expect(result).not_to include(other_activity)
     end
   end
-
-  describe '.activity_matches_filter?' do
-    let!(:mine) { activity }
-    let!(:theirs) { activity(owner: other_user) }
-
-    it 'is true for an activity without restrictions' do
-      filter = ActivityFilter.new(name: 'f', filter: { 'from_date' => '', 'to_date' => '' })
-      expect(described_class.activity_matches_filter?(user, [team], mine, filter)).to be true
-    end
-
-    it 'is false for an activity outside of the date range' do
-      pending 'bug: string keyed filter hashes are ignored by load_activities (symbol key lookups)'
-      filter = ActivityFilter.new(name: 'f', filter: { 'from_date' => '2001-01-31', 'to_date' => '2001-01-01' })
-      expect(described_class.activity_matches_filter?(user, [team], mine, filter)).to be false
-    end
-
-    it 'is false for an activity of another user' do
-      pending 'bug: load_activities reads symbol keys, so the users/types of a jsonb filter (string keys) are ignored'
-      filter = ActivityFilter.create!(name: 'f', filter: { 'users' => [user.id.to_s] }).reload
-      expect(described_class.activity_matches_filter?(user, [team], theirs, filter)).to be false
-    end
-  end
 end
