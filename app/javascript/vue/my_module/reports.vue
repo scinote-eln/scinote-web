@@ -19,7 +19,7 @@
             <i class="sn-icon sn-icon-visibility-show"></i>
           </button>
           <button
-            v-if="editable"
+            v-if="editable && enabled"
             :disabled="template.generating_report"
             class="btn btn-primary icon-btn e2e-BT-task-analyticalReport-generate"
             @click="openWizard(template.id)"
@@ -108,6 +108,9 @@ export default {
       required: true
     },
     editable: {
+      default: false
+    },
+    enabled: {
       default: false
     }
   },
