@@ -14,3 +14,9 @@ if item.key?(:my_module_id)
   json.my_module_id item[:my_module_id]
   json.repository_row_id item[:repository_row_id]
 end
+
+if item.key?(:protocol_id)
+  json.row_assigned item[:row_assigned]
+  json.protocol_id item[:protocol_id]
+  json.repository_row_id item[:repository_row_id]
+end

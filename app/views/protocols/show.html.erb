@@ -6,6 +6,7 @@
  <% provide(:container_class, 'no-second-nav-container') %>
 
  <%= hidden_field_tag :scinote_local_url, Constants::ASSET_SYNC_URL %>
+ <%= hidden_field_tag :assignable_protocol_id, @protocol.id if @protocol.in_repository? %>
 
 <div class="content-pane protocols-show flexible with-grey-background pb-4" >
   <%= render partial: "protocols/header" %>

@@ -128,6 +128,21 @@ describe SmartAnnotation do
           expect(item[:row_assigned]).to be true
         end
       end
+
+      context 'with a protocol id' do
+        let(:protocol) { create :protocol, :in_repository_draft, team: team, added_by: user }
+
+        it 'marks rows as not assigned' do
+          item = search.call(assignable_protocol_id: protocol.id)[:items].first
+          expect(item).to include(row_assigned: false, protocol_id: protocol.id, repository_row_id: row.id)
+        end
+
+        it 'marks assigned rows' do
+          protocol.protocol_repository_rows.create!(repository_row: row)
+          item = search.call(assignable_protocol_id: protocol.id)[:items].first
+          expect(item[:row_assigned]).to be true
+        end
+      end
     end
 
     it 'returns no items for an unknown parent type' do

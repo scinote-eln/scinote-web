@@ -83,6 +83,11 @@
                 <i class="sn-icon sn-icon-assign-to-task"></i>
                 {{ i18n.t('atwho.buttons.assign') }}
               </button>
+              <button v-if="item.protocol_id && !item.row_assigned" type="button" class="btn btn-xs btn-light"
+                      @click.stop="assignToProtocol(item)">
+                <i class="sn-icon sn-icon-protocols-templates"></i>
+                {{ i18n.t('atwho.buttons.assign_to_protocol') }}
+              </button>
             </span>
           </template>
         </div>
@@ -113,7 +118,8 @@ import searchHighlightMixin from './smart_annotation_mixins/search_highlight_mix
 import {
   atwho_search_team_path,
   atwho_users_team_path,
-  my_module_repositories_path
+  my_module_repositories_path,
+  protocol_repository_rows_path
 } from '../../routes.js';
 
 const CHILD_TAG = { prj: 'sa-projects', exp: 'sa-experiments', tsk: 'sa-task-files', rep: 'sa-repositories' };
@@ -178,6 +184,10 @@ export default {
     teamId() {
       return document.body.dataset.currentTeamId;
     },
+    assignableProtocolId() {
+      const field = document.getElementById('assignable_protocol_id');
+      return field?.value || null;
+    },
     runQuery() {
       const teamId = this.teamId();
       if (!teamId) return;
@@ -205,6 +215,8 @@ export default {
       if (top) params.parent_type = top.tag;
       if (top && top.id) params.parent_id = top.id;
       if (this.assignableMyModuleId) params.assignable_my_module_id = this.assignableMyModuleId;
+      const protocolId = this.assignableProtocolId();
+      if (protocolId) params.assignable_protocol_id = protocolId;
 
       return axios.get(atwho_search_team_path(teamId), { params })
         .then((response) => ({ items: response.data.items || [], limitReached: !!response.data.limit_reached }));
@@ -292,6 +304,16 @@ export default {
         .catch((error) => {
           const flash = error.response && error.response.data && error.response.data.flash;
           HelperModule.flashAlertMsg(flash || this.i18n.t('errors.general'), 'danger');
+        });
+    },
+    assignToProtocol(item) {
+      axios.post(protocol_repository_rows_path(item.protocol_id), { repository_row_ids: [item.repository_row_id] })
+        .then(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('atwho.buttons.assign_to_protocol_success'), 'success');
+        })
+        .catch((error) => {
+          const errors = error.response?.data?.errors;
+          HelperModule.flashAlertMsg(errors || this.i18n.t('errors.general'), 'danger');
         });
     },
     onSearchInput(e) {

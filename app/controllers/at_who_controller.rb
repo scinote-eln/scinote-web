@@ -15,9 +15,11 @@ class AtWhoController < ApplicationController
     annotation = SmartAnnotation.new(current_user, current_team, @query)
     result = if params[:parent_type].present?
                annotation.search(parent_type: params[:parent_type], parent_id: params[:parent_id],
-                                  assignable_my_module_id: assignable_my_module_id)
+                                 assignable_my_module_id: assignable_my_module_id,
+                                 assignable_protocol_id: assignable_protocol_id)
              else
-               annotation.global_search(assignable_my_module_id: assignable_my_module_id)
+               annotation.global_search(assignable_my_module_id: assignable_my_module_id,
+                                        assignable_protocol_id: assignable_protocol_id)
              end
 
     @items = result[:items]
@@ -45,5 +47,11 @@ class AtWhoController < ApplicationController
     return unless params[:assignable_my_module_id].present?
 
     MyModule.readable_by_user(current_user, @team).find_by(id: params[:assignable_my_module_id])&.id
+  end
+
+  def assignable_protocol_id
+    return if params[:assignable_protocol_id].blank?
+
+    Protocol.readable_by_user(current_user, @team).find_by(id: params[:assignable_protocol_id])&.id
   end
 end

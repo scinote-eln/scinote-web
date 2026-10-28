@@ -13,7 +13,7 @@ class SmartAnnotation
     @query = query
   end
 
-  def search(parent_type:, parent_id: nil, assignable_my_module_id: nil)
+  def search(parent_type:, parent_id: nil, assignable_my_module_id: nil, assignable_protocol_id: nil)
     items =
       case parent_type
       when 'sa-projects'
@@ -25,7 +25,8 @@ class SmartAnnotation
       when 'sa-tasks'
         serialize_my_modules(my_modules)
       when 'sa-repositories'
-        parent_id ? serialize_repository_rows(repository_rows_of(find_repository(parent_id)), assignable_my_module_id)
+        parent_id ? serialize_repository_rows(repository_rows_of(find_repository(parent_id)),
+                                               assignable_my_module_id, assignable_protocol_id)
                   : serialize_repositories(repositories)
       when 'sa-task-files'
         serialize_files(files_of(find_my_module(parent_id)))
@@ -36,13 +37,13 @@ class SmartAnnotation
     cap(items)
   end
 
-  def global_search(assignable_my_module_id: nil)
+  def global_search(assignable_my_module_id: nil, assignable_protocol_id: nil)
     items = (
       serialize_projects(projects) +
       serialize_experiments(experiments) +
       serialize_my_modules(my_modules) +
       serialize_repositories(repositories) +
-      serialize_repository_rows(repository_rows, assignable_my_module_id) +
+      serialize_repository_rows(repository_rows, assignable_my_module_id, assignable_protocol_id) +
       serialize_files(files)
     ).sort_by { |item| item[:updated_at] }.reverse
 
@@ -190,16 +191,25 @@ class SmartAnnotation
     scope.map { |r| base_item(r, 'rep') }
   end
 
-  def serialize_repository_rows(scope, assignable_my_module_id)
+  def serialize_repository_rows(scope, assignable_my_module_id, assignable_protocol_id = nil)
     scope.map do |r|
       item = base_item(r, 'rep_item')
-      next item unless assignable_my_module_id.present?
 
-      item.merge(
-        row_assigned: assigned_row_ids(assignable_my_module_id).include?(r.id),
-        my_module_id: assignable_my_module_id,
-        repository_row_id: r.id
-      )
+      if assignable_my_module_id.present?
+        item.merge(
+          row_assigned: assigned_row_ids(assignable_my_module_id).include?(r.id),
+          my_module_id: assignable_my_module_id,
+          repository_row_id: r.id
+        )
+      elsif assignable_protocol_id.present?
+        item.merge(
+          row_assigned: assigned_protocol_row_ids(assignable_protocol_id).include?(r.id),
+          protocol_id: assignable_protocol_id,
+          repository_row_id: r.id
+        )
+      else
+        item
+      end
     end
   end
 
@@ -222,6 +232,12 @@ class SmartAnnotation
     @assigned_row_ids ||= {}
     @assigned_row_ids[my_module_id] ||=
       MyModuleRepositoryRow.where(my_module_id: my_module_id).pluck(:repository_row_id).to_set
+  end
+
+  def assigned_protocol_row_ids(protocol_id)
+    @assigned_protocol_row_ids ||= {}
+    @assigned_protocol_row_ids[protocol_id] ||=
+      ProtocolRepositoryRow.where(protocol_id: protocol_id).pluck(:repository_row_id).to_set
   end
 
   def base_item(record, type)
