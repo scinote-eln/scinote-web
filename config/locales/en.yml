@@ -1992,6 +1992,8 @@ en:
       generating: "Generating report"
       cretated: "Created: %{date}"
       empty_page: "This page is intentionally blank."
+      promo:
+        promo_title: 'This feature is disabled by default in open source SciNote'
       delete:
         title: "Delete report %{name}"
         description_html: "You are trying to delete a report.<br><br>This action cannot be undone."
@@ -4382,6 +4384,8 @@ en:
     report_template:
       title: "Report templates"
       new_template: "New template"
+      promo:
+        promo_title: 'This feature is disabled by default in open source SciNote'
       data_inputs:
         title: "Data inputs"
         banner: "Copy & paste these codes into your .DOCX file where you want to populate fields."

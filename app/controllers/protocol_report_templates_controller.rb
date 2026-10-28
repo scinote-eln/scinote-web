@@ -4,12 +4,13 @@ class ProtocolReportTemplatesController < ApplicationController
   include ActiveStorageFileUtil
 
   before_action :load_protocol
-  before_action :check_analytical_reporting
-  before_action :check_read_permissions, except: :create
-  before_action :check_manage_permissions, only: :create
-  before_action :load_report_template, only: %i(destroy preview pdf_preview_path download)
+  before_action :check_analytical_reporting, only: :create
+  before_action :check_read_permissions, except: %i(create destroy)
+  before_action :check_manage_permissions, only: %i(create destroy)
   before_action :set_inline_name_editing, only: :index
   before_action :set_breadcrumbs_items, only: :index
+  before_action :render_promo, except: :create
+  before_action :load_report_template, only: %i(destroy preview pdf_preview_path download)
 
   def index
     respond_to do |format|
@@ -104,6 +105,10 @@ class ProtocolReportTemplatesController < ApplicationController
 
   def check_analytical_reporting
     render_403 unless ReportTemplate.analytical_reporting_enabled?
+  end
+
+  def render_promo
+    render :promo if !ReportTemplate.analytical_reporting_enabled? && @protocol.report_templates.none?
   end
 
   def check_read_permissions

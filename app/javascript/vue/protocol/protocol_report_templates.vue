@@ -10,7 +10,7 @@
       <div class="flex justify-between items-center">
         <div class="text-xl font-semibold"> {{ i18n.t('protocols.report_template.title') }}</div>
         <button
-          v-if="editable"
+          v-if="editable && enabled"
           class="btn btn-primary icon-btn"
           @click="protocolReportTemplateModal = true"
           data-e2e="e2e-BT-protocolTemplate-analyticalReport-newTemplate"
@@ -86,6 +86,9 @@ export default {
       required: true
     },
     editable: {
+      default: false
+    },
+    enabled: {
       default: false
     }
   },

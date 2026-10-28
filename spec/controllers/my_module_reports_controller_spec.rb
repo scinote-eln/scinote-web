@@ -45,13 +45,6 @@ describe MyModuleReportsController, type: :controller do
   end
 
   describe 'before actions' do
-    it 'returns 403 when analytical reporting is disabled' do
-      allow(ReportTemplate).to receive(:analytical_reporting_enabled?).and_return(false)
-      get :index, params: { my_module_id: my_module.id }, format: :json
-
-      expect(response).to have_http_status(:forbidden)
-    end
-
     it 'returns 404 for an unknown task' do
       pending 'bug: load_my_module keeps running after render_404 and raises NoMethodError on nil'
       get :index, params: { my_module_id: -1 }, format: :json
@@ -66,6 +59,91 @@ describe MyModuleReportsController, type: :controller do
 
       expect(response).to have_http_status(:ok)
       expect(user.reload.current_team_id).to eq team.id
+    end
+  end
+
+  describe 'when analytical reporting is disabled' do
+    before do
+      allow(ReportTemplate).to receive(:analytical_reporting_enabled?).and_return(false)
+    end
+
+    it 'forbids creating a report' do
+      expect(MyModules::GenerateReportJob).not_to receive(:perform_later)
+      expect do
+        post :create, params: { my_module_id: my_module.id, report_template_id: report_template.id }, format: :json
+      end.not_to(change { AnalyticalReport.count })
+      expect(response).to have_http_status(:forbidden)
+      expect(response).not_to render_template(:promo)
+    end
+
+    context 'and the task has no reports' do
+      %i(index report_templates pdfs).each do |action|
+        it "renders the promo page for #{action}" do
+          get action, params: { my_module_id: my_module.id }
+
+          expect(response).to have_http_status(:ok)
+          expect(response).to render_template(:promo)
+        end
+      end
+
+      it 'renders the promo page before looking up the report' do
+        get :download, params: { my_module_id: my_module.id, id: -1 }
+
+        expect(response).to have_http_status(:ok)
+        expect(response).to render_template(:promo)
+      end
+
+      it 'still requires read permission' do
+        become_user_without_task_access
+        get :index, params: { my_module_id: my_module.id }
+
+        expect(response).to have_http_status(:forbidden)
+        expect(response).not_to render_template(:promo)
+      end
+    end
+
+    context 'and the task has a report that is still generating' do
+      before { create_report(name: 'Running', status: :in_progress, attach: false) }
+
+      it 'does not render the promo page' do
+        get :index, params: { my_module_id: my_module.id }, format: :json
+
+        expect(response).to have_http_status(:ok)
+        expect(response).not_to render_template(:promo)
+        expect(assigns(:analytical_reports)).to be_empty
+      end
+    end
+
+    context 'and the task already has finished reports' do
+      let!(:analytical_report) { create_report }
+
+      it 'still lists the reports' do
+        get :index, params: { my_module_id: my_module.id }, format: :json
+
+        expect(response).to have_http_status(:ok)
+        expect(response).not_to render_template(:promo)
+        expect(assigns(:analytical_reports)).to eq [analytical_report]
+      end
+
+      it 'still allows downloading a report' do
+        get :download, params: { my_module_id: my_module.id, id: analytical_report.id }
+
+        expect(response).to have_http_status(:redirect)
+        expect(response.location).to include("#{analytical_report.name}.pdf")
+      end
+
+      it 'still allows destroying a report' do
+        allow(Activities::CreateActivityService).to receive(:call)
+        expect { delete :destroy, params: { my_module_id: my_module.id, id: analytical_report.id }, format: :json }
+          .to change { AnalyticalReport.count }.by(-1)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns 404 for an unknown report' do
+        get :download, params: { my_module_id: my_module.id, id: -1 }
+
+        expect(response).to have_http_status(:not_found)
+      end
     end
   end
 
@@ -174,11 +252,7 @@ describe MyModuleReportsController, type: :controller do
     end
 
     it 'is forbidden without read permission' do
-      other_user = create :user, confirmed_at: Time.zone.now
-      other_user.update!(current_team_id: team.id)
-      create_user_assignment(team, viewer_role, other_user, user)
-      sign_out user
-      sign_in other_user
+      become_user_without_task_access
       get :report_templates, params: { my_module_id: my_module.id }, format: :json
 
       expect(response).to have_http_status(:forbidden)
