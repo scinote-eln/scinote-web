@@ -20,6 +20,7 @@
           :value="dataType"
           :options="options"
           :disabled="disabledType"
+          e2eValue="e2e-DD-invItems-manageColumns-columnType"
           @change="$emit('update:dataType', $event)"
         />
       </div>

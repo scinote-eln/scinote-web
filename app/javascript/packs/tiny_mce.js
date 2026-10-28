@@ -195,7 +195,13 @@ window.TinyMCE = (() => {
       });
     }
 
-    setTimeout(() => { tinyMCE.activeEditor.execCommand('mceAutoResize') }, 500);
+    // The editor needs focus for the blur-save; preventScroll keeps the page from scrolling to the caret
+    setTimeout(() => {
+      if (editor.removed) return;
+
+      editor.getBody().focus({ preventScroll: true });
+      editor.execCommand('mceAutoResize', false, null, { skip_focus: true });
+    }, 500);
   }
 
   function initCssOverrides(editor) {
@@ -237,6 +243,12 @@ window.TinyMCE = (() => {
     }
   }
 
+  // The emptied editor container sits below the restored view; hiding it stops Chrome scroll anchoring
+  // from following it down (the page would jump by the height of the view).
+  function hideEditorContainer(editorForm) {
+    editorForm.find('.tinymce-editor-container').addClass('hidden');
+  }
+
   // Update scroll position after exit
   function updateScrollPosition(editorForm) {
     if (editorForm.offset().top < $(window).scrollTop()) {
@@ -267,6 +279,7 @@ window.TinyMCE = (() => {
 
         editorForm.parent().height(tinyMceInitSize);
         tinyMceContainer.addClass('hidden');
+        editorForm.find('.tinymce-editor-container').removeClass('hidden');
 
         const plugins = `
           image table autosave autoresize link advlist codesample code autolink lists
@@ -431,9 +444,9 @@ window.TinyMCE = (() => {
             editorForm
               .on('ajax:success', (_ev, data) => {
                 editor.save();
-                editor.setProgressState(0);
                 editorForm.find('.tinymce-status-badge').removeClass('hidden');
                 editor.remove();
+                hideEditorContainer(editorForm);
                 editorForm.find('.tinymce-view').html(data.html).removeClass('hidden');
                 TinyMCE.wrapTables(editorForm.find('.tinymce-view'));
                 editor.plugins.autosave.removeDraft();
@@ -470,6 +483,7 @@ window.TinyMCE = (() => {
                 editorForm.find('.tinymce-status-badge').addClass('hidden');
                 editorForm.find('.tinymce-view').removeClass('hidden');
                 editor.remove();
+                hideEditorContainer(editorForm);
 
                 if (options.onSaveCallback) { options.onSaveCallback($(selector).val()); }
 

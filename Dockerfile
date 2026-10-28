@@ -1,8 +1,10 @@
 FROM ruby:3.4-trixie
 MAINTAINER SciNote <info@scinote.net>
 
-ARG TIKA_DIST_URL="https://archive.apache.org/dist/tika/3.2.3/tika-app-3.2.3.jar"
-ENV TIKA_PATH=/usr/local/bin/tika-app.jar
+ARG TIKA_VERSION=4.1.0
+ARG TIKA_DIST_URL="https://archive.apache.org/dist/tika/${TIKA_VERSION}/tika-app-${TIKA_VERSION}.zip"
+ARG TIKA_HOME=/opt/tika-app
+ENV TIKA_PATH=${TIKA_HOME}/tika-app-${TIKA_VERSION}.jar
 
 # additional dependencies
 # libreoffice for file preview generation
@@ -29,9 +31,12 @@ RUN apt-get update -qq && \
   chromium \
   chromium-sandbox \
   npm \
+  unzip \
   yarnpkg && \
-  wget -O $TIKA_PATH $TIKA_DIST_URL && \
-  chmod +x $TIKA_PATH && \
+  mkdir -p $TIKA_HOME && \
+  wget -O /tmp/tika-app.zip $TIKA_DIST_URL && \
+  unzip -q /tmp/tika-app.zip -d $TIKA_HOME && \
+  rm /tmp/tika-app.zip && \
   ln -s /usr/bin/yarnpkg /usr/bin/yarn && \
   ln -s /usr/lib/$(dpkg-architecture -q DEB_HOST_MULTIARCH)/libvips.so.42 /usr/lib/$(dpkg-architecture -q DEB_HOST_MULTIARCH)/libvips.so && \
   rm -rf /var/lib/apt/lists/*

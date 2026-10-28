@@ -595,7 +595,8 @@ export default {
         '.dp--instance-calendar',
         '.label-printing-progress-modal',
         '.atwho-view',
-        '.sn-select-dropdown'
+        '.sn-select-dropdown',
+        '.dp--action-button'
       ];
 
       const excludeSelectors = ['#myModuleRepositoryFullViewModal'];
@@ -696,7 +697,16 @@ export default {
     reload() {
       if (this.isShowing) {
         // perserve scrollTop on reload
-        this.loadRepositoryRow(this.currentItemUrl, this.$refs.bodyWrapper.scrollTop);
+        this.loadRepositoryRow(this.currentItemUrl, this.$refs.bodyWrapper.scrollTop).then(() => {
+          if (this.loadingError || !this.isSameRepository) return;
+
+          const updatedRow = { id: this.repositoryRowId, assigned_tasks_count: this.assignedModules.total_assigned_size };
+          if (window.repositoryAssignTable) {
+            window.repositoryAssignTable.updateRowData(updatedRow);
+          } else {
+            window.repositoryTable?.updateRowData(updatedRow);
+          }
+        });
       }
     },
     showRepositoryAssignModal() {
