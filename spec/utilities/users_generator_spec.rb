@@ -81,10 +81,7 @@ describe UsersGenerator do
       expect(user.current_team_id).to be_nil
     end
 
-    # bug: create_user passes UserRole.owner_role, an unsaved template instance, to UserAssignment,
-    # so the assignment fails with a NOT NULL violation on user_role_id for every team id
     it 'assigns the user as owner of the given teams and makes the first one current' do
-      pending 'bug: create_user cannot assign the owner role of a team (UserRole.owner_role is unsaved)'
       user = generator.create_user('Max Roe', 'max.roe@example.com', 'Secret-Pass-123', true, nil, [other_team.id])
 
       assignment = UserAssignment.find_by(user: user, assignable: other_team)
