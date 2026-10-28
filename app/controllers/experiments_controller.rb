@@ -241,7 +241,8 @@ class ExperimentsController < ApplicationController
 
     service = Experiments::CopyExperimentAsTemplateService.call(experiment: @experiment,
                                                                 project: @project,
-                                                                user: current_user)
+                                                                user: current_user,
+                                                                copy_results: copy_results_param)
 
     if service.succeed?
       flash[:success] = t('experiments.clone.success_flash',
@@ -432,7 +433,8 @@ class ExperimentsController < ApplicationController
           }.merge(new_my_module.get_new_position)
         )
         new_my_module.designated_users << current_user
-        MyModules::CopyContentJob.perform_later(current_user.id, my_module.id, new_my_module.id)
+        MyModules::CopyContentJob.perform_later(current_user.id, my_module.id, new_my_module.id,
+                                                copy_results: copy_results_param)
       end
       @experiment.workflowimg.purge
     end
@@ -484,6 +486,10 @@ class ExperimentsController < ApplicationController
 
   def move_experiment_param
     params.require(:experiment).require(:project_id)
+  end
+
+  def copy_results_param
+    ActiveModel::Type::Boolean.new.cast(params[:copy_results])
   end
 
   def view_type_params
