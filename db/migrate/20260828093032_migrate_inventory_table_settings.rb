@@ -58,7 +58,7 @@ class MigrateInventoryTableSettings < ActiveRecord::Migration[7.2]
         end
 
         order = {
-          column: columns[old_state.dig('order', 0, 0)]['colId'],
+          column: columns[old_state.dig('order', 0, 0).to_i]['colId'],
           dir: old_state.dig('order', 0, 1)
         }
 
