@@ -250,40 +250,26 @@ class TeamImporter
   def update_annotation(text)
     return false if text.nil?
 
+    mappings = { 'prj' => @project_mappings, 'exp' => @experiment_mappings, 'tsk' => @my_module_mappings,
+                 'rep_item' => @repository_row_mappings, 'rep' => @repository_mappings }
     updated = false
-    %w(prj exp tsk rep_item rep).each do |name|
-      text.scan(/~#{name}~\w+\]/).each do |text_match|
-        orig_id_encoded = text_match.match(/~#{name}~(\w+)\]/)[1]
-        orig_id = orig_id_encoded.base62_decode
-        new_id =
-          case name
-          when 'prj'
-            @project_mappings[orig_id]
-          when 'exp'
-            @experiment_mappings[orig_id]
-          when 'tsk'
-            @my_module_mappings[orig_id]
-          when 'rep_item'
-            @repository_row_mappings[orig_id]
-          when 'rep'
-            @repository_mappings[orig_id]
-          end
-        next unless new_id
+    remapped = text.gsub(/~(prj|exp|tsk|rep_item|rep)~(\w+)\]/) do |token|
+      name, orig_id_encoded = Regexp.last_match.captures
+      new_id = mappings[name][orig_id_encoded.base62_decode]
+      next token unless new_id
 
-        new_id_encoded = new_id.base62_encode
-        text.sub!("~#{name}~#{orig_id_encoded}]", "~#{name}~#{new_id_encoded}]")
-        updated = true
-      end
-    end
-    text.scan(SmartAnnotations::TagToText::USER_REGEX).each do |user_match|
-      orig_id_encoded = user_match[1]
-      orig_id = orig_id_encoded.base62_decode
-      next unless @user_mappings[orig_id]
-
-      new_id_encoded = @user_mappings[orig_id].base62_encode
-      text.sub!("~#{orig_id_encoded}]", "~#{new_id_encoded}]")
       updated = true
+      "~#{name}~#{new_id.base62_encode}]"
     end
+    remapped = remapped.gsub(SmartAnnotations::TagToText::USER_REGEX) do |token|
+      name, orig_id_encoded = Regexp.last_match.captures
+      new_id = @user_mappings[orig_id_encoded.base62_decode]
+      next token unless new_id
+
+      updated = true
+      "[@#{name}~#{new_id.base62_encode}]"
+    end
+    text.replace(remapped) if updated
     updated
   end
 

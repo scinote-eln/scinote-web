@@ -579,14 +579,6 @@ describe TeamImporter do
     end
 
     it 'remaps smart annotations to the imported records' do
-      # bug: TeamImporter#update_annotation rewrites user tokens with an unanchored text.sub!("~ID]", ...), so when
-      # the NEW id of a task encodes to the same string as the OLD id of a user, the user remap also rewrites the
-      # task token. Keep the new ids far away from the exported ones so this example does not depend on the id
-      # sequences (the order the specs run in).
-      %w(projects experiments my_modules users).each do |table|
-        ActiveRecord::Base.connection.execute("SELECT setval('#{table}_id_seq', 1000000)")
-      end
-
       importer.import_from_dir(export_dir)
 
       imported_project = imported_team.projects.find_by(name: 'Exported project')
@@ -595,6 +587,35 @@ describe TeamImporter do
       annotated = imported_project.project_comments.where.not(message: 'Project comment').first
       expect(annotated.message).to include("~tsk~#{imported_task.id.base62_encode}]")
       expect(annotated.message).to include("[@Exporter~#{imported_user.id.base62_encode}]")
+    end
+
+    context 'when the new id of a task encodes like the old id of a user' do
+      let(:user) do
+        ActiveRecord::Base.connection.execute("SELECT setval('users_id_seq', 5000000)")
+        create :user, full_name: 'Exporter'
+      end
+
+      it 'keeps the task and the user token apart' do
+        # The importer creates the tasks in export order, which the exporter leaves to the database
+        exported_tasks = JSON.parse(File.read(File.join(export_dir, 'team_export.json')))
+                             .dig('projects', 0, 'experiments', 0, 'my_modules')
+        tasks_before_task_a = exported_tasks.index { |exported| exported['my_module']['id'] == task_a.id }
+        conn = ActiveRecord::Base.connection
+        conn.execute("SELECT setval('my_modules_id_seq', #{user.id - 1 - tasks_before_task_a})")
+        conn.execute("SELECT setval('users_id_seq', 6000000)")
+        %w(projects experiments).each { |table| conn.execute("SELECT setval('#{table}_id_seq', 1000000)") }
+
+        importer.import_from_dir(export_dir)
+
+        imported_project = imported_team.projects.find_by(name: 'Exported project')
+        imported_task = imported_project.experiments.first.my_modules.find_by(name: 'Task A')
+        imported_user = User.find_by(email: "imported-#{user.email}")
+        expect(imported_task.id).to eq user.id
+        annotated = imported_project.project_comments.where.not(message: 'Project comment').first
+        expect(annotated.message).to eq(
+          "See [#Task A~tsk~#{imported_task.id.base62_encode}] by [@Exporter~#{imported_user.id.base62_encode}]"
+        )
+      end
     end
 
     it 'imports reports, inventories, label templates and activities' do
@@ -628,6 +649,66 @@ describe TeamImporter do
         .to eq "imported-#{user.email}"
       expect(Activity.where(team: imported_team).count).to eq 2
       expect(Activity.where(team: imported_team, project: imported_project).count).to eq 1
+    end
+  end
+
+  describe 'smart annotation remapping' do
+    let(:importer) { described_class.new }
+
+    it 'does not rewrite a task token that encodes like the id of a user' do
+      # The task gets the id that the exported user had: the user remap must not touch the task id it just wrote
+      importer.instance_variable_set(:@my_module_mappings, { 7 => 12 })
+      importer.instance_variable_set(:@user_mappings, { 12 => 3 })
+      text = +"[#T~tsk~#{7.base62_encode}] [@J~#{12.base62_encode}]"
+
+      expect(importer.send(:update_annotation, text)).to be true
+      expect(text).to eq "[#T~tsk~#{12.base62_encode}] [@J~#{3.base62_encode}]"
+    end
+
+    it 'remaps chained task ids once each' do
+      importer.instance_variable_set(:@my_module_mappings, { 7 => 8, 8 => 9 })
+      text = +"[#A~tsk~#{7.base62_encode}] [#B~tsk~#{8.base62_encode}]"
+
+      expect(importer.send(:update_annotation, text)).to be true
+      expect(text).to eq "[#A~tsk~#{8.base62_encode}] [#B~tsk~#{9.base62_encode}]"
+    end
+
+    it 'remaps chained user ids once each' do
+      importer.instance_variable_set(:@user_mappings, { 7 => 8, 8 => 9 })
+      text = +"[@A~#{7.base62_encode}] [@B~#{8.base62_encode}]"
+
+      expect(importer.send(:update_annotation, text)).to be true
+      expect(text).to eq "[@A~#{8.base62_encode}] [@B~#{9.base62_encode}]"
+    end
+
+    it 'remaps every kind of token with its own mapping' do
+      importer.instance_variable_set(:@project_mappings, { 1 => 101 })
+      importer.instance_variable_set(:@experiment_mappings, { 1 => 102 })
+      importer.instance_variable_set(:@my_module_mappings, { 1 => 103 })
+      importer.instance_variable_set(:@repository_row_mappings, { 1 => 104 })
+      importer.instance_variable_set(:@repository_mappings, { 1 => 105 })
+      importer.instance_variable_set(:@user_mappings, { 1 => 106 })
+      # Every token carries the same old id, so each one shows which mapping it was looked up in
+      old_id = 1.base62_encode
+      text = +"[#A~prj~#{old_id}] [#B~exp~#{old_id}] [#C~tsk~#{old_id}] [#D~rep_item~#{old_id}] " \
+              "[#E~rep~#{old_id}] [@F~#{old_id}]"
+
+      expect(importer.send(:update_annotation, text)).to be true
+      expect(text).to eq "[#A~prj~#{101.base62_encode}] [#B~exp~#{102.base62_encode}] [#C~tsk~#{103.base62_encode}] " \
+                         "[#D~rep_item~#{104.base62_encode}] [#E~rep~#{105.base62_encode}] [@F~#{106.base62_encode}]"
+    end
+
+    it 'leaves the text alone and returns false when none of the ids is mapped' do
+      importer.instance_variable_set(:@my_module_mappings, { 7 => 8 })
+      importer.instance_variable_set(:@user_mappings, { 12 => 3 })
+      text = +"[#T~tsk~#{9.base62_encode}] [@J~#{13.base62_encode}]"
+
+      expect(importer.send(:update_annotation, text)).to be false
+      expect(text).to eq "[#T~tsk~#{9.base62_encode}] [@J~#{13.base62_encode}]"
+    end
+
+    it 'returns false for a missing text' do
+      expect(importer.send(:update_annotation, nil)).to be false
     end
   end
 end
