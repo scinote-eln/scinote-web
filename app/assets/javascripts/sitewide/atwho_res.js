@@ -98,9 +98,9 @@ var SmartAnnotation = (function() {
 
     function evaluateMatch() {
       var subtext = adapter.getSubtext();
-      var flag = AtWhoMatchers.isTriggerFlag('#', subtext, true)
+      var flag = AtWhoMatchers.isTriggerFlag('#', subtext)
         ? '#'
-        : (AtWhoMatchers.isTriggerFlag('@', subtext, false) ? '@' : null);
+        : (AtWhoMatchers.isTriggerFlag('@', subtext) ? '@' : null);
 
       if (!flag) return;
       openFlyout(adapter, field, flag, assignableMyModuleId);
