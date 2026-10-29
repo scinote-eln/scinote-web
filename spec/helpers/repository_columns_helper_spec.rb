@@ -6,8 +6,6 @@ describe RepositoryColumnsHelper, type: :helper do
   let(:user) { create :user }
   let(:repository) { create :repository, created_by: user, team: create(:team, created_by: user) }
   let!(:columns) { create_list :repository_column, 3, repository: repository, created_by: user }
-  let(:default_order) { repository.default_table_state['ColReorder'] }
-  let(:default_count) { default_order.length }
 
   before do
     without_partial_double_verification { allow(helper).to receive(:current_user).and_return(user) }
@@ -23,49 +21,71 @@ describe RepositoryColumnsHelper, type: :helper do
   end
 
   describe '#repository_columns_ordered_by_state' do
-    def save_state(col_reorder)
-      create :repository_table_state, user: user, repository: repository,
-                                      state: { 'ColReorder' => col_reorder }
+    let(:repository_row) { create :repository_row, repository: repository, created_by: user }
+
+    def save_state(view_mode, columns_state)
+      user.user_settings.create!(
+        key: "repository_table_#{repository.id}_#{view_mode}_table_state",
+        value: { 'columnsState' => columns_state }
+      )
     end
 
     it 'returns an empty list for a repository without columns' do
-      empty = create :repository, created_by: user, team: repository.team
+      empty_repository = create :repository, created_by: user, team: repository.team
+      empty_row = create :repository_row, repository: empty_repository, created_by: user
 
-      expect(helper.repository_columns_ordered_by_state(empty)).to eq []
+      expect(helper.repository_columns_ordered_by_state(empty_row)).to eq []
     end
 
     it 'returns columns by id when the user has no table state' do
-      expect(helper.repository_columns_ordered_by_state(repository)).to eq columns
+      expect(helper.repository_columns_ordered_by_state(repository_row)).to eq columns
     end
 
-    it 'returns columns by id when the state has no column reordering' do
-      create :repository_table_state, user: user, repository: repository, state: {}
+    it 'returns columns by id when the saved state has no columnsState' do
+      save_state('active', nil)
 
-      expect(helper.repository_columns_ordered_by_state(repository)).to eq columns
+      expect(helper.repository_columns_ordered_by_state(repository_row)).to eq columns
     end
 
-    it 'returns columns by id when only default positions are present' do
-      save_state(default_order)
+    it 'orders columns by their saved colId position' do
+      save_state('active', [{ 'colId' => "col_#{columns[2].id}" }, { 'colId' => "col_#{columns[0].id}" }])
 
-      expect(helper.repository_columns_ordered_by_state(repository)).to eq columns
-    end
-
-    it 'orders custom columns by their saved position' do
-      save_state(default_order + [default_count + 2, default_count, default_count + 1])
-
-      expect(helper.repository_columns_ordered_by_state(repository)).to eq [columns[2], columns[0], columns[1]]
+      expect(helper.repository_columns_ordered_by_state(repository_row)).to eq [columns[2], columns[0], columns[1]]
     end
 
     it 'keeps columns missing from the saved state at the end' do
-      save_state(default_order + [default_count + 1])
+      save_state('active', [{ 'colId' => "col_#{columns[1].id}" }])
 
-      expect(helper.repository_columns_ordered_by_state(repository)).to eq [columns[1], columns[0], columns[2]]
+      expect(helper.repository_columns_ordered_by_state(repository_row)).to eq [columns[1], columns[0], columns[2]]
     end
 
-    it 'ignores saved positions that point to no column' do
-      save_state(default_order + [default_count + 10, default_count + 2])
+    it 'ignores saved colIds that are not custom columns' do
+      save_state('active', [{ 'colId' => 'checkbox' }, { 'colId' => "col_#{columns[2].id}" }, { 'colId' => 'name' }])
 
-      expect(helper.repository_columns_ordered_by_state(repository)).to eq [columns[2], columns[0], columns[1]]
+      expect(helper.repository_columns_ordered_by_state(repository_row)).to eq [columns[2], columns[0], columns[1]]
+    end
+
+    it 'ignores saved colIds that point to a column that no longer exists' do
+      save_state('active', [{ 'colId' => "col_#{columns[2].id}" }, { 'colId' => 'col_999999' }])
+
+      expect(helper.repository_columns_ordered_by_state(repository_row)).to eq [columns[2], columns[0], columns[1]]
+    end
+
+    it 'maps the stock colId to the stock-type column' do
+      stock_column = create :repository_column, :stock_type, repository: repository, created_by: user
+
+      save_state('active', [{ 'colId' => 'stock' }])
+
+      expect(helper.repository_columns_ordered_by_state(repository_row))
+        .to eq [stock_column, columns[0], columns[1], columns[2]]
+    end
+
+    it 'uses the archived view state for an archived row' do
+      archived_row = create :repository_row, :archived, repository: repository, created_by: user
+      save_state('active', [{ 'colId' => "col_#{columns[2].id}" }])
+      save_state('archived', [{ 'colId' => "col_#{columns[1].id}" }])
+
+      expect(helper.repository_columns_ordered_by_state(archived_row)).to eq [columns[1], columns[0], columns[2]]
     end
   end
 end
