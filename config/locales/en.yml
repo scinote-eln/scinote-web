@@ -5069,6 +5069,8 @@ en:
       mention_page: "Mention page"
       add_page_number: "Add page number"
       assign: "Assign to task"
+      assign_to_protocol: "Assign to Protocol"
+      assign_to_protocol_success: "Successfully assigned an item to the protocol."
     navigate: "Navigate"
     projects: Projects
     experiments: Experiments

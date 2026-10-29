@@ -123,6 +123,23 @@ describe AtWhoController, type: :controller do
                      format: :json
         expect(json['items'].first).not_to have_key('row_assigned')
       end
+
+      it 'marks assignment for a readable assignable protocol' do
+        protocol = create :protocol, :in_repository_draft, team: team, added_by: user
+        get :search, params: { id: team.id, query: 'Alpha', parent_type: 'sa-repositories',
+                               parent_id: repository.id, assignable_protocol_id: protocol.id },
+                     format: :json
+        expect(json['items'].first).to include('row_assigned' => false, 'protocol_id' => protocol.id,
+                                               'repository_row_id' => row.id)
+      end
+
+      it 'ignores an assignable protocol the user cannot read' do
+        foreign_protocol = create :protocol, :in_repository_draft, added_by: create(:user)
+        get :search, params: { id: team.id, query: 'Alpha', parent_type: 'sa-repositories',
+                               parent_id: repository.id, assignable_protocol_id: foreign_protocol.id },
+                     format: :json
+        expect(json['items'].first).not_to have_key('row_assigned')
+      end
     end
   end
 end
