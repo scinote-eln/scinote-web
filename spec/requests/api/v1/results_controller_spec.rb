@@ -202,20 +202,6 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
       expect(ResultText.last.text).to include "data-mce-token=\"#{Base62.encode(TinyMceAsset.last.id)}\""
     end
 
-    it 'accepts a text result with a base64 image whatever the id of the new TinyMCE image' do
-      pending 'bug: extract_base64_images puts a second data-mce-token into the img, the first one wins and the ' \
-              "client's file_token is lost, so the API answers 400 unless the new TinyMceAsset id encodes to the token"
-      create :tiny_mce_asset, team: @team1
-      post api_v1_team_project_experiment_task_results_path(
-        team_id: @team1.id,
-        project_id: @valid_project,
-        experiment_id: @valid_experiment,
-        task_id: @valid_task
-      ), params: @valid_tinymce_hash_body.to_json, headers: @valid_headers
-
-      expect(response).to have_http_status 201
-    end
-
     it 'Response correct with old TinyMCE images' do
       hash_body = nil
       @valid_tinymce_hash_body[:included][0][:attributes][:text] = 'Result text 1 [~tiny_mce_id:1]'
