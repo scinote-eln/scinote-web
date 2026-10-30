@@ -220,7 +220,7 @@ var AtWhoFieldAdapter = (function() {
     chip.textContent = coreText;
     range.insertNode(chip);
 
-    var spaceNode = this.win.document.createTextNode(' ');
+    var spaceNode = this.win.document.createTextNode('\u00A0');
     if (chip.nextSibling) {
       chip.parentNode.insertBefore(spaceNode, chip.nextSibling);
     } else {
