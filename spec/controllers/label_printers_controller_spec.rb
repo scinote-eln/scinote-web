@@ -54,10 +54,14 @@ describe LabelPrintersController, type: :controller do
 
   describe 'POST create' do
     it 'creates a printer and redirects to edit' do
-      pending 'bug: label_printer_params does not permit language_type, so the presence validation always fails'
       expect do
-        post :create, params: { label_printer: { name: 'New printer', type_of: 'fluics' } }
+        post :create, params: { label_printer: { name: 'New printer', type_of: 'fluics', language_type: 'zpl' } }
       end.to change(LabelPrinter, :count).by(1)
+
+      created = LabelPrinter.find_by!(name: 'New printer')
+      expect(created).to have_attributes(type_of: 'fluics', language_type: 'zpl')
+      expect(response).to redirect_to(edit_label_printer_path(created))
+      expect(flash[:success]).to be_present
     end
 
     # bug: failure branch renders :new which has no template
@@ -131,17 +135,10 @@ describe LabelPrintersController, type: :controller do
     end
   end
 
-  describe 'POST print' do
-    let(:template) do
-      ZebraLabelTemplate.create!(name: 'T', content: '^XA^XZ', width_mm: 1, height_mm: 1, unit: :mm,
-                                 density: 12, team: team)
-    end
-
-    it 'enqueues a print job' do
-      pending 'bug: print_job_params calls params.require with two keys (ArgumentError) and ' \
-              'LabelTemplate#render is not defined'
-      post :print, params: { id: printer.id, label_template_id: template.id, locals: {} }, format: :json
-      expect(response).to have_http_status(:success)
+  describe 'retired print endpoint' do
+    # printing goes through repository_rows#print; this one could never work and was removed
+    it 'is no longer routed' do
+      expect(Rails.application.routes.url_helpers).not_to respond_to(:print_label_printer_path)
     end
   end
 end
