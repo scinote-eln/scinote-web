@@ -56,7 +56,7 @@ module Reports
               text '| '
               if form_response.archived?
                 text I18n.t('projects.reports.elements.archived_metadata',
-                            datetime: I18n.l(form_response.archived_at, format: :full),
+                            datetime: I18n.l(form_response.archived_on, format: :full),
                             user: form_response.archived_by&.full_name), color: color[:gray]
               else
                 text I18n.t('projects.reports.elements.step_forms.user_time',

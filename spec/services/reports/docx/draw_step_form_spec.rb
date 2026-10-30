@@ -80,7 +80,6 @@ describe Reports::Docx::DrawStepForm do
   it 'draws archive metadata for an archived response' do
     archived_on = Time.zone.local(2024, 5, 5, 5)
     form_response.update_columns(archived: true, archived_on: archived_on, archived_by_id: user.id)
-    pending 'bug: draw_step_forms reads form_response.archived_at, but the column is archived_on (NoMethodError)'
     draw
     expect(all_text).to include(I18n.t('search.index.archived'))
     expect(all_text).to include(
