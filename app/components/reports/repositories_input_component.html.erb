@@ -4,8 +4,9 @@
     <%= select_tag @name, options_from_collection_for_select(@repositories, :id, :name, @value), placeholder: @placeholder, class: 'sci-input-field report-template-value-dropdown', data: { type: 'RepositoriesInputComponent' }, multiple: true %>
   </div>
 <% else %>
-  <% @project_members.where(id: @value).each do |member| %>
-    <%= member.public_send(@displayed_field) %>
+  <% selected_ids = Array(@value).map(&:to_s) %>
+  <% @repositories.select { |repository| selected_ids.include?(repository.id.to_s) }.each do |repository| %>
+    <%= repository.public_send(@displayed_field) %>
     <br>
   <% end %>
 <% end %>

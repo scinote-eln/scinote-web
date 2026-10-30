@@ -50,10 +50,42 @@ RSpec.describe Reports::RepositoriesInputComponent, type: :component do
   end
 
   context 'when not editing' do
-    # bug: the template reads @project_members, which this component never sets, so the read-only view raises
-    pending 'bug: read-only rendering raises NoMethodError on nil @project_members' do
-      report.report_template_values.create!(view_component: 'RepositoriesInputComponent', name: 'repos', value: [alpha.id])
+    def add_value(ids)
+      report.report_template_values.create!(view_component: 'RepositoriesInputComponent', name: 'repos', value: ids)
+    end
+
+    def listed_names
+      render_component(editing: false).text.lines.map(&:strip).reject(&:empty?)
+    end
+
+    it 'lists the stored repositories by name' do
+      add_value([alpha.id])
       expect(render_component(editing: false).text.strip).to eq 'Alpha items'
+    end
+
+    it 'finds repositories whose ids were stored as strings' do
+      add_value([alpha.id.to_s])
+      expect(listed_names).to eq ['Alpha items']
+    end
+
+    it 'lists several repositories in name order' do
+      add_value([zeta.id, alpha.id])
+      expect(listed_names).to eq ['Alpha items', 'zeta items']
+    end
+
+    it 'lists the snapshot of a deleted repository' do
+      snapshot_source = create :repository, name: 'Gone source', team: team, created_by: user
+      snapshot = create :repository_snapshot, original_repository: snapshot_source, team: team,
+                                              created_by: user, name: 'Gone snapshot'
+      snapshot_source.destroy!
+      add_value([snapshot.id])
+      expect(listed_names).to eq ['Gone snapshot']
+    end
+
+    it 'ignores repositories that are not offered for the report team' do
+      other = create :repository, name: 'Foreign', team: create(:team)
+      add_value([alpha.id, other.id])
+      expect(listed_names).to eq ['Alpha items']
     end
   end
 end
