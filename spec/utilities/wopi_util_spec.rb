@@ -171,10 +171,7 @@ describe WopiUtil do
       expect(util.get_action('xlsx', 'view')).to be_nil
     end
 
-    # bug: initialize_discovery rescues the fetch error and returns the backtrace Array,
-    # so get_action raises TypeError instead of reporting that no action is available
     it 'returns nil when the discovery document cannot be fetched' do
-      pending 'bug: get_action returns nil when the discovery document cannot be fetched'
       allow(Net::HTTP).to receive(:get).and_raise(SocketError, 'getaddrinfo failed')
 
       expect(util.get_action('docx', 'view')).to be_nil
