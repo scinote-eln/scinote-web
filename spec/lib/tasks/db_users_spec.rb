@@ -71,9 +71,6 @@ describe 'db:load_users' do
     end
 
     it 'adds the user to that team as owner' do
-      # bug: UsersGenerator#create_user builds an unsaved UserRole.owner_role (name already taken), so the
-      # assignment has a NULL user_role_id and the whole load is reverted
-      pending 'bug: UsersGenerator#create_user cannot assign teams (UserRole.owner_role is never persisted)'
       expect { subject.invoke(yaml_path) }.to output(/USER #\d+/).to_stdout
 
       user = User.find_by!(email: 'rake.loaded@example.com')
@@ -114,8 +111,6 @@ describe 'db:add_user' do
     let(:answers) { ['Added User', 'added.user@example.com', 'Pass1234!word', 'T', 'Add team A, Add team B'] }
 
     it 'creates the user with a private team and the extra teams' do
-      # bug: UsersGenerator#create_user cannot assign teams (UserRole.owner_role is never persisted)
-      pending 'bug: UsersGenerator#create_user cannot assign teams (UserRole.owner_role is never persisted)'
       expect { subject.invoke }
         .to output(/Successfully created user.*Email: added.user@example.com.*Password: Pass1234!word/m).to_stdout
 
