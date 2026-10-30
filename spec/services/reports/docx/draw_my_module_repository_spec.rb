@@ -101,8 +101,10 @@ describe Reports::Docx::DrawMyModuleRepository do
     other_repository = create :repository, team: team, created_by: user
     other_element = create :report_element, report: report, type_of: :my_module_repository, my_module: my_module,
                                             repository: other_repository
-    pending 'bug: draw_my_module_repository reads repository.id before the nil check (NoMethodError)'
-    expect { renderer.draw_my_module_repository(other_element) }.not_to raise_error
+
+    expect(renderer.draw_my_module_repository(other_element)).to be_nil
+    expect(document_node.xpath('//tbl')).to be_empty
+    expect(all_text).not_to include(other_repository.name)
   end
 
   context 'with a selected repository snapshot' do
