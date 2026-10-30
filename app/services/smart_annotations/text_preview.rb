@@ -46,10 +46,10 @@ module SmartAnnotations
       end
 
       def generate_rep_item_snippet(name, object)
-        if object
-          return object.name
-        end
-        "#{name} #{I18n.t('atwho.res.deleted')}"
+        return "#{name} #{I18n.t('atwho.res.deleted')}" if object.nil?
+        return "#{object.name} #{I18n.t('atwho.res.archived')}" if object.archived?
+
+        object.name
       end
 
       def generate_rep_snippet(name, object)
