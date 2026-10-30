@@ -64,16 +64,6 @@ class LabelPrintersController < ApplicationController
     redirect_to addons_path
   end
 
-  def print
-    print_job = LabelPrinters::PrintJob.perform_later(
-      LabelPrinter.find(params[:id]),
-      LabelTemplate.find(print_job_params[:label_template_id])
-        .render(print_job_params[:locals])
-    )
-
-    render json: { job_id: print_job.job_id }
-  end
-
   def update_progress_modal
     render(
       json: {
@@ -124,12 +114,8 @@ class LabelPrintersController < ApplicationController
 
   def label_printer_params
     params.require(:label_printer).permit(
-      :name, :type_of, :fluics_api_key, :host, :port
+      :name, :type_of, :language_type, :fluics_api_key, :host, :port
     )
-  end
-
-  def print_job_params
-    params.require(:label_template_id, :label_template_locals)
   end
 
   def find_label_printer

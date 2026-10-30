@@ -82,7 +82,6 @@ Rails.application.routes.draw do
         as: 'zebra_settings'
 
     resources :label_printers, only: [] do
-      post :print, on: :member
       get :update_progress_modal, on: :member
     end
 
