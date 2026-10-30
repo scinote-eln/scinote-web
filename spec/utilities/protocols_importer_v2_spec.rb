@@ -167,7 +167,6 @@ describe ProtocolsImporterV2 do
     end
 
     it 'renames a too long protocol name' do
-      pending 'bug: RenamingUtil compares v.class == ActiveModel LengthValidator, but AR uses a subclass, so long names are never truncated and save! raises'
       protocol_json['name'] = 'n' * (Constants::NAME_MAX_LENGTH + 20)
 
       expect(protocol.name.length).to be <= Constants::NAME_MAX_LENGTH

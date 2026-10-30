@@ -98,11 +98,10 @@ describe ProtocolsImporter do
     end
 
     it 'keeps a renamed name for too long names' do
-      pending 'bug: populate_protocol overwrites the renamed name with the original json name, and RenamingUtil ' \
-              'never truncates (LengthValidator class mismatch), so save! raises'
       protocol_json['name'] = 'n' * (Constants::NAME_MAX_LENGTH + 5)
 
-      expect(protocol.name.length).to be <= Constants::NAME_MAX_LENGTH
+      expect(protocol.reload.name.length).to eq Constants::NAME_MAX_LENGTH
+      expect(protocol.name).to end_with '...'
     end
   end
 

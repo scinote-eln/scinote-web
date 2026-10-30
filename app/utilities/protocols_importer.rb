@@ -20,6 +20,8 @@ class ProtocolsImporter
 
     # Try to rename record
     rename_record(protocol, :name) if protocol.invalid?
+    # populate_protocol applies the name from the json, so keep the renamed one
+    protocol_json['name'] = protocol.name
 
     # Okay, now save the protocol
     protocol.save!
