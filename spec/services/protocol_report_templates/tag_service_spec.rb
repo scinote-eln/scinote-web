@@ -40,14 +40,6 @@ describe ProtocolReportTemplates::TagService do
   describe '#tags' do
     let!(:content) { build_content(protocol, 'A') }
     let(:tags) { service.tags }
-
-    # bug: TagService#element_label calls FormResponse#name, which does not exist, so #tags raises for any
-    # protocol with a form response. The name is stubbed here to exercise the rest of the method.
-    before do
-      without_partial_double_verification do
-        allow_any_instance_of(FormResponse).to receive(:name) { |response| response.form.name }
-      end
-    end
     let(:step_group) { tags.find { |t| t[:tag] == tag_for('step', content[:step].id) } }
     let(:result_group) { tags.find { |t| t[:tag] == tag_for('result', content[:result].id) } }
 
@@ -104,15 +96,6 @@ describe ProtocolReportTemplates::TagService do
 
     it 'only returns defaults for an empty protocol' do
       expect(described_class.new(create(:protocol, :in_repository_draft, team: team, added_by: user)).tags.size).to eq 1
-    end
-  end
-
-  describe '#tags with a form response and no stubbing' do
-    it 'raises NoMethodError' do
-      # bug: tag_service.rb:132 calls FormResponse#name, which does not exist, so #tags fails for such protocols
-      build_content(protocol, 'A')
-
-      expect { service.tags }.to raise_error(NoMethodError, /name/)
     end
   end
 
