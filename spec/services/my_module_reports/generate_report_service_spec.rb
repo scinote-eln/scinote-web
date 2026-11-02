@@ -133,10 +133,10 @@ RSpec.describe MyModuleReports::GenerateReportService do
       expect(texts_for(tag('step', step_one.id))).to eq ["<div>1. Prepare</div><div>{{#{tag('step', step_one.id)}}}</div>"]
     end
 
-    it 'adds the numbered step name to the full protocol text, pointing at the step tag' do
+    it 'adds the numbered step name to the full protocol text, pointing at the protocol tag' do
       generate
-      expect(texts_for(:PROTOCOL)).to include("<div>1. Prepare</div><div>{{#{tag('step', step_one.id)}}}</div>",
-                                              "<div>2. Run</div><div>{{#{tag('step', step_two.id)}}}</div>")
+      expect(texts_for(:PROTOCOL)).to include("<div>1. Prepare</div><div>{{PROTOCOL}}</div>",
+                                              "<div>2. Run</div><div>{{PROTOCOL}}</div>")
     end
 
     context 'with a text element' do

@@ -53,11 +53,11 @@ module MyModuleReports
     def render_steps(report)
       @my_module.steps.active.ordered.each do |step|
         step_tag = build_tag('step', step.id)
-        title = "<div>#{step.position_plus_one}. #{step.name}</div><div>{{#{step_tag}}}</div>"
-        add_block_text(report, step_tag, title)
+
+        add_block_text(report, step_tag, "<div>#{step.position_plus_one}. #{step.name}</div><div>{{#{step_tag}}}</div>")
 
         # for full protocol tag
-        add_block_text(report, PROTOCOL_TAG, title)
+        add_block_text(report, PROTOCOL_TAG, "<div>#{step.position_plus_one}. #{step.name}</div><div>{{#{PROTOCOL_TAG}}}</div>")
 
         render_elements(report, step.step_orderable_elements, [PROTOCOL_TAG, step_tag])
         clear_tags(report, PROTOCOL_TAG, step_tag)
