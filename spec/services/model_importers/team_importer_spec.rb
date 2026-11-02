@@ -30,6 +30,7 @@ describe TeamImporter do
         USER_ID = @user.id
 
         @team_importer = TeamImporter.new
+        @import_started_at = Time.current
         @exp = @team_importer.import_experiment_template_from_dir(TEMPLATE_DIR,
                                                                   PROJECT_ID,
                                                                   USER_ID)
@@ -309,8 +310,8 @@ describe TeamImporter do
                 expect(db_asset.blob.byte_size).to eq(
                   json_asset['asset_blob']['byte_size']
                 )
-                expect(db_asset.blob.created_at).to be_within(10.seconds)
-                  .of(Time.now)
+                # the import runs once in before :all, so compare with its start, not with the current time
+                expect(db_asset.blob.created_at).to be >= @import_started_at - 1.second
                 expect(db_asset.version).to eq(
                   json_asset['asset']['version']
                 )
