@@ -18,7 +18,7 @@ class AssetsController < ApplicationController
 
   before_action :load_vars, except: :create_wopi_file
   before_action :check_read_permission, except: %i(edit destroy update_image duplicate create_wopi_file toggle_view_mode archive restore lock unlock update_title)
-  before_action :check_manage_permission, only: %i(edit duplicate update_image rename toggle_view_mode archive update_title)
+  before_action :check_manage_permission, only: %i(edit duplicate update_image rename toggle_view_mode archive update_title move)
   before_action :check_restore_permission, only: :restore
   before_action :check_destroy_permission, only: :destroy
   before_action :check_restore_version_permission, only: :restore_version
@@ -92,13 +92,16 @@ class AssetsController < ApplicationController
   end
 
   def move
-    case @assoc
-    when Step
-      target = @assoc.protocol.steps.find_by(id: params[:target_id])
-    when ResultBase
-      target = @assoc.parent.results.active.find_by(id: params[:target_id])
-      return render_404 unless target
-    end
+    target =
+      case @assoc
+      when Step
+        @assoc.protocol.steps.find_by(id: params[:target_id])
+      when ResultBase
+        @assoc.parent.results.active.find_by(id: params[:target_id])
+      end
+
+    return render_404 unless target
+    return render_403 unless move_target_manageable?(target)
 
     ActiveRecord::Base.transaction do
       if @assoc.is_a?(Step)
@@ -641,6 +644,17 @@ class AssetsController < ApplicationController
 
   def check_read_permission
     render_403 and return unless can_read_asset?(@asset)
+  end
+
+  def move_target_manageable?(target)
+    case target
+    when Step
+      can_manage_step_attachments?(target)
+    when ResultBase
+      can_manage_result_attachments?(target)
+    else
+      false
+    end
   end
 
   def check_manage_permission

@@ -126,6 +126,146 @@ describe AssetsController, type: :controller do
         expect_success_json
       end
     end
+
+    context 'when the user is a viewer (can read but not manage)' do
+      let(:target_step) { steps.first }
+      let(:target_result) { create :result, my_module: my_module, user: user }
+
+      before do
+        # create every record (and its owner assignment) first, then downgrade all assignments of the user
+        step_asset
+        result_asset
+        step_asset_in_repository
+        target_step
+        target_result
+        UserAssignment.where(user: user).update_all(user_role_id: viewer_role.id)
+      end
+
+      it 'has only viewer assignments left, so inherited owner rights are gone' do
+        expect(UserAssignment.where(user: user).pluck(:user_role_id).uniq).to eq([viewer_role.id])
+        [team, project, experiment, my_module, protocol_in_repository].each do |assignable|
+          assignment = UserAssignment.find_by(user: user, assignable: assignable)
+          expect(assignment&.user_role).to eq(viewer_role)
+        end
+      end
+
+      context 'when moving a step asset to another step' do
+        let(:asset_id) { step_asset.asset.id }
+        let(:target_id) { target_step.id }
+
+        it 'renders 403 and leaves the asset on its step' do
+          original_step_id = step_asset.step_id
+
+          action
+
+          expect(response).to have_http_status(:forbidden)
+          expect(step_asset.reload.step_id).to eq(original_step_id)
+          expect(step_asset.step_id).not_to eq(target_step.id)
+        end
+      end
+
+      context 'when moving a result asset to another result' do
+        let(:asset_id) { result_asset.asset.id }
+        let(:target_id) { target_result.id }
+
+        it 'renders 403 and leaves the asset on its result' do
+          original_result_id = result_asset.result_id
+
+          action
+
+          expect(response).to have_http_status(:forbidden)
+          expect(result_asset.reload.result_id).to eq(original_result_id)
+          expect(result_asset.result_id).not_to eq(target_result.id)
+        end
+      end
+
+      context 'when moving an asset of a protocol in the repository' do
+        let(:step_in_repository1) { create :step, protocol: protocol_in_repository, user: user }
+        let(:asset_id) { step_asset_in_repository.asset.id }
+        let(:target_id) { step_in_repository1.id }
+
+        before { step_in_repository1 }
+
+        it 'renders 403 and leaves the asset on its step' do
+          original_step_id = step_asset_in_repository.step_id
+
+          action
+
+          expect(response).to have_http_status(:forbidden)
+          expect(step_asset_in_repository.reload.step_id).to eq(original_step_id)
+          expect(step_asset_in_repository.step_id).not_to eq(step_in_repository1.id)
+        end
+      end
+
+      # move_targets stays read-gated: proves the downgrade leaves read access intact
+      context 'when requesting move targets of a step asset' do
+        let(:action) { get :move_targets, params: { id: step_asset.asset.id }, format: :json }
+
+        it 'still returns the targets' do
+          action
+
+          expect_success_json
+          target_ids = response.parsed_body['targets'].map(&:first)
+          expect(target_ids).to include(*steps.map(&:id))
+          expect(target_ids).not_to include(step_asset.step_id)
+        end
+      end
+    end
+
+    context 'when the target is not manageable' do
+      let(:target_result) { create :result, my_module: my_module, user: user }
+
+      context 'when the target step has locked attachments' do
+        let(:asset_id) { step_asset.asset.id }
+        let(:target_id) { steps.first.id }
+
+        it 'renders 403 and leaves the asset on its step' do
+          steps.first.update_column(:attachments_locked, true)
+          original_step_id = step_asset.step_id
+
+          action
+
+          expect(response).to have_http_status(:forbidden)
+          expect(step_asset.reload.step_id).to eq(original_step_id)
+          expect(step_asset.step_id).not_to eq(steps.first.id)
+        end
+      end
+
+      context 'when the target result has locked attachments' do
+        let(:asset_id) { result_asset.asset.id }
+        let(:target_id) { target_result.id }
+
+        it 'renders 403 and leaves the asset on its result' do
+          target_result.update_column(:attachments_locked, true)
+          original_result_id = result_asset.result_id
+
+          action
+
+          expect(response).to have_http_status(:forbidden)
+          expect(result_asset.reload.result_id).to eq(original_result_id)
+          expect(result_asset.result_id).not_to eq(target_result.id)
+        end
+      end
+
+      context 'when the target step is archived' do
+        let(:archived_target_step) do
+          create :step, protocol: my_module.protocol, user: user, archived: true, archived_by: user,
+                        archived_on: Time.zone.now
+        end
+        let(:asset_id) { step_asset.asset.id }
+        let(:target_id) { archived_target_step.id }
+
+        it 'renders 403 and leaves the asset on its step' do
+          original_step_id = step_asset.step_id
+
+          action
+
+          expect(response).to have_http_status(:forbidden)
+          expect(step_asset.reload.step_id).to eq(original_step_id)
+          expect(step_asset.step_id).not_to eq(archived_target_step.id)
+        end
+      end
+    end
   end
 
   describe 'GET #file_url' do
@@ -616,15 +756,13 @@ describe AssetsController, type: :controller do
         expect(response).to have_http_status(:not_found)
       end
 
-      it 'returns unprocessable entity when step target does not exist' do
+      it 'returns 404 when step target does not exist' do
         post :move, params: { id: step_asset.asset.id, target_id: -1 }, format: :json
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:not_found)
         expect(step_asset.reload.step_id).to eq step.id
       end
 
       it 'returns forbidden for viewers' do
-        # move is only guarded by check_read_permission (assets_controller.rb:20), so viewers can move files
-        pending 'bug: viewers (read-only) can move assets between steps/results'
         step_asset
         downgrade_to_viewer(my_module)
         post :move, params: { id: step_asset.asset.id, target_id: steps.first.id }, format: :json
