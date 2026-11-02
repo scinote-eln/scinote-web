@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ExperimentReportsController < ApplicationController
+  include TeamsHelper
+
   before_action :check_experiment_reporting_enabled
   before_action :load_experiment
   before_action :check_view_permissions, except: %i(create destroy my_modules)

@@ -139,7 +139,6 @@ describe ResultElements::TextsController, type: :controller do
     end
 
     it 'switches the current team to the protocol team' do
-      pending 'bug: ResultElements::BaseController calls current_team_switch without including TeamsHelper'
       other_team = create :team, created_by: user
       user.update!(current_team_id: other_team.id)
       get :move_targets, params: params, format: :json
