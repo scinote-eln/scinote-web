@@ -279,7 +279,6 @@ RSpec.describe Users::SessionsController, type: :controller do
     end
 
     it 'redirects to root when the pending user does not exist' do
-      pending 'bug: `redirect_to root_path && return` returns before redirecting'
       post :authenticate_with_recovery_code, params: { recovery_code: 'x' }, session: { otp_user_id: -1 }
 
       expect(response).to redirect_to(root_path)

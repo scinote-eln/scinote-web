@@ -65,7 +65,7 @@ class Users::SessionsController < Devise::SessionsController
 
     unless user
       flash[:alert] = t('devise.sessions.2fa.no_user_error')
-      redirect_to root_path && return
+      return redirect_to root_path
     end
 
     if user.valid_otp?(params[:otp])
@@ -86,7 +86,7 @@ class Users::SessionsController < Devise::SessionsController
 
     unless user
       flash[:alert] = t('devise.sessions.2fa.no_user_error')
-      redirect_to root_path && return
+      return redirect_to root_path
     end
 
     session.delete(:otp_user_id)
