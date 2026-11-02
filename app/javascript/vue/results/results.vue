@@ -225,7 +225,9 @@ export default {
           this.results = [{ newResult: true, ...result }, ...this.results];
           window.scrollTo(0, 0);
         }
-      );
+      ).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+      });
     },
     checkResultsState() {
       this.resultsCollapsed = this.$refs.results?.every((result) => result.isCollapsed) || false;

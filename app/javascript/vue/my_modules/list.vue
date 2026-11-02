@@ -376,6 +376,9 @@ export default {
         }
       }).then(() => {
         this.updateTable();
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+        this.updateTable();
       });
     },
     updateExperimentDescription(description) {
@@ -385,6 +388,8 @@ export default {
         }
       }).then(() => {
         this.loadExperiment();
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     updateStartDate(value, params) {
@@ -393,6 +398,9 @@ export default {
           started_on: value
         }
       }).then(() => {
+        this.updateTable();
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         this.updateTable();
       });
     },
@@ -455,6 +463,9 @@ export default {
     updateFavorite(value, params) {
       const url = value ? params.data.urls.favorite : params.data.urls.unfavorite;
       axios.post(url).then(() => {
+        this.updateTable();
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         this.updateTable();
       });
     }
