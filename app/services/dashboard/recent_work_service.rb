@@ -187,7 +187,7 @@ module Dashboard
     def join_experiment_user_roles(activities)
       join_permitted_subjects(
         activities.joins(
-          "LEFT OUTER JOIN projects AS experiment_subjects
+          "LEFT OUTER JOIN experiments AS experiment_subjects
           ON experiment_subjects.id = activities.subject_id AND activities.subject_type='Experiment'"
         ),
         :experiment_subjects,

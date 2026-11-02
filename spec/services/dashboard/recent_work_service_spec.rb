@@ -27,8 +27,6 @@ describe Dashboard::RecentWorkService do
   end
 
   describe '#call' do
-    # bug: join_experiment_user_roles joins experiment activities against the projects table, so experiment
-    # entries only appear when ids happen to collide. Experiment entries are deliberately not asserted here.
     it 'returns task and project entries with urls and codes' do
       log(my_module, :create_module)
       log(project, :create_project)
@@ -45,6 +43,24 @@ describe Dashboard::RecentWorkService do
       expect(by_group["pro#{project.id}"][:url])
         .to eq Rails.application.routes.url_helpers.experiments_path(project_id: project.id)
       expect(task[:last_change]).to be_a(String)
+    end
+
+    it 'includes experiment entries' do
+      # Experiment entries used to show up only when a project shared the experiment id, so keep the ids apart
+      ActiveRecord::Base.connection.execute("SELECT setval('experiments_id_seq', 2000000)")
+      new_experiment = create :experiment, project: project, created_by: user
+      log(new_experiment, :create_experiment)
+      expect(Project.where(id: new_experiment.id)).to be_empty
+
+      by_group = call.index_by { |r| r[:group_id] }
+
+      expect(by_group.keys).to eq ["exp#{new_experiment.id}"]
+      entry = by_group["exp#{new_experiment.id}"]
+      expect(entry[:subject_type]).to eq 'Experiment'
+      expect(entry[:name]).to eq new_experiment.name
+      expect(entry[:code]).to eq "#{Experiment::ID_PREFIX}#{new_experiment.id}"
+      expect(entry[:url])
+        .to eq Rails.application.routes.url_helpers.my_modules_experiment_path(new_experiment.id)
     end
 
     it 'orders by most recent change' do
@@ -82,6 +98,22 @@ describe Dashboard::RecentWorkService do
       log(other, :create_project, project: other)
 
       expect(call.map { |r| r[:group_id] }).not_to include("pro#{other.id}")
+    end
+
+    it 'skips experiments of projects the user cannot read activities for' do
+      # Keep the experiment ids apart from the project ids, as in 'includes experiment entries'
+      ActiveRecord::Base.connection.execute("SELECT setval('experiments_id_seq', 2000000)")
+      visible_experiment = create :experiment, project: project, created_by: user
+      hidden_project = create :project, team: team, created_by: create(:user), visibility: :hidden
+      hidden_experiment = create :experiment, project: hidden_project
+      expect(Project.where(id: [visible_experiment.id, hidden_experiment.id])).to be_empty
+      log(visible_experiment, :create_experiment)
+      log(hidden_experiment, :create_experiment, project: hidden_project)
+
+      groups = call.pluck(:group_id)
+
+      expect(groups).to include("exp#{visible_experiment.id}")
+      expect(groups).not_to include("exp#{hidden_experiment.id}")
     end
 
     it 'includes team repositories' do
