@@ -3,7 +3,7 @@
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar';
 import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import { mountWithTurbolinks } from './helpers/turbolinks.js';
-import RepositoryItemErrorSidebar from '../../vue/repository_item_sidebar/RepositoryItemErrorSidebar.vue';
+import RepositoryItemErrorSidebar from '../../vue/repository_item_sidebar/repository_item_error_sidebar.vue';
 
 const app = createApp({});
 app.component('RepositoryItemErrorSidebar', RepositoryItemErrorSidebar);

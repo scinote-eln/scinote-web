@@ -970,6 +970,8 @@ Rails.application.routes.draw do
           put :update_cell
           get :assigned_counters
           get :equipment_booking_events
+          get :storage_locations
+          get :assigned_modules
         end
 
         collection do
