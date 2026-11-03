@@ -155,8 +155,6 @@ class MyModule < ApplicationRecord
   end
 
   def results_count(view_mode = 'active')
-    return results.size if archived_branch?
-
     return results.archived.size if view_mode == 'archived'
 
     results.active.size
