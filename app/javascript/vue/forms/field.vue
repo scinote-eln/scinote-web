@@ -29,6 +29,7 @@
         :disabled="disabled"
         :field="field"
         :marked_as_na="markAsNa"
+        :assignableMyModuleId="assignableMyModuleId"
         @save="saveValue"
         @validChanged="checkValidField"
         @inputLengthUpdated="inputLengthUpdated"
@@ -88,6 +89,10 @@ export default {
     disabled: Boolean,
     formResponse: {
       type: Object,
+      default: null
+    },
+    assignableMyModuleId: {
+      type: Number,
       default: null
     },
     dataE2e: {

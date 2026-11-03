@@ -3,6 +3,8 @@
 module SmartAnnotations
   class HtmlPreview
     class << self
+      include InputSanitizeHelper
+
       def html(name, type, object, preview_repository: false, page: nil)
         if preview_repository
           generate_rep_item_print_snippet(name, object)
@@ -17,39 +19,43 @@ module SmartAnnotations
 
       ROUTES = Rails.application.routes.url_helpers
 
+      def esc(value)
+        escape_input(value.to_s)
+      end
+
       def generate_prj_snippet(_, object)
-        return "<span class='sa-type'>Prj</span>#{object.name} #{I18n.t('atwho.res.archived')}" if object.archived?
+        return "<span class='sa-type'>Prj</span>#{esc(object.name)} #{I18n.t('atwho.res.archived')}" if object.archived?
 
         "<a class='sa-link' href='#{ROUTES.experiments_path(project_id: object)}'>" \
-          "<span class='sa-type'>Prj</span>#{object.name}</a>"
+          "<span class='sa-type'>Prj</span>#{esc(object.name)}</a>"
       end
 
       def generate_exp_snippet(_, object)
         if object.archived? || object.project.archived?
-          return "<span class='sa-type'>Exp</span>#{object.name} #{I18n.t('atwho.res.archived')}"
+          return "<span class='sa-type'>Exp</span>#{esc(object.name)} #{I18n.t('atwho.res.archived')}"
         end
 
         "<a class='sa-link' href='#{ROUTES.my_modules_experiment_path(object)}'>" \
-          "<span class='sa-type'>Exp</span>#{object.name}</a>"
+          "<span class='sa-type'>Exp</span>#{esc(object.name)}</a>"
       end
 
       def generate_tsk_snippet(_, object)
         if object.archived? || object.experiment.archived? || object.experiment.project.archived?
-          return "<span class='sa-type'>Tsk</span>#{object.name} #{I18n.t('atwho.res.archived')}"
+          return "<span class='sa-type'>Tsk</span>#{esc(object.name)} #{I18n.t('atwho.res.archived')}"
         end
 
         "<a class='sa-link' href='#{ROUTES.protocols_my_module_path(object)}'>" \
-          "<span class='sa-type'>Tsk</span>#{object.name}</a>"
+          "<span class='sa-type'>Tsk</span>#{esc(object.name)}</a>"
       end
 
       def generate_rep_item_snippet(name, object)
         if object&.repository
           repository_name = fetch_repository_name(object)
           "<a href='#{ROUTES.repository_repository_row_path(object.repository, object)}' " \
-            "class='sa-link record-info-link'><span class='sa-type'>#{trim_repository_name(repository_name)}</span>" \
-            "#{object.name} #{object.archived? ? I18n.t('atwho.res.archived') : ''}</a>"
+            "class='sa-link record-info-link'><span class='sa-type'>#{esc(trim_repository_name(repository_name))}</span>" \
+            "#{esc(object.name)} #{object.archived? ? I18n.t('atwho.res.archived') : ''}</a>"
         else
-          "<span class='sa-type'>Inv</span> #{name} #{I18n.t('atwho.res.deleted')}"
+          "<span class='sa-type'>Inv</span> #{esc(name)} #{I18n.t('atwho.res.deleted')}"
         end
       end
 
@@ -57,32 +63,33 @@ module SmartAnnotations
         if object&.repository
           repository_name = fetch_repository_name(object)
           "<a class='sa-link' href='#{ROUTES.repository_path(object.repository)}' " \
-            "><span class='sa-type'>#{trim_repository_name(repository_name)}</span>" \
-            "#{object.name} #{object.archived? ? I18n.t('atwho.res.archived') : ''}</a>"
+            "><span class='sa-type'>#{esc(trim_repository_name(repository_name))}</span>" \
+            "#{esc(object.name)} #{object.archived? ? I18n.t('atwho.res.archived') : ''}</a>"
         else
-          "<span class='sa-type'>Inv</span> #{name} #{I18n.t('atwho.res.deleted')}"
+          "<span class='sa-type'>Inv</span> #{esc(name)} #{I18n.t('atwho.res.deleted')}"
         end
       end
 
       # The repository (inventory) itself. `object` is nil when the repository no longer exists.
       def generate_rep_snippet(name, object)
-        return "<span class='sa-type'>Inv</span> #{name} #{I18n.t('atwho.res.deleted')}" if object.nil?
+        return "<span class='sa-type'>Inv</span> #{esc(name)} #{I18n.t('atwho.res.deleted')}" if object.nil?
 
         if object.archived?
-          return "<span class='sa-type'>Inv</span>#{object.name} #{I18n.t('atwho.res.archived')}"
+          return "<span class='sa-type'>Inv</span>#{esc(object.name)} #{I18n.t('atwho.res.archived')}"
         end
 
         "<a class='sa-link' href='#{ROUTES.repository_path(object)}'>" \
-          "<span class='sa-type'>Inv</span>#{object.name}</a>"
+          "<span class='sa-type'>Inv</span>#{esc(object.name)}</a>"
       end
 
       def generate_file_snippet(name, object, page = nil)
-        return "<span class='sa-type'>Fl</span>#{name} #{I18n.t('atwho.res.deleted')}" if object.nil?
-        return "<span class='sa-type'>Fl</span>#{file_label(object, page)} #{I18n.t('atwho.res.archived')}" if object.archived? || file_my_module_archived?(object)
+        return "<span class='sa-type'>Fl</span>#{esc(name)} #{I18n.t('atwho.res.deleted')}" if object.nil?
+        return "<span class='sa-type'>Fl</span>#{esc(file_label(object, page))} #{I18n.t('atwho.res.archived')}" if object.archived? || file_my_module_archived?(object)
 
         "<a class='sa-link file-preview-link file-name' href='#{ROUTES.rails_blob_path(object.file, disposition: 'attachment')}' " \
-          "data-no-turbolink='true' data-id='#{object.id}' data-preview-url='#{ROUTES.asset_file_preview_path(object, preview: true)}'>" \
-          "<span class='sa-type'>Fl</span>#{file_label(object, page)}</a>"
+          "data-no-turbolink='true' data-id='#{object.id}' data-preview-url='#{ROUTES.asset_file_preview_path(object, preview: true)}'" \
+          "#{" data-page='#{page}'" if page.present?}>" \
+          "<span class='sa-type'>Fl</span>#{esc(file_label(object, page))}</a>"
       end
 
       def file_label(object, page)

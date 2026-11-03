@@ -353,7 +353,7 @@ class Constants
   config[:attributes]['img'] << 'data-mce-token'
   config[:attributes]['img'] << 'data-source-type'
   config[:attributes]['a'] << 'data-turbolinks'
-  config[:attributes]['a'].merge(%w(data-no-turbolink data-id data-preview-url))
+  config[:attributes]['a'].merge(%w(data-no-turbolink data-id data-preview-url data-page))
   config[:protocols]['img']['src'] << 'data'
   (config[:attributes]['span'] ||= []).concat(%w(class data-latex))
 

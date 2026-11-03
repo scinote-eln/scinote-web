@@ -61,7 +61,7 @@
             <span class="truncate leading-none" v-html="highlightMatch(itemDisplayName(item))"></span>
             <span v-if="isDrillable(item)" @click.stop="addToStack(item)" class="sn-icon sn-icon-arrow-right text-sn-grey-700 shrink-0"></span>
             <span v-if="mentioningPageItem === item" class="flex items-center gap-1.5 shrink-0 ml-auto">
-              <input type="text" inputmode="numeric" pattern="[0-9]*" class="page-number-input w-32 border border-sn-light-grey rounded px-2 py-1 text-sm"
+              <input type="text" inputmode="numeric" pattern="[0-9]*" class="page-number-input w-40 border border-sn-light-grey rounded px-2 py-1 text-sm"
                      :value="pageNumberInput" :placeholder="i18n.t('atwho.buttons.add_page_number')"
                      @click.stop @input="onPageNumberInput" @keydown.stop="onPageInputKeydown($event, item)" />
               <button type="button" class="btn btn-xs btn-light" :disabled="!pageNumberInput" @click.stop="confirmPageMention(item)">
@@ -70,13 +70,13 @@
               </button>
             </span>
             <span v-else class="tw-hidden group-hover:flex items-center gap-1.5 shrink-0 ml-auto">
-              <button type="button" class="btn btn-xs btn-light" @click.stop="selectItem(item)">
-                <i class="sn-icon sn-icon-assign"></i>
-                {{ i18n.t('atwho.buttons.add') }}
-              </button>
               <button v-if="isPdfFile(item)" type="button" class="btn btn-xs btn-light" @click.stop="startPageMention(item)">
                 <i class="sn-icon sn-icon-page"></i>
                 {{ i18n.t('atwho.buttons.mention_page') }}
+              </button>
+              <button type="button" class="btn btn-xs btn-light" @click.stop="selectItem(item)">
+                <i class="sn-icon sn-icon-assign"></i>
+                {{ i18n.t('atwho.buttons.add') }}
               </button>
               <button v-if="item.my_module_id && !item.row_assigned" type="button" class="btn btn-xs btn-light"
                       @click.stop="assignItem(item)">
@@ -154,12 +154,18 @@ export default {
   },
   computed: {
     pills() {
-      return [
+      const pills = [
         { tag: 'sa-projects', label: this.i18n.t('atwho.projects') },
         { tag: 'sa-experiments', label: this.i18n.t('atwho.experiments') },
         { tag: 'sa-tasks', label: this.i18n.t('atwho.tasks') },
         { tag: 'sa-repositories', label: this.i18n.t('atwho.inventories') }
       ];
+
+      if (this.assignableMyModuleId) {
+        pills.push({ tag: 'sa-task-files', label: this.i18n.t('atwho.files'), id: this.assignableMyModuleId });
+      }
+
+      return pills;
     },
     showPills() {
       return this.flag === '#' && this.navStack.length === 0 && !this.query;
@@ -222,7 +228,7 @@ export default {
         .then((response) => ({ items: response.data.items || [], limitReached: !!response.data.limit_reached }));
     },
     openPill(pill) {
-      this.navStack = [{ tag: pill.tag, id: null, code: pill.label }];
+      this.navStack = [{ tag: pill.tag, id: pill.id || null, code: pill.label }];
       this.query = '';
       this.resetActiveIndex();
       this.runQuery();

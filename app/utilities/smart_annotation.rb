@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class SmartAnnotation
-  include InputSanitizeHelper
-
   LIMIT = Constants::ATWHO_SEARCH_LIMIT
 
   attr_writer :current_user, :current_team, :query
@@ -90,7 +88,8 @@ class SmartAnnotation
 
   def files
     filter_files_by_query(
-      Asset.where('assets.id IN (?) OR assets.id IN (?)', assets_in_readable_steps, assets_in_readable_results)
+      Asset.active
+           .where('assets.id IN (?) OR assets.id IN (?)', assets_in_readable_steps, assets_in_readable_results)
            .joins(file_attachment: :blob)
     ).order(updated_at: :desc).limit(LIMIT + 1)
   end
@@ -138,11 +137,12 @@ class SmartAnnotation
   def files_of(my_module)
     return Asset.none unless my_module
 
-    step_asset_ids = my_module.assets_in_steps.select(:id)
-    result_asset_ids = my_module.assets_in_results.select(:id)
+    step_asset_ids = my_module.assets_in_steps.with_active_step.select(:id)
+    result_asset_ids = my_module.assets_in_results.with_active_result.select(:id)
 
     filter_files_by_query(
-      Asset.where('assets.id IN (?) OR assets.id IN (?)', step_asset_ids, result_asset_ids)
+      Asset.active
+           .where('assets.id IN (?) OR assets.id IN (?)', step_asset_ids, result_asset_ids)
            .joins(file_attachment: :blob)
     ).order(updated_at: :desc).limit(LIMIT + 1)
   end
@@ -156,11 +156,11 @@ class SmartAnnotation
   end
 
   def assets_in_readable_steps
-    Asset.joins(step: :protocol).where(protocols: { my_module_id: readable_my_module_ids }).select(:id)
+    Asset.joins(step: :protocol).with_active_step.where(protocols: { my_module_id: readable_my_module_ids }).select(:id)
   end
 
   def assets_in_readable_results
-    Asset.joins(:result).where(results: { my_module_id: readable_my_module_ids }).select(:id)
+    Asset.joins(:result).with_active_result.where(results: { my_module_id: readable_my_module_ids }).select(:id)
   end
 
   def filter_files_by_query(scope)
@@ -218,8 +218,8 @@ class SmartAnnotation
       {
         id: asset.id,
         id_encoded: asset.id.base62_encode,
-        name: sanitize_input(asset.file_name),
-        display_name: sanitize_input(asset.file_title.presence || asset.file_name),
+        name: asset.file_name,
+        display_name: asset.file_title.presence || asset.file_name,
         code: asset.code,
         type: 'file',
         pdf: asset.pdf?,
@@ -244,7 +244,7 @@ class SmartAnnotation
     {
       id: record.id,
       id_encoded: record.id.base62_encode,
-      name: sanitize_input(record.name),
+      name: record.name,
       code: record.code,
       type: type,
       updated_at: record.updated_at
