@@ -43,13 +43,13 @@ class TeamImporter
     @asset_counter = 0
     @user_counter = 0
     @mce_asset_counter = 0
+    @user_roles = UserRole.all
   end
 
   def import_from_dir(import_dir)
     MyModule.skip_callback(:create, :before, :create_blank_protocol)
     Activity.skip_callback(:create, :before, :add_user)
     Activity.skip_callback(:initialize, :after, :init_default_values)
-    @user_roles = UserRole.all
     @import_dir = import_dir
     team_json = JSON.parse(File.read("#{@import_dir}/team_export.json"))
     team = Team.new(team_json['team'].slice(*Team.column_names))
@@ -629,6 +629,7 @@ class TeamImporter
     experiment.skip_user_assignments = true
     experiment.save!
     @experiment_mappings[orig_experiment_id] = experiment.id
+    @user_mappings[experiment.created_by_id] = experiment.created_by_id
 
     create_user_assignments(experiment_json['user_assignments'], experiment)
     create_team_assignments(experiment_json['team_assignments'], experiment)
