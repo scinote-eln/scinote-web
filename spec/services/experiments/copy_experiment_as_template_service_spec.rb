@@ -69,6 +69,7 @@ describe Experiments::CopyExperimentAsTemplateService do
     it 'raises NoMethodError when experiment is nil' do
       expect { described_class.call(experiment: nil, project: new_project, user: user) }
         .to raise_error(NoMethodError)
+    end
   end
 
   context 'when service call is not successful' do
