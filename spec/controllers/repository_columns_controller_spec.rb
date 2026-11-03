@@ -74,15 +74,15 @@ describe RepositoryColumnsController, type: :controller do
       expect(json['id']).to eq text_column.id
     end
 
-    # bug: error branch puts status: :unprocessable_entity in the JSON body, so HTTP stays 200 and the JS shows success
-    # bug: delete_column_inventory activity is logged before destroy, so a failed destroy still records it
     it 'destroy reports an error when the column cannot be destroyed' do
       text_column
       allow_any_instance_of(RepositoryColumn).to receive(:destroy).and_return(false)
+
       expect do
         delete :destroy, params: { repository_id: repository.id, id: text_column.id }, format: :json
-      end.to change { Activity.count }.by(1)
-      expect(response).to have_http_status(:ok)
+      end.to change { Activity.count }.by(0)
+
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json['message']).to be_present
       expect(repository.repository_columns.count).to eq 1
     end
