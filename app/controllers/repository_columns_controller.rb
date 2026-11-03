@@ -49,20 +49,21 @@ class RepositoryColumnsController < ApplicationController
   end
 
   def destroy
-    column_id = @repository_column.id
-    column_name = @repository_column.name
+    ActiveRecord::Base.transaction do
+      column_id = @repository_column.id
+      column_name = @repository_column.name
+      log_activity(:delete_column_inventory)
+      @repository_column.destroy!
 
-    log_activity(:delete_column_inventory) # Should we move this call somewhere?
-    if @repository_column.destroy
       render json: {
         message: t('libraries.repository_columns.destroy.success_flash', name: escape_input(column_name)),
         id: column_id
       }
-    else
+    rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotDestroyed => e
       render json: {
-        message: t('libraries.repository_columns.destroy.error_flash'),
-        status: :unprocessable_entity
-      }
+        message: t('libraries.repository_columns.destroy.error_flash')
+      }, status: :unprocessable_entity
+      raise ActiveRecord::Rollback
     end
   end
 
