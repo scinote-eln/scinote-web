@@ -5,12 +5,14 @@ class RepositoryRowsController < ApplicationController
   include MyModulesHelper
   include StorageLocationsHelper
   include EquipmentBookingHelper
+  include RepositoryColumnsHelper
 
   before_action :load_repository, except: %i(show print rows_to_print print_zpl validate_label_template_columns)
   before_action :load_repository_or_snapshot, only: %i(show print rows_to_print print_zpl
                                                        validate_label_template_columns)
   before_action :load_repository_row, only: %i(show update assigned_task_list assigned_counters
-                                               active_reminder_repository_cells relationships equipment_booking_events)
+                                               active_reminder_repository_cells relationships equipment_booking_events
+                                               storage_locations assigned_modules)
   before_action :load_repository_rows, only: %i(print rows_to_print print_zpl validate_label_template_columns)
 
   before_action :check_read_permissions, except: %i(create update delete_records
@@ -72,19 +74,35 @@ class RepositoryRowsController < ApplicationController
         return render_403 if @my_module && !can_read_my_module?(@my_module)
 
         if @my_module
-          @my_module_assign_error = if !can_assign_my_module_repository_rows?(@my_module)
-                                      I18n.t('repository_row.modal_info.assign_to_task_error.no_access')
-                                    elsif @repository_row.my_modules.where(id: @my_module.id).any?
-                                      I18n.t('repository_row.modal_info.assign_to_task_error.already_assigned')
-                                    end
+          already_assigned = @repository_row.my_modules.where(id: @my_module.id).any?
+          @assign_to_current_task = {
+            url: my_module_repositories_path(@my_module.id),
+            disabled: !can_assign_my_module_repository_rows?(@my_module) || already_assigned
+          }
         end
 
-        @assigned_modules = @repository_row.my_modules.distinct
-        @viewable_modules = @assigned_modules.readable_by_user(current_user, current_user.teams)
-                                             .joins(:my_module_repository_rows)
-                                             .select('my_module_repository_rows.created_at, my_modules.*')
-                                             .order(my_module_repository_rows: { created_at: :desc })
-        @reminders_present = Repository.reminders_enabled?
+        @repository ||= Repository.new(id: @repository_row.repository_id)
+        @repository_row.repository = @repository
+
+        # matches index_ag's own `view_mode == 'archived' -> can_manage_repository_rows = false`:
+        # an archived row's custom columns/stock are read-only in the table, so they must be here too
+        editable_context = @repository_row.snapshot_at.nil? && !@repository_row.archived? &&
+                            @repository.is_a?(Repository) && !@repository.is_a?(SoftLockedRepository)
+
+        @row = Lists::RepositoryRowSerializer.new(
+          @repository_row,
+          scope: current_user,
+          scope_name: :current_user,
+          user: current_user,
+          can_manage_repository_rows: editable_context && can_manage_repository_rows?(@repository),
+          with_reminders: Repository.reminders_enabled?,
+          with_stock_management: @repository.has_stock_management?,
+          can_manage_stock: editable_context && can_manage_repository_stock?(@repository)
+        ).as_json.merge(id: @repository_row.id)
+
+        @column_defs = repository_columns_ordered_by_state(@repository_row).map do |column|
+          RepositoryColumnSerializer.new(column).as_json.merge(id: column.id)
+        end
       end
     end
   end
@@ -378,9 +396,47 @@ class RepositoryRowsController < ApplicationController
 
   def relationships
     render json: {
-      repository_row: RepositoryRowSerializer.new(@repository_row),
-      parents: @repository_row.parent_repository_rows.map { |r| RepositoryRowSerializer.new(r) },
-      children: @repository_row.child_repository_rows.map { |r| RepositoryRowSerializer.new(r) }
+      parents_count: @repository_row.parent_connections_count,
+      children_count: @repository_row.child_connections_count,
+      parents: serialize_connections(@repository_row.parent_connections.preload(parent: :repository)),
+      children: serialize_connections(@repository_row.child_connections.preload(child: :repository)),
+      row_connections: {
+        inventories_url: repository_row_connections_repositories_url,
+        inventory_items_url: repository_rows_repository_repository_row_repository_row_connections_path(@repository, @repository_row),
+        create_url: repository_repository_row_repository_row_connections_url(@repository, @repository_row)
+      }
+    }
+  end
+
+  def storage_locations
+    render json: {
+      locations: @repository_row.storage_locations.distinct.map do |storage_location|
+        readable = can_read_storage_location?(storage_location)
+
+        {
+          id: storage_location.id,
+          readable: readable,
+          name: readable ? storage_location.name : storage_location.code,
+          metadata: storage_location.metadata,
+          breadcrumbs: storage_location.breadcrumbs(readable: readable),
+          positions: readable ? storage_location.storage_location_repository_rows.where(repository_row: @repository_row) : []
+        }
+      end,
+      enabled: StorageLocation.storage_locations_enabled?,
+      placeholder: storage_locations_placeholder
+    }
+  end
+
+  def assigned_modules
+    my_modules = @repository_row.my_modules.distinct
+    viewable_my_modules = my_modules.readable_by_user(current_user, current_user.teams)
+                                    .joins(:my_module_repository_rows)
+                                    .select('my_module_repository_rows.created_at, my_modules.*')
+                                    .order(my_module_repository_rows: { created_at: :desc })
+
+    render json: {
+      total_assigned_size: my_modules.size,
+      viewable_modules: viewable_my_modules.map { |my_module| serialize_assigned_my_module_value(my_module) }
     }
   end
 
@@ -487,6 +543,17 @@ class RepositoryRowsController < ApplicationController
 
   def search_params
     params.permit(:q, :repository_id, :repository_column_id)
+  end
+
+  def serialize_connections(connections)
+    connections.map do |connection|
+      RepositoryRowConnectionSerializer.new(
+        connection,
+        repository_row: @repository_row,
+        scope: current_user,
+        scope_name: :current_user
+      ).as_json
+    end
   end
 
   def record_annotation_notification(record, cell, old_text = nil)

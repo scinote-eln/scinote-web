@@ -4,7 +4,7 @@ import { PerfectScrollbar } from 'vue3-perfect-scrollbar';
 import { createApp } from 'vue/dist/vue.esm-bundler.js';
 import { vOnClickOutside } from '@vueuse/components';
 import { mountWithTurbolinks } from './helpers/turbolinks.js';
-import RepositoryItemSidebar from '../../vue/repository_item_sidebar/RepositoryItemSidebar.vue';
+import RepositoryItemSidebar from '../../vue/repository_item_sidebar/repository_item_sidebar.vue';
 
 const app = createApp({});
 app.component('RepositoryItemSidebar', RepositoryItemSidebar);

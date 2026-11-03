@@ -144,24 +144,12 @@ class RepositoryRowConnectionsController < ApplicationController
                              end
 
     repository_connections.map do |connection|
-      repository_row = @relation_type == 'parent' ? connection.parent : connection.child
-      if can_read_repository?(repository_row.repository)
-        {
-          name: repository_row.name_with_label,
-          code: repository_row.code,
-          path: repository_repository_row_path(repository_row.repository, repository_row),
-          repository_name: repository_row.repository.name_with_label,
-          repository_path: repository_path(repository_row.repository),
-          can_connect_rows: can_connect_repository_rows?(repository_row.repository),
-          unlink_path: repository_repository_row_repository_row_connection_path(
-            repository_row.repository,
-            repository_row,
-            connection
-          )
-        }
-      else
-        { name: I18n.t('repositories.item_card.relationships.private_item_name') }
-      end
+      RepositoryRowConnectionSerializer.new(
+        connection,
+        repository_row: @repository_row,
+        scope: current_user,
+        scope_name: :current_user
+      ).as_json
     end
   end
 

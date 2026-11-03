@@ -194,8 +194,8 @@ export default {
         .then((response) => {
           this.loadingHoveredRow = false;
           this.hoveredRow = {
-            name: response.data.default_columns.name,
-            columns: response.data.custom_columns
+            name: response.data.row.name,
+            columns: response.data.custom_columns_preview
           };
         });
       e.stopPropagation();

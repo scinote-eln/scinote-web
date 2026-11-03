@@ -4,7 +4,7 @@
       <h4 data-e2e="e2e-TX-itemCard-equipmentBooking-title">{{ i18n.t('repositories.equipment_booking.title') }}</h4>
       <button v-if="repositoryRow.permissions.can_manage &&
                     repositoryRow.equipment_booking.enabled &&
-                    !repositoryRow.default_columns.archived"
+                    !repositoryRow.row.archived"
               class="btn btn-light ml-auto"
               @click="createEvent = true"
               data-e2e="e2e-BT-itemCard-equipmentBooking-createEvent">
@@ -12,7 +12,7 @@
       </button>
     </div>
     <template v-if="repositoryRow.equipment_booking.enabled">
-      <template v-if="!repositoryRow.default_columns.archived">
+      <template v-if="!repositoryRow.row.archived">
         <div v-if="futureEvents.length > 0" class="mt-4">
           <h5 class="!text-sm">{{ i18n.t('repositories.equipment_booking.upcoming_events') }}</h5>
           <div v-for="event in futureEvents" :key="event.id" class="mb-2 flex flex-col">
