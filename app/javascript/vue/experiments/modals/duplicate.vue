@@ -16,6 +16,13 @@
                             :value="targetProject"
                             :searchable="true"
                             @change="changeProject" />
+            <div class="flex items-center gap-2.5 mt-4">
+              <span class="sci-checkbox-container">
+                <input type="checkbox" class="sci-checkbox" v-model="copyResults" />
+                <span class="sci-checkbox-label"></span>
+              </span>
+              {{ i18n.t('experiments.clone.copy_results') }}
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ i18n.t('general.cancel') }}</button>
@@ -51,6 +58,7 @@ export default {
   data() {
     return {
       targetProject: null,
+      copyResults: false,
       submitting: false
     };
   },
@@ -62,6 +70,7 @@ export default {
         experiment: {
           project_id: this.targetProject,
         },
+        copy_results: this.copyResults,
       }).then((response) => {
         this.$emit('update');
         window.location.replace(response.data.url);

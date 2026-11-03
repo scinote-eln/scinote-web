@@ -2,11 +2,11 @@
 
 module MyModules
   class CopyContentJob < ApplicationJob
-    def perform(user_id, source_my_module_id, target_my_module_id, skip_activities: false)
+    def perform(user_id, source_my_module_id, target_my_module_id, skip_activities: false, copy_results: false)
       user = User.find(user_id)
       target_my_module = MyModule.find(target_my_module_id)
       MyModule.transaction do
-        MyModule.find(source_my_module_id).copy_content(user, target_my_module)
+        MyModule.find(source_my_module_id).copy_content(user, target_my_module, include_results: copy_results)
         create_copy_my_module_activity(user, source_my_module_id, target_my_module_id) unless skip_activities
         target_my_module.update!(provisioning_status: :done)
       end

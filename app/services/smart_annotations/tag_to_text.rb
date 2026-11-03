@@ -8,6 +8,7 @@ module SmartAnnotations
     attr_reader :text
 
     def initialize(user, team, text, is_shared_object: false, add_prefix_type: false)
+      text ||= ''
       parse_items_annotations(user, team, text, is_shared_object, add_prefix_type)
       parse_users_annotations(user, team, @text, is_shared_object)
     end

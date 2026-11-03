@@ -4,24 +4,30 @@ require 'rails_helper'
 
 describe Experiments::CopyExperimentAsTemplateService do
   let(:user) { create :user }
-  let(:team) { create :team, created_by: user }
-
-  let(:project) do
-    create :project, team: team, created_by: user
-  end
-  let(:new_project) do
-    create :project, team: team, created_by: user
-  end
-  let(:experiment) do
-    create :experiment, :with_tasks, name: 'MyExp', project: project
-  end
+  let(:team) { create :team, created_by: user, skip_user_assignments: true }
+  let(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
+  let!(:team_assignment) { create :user_assignment, user: user, assignable: team, user_role: owner_role }
+  let(:project) { create :project, team: team, created_by: user, default_public_user_role_id: owner_role.id }
+  let(:new_project) { create :project, team: team, created_by: user, default_public_user_role_id: owner_role.id }
+  let(:experiment) { create :experiment, name: 'MyExp', project: project, created_by: user }
+  let!(:grouped_my_module) { create :my_module, experiment: experiment, created_by: user }
+  let!(:single_my_module) { create :my_module, experiment: experiment, created_by: user, my_module_group: nil }
 
   let(:service_call) do
-    Experiments::CopyExperimentAsTemplateService.call(experiment: experiment, project: new_project, user: user)
+    described_class.call(experiment: experiment, project: new_project, user: user)
   end
 
-  # tasks are copied only when readable by the user, and readability is resolved against the user's current team
-  before { user.update!(current_team_id: team.id) }
+  around do |example|
+    queue_adapter = ActiveJob::Base.queue_adapter
+    ActiveJob::Base.queue_adapter = :test
+    example.run
+  ensure
+    ActiveJob::Base.queue_adapter = queue_adapter
+  end
+
+  before do
+    user.update!(current_team_id: team.id)
+  end
 
   context 'when service call is successful' do
     it 'adds new experiment to target project' do
@@ -33,8 +39,7 @@ describe Experiments::CopyExperimentAsTemplateService do
     end
 
     it 'calls create activity service' do
-      # copied tasks also trigger designate_user_to_my_module activities, so other calls are allowed
-      allow(Activities::CreateActivityService).to receive(:call)
+      allow(Activities::CreateActivityService).to receive(:call).and_call_original
       expect(Activities::CreateActivityService).to receive(:call)
         .with(hash_including(activity_type: :clone_experiment))
 
@@ -64,6 +69,38 @@ describe Experiments::CopyExperimentAsTemplateService do
     it 'raises NoMethodError when experiment is nil' do
       expect { described_class.call(experiment: nil, project: new_project, user: user) }
         .to raise_error(NoMethodError)
+  end
+
+  context 'when service call is not successful' do
+    it 'returns an error when project is missing' do
+      service = described_class.call(experiment: experiment, project: nil, user: user)
+
+      expect(service.errors).to have_key(:invalid_arguments)
+    end
+  end
+
+  describe 'copying results' do
+    def expect_copy_content_jobs(copy_results:)
+      [grouped_my_module, single_my_module].each do |my_module|
+        expect(MyModules::CopyContentJob).to have_been_enqueued
+          .with(user.id, my_module.id, anything, skip_activities: true, copy_results: copy_results)
+      end
+    end
+
+    context 'when copy_results is not set' do
+      it 'copies tasks without results' do
+        expect(service_call.succeed?).to be true
+        expect_copy_content_jobs(copy_results: false)
+      end
+    end
+
+    context 'when copy_results is true' do
+      it 'copies tasks with results' do
+        service = described_class.call(experiment: experiment, project: new_project, user: user, copy_results: true)
+
+        expect(service.succeed?).to be true
+        expect_copy_content_jobs(copy_results: true)
+      end
     end
   end
 end

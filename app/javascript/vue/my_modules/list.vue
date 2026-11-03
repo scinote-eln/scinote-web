@@ -53,6 +53,10 @@
              :my_module="moveModalObject"
              @close="moveModalObject = null"
              @move="updateTable" />
+  <DuplicateModal v-if="duplicateModalObject"
+                  :duplicateObject="duplicateModalObject"
+                  @close="duplicateModalObject = null"
+                  @duplicate="updateTable" />
   <AccessModal v-if="accessModalParams" :params="accessModalParams"
                @close="accessModalParams = null" @refresh="this.reloadingTable = true" />
 </template>
@@ -78,6 +82,7 @@ import CommentsRenderer from '../shared/datatable/renderers/comments.vue';
 import NewModal from './modals/new.vue';
 import EditModal from './modals/edit.vue';
 import MoveModal from './modals/move.vue';
+import DuplicateModal from './modals/duplicate.vue';
 import AccessModal from '../shared/access_modal/modal.vue';
 import FavoriteRenderer from '../shared/datatable/renderers/favorite.vue';
 import UsersDropdownRenderer from '../shared/select_dropdown_renderers/user.vue';
@@ -97,6 +102,7 @@ export default {
     NewModal,
     EditModal,
     MoveModal,
+    DuplicateModal,
     AccessModal,
     NameRenderer,
     ResultsRenderer,
@@ -129,6 +135,7 @@ export default {
   data() {
     return {
       moveModalObject: null,
+      duplicateModalObject: null,
       editModalObject: null,
       newModalOpen: false,
       tagsModalObject: null,
@@ -402,6 +409,7 @@ export default {
       this.reloadingTable = true;
       this.editModalObject = null;
       this.moveModalObject = null;
+      this.duplicateModalObject = null;
       this.updateNavigator(true);
     },
     updateNavigator(withExpanedChildren = false) {
@@ -439,12 +447,10 @@ export default {
       this.moveModalObject.movePath = event.path;
     },
     duplicate(event, rows) {
-      axios.post(event.path, { my_module_ids: rows.map((row) => row.id) }).then(() => {
-        this.reloadingTable = true;
-        this.updateNavigator(true);
-      }).catch((error) => {
-        HelperModule.flashAlertMsg(error.response.data.error, 'danger');
-      });
+      this.duplicateModalObject = {
+        path: event.path,
+        ids: rows.map((row) => row.id)
+      };
     },
     access(_event, rows) {
       this.accessModalParams = {

@@ -88,8 +88,18 @@ const image_upload_handler = (blobInfo, _progress) => {
 };
 
 const findEditorImageBySrc = (editor, src) => {
-  const iframe = $(`#${editor.id}`).next().find('.tox-edit-area iframe').contents()[0];
-  return iframe && iframe.querySelector(`img[src="${src}"]`);
+  if (editor.removed) return null;
+
+  return editor.dom.select('img').find((element) => element.getAttribute('src') === src);
+};
+
+// changes go through editor.dom and get their own undo level, so TinyMCE's undo history
+// matches the editor content (otherwise undo or smart paste restores the pasted images)
+const updateEditorImage = (editor, imageElement, update) => {
+  if (!imageElement) return;
+
+  update(imageElement);
+  editor.undoManager.add();
 };
 
 const extractAndUploadElementImage = async (editor, imageElement) => {
@@ -109,17 +119,18 @@ const extractAndUploadElementImage = async (editor, imageElement) => {
     blob.name = `image.${contentType.split('image/')[1] || 'png'}`;
 
     const image = await createTinyMceAsset(blob);
-    const liveElement = findEditorImageBySrc(editor, src);
 
-    if (!liveElement) return;
-
-    liveElement.setAttribute('src', image.url);
-    liveElement.setAttribute('data-mce-token', image.token);
-    liveElement.setAttribute('alt', `description-${image.token}`);
-    liveElement.setAttribute('class', 'img-responsive');
+    updateEditorImage(editor, findEditorImageBySrc(editor, src), (liveElement) => {
+      editor.dom.setAttribs(liveElement, {
+        src: image.url,
+        'data-mce-token': image.token,
+        alt: `description-${image.token}`,
+        class: 'img-responsive'
+      });
+    });
   } catch(error) {
     // remove the image so it's obvious to the user that the pasted image didn't come through
-    findEditorImageBySrc(editor, src)?.remove();
+    updateEditorImage(editor, findEditorImageBySrc(editor, src), (liveElement) => editor.dom.remove(liveElement));
     console.error(`Error uploading image: ${error}`);
   }
 };

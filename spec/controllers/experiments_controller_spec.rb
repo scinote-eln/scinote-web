@@ -348,6 +348,27 @@ describe ExperimentsController, type: :controller do
       expect(response).to have_http_status(:success)
       expect(response.media_type).to eq 'application/json'
     end
+
+    it 'clones without results by default' do
+      expect(Experiments::CopyExperimentAsTemplateService).to receive(:call)
+        .with(hash_including(copy_results: be_falsey)).and_call_original
+
+      action
+    end
+
+    it 'clones without results when copy_results is false' do
+      expect(Experiments::CopyExperimentAsTemplateService).to receive(:call)
+        .with(hash_including(copy_results: false)).and_call_original
+
+      post :clone, params: { id: experiment.id, experiment: { project_id: project_second.id }, copy_results: 'false' }
+    end
+
+    it 'clones with results when copy_results is true' do
+      expect(Experiments::CopyExperimentAsTemplateService).to receive(:call)
+        .with(hash_including(copy_results: true)).and_call_original
+
+      post :clone, params: { id: experiment.id, experiment: { project_id: project_second.id }, copy_results: true }, as: :json
+    end
   end
 
   describe 'POST move' do
@@ -415,6 +436,31 @@ describe ExperimentsController, type: :controller do
       expect(response).to have_http_status(:success)
       expect(response.media_type).to eq 'application/json'
       expect(response.body).not_to be_empty
+    end
+
+    context 'when copying task content' do
+      around do |example|
+        queue_adapter = ActiveJob::Base.queue_adapter
+        ActiveJob::Base.queue_adapter = :test
+        example.run
+      ensure
+        ActiveJob::Base.queue_adapter = queue_adapter
+      end
+
+      it 'copies tasks without results by default' do
+        expect { action }.to have_enqueued_job(MyModules::CopyContentJob)
+          .with(user.id, my_module.id, anything, copy_results: be_falsey)
+      end
+
+      it 'copies tasks without results when copy_results is false' do
+        expect { post :batch_clone_my_modules, params: { id: experiment.id, my_module_ids: [my_module.id], copy_results: 'false' } }
+          .to have_enqueued_job(MyModules::CopyContentJob).with(user.id, my_module.id, anything, copy_results: false)
+      end
+
+      it 'copies tasks with results when copy_results is true' do
+        expect { post :batch_clone_my_modules, params: { id: experiment.id, my_module_ids: [my_module.id], copy_results: true }, as: :json }
+          .to have_enqueued_job(MyModules::CopyContentJob).with(user.id, my_module.id, anything, copy_results: true)
+      end
     end
   end
 

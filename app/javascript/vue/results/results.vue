@@ -169,15 +169,16 @@ export default {
         const params = this.sort ? { ...this.filters, sort: this.sort } : { ...this.filters };
         params['format'] = 'json';
         axios.get(this.nextPageUrl, { params }).then((response) => {
-          this.results = this.results.concat(response.data.data);
-          this.results.forEach(result => {
+          const included = response.data.included || [];
+          response.data.data.forEach(result => {
             result.attachments = []
             result.relationships.assets.data.forEach((asset) => {
-              result.attachments.push(response.data.included.find((a) => a.id === asset.id && a.type === 'assets'));
+              result.attachments.push(included.find((a) => a.id === asset.id && a.type === 'assets'));
             });
 
             result.elements = result.attributes.elements || [];
           });
+          this.results = this.results.concat(response.data.data);
           this.sort = response.data.meta.sort;
           this.nextPageUrl = response.data.links.next;
           this.loadingPage = false;

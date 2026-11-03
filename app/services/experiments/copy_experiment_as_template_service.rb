@@ -7,10 +7,11 @@ module Experiments
     attr_reader :errors, :c_exp
     alias cloned_experiment c_exp
 
-    def initialize(experiment:, project:, user:)
+    def initialize(experiment:, project:, user:, copy_results: false)
       @exp = experiment
       @project = project
       @user = user
+      @copy_results = copy_results
       @original_project = @exp.project
       @c_exp = nil
       @errors = {}
@@ -30,12 +31,12 @@ module Experiments
 
         # Copy all signle taskas
         @c_exp.my_modules << @exp.my_modules.readable_by_user(@user).without_group.map do |m|
-          m.deep_clone_to_experiment(@user, @c_exp)
+          m.deep_clone_to_experiment(@user, @c_exp, copy_results: @copy_results)
         end
 
         # Copy all grouped tasks
         @exp.my_module_groups.each do |g|
-          @c_exp.my_module_groups << g.deep_clone_to_experiment(@user, @c_exp)
+          @c_exp.my_module_groups << g.deep_clone_to_experiment(@user, @c_exp, copy_results: @copy_results)
         end
 
         @c_exp.save!
@@ -67,7 +68,7 @@ module Experiments
           .map do |key, value|
             "Can't find #{key.capitalize}" if value.nil?
           end.compact
-        false
+        return false
       end
 
       true
