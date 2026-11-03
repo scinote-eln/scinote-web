@@ -161,9 +161,8 @@ describe Users::Settings::TeamsController, type: :controller do
     # ActionView::Helpers::UrlHelper (included in the controller) overrides url_for
     it 'destroys the team but fails to redirect to the list' do
       user.update!(current_team_id: create(:team, created_by: user).id)
-      expect do
-        expect { delete :destroy, params: { id: team.id } }.to raise_error(ArgumentError)
-      end.to change(Team, :count).by(-1)
+      expect { delete :destroy, params: { id: team.id } }.to change(Team, :count).by(-1)
+      expect(response).to redirect_to(teams_path)
     end
 
     it 'is forbidden for a team viewer' do
