@@ -317,7 +317,6 @@ describe StepElements::ChecklistItemsController, type: :controller do
       end
 
       it 'creates a paragraph item without after_id' do
-        pending 'bug: ChecklistItem#save_multiline! calls nil + 1 when with_paragraphs is set and after_id is missing'
         post :create, params: base_params.merge(attributes: { text: "One\nTwo", with_paragraphs: true }), format: :json
 
         expect(response).to have_http_status(:ok)
