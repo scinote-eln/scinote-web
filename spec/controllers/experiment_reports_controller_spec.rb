@@ -48,7 +48,6 @@ describe ExperimentReportsController, type: :controller do
     end
 
     it 'switches the current team to the team of the experiment' do
-      pending 'bug: ExperimentReportsController does not include TeamsHelper, current_team_switch is undefined'
       other_team = create :team, created_by: user, skip_user_assignments: true
       user.update!(current_team_id: other_team.id)
       get :index, params: { experiment_id: experiment.id }, format: :json
