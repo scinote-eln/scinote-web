@@ -36,7 +36,8 @@
             <button v-if="urls.add_step_url || addingStepsLocked"
               class="btn btn-secondary icon-btn xl:!px-4"
               :disabled="addingStepsLocked"
-              :data-sn-tooltip="addingStepsLocked ? i18n.t('protocols.action_disabled') : i18n.t('protocols.steps.new_step_title')"
+              :data-sn-tooltip="addingStepsLocked ? i18n.t('protocols.action_disabled') : withShortcut(i18n.t('protocols.steps.new_step_title'), KEYMAP.TASK_NEW_STEP)"
+              :aria-keyshortcuts="addingStepsLocked ? null : shortcutAria(KEYMAP.TASK_NEW_STEP)"
               @keyup.enter="addStep(steps.length)"
               @click="addStep(steps.length)"
               tabindex="0"
@@ -48,7 +49,8 @@
               v-if="!inRepository && permissions.can_manage_protocol_in_module"
               class="btn btn-secondary icon-btn xl:!px-4"
               @click="showRepositoriesModal = true"
-              :data-sn-tooltip="i18n.t('protocols.steps.show_repositories')"
+              :data-sn-tooltip="withShortcut(i18n.t('protocols.steps.show_repositories'), KEYMAP.TASK_INVENTORIES)"
+              :aria-keyshortcuts="shortcutAria(KEYMAP.TASK_INVENTORIES)"
               data-e2e="e2e-BT-task-protocol-assignedItems"
             >
               <span class="sn-icon sn-icon-inventory" aria-hidden="true"></span>
@@ -56,7 +58,8 @@
             </button>
             <template v-if="steps.length > 0">
               <button
-                :data-sn-tooltip="i18n.t('protocols.steps.collapse_label')"
+                :data-sn-tooltip="withShortcut(i18n.t('protocols.steps.collapse_label'), KEYMAP.TASK_TOGGLE_STEPS)"
+                :aria-keyshortcuts="shortcutAria(KEYMAP.TASK_TOGGLE_STEPS)"
                 v-if="!stepCollapsed"
                 class="btn btn-secondary icon-btn xl:!px-4"
                 @click="collapseSteps"
@@ -67,7 +70,8 @@
                 <span class="tw-hidden xl:inline">{{ i18n.t("protocols.steps.collapse_label") }}</span>
               </button>
               <button v-else
-                :data-sn-tooltip="i18n.t('protocols.steps.expand_label')"
+                :data-sn-tooltip="withShortcut(i18n.t('protocols.steps.expand_label'), KEYMAP.TASK_TOGGLE_STEPS)"
+                :aria-keyshortcuts="shortcutAria(KEYMAP.TASK_TOGGLE_STEPS)"
                 class="btn btn-secondary icon-btn xl:!px-4"
                 @click="expandSteps"
                 tabindex="0"
@@ -88,10 +92,12 @@
               :canArchiveSteps="steps.length > 0 && urls.archive_steps_url !== null"
             />
             <button
+              ref="printButton"
               class="btn btn-light icon-btn"
               data-toggle="modal"
               data-target="#print-protocol-modal"
-              :data-sn-tooltip="i18n.t('protocols.print_label')"
+              :data-sn-tooltip="withShortcut(i18n.t('protocols.print_label'), KEYMAP.TASK_PRINT)"
+              :aria-keyshortcuts="shortcutAria(KEYMAP.TASK_PRINT)"
               tabindex="0"
               data-e2e="e2e-BT-task-protocol-print"
             >
@@ -393,6 +399,8 @@ import moduleNameObserver from '../mixins/moduleNameObserver';
 import AssignedItemsModal from './modals/assigned_items.vue';
 import tooltipMixin from '../mixins/tooltipMixin.js';
 import StepCollapseState from './mixins/step_collapse_state.js';
+import keyboardShortcutsMixin from '../shared/keyboard_shortcuts/mixin.js';
+import KEYMAP from '../shared/keyboard_shortcuts/keymap.js';
 import axios from '../../packs/custom_axios.js';
 import { protocol_filter_global_activities_path } from '../../routes.js';
 import LockedTag from '../shared/snippets/locked_tag.vue';
@@ -410,7 +418,8 @@ export default {
     ReorderableItemsModal, ProtocolMetadata, clipboardPasteModal,
     AssignedItemsModal, ManageStepsModal, LockedTag
   },
-  mixins: [UtilsMixin, stackableHeadersMixin, moduleNameObserver, AssetPasteMixin, tooltipMixin, StepCollapseState],
+  mixins: [UtilsMixin, stackableHeadersMixin, moduleNameObserver, AssetPasteMixin, tooltipMixin, StepCollapseState,
+    keyboardShortcutsMixin],
   computed: {
     wrappedTables() {
       return window.wrapTables(this.protocol.attributes.description_view);
@@ -446,8 +455,31 @@ export default {
       anchorId: null,
       elementsLoaded: 0,
       attachmentsLoaded: 0,
-      loadingOverlay: false
+      loadingOverlay: false,
+      KEYMAP
     };
+  },
+  shortcuts() {
+    // Task toolbar only, never on protocol templates; each checks the same conditions as its button
+    const onTask = (condition) => () => !!this.protocol.id && !this.inRepository && !!condition();
+    return [{
+      keys: KEYMAP.TASK_NEW_STEP,
+      handler: () => this.addStep(this.steps.length),
+      when: onTask(() => this.urls.add_step_url && !this.addingStepsLocked)
+    }, {
+      keys: KEYMAP.TASK_INVENTORIES,
+      handler: () => { this.showRepositoriesModal = true; },
+      when: onTask(() => this.permissions.can_manage_protocol_in_module)
+    }, {
+      keys: KEYMAP.TASK_TOGGLE_STEPS,
+      handler: () => (this.stepCollapsed ? this.expandSteps() : this.collapseSteps()),
+      when: onTask(() => this.steps.length > 0)
+    }, {
+      // SciNote's print modal instead of the browser's print dialog
+      keys: KEYMAP.TASK_PRINT,
+      handler: () => this.$refs.printButton.click(),
+      when: onTask(() => this.$refs.printButton && document.getElementById('print-protocol-modal'))
+    }].map((shortcut) => ({ ...shortcut, scope: 'page' }));
   },
   created() {
     const urlParams = new URLSearchParams(window.location.search);
