@@ -28,6 +28,10 @@ class MyModulesController < ApplicationController
   before_action :load_experiment_my_modules, only: %i(protocols activities archive)
   before_action :set_breadcrumbs_items, only: %i(protocols activities archive index)
   before_action :set_navigator, only: %i(protocols activities archive index)
+  before_action :skip_session, only: :current_status
+
+  # Don't let polling reset Devise's timeoutable clock.
+  prepend_before_action -> { request.env['devise.skip_timeout'] = true }, only: :current_status
 
   layout 'fluid'.freeze
 
@@ -668,5 +672,11 @@ class MyModulesController < ApplicationController
               my_module: object.id,
               tag: tag.id
             })
+  end
+
+  # Prevent this request from writing the session back to the client.
+  # Needed for polling endpoints, that would keep an idle user's session alive indefinitely.
+  def skip_session
+    request.session_options[:skip] = true
   end
 end

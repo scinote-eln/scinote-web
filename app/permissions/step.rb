@@ -181,6 +181,14 @@ Canaid::Permissions.register_for(Checklist) do
   can :unlock_step_checklist do |user, checklist|
     Protocol.content_locking_enabled? && can_manage_protocol_draft_in_repository?(user, checklist.step.protocol)
   end
+
+  can :check_step_checklist_items do |user, checklist|
+    can_check_my_module_steps?(user, checklist.step.my_module) && checklist.active? && checklist.step.active?
+  end
+
+  can :uncheck_step_checklist_items do |user, checklist|
+    can_uncheck_my_module_steps?(user, checklist.step.my_module) && checklist.active? && checklist.step.active?
+  end
 end
 
 Canaid::Permissions.register_for(Table) do

@@ -117,9 +117,9 @@ module StepElements
 
     def check_toggle_permissions
       if ActiveModel::Type::Boolean.new.cast(checklist_toggle_item_params[:checked])
-        render_403 unless can_check_my_module_steps?(@step.protocol.my_module)
+        render_403 unless can_check_step_checklist_items?(@checklist)
       else
-        render_403 unless can_uncheck_my_module_steps?(@step.protocol.my_module)
+        render_403 unless can_uncheck_step_checklist_items?(@checklist)
       end
     end
 
