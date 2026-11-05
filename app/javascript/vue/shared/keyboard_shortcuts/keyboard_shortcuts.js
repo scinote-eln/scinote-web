@@ -16,10 +16,15 @@
 // modal is open ({ allowInInputs, allowInModals } turn that off).
 // When several shortcuts match, the highest scope wins: overlay > page > global. A handler
 // that returns false passes the key on to the next match.
+//
+// Server-rendered markup needs no JS: an element with data-shortcut="alt+shift+1" is clicked
+// when those keys are pressed (if it is visible and not aria-current="page"), and gets
+// aria-keyshortcuts and the shortcut in its title on every page load (see decorateShortcuts).
 
 const SCOPES = ['global', 'page', 'overlay'];
 const RICH_TEXT = '[contenteditable="true"], .mce-content-body';
 const FORM_FIELDS = 'input, textarea, select';
+const DECLARATIVE = '[data-shortcut]';
 
 export const isMac = /mac|iphone|ipad/i.test(navigator.userAgentData?.platform || navigator.platform || '');
 
@@ -57,13 +62,25 @@ function allowed(entry, event) {
   return !entry.when || entry.when();
 }
 
+function elementEntries() {
+  return [...document.querySelectorAll(DECLARATIVE)]
+    .filter((element) => element.getClientRects().length > 0)
+    .map((element) => ({
+      combo: parseKeys(element.dataset.shortcut),
+      scope: 'page',
+      handler: () => {
+        if (element.getAttribute('aria-current') !== 'page') element.click();
+      }
+    }));
+}
+
 function createRegistry() {
   const entries = new Set();
 
   document.addEventListener('keydown', (event) => {
     if (event.repeat || event.isComposing || event.defaultPrevented) return;
 
-    const candidates = [...entries]
+    const candidates = [...entries, ...elementEntries()]
       .filter((entry) => matches(event, entry.combo) && allowed(entry, event))
       .sort((a, b) => SCOPES.indexOf(b.scope) - SCOPES.indexOf(a.scope));
 
@@ -78,11 +95,8 @@ function createRegistry() {
   return entries;
 }
 
-// Every Vue pack is its own webpack bundle, so the registry lives on window to keep a
-// single listener and a single list of shortcuts per page
 function registry() {
-  if (!window.SciNoteShortcuts) window.SciNoteShortcuts = createRegistry();
-  return window.SciNoteShortcuts;
+  return window.SciNoteShortcuts.entries;
 }
 
 // Returns a function that removes the shortcut again
@@ -116,4 +130,23 @@ export function shortcutAria(keys) {
 // Tooltip text with the shortcut appended, e.g. 'New step (⌥⇧N)'
 export function withShortcut(label, keys) {
   return I18n.t('keyboard_shortcuts.with_shortcut', { label, shortcut: shortcutLabel(keys) });
+}
+
+// Adds aria-keyshortcuts and the shortcut label to the title of [data-shortcut] elements.
+// Runs on every page load; call it for markup rendered later, e.g. an AJAX partial.
+export function decorateShortcuts(root = document) {
+  root.querySelectorAll(`${DECLARATIVE}:not([aria-keyshortcuts])`).forEach((element) => {
+    const keys = element.dataset.shortcut;
+    element.setAttribute('aria-keyshortcuts', shortcutAria(keys));
+    element.setAttribute('title', element.title ? withShortcut(element.title, keys) : shortcutLabel(keys));
+  });
+}
+
+// Every Vue pack is its own webpack bundle, so the registry lives on window to keep a
+// single listener and a single list of shortcuts per page. It is set up on load, so
+// [data-shortcut] works even where nothing registers a shortcut. Legacy scripts reach
+// decorateShortcuts as window.SciNoteShortcuts.decorate.
+if (!window.SciNoteShortcuts) {
+  window.SciNoteShortcuts = { entries: createRegistry(), decorate: decorateShortcuts };
+  document.addEventListener('turbolinks:load', () => decorateShortcuts());
 }
