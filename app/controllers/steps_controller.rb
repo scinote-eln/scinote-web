@@ -25,7 +25,8 @@ class StepsController < ApplicationController
 
   def index
     view_mode = params[:view_mode]
-    @steps = @protocol.steps.preload(:assets, :step_orderable_elements, :step_texts, :form_responses, :tables, :checklists)
+    @steps = @protocol.steps.preload(:user, :last_modified_by, :assets, :step_orderable_elements, :step_texts, :form_responses,
+                                     :tables, :checklists)
 
     if view_mode == 'archived'
       @steps = @steps.archived_or_having_archived

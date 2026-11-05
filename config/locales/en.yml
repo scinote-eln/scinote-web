@@ -4429,6 +4429,11 @@ en:
       skipped: 'Skipped'
       expand_label: "Expand All"
       collapse_label: "Collapse All"
+      expand_step: "Expand step"
+      collapse_step: "Collapse step"
+      empty:
+        title: "Start work in this step:"
+        no_content: "This step has no content."
       new_step: "New step"
       show_repositories: "Assigned items"
       add_step: "Add step"
@@ -4453,6 +4458,9 @@ en:
       component_duplication_failed: "Step content could not be duplicated, try again later."
       timestamp: "Created on %{date} by %{user}"
       timestamp_archived: "Archived on %{date} by %{user}"
+      completed_timestamp: "Completed on %{date} by %{user}"
+      skipped_timestamp: "Skipped on %{date} by %{user}"
+      modified_timestamp: "Last modified on %{date} by %{user}"
       timestamp_iso_html: "Created on <span class='iso-formatted-date'>%{date}</span> by %{user}"
       manage_links: "Manage links"
       archived_result: "Archived"
@@ -4467,6 +4475,8 @@ en:
         uncomplete: "Unmark as complete"
         skip: "Skip step"
         unskip: "Unskip step"
+        mark_as_done: "Mark as done"
+        mark_as_not_done: "Mark as not done"
       options_dropdown:
         title: 'Step options'
         duplicate: 'Duplicate'

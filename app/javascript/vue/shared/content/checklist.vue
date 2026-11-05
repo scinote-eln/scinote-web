@@ -1,10 +1,13 @@
 <template>
-  <div class="content__checklist-container pr-8" :data-e2e="`e2e-CO-${dataE2e}-checklist${element.id}`">
-    <div class="sci-divider my-6" v-if="!inRepository"></div>
+  <div class="content__checklist-container"
+    :class="card ? 'bg-sn-white rounded-lg pt-2 px-4 pb-4' : 'pr-8'"
+    :data-e2e="`e2e-CO-${dataE2e}-checklist${element.id}`">
+    <div class="sci-divider my-6" v-if="!inRepository && !card"></div>
     <div :class="{'!bg-sn-background-brittlebush p-4': element.archived}">
-      <div class="checklist-header flex rounded gap-2 mb-1 items-center relative w-full group/checklist-header"
-        :class="{ 'editing-name': editingName, 'locked': !element.urls.update_url }">
-        <div class="grow-1 text-ellipsis whitespace-nowrap my-1 font-bold" :class="{ 'grow': !element.archived }">
+      <div class="checklist-header flex rounded gap-2 items-center relative w-full group/checklist-header"
+        :class="[card ? 'h-10 mb-4' : 'mb-1', { 'editing-name': editingName, 'locked': !element.urls.update_url }]">
+        <div class="grow-1 text-ellipsis whitespace-nowrap my-1"
+             :class="[card ? 'text-sm font-semibold' : 'font-bold', { 'grow': !element.archived }]">
           <InlineEdit
             :class="{ 'pointer-events-none': !element.urls.update_url }"
             :value="element.name"
@@ -57,7 +60,7 @@
             v-if="inRepository || !this.element.locked"
             class="ml-auto"
             :listItems="this.actionMenu"
-            :btnClasses="'btn btn-light icon-btn  btn-sm'"
+            :btnClasses="card ? 'btn btn-light icon-btn' : 'btn btn-light icon-btn btn-sm'"
             :position="'right'"
             :btnIcon="'sn-icon sn-icon-more-hori'"
             :dataE2e="`e2e-DD-${dataE2e}-checklist${element.id}-options`"
@@ -158,6 +161,11 @@ export default {
     element: {
       type: Object,
       required: true
+    },
+    // Step layout: a white card with its own padding, no divider or right gutter (Results use the default)
+    card: {
+      type: Boolean,
+      default: false
     },
     inRepository: {
       type: Boolean,
