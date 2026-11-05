@@ -5,12 +5,16 @@
         :class="{'disabled' : !currentTeam, 'error': invalidQuery}" :title="i18n.t('nav.search')"
        :data-e2e="'e2e-IF-topMenu-search'">
         <input ref="searchField" type="text" class="!pr-20" v-model="searchQuery"
+               :aria-keyshortcuts="shortcutAria(KEYMAP.SEARCH)"
                :class="{'active': flyoutOpened}"
                @keydown="focusHistoryItem"
                @keydown.down="focusQuickSearchResults"
                @keydown.escape="closeFlyout"
                @focus="openHistory" :placeholder="i18n.t('nav.search')" @keydown.enter="saveQuery"/>
         <i class="sn-icon sn-icon-search"></i>
+        <ShortcutHint v-if="searchQuery.length <= 1" :keys="KEYMAP.SEARCH"
+                      class="absolute right-3 top-1/2 -translate-y-1/2"
+                      :data-e2e="'e2e-TX-topMenu-searchShortcut'" />
         <div v-if="this.searchQuery.length > 1" class="flex items-center gap-1 absolute right-2 top-1.5">
           <button class="btn btn-light icon-btn btn-xs" @click="this.searchQuery = ''; $refs.searchField.focus()" :data-e2e="'e2e-BT-topMenu-searchClear'">
             <i class="sn-icon sn-icon-close  !m-0" :title="i18n.t('nav.clear')"></i>
@@ -129,9 +133,13 @@ import GeneralDropdown from '../shared/general_dropdown.vue';
 import StringWithEllipsis from '../shared/string_with_ellipsis.vue';
 import SearchFilters from '../global_search/filters.vue';
 import axios from '../../packs/custom_axios.js';
+import keyboardShortcutsMixin from '../shared/keyboard_shortcuts/mixin.js';
+import KEYMAP from '../shared/keyboard_shortcuts/keymap.js';
+import ShortcutHint from '../shared/keyboard_shortcuts/shortcut_hint.vue';
 
 export default {
   name: 'QuickSearch',
+  mixins: [keyboardShortcutsMixin],
   props: {
     quickSearchUrl: {
       type: String,
@@ -160,7 +168,8 @@ export default {
   components: {
     GeneralDropdown,
     StringWithEllipsis,
-    SearchFilters
+    SearchFilters,
+    ShortcutHint
   },
   computed: {
     reversedPreviousQueries() {
@@ -200,13 +209,28 @@ export default {
       loading: false,
       filtersOpened: false,
       focusedHistoryItem: null,
-      flyoutOpened: false
+      flyoutOpened: false,
+      KEYMAP
     };
+  },
+  shortcuts() {
+    // Rich-text editors keep Cmd/Ctrl+K for inserting a link
+    return [{
+      keys: KEYMAP.SEARCH, handler: this.focusSearchField, allowInInputs: true, when: () => !!this.currentTeam
+    }];
   },
   mounted() {
     this.previousQueries = JSON.parse(localStorage.getItem('quickSearchHistory') || '[]');
   },
   methods: {
+    focusSearchField() {
+      const field = this.$refs.searchField;
+      if (!field) return false;
+
+      field.focus();
+      field.select();
+      return true;
+    },
     openHistory() {
       this.$refs.container.isOpen = this.canOpen;
     },
