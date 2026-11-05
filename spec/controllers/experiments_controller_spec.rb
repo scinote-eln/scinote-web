@@ -921,7 +921,7 @@ describe ExperimentsController, type: :controller do
     let(:action) { post :batch_clone_my_modules, params: { id: experiment.id, my_module_ids: [my_module.id] } }
 
     it 'creates a clone and enqueues content copy' do
-      expect(MyModules::CopyContentJob).to receive(:perform_later).with(user.id, my_module.id, anything)
+      expect(MyModules::CopyContentJob).to receive(:perform_later).with(user.id, my_module.id, anything,  copy_results: anything)
       expect { action }.to change { experiment.my_modules.count }.by(1)
       expect(JSON.parse(response.body)['provisioning_status_urls'].size).to eq(1)
     end
