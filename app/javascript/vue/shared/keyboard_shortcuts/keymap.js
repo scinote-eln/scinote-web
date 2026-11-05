@@ -2,5 +2,7 @@
 // Syntax: see keyboard_shortcuts.js.
 
 export default {
-  SEARCH: 'mod+k'
+  SEARCH: 'mod+k',
+  // Item card: jump to the Nth section, n = 1..9
+  ITEM_CARD_SECTION: (n) => `alt+shift+${n}`
 };
