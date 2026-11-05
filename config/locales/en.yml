@@ -5081,7 +5081,7 @@ en:
     experiments: Experiments
     tasks: Tasks
     inventories: Inventories
-    more_results: To get other results, please type more
+    more_results: "Enter longer search term to get more results"
     search_placeholder: "Search"
     search_placeholder_reference: "Assign anything"
     search_placeholder_users: "Search for users"
