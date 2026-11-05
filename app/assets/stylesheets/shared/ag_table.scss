@@ -39,3 +39,20 @@
     outline-offset: 0 !important;
   }
 }
+
+// Opt-in keyboard navigation (DataTable `keyboardNavigation` prop)
+.sn-keyboard-navigation .ag-root-wrapper {
+  // Keep the mouse look unchanged: no AG Grid border on a clicked (focused) cell
+  .ag-cell-focus:not(.ag-cell-range-selected):focus-within {
+    border: 0;
+  }
+
+  .ag-cell:focus-visible {
+    outline: 2px solid var(--sn-science-blue);
+    outline-offset: -2px;
+  }
+}
+
+.sn-keyboard-navigation:has(.ag-cell:focus-visible) .ag-row-focus:not(.ag-row-selected) {
+  background-color: var(--sn-super-light-grey);
+}

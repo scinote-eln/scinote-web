@@ -4,8 +4,8 @@
               leave-active-class="transition-all ease-sharp duration-[588ms]"
               leave-to-class="translate-x-full w-0"
               v-click-outside="handleOutsideClick">
-    <div ref="wrapper" v-show="isShowing" id="repository-item-sidebar-wrapper"
-      class='items-sidebar-wrapper bg-white gap-2.5 self-stretch rounded-tl-4 rounded-bl-4 sn-shadow-menu-lg h-full w-[565px]'>
+    <div ref="wrapper" v-show="isShowing" id="repository-item-sidebar-wrapper" tabindex="-1"
+      class='items-sidebar-wrapper outline-none bg-white gap-2.5 self-stretch rounded-tl-4 rounded-bl-4 sn-shadow-menu-lg h-full w-[565px]'>
 
       <div id="repository-item-sidebar" data-e2e="e2e-CO-itemCard" class="w-full h-full pl-6 bg-white flex flex-col">
 
@@ -20,6 +20,8 @@
               data-e2e="e2e-TX-itemCard-title">
             </repository-item-sidebar-title>
             <i id="close-icon" data-e2e="e2e-BT-itemCard-close" @click="toggleShowHideSidebar(null)"
+              @keydown.enter.prevent="toggleShowHideSidebar(null)"
+              tabindex="0" role="button" :aria-label="i18n.t('general.close')"
               class="sn-icon sn-icon-close ml-auto cursor-pointer my-auto mx-0"></i>
           </div>
           <div v-if="snapshotAt" class="text-sn-grey mt-2">

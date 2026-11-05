@@ -16,6 +16,7 @@
         }
       }"
       :enableBarcodeSearch="true"
+      :keyboardNavigation="true"
       :fetchColumnsOnReload="true"
       :addingNewRow="addingNewRow"
       :newRowTemplate="newRowTemplate"
@@ -49,6 +50,7 @@
       @restore="restoreRows"
       @delete="deleteRows"
       @createEvent="createEvent"
+      @cellKeyboardActivate="onCellKeyboardActivate"
     ></DataTable>
     <div v-else class="flex items-center justify-center w-full h-96 text-sn-grey-500">
       {{ i18n.t('repositories.show.laoding_table_configuration') }}
@@ -169,6 +171,7 @@ export default {
     createEventModalRow: null,
     currentPageRows: [],
     activeFilter: [],
+    itemCardFocus: null,
     newRowTemplate: {
       name: {
         value: '',
@@ -182,6 +185,7 @@ export default {
   },
   beforeUnmount() {
     delete window.repositoryTable;
+    this.stopItemCardFocus(false);
   },
   computed: {
     toolbarActions() {
@@ -246,6 +250,111 @@ export default {
     },
   },
   methods: {
+    // Item card opened with Enter on a Name cell: Tab cycles inside the card
+    // until it closes, then focus returns to that Name cell.
+    onCellKeyboardActivate({ column, rowIndex }) {
+      if (column.getColId() !== 'name') return;
+
+      this.$nextTick(() => {
+        if (this.isItemCardShowing()) this.startItemCardFocus(rowIndex);
+      });
+    },
+    isItemCardShowing() {
+      return Boolean(window.repositoryItemSidebarComponent?.isShowing);
+    },
+    startItemCardFocus(rowIndex) {
+      this.stopItemCardFocus(false);
+      const wrapper = document.getElementById('repository-item-sidebar-wrapper');
+      if (!wrapper) return;
+
+      const observer = new MutationObserver(() => {
+        if (!this.isItemCardShowing()) this.stopItemCardFocus(true);
+      });
+      observer.observe(wrapper, { attributes: true, attributeFilter: ['style', 'class'] });
+      this.itemCardFocus = { rowIndex, wrapper, observer };
+      document.addEventListener('keydown', this.handleItemCardKeydown, true);
+      wrapper.focus({ preventScroll: true });
+    },
+    stopItemCardFocus(restoreFocus) {
+      if (!this.itemCardFocus) return;
+
+      const { rowIndex, wrapper, observer } = this.itemCardFocus;
+      observer.disconnect();
+      document.removeEventListener('keydown', this.handleItemCardKeydown, true);
+      this.itemCardFocus = null;
+
+      if (!restoreFocus) return;
+      // Don't take focus back if the card was closed by clicking somewhere else
+      const active = document.activeElement;
+      if (!active || active === document.body || wrapper.contains(active)) {
+        this.$refs.repositoryTable?.gridApi?.setFocusedCell(rowIndex, 'name');
+      }
+    },
+    handleItemCardKeydown(event) {
+      if (!this.itemCardFocus) return;
+      if (!this.isItemCardShowing()) {
+        this.stopItemCardFocus(true);
+        return;
+      }
+      // Leave keys alone while a modal opened from the card is in front of it
+      if (document.querySelector('.modal.in')) return;
+
+      if (event.key === 'Escape') {
+        this.closeItemCardOnEscape(event);
+      } else if (event.key === 'Tab') {
+        this.trapTabInItemCard(event);
+      }
+    },
+    closeItemCardOnEscape(event) {
+      const { target } = event;
+      const { wrapper } = this.itemCardFocus;
+      if (event.defaultPrevented || target.closest?.('.sn-select-dropdown, .sn-dropdown, .dp__menu')) return;
+
+      // First Escape closes a dropdown opened inside the card (they close on an outside click)
+      if (document.querySelector('.sn-select-dropdown, .sn-dropdown')) {
+        wrapper.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+        wrapper.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        return;
+      }
+      const close = () => window.repositoryItemSidebarComponent?.toggleShowHideSidebar(null);
+      if (target.matches?.('input, textarea, select, [contenteditable="true"]')) {
+        // Let the field handle Escape (e.g. cancel an edit) first; close only if it kept focus
+        setTimeout(() => {
+          if (this.itemCardFocus && document.activeElement === target) close();
+        });
+        return;
+      }
+      close();
+    },
+    trapTabInItemCard(event) {
+      const { wrapper } = this.itemCardFocus;
+      const focusable = Array.from(wrapper.querySelectorAll([
+        'a[href]',
+        'button:not([disabled])',
+        'input:not([disabled]):not([type="hidden"])',
+        'select:not([disabled])',
+        'textarea:not([disabled])',
+        '[contenteditable="true"]',
+        '[tabindex]:not([tabindex="-1"])'
+      ].join(', '))).filter((el) => el.getClientRects().length > 0);
+
+      // No stopPropagation: card dropdowns close themselves on Tab
+      event.preventDefault();
+      if (focusable.length === 0) {
+        wrapper.focus({ preventScroll: true });
+        return;
+      }
+
+      const index = focusable.indexOf(document.activeElement);
+      let next;
+      if (index === -1) {
+        next = event.shiftKey ? focusable[focusable.length - 1] : focusable[0];
+      } else {
+        const step = event.shiftKey ? -1 : 1;
+        next = focusable[(index + step + focusable.length) % focusable.length];
+      }
+      next.focus();
+    },
     updateRowData(row) {
       // DataTable prepends unknown rows, so skip pushes for rows that aren't loaded
       if (!this.findLoadedRow(row.id)) return;
