@@ -1,7 +1,11 @@
 <template>
   <div>
     <div v-if="protocol.id" class="task-protocol">
-      <div ref="header" class="task-section-header ml-[-1rem] w-[calc(100%_+_2rem)] px-4 bg-sn-white sticky top-0 transition" v-if="!inRepository">
+      <!-- Task page: this bar and the title/description below form one white card (rounded top only while expanded) -->
+      <div ref="header"
+           v-if="!inRepository"
+           class="task-section-header w-full px-4 bg-sn-white sticky top-0 transition"
+           :class="headerSticked ? 'rounded-none' : (protocolCollapsed ? 'rounded-xl' : 'rounded-t-xl')">
         <div class="portocol-header-left-part grow" :class="{'overflow-hidden': headerSticked && moduleName}">
           <template v-if="headerSticked && moduleName">
             <i class="sn-icon sn-icon-navigator sci--layout--navigator-open cursor-pointer p-1.5 border rounded border-sn-light-grey mr-4"></i>
@@ -10,16 +14,18 @@
             </div>
           </template>
           <template v-else>
+            <!-- protocolCollapsed tracks the real collapse state; Bootstrap's .collapsed class can drift -->
             <a class="task-section-caret"
+              :class="{ collapsed: protocolCollapsed }"
               tabindex="0"
               role="button"
               data-toggle="collapse"
               href="#protocol-content"
-              aria-expanded="true"
+              :aria-expanded="!protocolCollapsed"
               aria-controls="protocol-content"
               data-e2e="e2e-IC-task-protocol-visibilityToggle"
             >
-              <i class="sn-icon sn-icon-right"></i>
+              <i :class="['sn-icon', protocolCollapsed ? 'sn-icon-right' : 'sn-icon-down']"></i>
               <div class="task-section-title truncate">
                 <h2 data-e2e="e2e-TX-task-protocol-sectionTitle">{{ i18n.t('Protocol') }}</h2>
               </div>
@@ -118,9 +124,9 @@
         aria-expanded="true"
         data-e2e="e2e-CO-task-protocol-content"
       >
-        <div class="sci-divider" v-if="!inRepository"></div>
-        <div class="mb-4">
-          <div class="protocol-name mt-4" v-if="!inRepository">
+        <div :class="inRepository ? 'mb-4' : 'bg-sn-white rounded-b-xl pt-2 pr-4 pb-6 pl-14'">
+          <div class="sci-divider mb-4" v-if="!inRepository"></div>
+          <div class="protocol-name" v-if="!inRepository">
             <InlineEdit
               v-if="urls.update_protocol_name_url"
               :value="protocol.attributes.name"
@@ -217,8 +223,7 @@
               />
             </div>
           </div>
-          <div class="sci-divider my-4" v-if="!inRepository"></div>
-          <div id="protocol-steps-container" :class=" inRepository ? 'protocol-steps collapse in' : ''">
+          <div id="protocol-steps-container" :class=" inRepository ? 'protocol-steps collapse in' : 'mt-4'">
             <div v-if="inRepository" class="py-5 flex flex-row gap-8 justify-between">
               <a
                 v-if="urls.add_step_url"
@@ -286,18 +291,6 @@
               class="protocol-steps pb-8"
             >
               <div v-for="(step, index) in steps" :key="step.id" class="step-block">
-                <template v-if="urls.reorder_steps_url">
-                  <div v-if="index > 0 && urls.add_step_url && urls.reorder_steps_url" class="insert-step" @click="addStep(index)" data-e2e="e2e-BT-protocol-templateSteps-insertStep">
-                    <i class="sn-icon sn-icon-new-task"></i>
-                    <span class="mr-3">{{ i18n.t("protocols.steps.add_step") }}</span>
-                  </div>
-                </template>
-                <template v-else-if="index > 0 && urls.add_step_url">
-                  <div class="insert-step disabled"  :data-sn-tooltip="i18n.t('protocols.action_disabled')">
-                    <i class="sn-icon sn-icon-new-task"></i>
-                    <span class="mr-3">{{ i18n.t("protocols.steps.add_step") }}</span>
-                  </div>
-                </template>
                 <Step
                   ref="steps"
                   :step.sync="steps[index]"
@@ -320,10 +313,11 @@
                   :reorderStepUrl="steps.length > 1 ? urls.reorder_steps_url : null"
                   :assignableMyModuleId="protocol.attributes.assignable_my_module_id"
                 />
-                <div v-if="(index === steps.length - 1) && urls.add_step_url" class="insert-step" @click="addStep(index + 1)" data-e2e="e2e-BT-protocol-templateSteps-insertStep">
-                  <i class="sn-icon sn-icon-new-task"></i>
-                  <span class="mr-3">{{ i18n.t("protocols.steps.add_step") }}</span>
-                </div>
+                <AddStepButton
+                  v-if="urls.add_step_url || addingStepsLocked"
+                  :disabled="!canInsertStepAfter(index)"
+                  @add="addStep(index + 1)"
+                />
               </div>
               <div v-if="steps.length > 0 && urls.add_step_url && inRepository" class="py-5">
                 <a
@@ -396,6 +390,7 @@ import StepCollapseState from './mixins/step_collapse_state.js';
 import axios from '../../packs/custom_axios.js';
 import { protocol_filter_global_activities_path } from '../../routes.js';
 import LockedTag from '../shared/snippets/locked_tag.vue';
+import AddStepButton from './add_step_button.vue';
 
 export default {
   name: 'ProtocolContainer',
@@ -408,7 +403,7 @@ export default {
   components: {
     Step, InlineEdit, ProtocolOptions, Tinymce,
     ReorderableItemsModal, ProtocolMetadata, clipboardPasteModal,
-    AssignedItemsModal, ManageStepsModal, LockedTag
+    AssignedItemsModal, ManageStepsModal, LockedTag, AddStepButton
   },
   mixins: [UtilsMixin, stackableHeadersMixin, moduleNameObserver, AssetPasteMixin, tooltipMixin, StepCollapseState],
   computed: {
@@ -446,7 +441,8 @@ export default {
       anchorId: null,
       elementsLoaded: 0,
       attachmentsLoaded: 0,
-      loadingOverlay: false
+      loadingOverlay: false,
+      protocolCollapsed: false
     };
   },
   created() {
@@ -455,6 +451,8 @@ export default {
     this.loadingOverlay = true;
   },
   mounted() {
+    // Delegated, because #protocol-content renders after the protocol loads
+    $(this.$el).on('show.bs.collapse hide.bs.collapse', '#protocol-content', this.onProtocolCollapse);
     axios.get(this.protocolUrl).then((response) => {
       this.protocol = response.data.data;
       this.$nextTick(() => {
@@ -468,11 +466,23 @@ export default {
     })
   },
   beforeUnmount() {
+    $(this.$el).off('show.bs.collapse hide.bs.collapse', '#protocol-content', this.onProtocolCollapse);
     if (!this.inRepository) {
       window.removeEventListener('scroll', this.initStackableHeaders, false);
     }
   },
   methods: {
+    // Appending is always possible with add_step_url; inserting between steps also shifts
+    // positions, so it needs reorder_steps_url too
+    onProtocolCollapse(e) {
+      // Step bodies are collapses too, and their events bubble through #protocol-content
+      if (e.target.id !== 'protocol-content') return;
+      this.protocolCollapsed = e.type === 'hide';
+    },
+    canInsertStepAfter(index) {
+      if (this.addingStepsLocked || !this.urls.add_step_url) return false;
+      return index === this.steps.length - 1 || !!this.urls.reorder_steps_url;
+    },
     setStepRelationships(step, response) {
       step.attachments = [];
       step.relationships.assets.data.forEach((asset) => {

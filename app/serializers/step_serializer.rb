@@ -13,7 +13,8 @@ class StepSerializer < ActiveModel::Serializer
              :marvinjs_enabled, :marvinjs_context, :created_by, :created_at, :assets_order,
              :wopi_enabled, :wopi_context, :comments_count, :unseen_comments, :storage_limit,
              :type, :open_vector_editor_context, :collapsed, :my_module_id, :results, :protocol_id, :skipped_at,
-             :archived_by, :archived_on, :archived, :locked, :attachments_locked, :adding_items_allowed, :permissions, :elements
+             :archived_by, :archived_on, :archived, :locked, :attachments_locked, :adding_items_allowed, :permissions, :elements,
+             :status_timestamp
 
   def elements
     elements = if object.archived?
@@ -199,5 +200,18 @@ class StepSerializer < ActiveModel::Serializer
 
   def archived_on
     I18n.l(object.archived_on, format: :full) if object.archived_on.present?
+  end
+
+  # Completion and skipping aren't attributed to a user, so the last modifier is shown
+  def status_timestamp
+    user = (object.last_modified_by || object.user)&.full_name
+
+    if object.completed? && object.completed_on.present?
+      I18n.t('protocols.steps.completed_timestamp', date: I18n.l(object.completed_on, format: :full), user: user)
+    elsif object.skipped_at.present?
+      I18n.t('protocols.steps.skipped_timestamp', date: I18n.l(object.skipped_at, format: :full), user: user)
+    elsif object.updated_at > object.created_at
+      I18n.t('protocols.steps.modified_timestamp', date: I18n.l(object.updated_at, format: :full), user: user)
+    end
   end
 end

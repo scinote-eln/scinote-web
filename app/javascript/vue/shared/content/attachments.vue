@@ -1,11 +1,12 @@
 <template>
-  <div class="content__attachments pr-8"
+  <div class="content__attachments"
+    :class="card ? 'bg-sn-white rounded-lg pt-2 px-4 pb-4' : 'pr-8'"
     :id='"content__attachments-" + parent.id'
     :data-e2e="`e2e-CO-${dataE2e}-attachments`">
-    <div class="sci-divider my-6"></div>
+    <div class="sci-divider my-6" v-if="!card"></div>
     <div :class="{'!bg-sn-background-brittlebush p-4': archived}">
-      <div class="content__attachments-actions">
-        <div class="title">
+      <div class="content__attachments-actions" :class="{ 'h-10': card }">
+        <div class="title" :class="{ '!text-sm !leading-5 !font-semibold': card }">
           {{ i18n.t('protocols.steps.files', {count: attachments.length}) }}
         </div>
         <div class="flex items-center gap-2" v-if="parent.attributes.attachments_manageble && attachmentsReady">
@@ -27,7 +28,7 @@
           ></MenuDropdown>
         </div>
       </div>
-      <div class="attachments" :data-parent-id="parent.id">
+      <div class="attachments" :class="{ '!mt-4 !mb-0': card }" :data-parent-id="parent.id">
         <component
           v-for="(attachment, index) in attachmentsOrdered"
           :key="`${attachment.id}-${attachment.attributes.checksum}`"
@@ -69,6 +70,11 @@ export default {
     parent: {
       type: Object,
       required: true
+    },
+    // Step layout: a white card with its own padding, no divider or right gutter (Results use the default)
+    card: {
+      type: Boolean,
+      default: false
     },
     attachmentsReady: {
       type: Boolean,

@@ -1,244 +1,137 @@
 <template>
-  <div ref="stepContainer" class="step-container pr-8"
+  <div ref="stepContainer"
+       class="step-container flex flex-col gap-4 p-4 rounded-lg bg-sn-white"
        :id="`stepContainer${step.id}`"
-       @drop.prevent="dropFile"
-       @dragenter.prevent="dragEnter($event)"
-       @dragover.prevent
        :data-id="step.id"
        :class="{ 'draging-file': dragingFile, 'editing-name': editingName, 'locked': !urls.update_url, 'pointer-events-none': addingContent }"
        :data-e2e="`e2e-CO-protocol-step${step.id}`"
+       @drop.prevent="dropFile"
+       @dragenter.prevent="dragEnter($event)"
+       @dragover.prevent
   >
     <div class="drop-message" @dragleave.prevent="!showFileModal ? dragingFile = false : null">
-      {{ this.i18n.t('protocols.steps.drop_message', { position: step.attributes.position + 1 }) }}
+      {{ i18n.t('protocols.steps.drop_message', { position: step.attributes.position + 1 }) }}
       <StorageUsage v-if="showStorageUsage()" :parent="step"/>
     </div>
-    <div class="step-header">
-      <div class="step-element-header" :class="{ 'no-hover': !urls.update_url }">
-        <div class="flex items-center gap-4 py-0.5 border-0 border-y border-transparent border-solid">
-          <a ref="toggleElement" class="step-collapse-link hover:no-underline focus:no-underline self-start"
-            :href="'#stepBody' + step.id"
-            data-toggle="collapse"
-            data-remote="true"
-            @click="toggleCollapsed"
-            :data-e2e="`e2e-BT-protocol-step${step.id}-toggleCollapsed`">
-              <span class="sn-icon sn-icon-right "></span>
-          </a>
-          <div v-if="!inRepository" class="flex flex-col gap-1">
-            <div class="flex items-center justify-center cursor-pointer
-                        hover:text-sn-alert-green-disabled"
-                 :class="[step.attributes.completed ? 'text-sn-alert-green' : 'text-sn-grey-700', { 'step-element--locked': !urls.state_url }]"
-                 @click="changeState"
-                 ref="completeState"
-                 @keyup.enter="changeState"
-                 tabindex="0"
-                 :data-sn-tooltip="completeStateTooltip"
-                 :data-e2e="`e2e-BT-protocol-step${step.id}-toggleCompleted`">
-              <i :class="['sn-icon', step.attributes.completed ? 'sn-icon-task-status-completed' : 'sn-icon-task-status-uncompleted']"></i>
-            </div>
-            <div class="flex items-center justify-center cursor-pointer"
-                 :class="[
-                   step.attributes.skipped_at ? 'text-sn-science-blue hover:text-sn-blue-click' : 'text-sn-grey-700 hover:text-sn-science-blue',
-                   { 'step-element--locked': !urls.skip_url }
-                 ]"
-                 ref="skipState"
-                 @click="changeSkipped"
-                 @keyup.enter="changeSkipped"
-                 tabindex="0"
-                 :data-sn-tooltip="skipStateTooltip"
-                 data-e2e="e2e-BT-protocol-toggleSkipped"
-            >
-              <i :class="['sn-icon', step.attributes.skipped_at ? 'sn-icon-skip-fill' : 'sn-icon-skip-outline']" :data-e2e="`e2e-BT-protocol-step${step.id}-toggleSkipped`"></i>
-            </div>
-          </div>
-          <div class="step-position leading-5 self-start" :data-e2e="`e2e-TX-protocol-step${step.id}-position`">
-            {{ step.attributes.position + 1 }}.
-          </div>
-        </div>
-        <div class="step-name-container basis-[calc(100%_-_100px)]" :class="{'step-element--locked': !urls.update_url, 'opacity-30': step.attributes.skipped_at}">
-          <InlineEdit
-            :value="step.attributes.name"
-            :class="{ 'step-element--locked': !urls.update_url }"
-            :characterLimit="255"
-            :allowBlank="false"
-            :attributeName="`${this.i18n.t('Step')} ${this.i18n.t('name')}`"
-            :autofocus="editingName"
-            :singleLine="false"
-            :timestamp="this.i18n.t('protocols.steps.timestamp', { date: step.attributes.created_at, user: step.attributes.created_by })"
-            :placeholder="this.i18n.t('protocols.steps.placeholder')"
-            :defaultValue="this.i18n.t('protocols.steps.default_name')"
-            @editingEnabled="editingName = true"
-            @editingDisabled="editingName = false"
-            :editOnload="step.newStep == true"
-            :dataE2e="`protocol-step${step.id}-title`"
-            @update="updateName"
+
+    <!-- Outside the body, so the File tile and Insert menu both reach them whatever the layout -->
+    <input type="file" class="hidden" ref="fileSelector" @change="loadFromComputer" multiple />
+    <span
+      class="new-marvinjs-upload-button hidden"
+      :data-object-id="step.id"
+      ref="marvinJsButton"
+      :data-marvin-url="step.attributes.marvinjs_context?.marvin_js_asset_url"
+      :data-object-type="step.attributes.type"
+      tabindex="0"
+    ></span> <!-- Hidden element to support legacy code -->
+
+    <StepHeader
+      :step="step"
+      :inRepository="inRepository"
+      :isCollapsed="isCollapsed"
+      :editingName="editingName"
+      @toggle-complete="changeState"
+      @toggle-skip="changeSkipped"
+      @toggle-collapse="toggleBody"
+      @update-name="updateName"
+      @editing="editingName = $event"
+    />
+
+    <div class="collapse in" :id="'stepBody' + step.id">
+      <div class="flex items-start gap-6 rounded-xl bg-sn-super-light-grey" :class="isEmpty ? 'p-6' : 'p-4'">
+        <div class="flex flex-col gap-6 grow min-w-0">
+          <StepEmptyState
+            v-if="isEmpty"
+            :stepId="step.id"
+            :contentTypes="contentTypes"
+            @insert="insertContent"
           />
-        </div>
-      </div>
-      <div class="elements-actions-container mt-[-5px]">
-        <input type="file" class="hidden" ref="fileSelector" @change="loadFromComputer" multiple />
-        <LockedTag v-if="step.attributes.locked" />
-        <MenuDropdown
-          :listItems="this.insertMenu"
-          :btnText="this.i18n.t('protocols.steps.insert.button')"
-          :position="'right'"
-          :caret="true"
-          :dataE2e="`e2e-DD-protocol-step${step.id}-insertContent`"
-          :disableOverflow="true"
-          @create:custom_well_plate="openCustomWellPlateModal"
-          @create:table="(...args) => this.createElement('table', ...args)"
-          @create:checklist="createElement('checklist')"
-          @create:text="createElement('text')"
-          @create:form="openFormSelectModal = true"
-          @create:file="openLoadFromComputer"
-          @create:wopi_file="openWopiFileModal"
-          @create:ove_file="openOVEditor"
-          @create:marvinjs_file="openMarvinJsModal($refs.marvinJsButton)"
-        ></MenuDropdown>
-        <span
-          class="new-marvinjs-upload-button hidden"
-          :data-object-id="step.id"
-          ref="marvinJsButton"
-          :data-marvin-url="step.attributes.marvinjs_context?.marvin_js_asset_url"
-          :data-object-type="step.attributes.type"
-          tabindex="0"
-        ></span> <!-- Hidden element to support legacy code -->
-        <template v-if="step.attributes.results.length == 0">
-          <button ref="linkButton" v-if="permissions.can_link_results" :data-sn-tooltip="i18n.t('protocols.steps.link_results')" class="btn btn-light icon-btn" @click="this.openLinkResultsModal = true">
-            <i class="sn-icon sn-icon-results"></i>
-          </button>
-        </template>
-        <GeneralDropdown v-else ref="linkedResultsDropdown"  position="right">
-          <template v-slot:field>
-            <button ref="linkButton" class="btn btn-light icon-btn" :data-sn-tooltip="i18n.t('protocols.steps.linked_results')">
-              <i class="sn-icon sn-icon-results"></i>
-              <span class="absolute top-1 right-1 h-4 min-w-4 bg-sn-science-blue text-white flex items-center justify-center rounded-full text-[10px]">
-                {{ step.attributes.results.length }}
-              </span>
-            </button>
-          </template>
-          <template v-slot:flyout>
-            <div class="overflow-y-auto max-h-[calc(50vh_-_6rem)]">
-              <a v-for="result in step.attributes.results"
-                :key="result.id"
-                :data-sn-tooltip="result.name"
-                :href="resultUrl(result.id, result.archived)"
-                class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer hover:no-underline text-sn-blue truncate flex items-center gap-2"
-              >
-                <i v-if="result.archived" class="sn-icon sn-icon-archived"></i>
-                {{ result.name }}
-              </a>
+          <template v-else>
+            <MenuDropdown
+              v-if="insertMenu.length > 0"
+              class="self-start"
+              :listItems="insertMenu"
+              :btnText="i18n.t('protocols.steps.insert.button')"
+              :btnClasses="'btn btn-light btn-lg hover:!bg-sn-light-grey'"
+              :position="'left'"
+              :caret="true"
+              :dataE2e="`e2e-DD-protocol-step${step.id}-insertContent`"
+              :disableOverflow="true"
+              @dtEvent="(action, item) => insertContent(action, item.params)"
+            />
+            <component
+              v-for="(element, index) in orderedElements"
+              :ref="'stepComponent'"
+              :is="elements[index].type"
+              :key="`${element.id}-${element.type}`"
+              class="step-element"
+              :element.sync="elements[index]"
+              :card="true"
+              :inRepository="inRepository"
+              :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
+              :assignableMyModuleId="assignableMyModuleId"
+              :isNew="element.isNew"
+              :dataE2e="`protocol-step${step.id}`"
+              e2eClass="protocol-step"
+              @component:adding-content="($event) => addingContent = $event"
+              @component:delete="removeElement"
+              @component:archive="removeElement"
+              @component:restore="removeElement"
+              @update="updateElement"
+              @reorder="openReorderModal"
+              @component:insert="insertElement"
+              @moved="moveElement"
+            />
+            <Attachments v-if="attachments.length"
+                         class="step-element"
+                         :card="true"
+                         :parent="step"
+                         :attachments="attachments"
+                         :attachmentsReady="attachmentsReady"
+                         :dataE2e="`protocol-step${step.id}`"
+                         e2eClass="protocol-step"
+                         @attachments:openFileModal="showFileModal = true"
+                         @attachment:deleted="attachmentDeleted"
+                         @attachment:update="updateAttachment"
+                         @attachment:uploaded="loadAttachments"
+                         @attachments:order="changeAttachmentsOrder"
+                         @attachment:moved="moveAttachment"
+                         @attachments:viewMode="changeAttachmentsViewMode"
+                         @attachment:viewMode="updateAttachmentViewMode"/>
+            <div v-if="!inRepository && (urls.state_url || urls.skip_url)" class="flex flex-wrap gap-2 pt-4">
+              <button v-if="urls.state_url"
+                      type="button"
+                      class="btn btn-light btn-lg hover:!bg-sn-light-grey"
+                      :data-e2e="`e2e-BT-protocol-step${step.id}-markAsDone`"
+                      @click="changeState">
+                <i :class="['sn-icon', step.attributes.completed ? 'sn-icon-task-status-completed' : 'sn-icon-alert-success']"></i>
+                {{ step.attributes.completed ? i18n.t('protocols.steps.status.mark_as_not_done') : i18n.t('protocols.steps.status.mark_as_done') }}
+              </button>
+              <button v-if="urls.skip_url"
+                      type="button"
+                      class="btn btn-light btn-lg hover:!bg-sn-light-grey"
+                      :data-e2e="`e2e-BT-protocol-step${step.id}-skipStep`"
+                      @click="changeSkipped">
+                <i :class="['sn-icon', step.attributes.skipped_at ? 'sn-icon-skip-fill' : 'sn-icon-skip-outline']"></i>
+                {{ step.attributes.skipped_at ? i18n.t('protocols.steps.status.unskip') : i18n.t('protocols.steps.status.skip') }}
+              </button>
             </div>
-            <template v-if="permissions.can_link_results">
-              <hr class="my-0">
-              <div class="py-2.5 px-3 hover:bg-sn-super-light-grey cursor-pointer text-sn-blue"
-                  @click="this.openLinkResultsModal = true; $refs.linkedResultsDropdown.closeMenu()">
-                {{ i18n.t('protocols.steps.manage_links') }}
-              </div>
-            </template>
           </template>
-        </GeneralDropdown>
-        <a href=" #"
-           v-if="!inRepository"
-           ref="comments"
-           class="open-comments-sidebar btn icon-btn btn-light"
-           data-turbolinks="false"
-           data-object-type="Step"
-           :data-sn-tooltip="i18n.t('protocols.steps.comments')"
-           @click="openCommentsSidebar"
-           :data-object-id="step.id">
-          <i class="sn-icon sn-icon-comments"></i>
-          <span class="comments-counter"
-                :id="`comment-count-${step.id}`"
-                :class="{'unseen': step.attributes.unseen_comments, 'hidden': !step.attributes.comments_count}"
-          >
-            {{ step.attributes.comments_count }}
-          </span>
-        </a>
-        <a v-if="this.step.attributes.urls.lock_url && !this.step.attributes.locked"
-          class="btn btn-light icon-btn e2e-BT-protocol-step-stepOptions-manage"
-          data-toggle="modal"
-          :data-e2e="`e2e-BT-protocol-step${this.step.id}-stepOptions-manage`"
-          :data-sn-tooltip="i18n.t('protocols.steps.manage_content')"
-          @click="openReorderModal()"
-          @keyup.enter="openReorderModal()"
-          tabindex="0">
-          <i class="sn-icon sn-icon-steps-manage" aria-hidden="true"></i>
-        </a>
-        <a v-else-if="this.urls.reorder_elements_url && !this.step.attributes.locked && this.elements.length > 1"
-          class="btn btn-light icon-btn e2e-BT-protocol-step-stepOptions-reorder"
-          data-toggle="modal"
-          :data-e2e="`e2e-BT-protocol-step${this.step.id}-stepOptions-reorder`"
-          :data-sn-tooltip="i18n.t('protocols.steps.rearrange_content')"
-          @click="openReorderModal()"
-          @keyup.enter="openReorderModal"
-          tabindex="0" >
-          <i class="sn-icon sn-icon-sort" aria-hidden="true"></i>
-        </a>
-        <MenuDropdown
-          v-if="!(step.attributes.locked && !inRepository)"
-          :listItems="this.actionsMenu"
-          :btnClasses="'btn btn-light icon-btn'"
-          :position="'right'"
-          :btnIcon="'sn-icon sn-icon-more-hori'"
-          :dataE2e="`e2e-DD-protocol-step${step.id}-options`"
+        </div>
+        <StepRail
+          :step="step"
+          :inRepository="inRepository"
+          :addingStepsLocked="addingStepsLocked"
+          :empty="isEmpty"
+          :elementsCount="elements.length"
+          :resultUrl="resultUrl"
           @duplicate="duplicateStep"
           @archive="showArchiveModal"
           @delete="showDeleteModal"
-        ></MenuDropdown>
-      </div>
-    </div>
-    <div class="collapse in" :id="'stepBody' + step.id">
-      <div class="step-elements">
-        <component
-          v-for="(element, index) in orderedElements"
-          :ref="'stepComponent'"
-          :is="elements[index].type"
-          :key="`${element.id}-${element.type}`"
-          class="step-element"
-          :element.sync="elements[index]"
-          :inRepository="inRepository"
-          :reorderElementUrl="elements.length > 1 ? urls.reorder_elements_url : ''"
-          :assignableMyModuleId="assignableMyModuleId"
-          :isNew="element.isNew"
-          :dataE2e="`protocol-step${step.id}`"
-          e2eClass="protocol-step"
-          @component:adding-content="($event) => addingContent = $event"
-          @component:delete="removeElement"
-          @component:archive="removeElement"
-          @component:restore="removeElement"
-          @update="updateElement"
           @reorder="openReorderModal"
-          @component:insert="insertElement"
-          @moved="moveElement"
+          @link-results="openLinkResultsModal = true"
         />
-        <Attachments v-if="attachments.length"
-                    :parent="step"
-                    :attachments="attachments"
-                    :attachmentsReady="attachmentsReady"
-                    :dataE2e="`protocol-step${step.id}`"
-                    e2eClass="protocol-step"
-                    @attachments:openFileModal="showFileModal = true"
-                    @attachment:deleted="attachmentDeleted"
-                    @attachment:update="updateAttachment"
-                    @attachment:uploaded="loadAttachments"
-                    @attachments:order="changeAttachmentsOrder"
-                    @attachment:moved="moveAttachment"
-                    @attachments:viewMode="changeAttachmentsViewMode"
-                    @attachment:viewMode="updateAttachmentViewMode"/>
       </div>
-      <ContentToolbar
-        v-if="orderedElements.length > 2 && insertMenu.length > 0"
-        :insertMenu="insertMenu"
-        @create:custom_well_plate="openCustomWellPlateModal"
-        @create:table="(...args) => this.createElement('table', ...args)"
-        @create:checklist="createElement('checklist')"
-        @create:text="createElement('text')"
-        @create:form="openFormSelectModal = true"
-        @create:file="openLoadFromComputer"
-        @create:wopi_file="openWopiFileModal"
-        @create:ove_file="openOVEditor"
-        @create:marvinjs_file="openMarvinJsModal($refs.marvinJsButton)"
-      ></ContentToolbar>
     </div>
 
     <deleteStepModal v-if="confirmingDelete" @confirm="deleteStep" @cancel="closeDeleteModal"/>
@@ -268,7 +161,7 @@
 
     <CustomWellPlateModal v-if="customWellPlate"
       @cancel="closeCustomWellPlateModal"
-      @create:table="(...args) => this.createElement('table', ...args)"
+      @create:table="(...args) => createElement('table', ...args)"
     />
 
     <SelectFormModal
@@ -287,605 +180,427 @@
   </div>
 </template>
 
- <script>
-  const ICON_MAP = {
-    'Checklist': 'fa-list-ul',
-    'StepText': 'fa-font',
-    'StepTable': 'fa-table'
-  }
+<script>
+import Table from '../shared/content/table.vue';
+import StepText from '../shared/content/text.vue';
+import Checklist from '../shared/content/checklist.vue';
+import FormResponse from '../shared/content/form_response.vue';
+import Attachments from '../shared/content/attachments.vue';
+import deleteStepModal from './modals/delete_step.vue';
+import archiveStepModal from './modals/archive_step.vue';
+import LinkResultsModal from './modals/link_results.vue';
+import ReorderableItemsModal from '../shared/reorderable_items_modal.vue';
+import ManageItemsModal from '../shared/manage_items_modal.vue';
+import MenuDropdown from '../shared/menu_dropdown.vue';
+import CustomWellPlateModal from '../shared/content/modal/custom_well_plate_modal.vue';
+import SelectFormModal from '../shared/content/modal/form_select.vue';
+import StorageUsage from '../shared/content/attachments/storage_usage.vue';
+import StepHeader from './step/step_header.vue';
+import StepRail from './step/step_rail.vue';
+import StepEmptyState from './step/step_empty_state.vue';
 
-  import InlineEdit from '../shared/inline_edit.vue'
-  import Table from '../shared/content/table.vue'
-  import StepText from '../shared/content/text.vue'
-  import Checklist from '../shared/content/checklist.vue'
-  import FormResponse from '../shared/content/form_response.vue'
-  import deleteStepModal from './modals/delete_step.vue'
-  import archiveStepModal from './modals/archive_step.vue'
-  import LinkResultsModal from './modals/link_results.vue'
-  import Attachments from '../shared/content/attachments.vue'
-  import ReorderableItemsModal from '../shared/reorderable_items_modal.vue'
-  import ManageItemsModal from '../shared/manage_items_modal.vue'
-  import MenuDropdown from '../shared/menu_dropdown.vue'
-  import GeneralDropdown from '../shared/general_dropdown.vue'
-  import ContentToolbar from '../shared/content/content_toolbar.vue'
-  import CustomWellPlateModal from '../shared/content/modal/custom_well_plate_modal.vue'
-  import LockedTag from '../shared/snippets/locked_tag.vue'
+import UtilsMixin from '../mixins/utils.js';
+import AttachmentsMixin from '../shared/content/mixins/attachments.js';
+import WopiFileModal from '../shared/content/attachments/mixins/wopi_file_modal.js';
+import OveMixin from '../shared/content/attachments/mixins/ove.js';
+import tooltipMixin from '../mixins/tooltipMixin.js';
+import StepCommonMixin from './mixins/step_common.js';
+import ContentTypesMixin from './step/content_types.js';
+import axios from '../../packs/custom_axios';
 
-  import UtilsMixin from '../mixins/utils.js'
-  import AttachmentsMixin from '../shared/content/mixins/attachments.js'
-  import WopiFileModal from '../shared/content/attachments/mixins/wopi_file_modal.js'
-  import SelectFormModal from '../shared/content/modal/form_select.vue'
-  import OveMixin from '../shared/content/attachments/mixins/ove.js'
-  import StorageUsage from '../shared/content/attachments/storage_usage.vue'
-  import axios from '../../packs/custom_axios';
-  import tooltipMixin from '../mixins/tooltipMixin.js';
-  import StepCommonMixin from './mixins/step_common.js';
-
-  export default {
-    name: 'StepContainer',
-    props: {
-      addingStepsLocked: {
-        type: Boolean,
-        required: true
-      },
-      step: {
-        type: Object,
-        required: true
-      },
-      inRepository: {
-        type: Boolean,
-        required: true
-      },
-      reorderStepUrl: {
-        required: false
-      },
-      assignableMyModuleId: {
-        type: Number,
-        required: false
-      },
-      stepToReload: {
-        type: Number,
-        required: false
-      },
-      activeDragStep: {
-        required: false
+export default {
+  name: 'StepContainer',
+  props: {
+    addingStepsLocked: {
+      type: Boolean,
+      required: true
+    },
+    step: {
+      type: Object,
+      required: true
+    },
+    inRepository: {
+      type: Boolean,
+      required: true
+    },
+    reorderStepUrl: {
+      required: false
+    },
+    assignableMyModuleId: {
+      type: Number,
+      required: false
+    },
+    stepToReload: {
+      type: Number,
+      required: false
+    },
+    activeDragStep: {
+      required: false
+    }
+  },
+  data() {
+    return {
+      confirmingArchive: false,
+      addingContent: false,
+      showFileModal: false,
+      dragingFile: false,
+      reordering: false,
+      editingName: false,
+      customWellPlate: false,
+      openFormSelectModal: false,
+      openLinkResultsModal: false
+    };
+  },
+  mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin, tooltipMixin, StepCommonMixin, ContentTypesMixin],
+  components: {
+    Table,
+    StepText,
+    Checklist,
+    FormResponse,
+    Attachments,
+    deleteStepModal,
+    archiveStepModal,
+    LinkResultsModal,
+    ReorderableItemsModal,
+    ManageItemsModal,
+    MenuDropdown,
+    CustomWellPlateModal,
+    SelectFormModal,
+    StorageUsage,
+    StepHeader,
+    StepRail,
+    StepEmptyState
+  },
+  watch: {
+    step() {
+      this.elements = this.step.elements;
+      this.attachments = this.step.attachments;
+    },
+    stepToReload() {
+      if (this.stepToReload == this.step.id) {
+        this.loadElements();
+        this.loadAttachments();
       }
     },
-    data() {
-      return {
-        confirmingArchive: false,
-        addingContent: false,
-        showFileModal: false,
-        showCommentsSidebar: false,
-        dragingFile: false,
-        reordering: false,
-        editingName: false,
-        inlineEditError: null,
-        customWellPlate: false,
-        openFormSelectModal: false,
-        openLinkResultsModal: false,
-        wellPlateOptions: [
-          { text: I18n.t('protocols.steps.insert.well_plate_options.custom'),
-            emit: 'create:custom_well_plate',
-            data_e2e: `e2e-BT-protocol-step${this.step.id}-customWellPlate` },
-          { text: I18n.t('protocols.steps.insert.well_plate_options.32_x_48'),
-            emit: 'create:table',
-            params: [32, 48],
-            data_e2e: `e2e-BT-protocol-step${this.step.id}-insertWellPlate-32` },
-          { text: I18n.t('protocols.steps.insert.well_plate_options.16_x_24'),
-            emit: 'create:table',
-            params: [16, 24],
-            data_e2e: `e2e-BT-protocol-step${this.step.id}-insertWellPlate-16` },
-          { text: I18n.t('protocols.steps.insert.well_plate_options.8_x_12'),
-            emit: 'create:table',
-            params: [8, 12],
-            data_e2e: `e2e-BT-protocol-step${this.step.id}-insertWellPlate-8` },
-          { text: I18n.t('protocols.steps.insert.well_plate_options.6_x_8'),
-            emit: 'create:table',
-            params: [6, 8],
-            data_e2e: `e2e-BT-protocol-step${this.step.id}-insertWellPlate-6` },
-          { text: I18n.t('protocols.steps.insert.well_plate_options.4_x_6'),
-            emit: 'create:table',
-            params: [4, 6],
-            data_e2e: `e2e-BT-protocol-step${this.step.id}-insertWellPlate-4` },
-          { text: I18n.t('protocols.steps.insert.well_plate_options.3_x_4'),
-            emit: 'create:table',
-            params: [3, 4],
-            data_e2e: `e2e-BT-protocol-step${this.step.id}-insertWellPlate-3` },
-          { text: I18n.t('protocols.steps.insert.well_plate_options.2_x_3'),
-            emit: 'create:table',
-            params: [2, 3],
-            data_e2e: `e2e-BT-protocol-step${this.step.id}-insertWellPlate-2` }
-        ]
-      }
-    },
-    mixins: [UtilsMixin, AttachmentsMixin, WopiFileModal, OveMixin, tooltipMixin, StepCommonMixin],
-    components: {
-      InlineEdit,
-      Table,
-      StepText,
-      Checklist,
-      deleteStepModal,
-      Attachments,
-      StorageUsage,
-      ReorderableItemsModal,
-      MenuDropdown,
-      ContentToolbar,
-      CustomWellPlateModal,
-      SelectFormModal,
-      FormResponse,
-      LinkResultsModal,
-      GeneralDropdown,
-      archiveStepModal,
-      ManageItemsModal,
-      LockedTag
-    },
-    watch: {
-      step() {
-        this.elements = this.step.elements;
-        this.attachments = this.step.attachments;
-      },
-      stepToReload() {
-        if (this.stepToReload == this.step.id) {
-          this.loadElements();
-          this.loadAttachments();
-        }
-      },
-      activeDragStep() {
-        if (this.activeDragStep != this.step.id && this.dragingFile) {
-          this.dragingFile = false;
-        }
-      }
-    },
-    mounted() {
-      $(this.$refs.comments).data('closeCallback', this.closeCommentsSidebar);
-      $(this.$refs.comments).data('openCallback', this.closeCommentsSidebar);
-      $(this.$refs.actionsDropdownButton).on('shown.bs.dropdown hidden.bs.dropdown', () => {
-        this.handleDropdownPosition(this.$refs.actionsDropdownButton, this.$refs.actionsDropdown)
-      });
-      $(this.$refs.elementsDropdownButton).on('shown.bs.dropdown hidden.bs.dropdown', () => {
-        this.handleDropdownPosition(this.$refs.elementsDropdownButton, this.$refs.elementsDropdown)
-      });
-    },
-    computed: {
-      reorderableElements() {
-        return this.orderedElements.map((e) => { return { id: e.id, attributes: e } })
-      },
-      orderedElements() {
-        return this.elements.sort((a, b) => (a.position) - (b.position));
-      },
-      urls() {
-        return this.step.attributes.urls || {}
-      },
-      permissions() {
-        return this.step.attributes.permissions || {}
-      },
-      cantUploadFiles() {
-        return !this.inRepository && (this.step.attributes.attachments_locked || this.step.attributes.locked);
-      },
-      completeStateTooltip() {
-        return this.step.attributes.completed
-          ? this.i18n.t('protocols.steps.status.uncomplete')
-          : this.i18n.t('protocols.steps.status.complete');
-      },
-      skipStateTooltip() {
-        return this.step.attributes.skipped_at
-          ? this.i18n.t('protocols.steps.status.unskip')
-          : this.i18n.t('protocols.steps.status.skip');
-      },
-      filesMenu() {
-        let menu = [];
-        if (this.urls.upload_attachment_url) {
-          menu = menu.concat([{
-            text: this.i18n.t('protocols.steps.insert.add_file'),
-            emit: 'create:file',
-            data_e2e: `e2e-BT-protocol-step${this.step.id}-insertAttachment-file`
-          }]);
-        }
-        if (this.step.attributes.wopi_enabled) {
-          menu = menu.concat([{
-            text: this.i18n.t('assets.create_wopi_file.button_text'),
-            emit: 'create:wopi_file',
-            data_e2e: `e2e-BT-protocol-step${this.step.id}-insertAttachment-wopi`
-          }]);
-        }
-        if (this.step.attributes.open_vector_editor_context.new_sequence_asset_url) {
-          menu = menu.concat([{
-            text: this.i18n.t('open_vector_editor.new_sequence_file'),
-            emit: 'create:ove_file',
-            data_e2e: `e2e-BT-protocol-step${this.step.id}-insertAttachment-sequence`
-          }]);
-        }
-        if (this.step.attributes.marvinjs_enabled) {
-          menu = menu.concat([{
-            text: this.i18n.t('marvinjs.new_button'),
-            emit: 'create:marvinjs_file',
-            data_e2e: `e2e-BT-protocol-step${this.step.id}-insertAttachment-chemicalDrawing`
-          }]);
-        }
-        return menu;
-      },
-      insertMenu() {
-        let menu = [];
-        if (this.urls.update_url) {
-          menu = menu.concat([{
-                    text: this.i18n.t('protocols.steps.insert.text'),
-                    icon: 'sn-icon sn-icon-result-text',
-                    emit: 'create:text',
-                    data_e2e: `e2e-BT-protocol-step${this.step.id}-insertText`
-                  },{
-                    text: this.i18n.t('protocols.steps.insert.attachment'),
-                    submenu: this.filesMenu,
-                    position: 'left',
-                    disabled: this.cantUploadFiles,
-                    title: this.cantUploadFiles ? this.i18n.t('protocols.action_disabled') : '',
-                    icon: 'sn-icon sn-icon-file',
-                    data_e2e: `e2e-BT-protocol-step${this.step.id}-insertAttachment`
-                  },{
-                    text: this.i18n.t('protocols.steps.insert.table'),
-                    icon: 'sn-icon sn-icon-tables',
-                    emit: 'create:table',
-                    data_e2e: `e2e-BT-protocol-step${this.step.id}-insertTable`
-                  },{
-                    text: this.i18n.t('protocols.steps.insert.well_plate'),
-                    submenu: this.wellPlateOptions,
-                    icon: 'sn-icon sn-icon-tables',
-                    position: 'left',
-                    data_e2e: `e2e-BT-protocol-step${this.step.id}-insertWellplate`
-                  },{
-                    text: this.i18n.t('protocols.steps.insert.checklist'),
-                    emit: 'create:checklist',
-                    icon: 'sn-icon sn-icon-checkllist',
-                    data_e2e: `e2e-BT-protocol-step${this.step.id}-insertChecklist`
-                  }]);
-        }
-
-        if (this.urls.create_form_response_url) {
-          menu = menu.concat([{
-                   text: this.i18n.t('protocols.steps.insert.form'),
-                   emit: 'create:form',
-                   icon: 'sn-icon sn-icon-forms',
-                   data_e2e: `e2e-BT-protocol-step${this.step.id}-insertForm`
-                 }]);
-        }
-
-        return menu;
-      },
-      actionsMenu() {
-        let menu = [];
-        if (this.urls.duplicate_step_url) {
-          menu = menu.concat([{
-            text: this.i18n.t('protocols.steps.options_dropdown.duplicate'),
-            emit: 'duplicate',
-            disabled: this.addingStepsLocked,
-            title: this.addingStepsLocked ? this.i18n.t('protocols.action_disabled') : '',
-            data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-duplicate`,
-            e2e_class: 'e2e-BT-protocol-step-stepOptions-duplicate'
-          }]);
-        }
-        if (this.urls.delete_url) {
-          menu = menu.concat([{
-            text: this.i18n.t('protocols.steps.options_dropdown.delete'),
-            emit: 'delete',
-            data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-delete`,
-            e2e_class: 'e2e-BT-protocol-step-stepOptions-delete'
-          }]);
-        }
-
-        if (this.urls.archive_url) {
-          menu = menu.concat([{
-            text: this.i18n.t('protocols.steps.options_dropdown.archive'),
-            emit: 'archive',
-            disabled: this.addingStepsLocked,
-            title: this.addingStepsLocked ? this.i18n.t('protocols.action_disabled') : '',
-            data_e2e: `e2e-BT-protocol-step${this.step.id}-stepOptions-archive`,
-            e2e_class: 'e2e-BT-protocol-step-stepOptions-archive'
-          }]);
-        }
-        return menu;
-      }
-    },
-    methods: {
-      dragEnter(e) {
-        if (this.showFileModal ||
-            !this.urls.upload_attachment_url ||
-            this.cantUploadFiles) return;
-
-        // Detect if dragged element is a file
-        // https://stackoverflow.com/a/8494918
-        let dt = e.dataTransfer;
-        if (dt.types && (dt.types.indexOf ? dt.types.indexOf('Files') != -1 : dt.types.contains('Files'))) {
-          this.dragingFile = true;
-          this.$emit('step:drag_enter', this.step.id);
-        }
-      },
-      showStorageUsage() {
-        return (this.elements.length || this.attachments.length) && !this.isCollapsed && this.step.attributes.storage_limit;
-      },
-      showDeleteModal() {
-        this.confirmingDelete = true;
-      },
-      closeDeleteModal() {
-        this.confirmingDelete = false;
-      },
-      deleteStep() {
-        axios.delete(this.urls.delete_url).then((response) => {
-          this.$emit(
-            'step:delete',
-            response.data.data,
-            'delete'
-          );
-        }).catch(() => {
-          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
-        });
-      },
-      showArchiveModal() {
-        if (this.elements.some(e => e.type === 'Table')) {
-          this.confirmingArchive = true;
-        } else {
-          this.archiveStep();
-        }
-      },
-      closeArchiveModal() {
-        this.confirmingArchive = false;
-      },
-      archiveStep() {
-        axios.post(this.urls.archive_url).then((response) => {
-          this.$emit('step:archived', response.data.data, 'archive', this.step.attributes.position);
-        }).catch(() => {
-          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
-        });
-      },
-      clickToggleButton() {
-        this.$refs.toggleElement.click();
-      },
-      toggleAttachmentsLock() {
-        axios.patch(this.urls.update_url, {
-          step: {attachments_locked: !this.step.attributes.attachments_locked}
-        }).then((response) => {
-            this.$emit('step:update', {
-              position: this.step.attributes.position,
-              attachments_locked: response.data.data.attributes.attachments_locked
-            });
-            this.loadAttachments();
-        }).catch(() => {
-          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
-        });
-      },
-      changeState() {
-        if (!this.urls.state_url) return;
-
-        const currentSkipStatus = this.step.attributes.skipped_at;
-
-        this.step.attributes.completed = !this.step.attributes.completed;
-
-        if (this.step.attributes.skipped_at && this.isCollapsed) {
-          this.clickToggleButton();
-        }
-
-        this.step.attributes.skipped_at = null;
-        this.$emit('step:update', {
-          completed: this.step.attributes.completed,
-          position: this.step.attributes.position,
-          skipped_at: this.step.attributes.skipped_at
-        });
-        axios.post(this.urls.state_url, {completed: this.step.attributes.completed}).catch(() => {
-          this.step.attributes.completed = !this.step.attributes.completed;
-          this.step.attributes.skipped_at = currentSkipStatus;
-          this.$emit('step:update', {
-            completed: this.step.attributes.completed,
-            position: this.step.attributes.position,
-            skipped_at: this.step.attributes.skipped_at
-          });
-          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
-        });
-      },
-      changeSkipped() {
-        if (!this.urls.skip_url) return;
-
-        const currentCompleteStatus = this.step.attributes.completed;
-
-        this.step.attributes.skipped_at = !this.step.attributes.skipped_at;
-        this.step.attributes.completed = false;
-        this.$emit('step:update', {
-          completed: this.step.attributes.completed,
-          position: this.step.attributes.position,
-          skipped_at: this.step.attributes.skipped_at
-        });
-
-        if (this.step.attributes.skipped_at && !this.isCollapsed || !this.step.attributes.skipped_at && this.isCollapsed) {
-          this.clickToggleButton();
-        }
-
-        axios.post(this.urls.skip_url, {skipped: this.step.attributes.skipped_at}).catch(() => {
-          this.step.attributes.skipped_at = !this.step.attributes.skipped_at;
-          this.step.attributes.completed = currentCompleteStatus;
-          this.$emit('step:update', {
-            completed: this.step.attributes.completed,
-            position: this.step.attributes.position,
-            skipped_at: this.step.attributes.skipped_at
-          });
-          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
-        });
-      },
-      updateElement(element, skipRequest=false, callback) {
-        let index = this.elements.findIndex((e) => e.id === element.id && e.type === element.type);
-
-        if (!this.elements[index]) return;
-
-        element.isNew = false;
-
-        if (skipRequest || !element.urls?.update_url) {
-          this.elements.splice(index, 1, element);
-          this.$emit('stepUpdated');
-        } else {
-          axios.put(
-            element.urls.update_url,
-            element
-          ).then((result) => {
-              this.elements.splice(index, 1, result.data);
-              this.$emit('stepUpdated');
-
-              // optional callback after successful update
-              if(typeof callback === 'function') {
-                callback();
-              }
-          }).catch(() => {
-            HelperModule.flashAlertMsg(this.i18n.t('errors.general_saving_data'), 'danger');
-          })
-        }
-      },
-      updateElementOrder(orderedElements) {
-        orderedElements.forEach((element, position) => {
-          let index = this.elements.findIndex((e) => e.id === element.id && e.type === element.attributes.type);
-          this.elements[index].position = position;
-        });
-
-        let elementPositions =
-          {
-            step_orderable_element_positions: this.elements.map(
-              (element) => [element.step_orderable_element_id, element.position]
-            )
-          };
-
-        axios.post(this.urls.reorder_elements_url, elementPositions)
-          .then(() => this.$emit('stepUpdated'))
-          .catch(() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger'));
-      },
-      updateName(newName) {
-        axios.patch(this.urls.update_url, {step: {name: newName}}).then((response) => {
-          this.$emit('step:update', {
-            name: response.data.data.attributes.name,
-            position: this.step.attributes.position
-          })
-        }).catch((error) => {
-          HelperModule.flashAlertMsg(error.response?.data?.errors ? Object.values(error.response.data.errors).join(', ') : this.i18n.t('errors.general'), 'danger');
-        });
-      },
-      toggleItemLock(item) {
-        const url = item.attributes.locked ? item.attributes.urls.unlock_url : item.attributes.urls.lock_url;
-        axios.post(url).then(() => {
-          item.attributes.locked = !item.attributes.locked;
-        }).catch(() => {
-          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
-        });
-      },
-      createElement(elementType, tableDimensions = null, name = '', formId = null) {
-        let plateTemplate = tableDimensions != null;
-        tableDimensions ||= [5, 8];
-        axios.post(this.urls[`create_${elementType}_url`], { tableDimensions: tableDimensions, plateTemplate: plateTemplate, name: name, form_id: formId }).then((response) => {
-          const result = response.data;
-          result.isNew = true;
-          this.elements.push(result)
-
-          if (this.isCollapsed) {
-            this.clickToggleButton();
-          }
-          this.$emit('stepUpdated')
-
-          this.$parent.$nextTick(() => {
-            const children = this.$refs.stepContainer.querySelectorAll(".step-element");
-            const lastChild = children[children.length - 1];
-
-            lastChild.scrollIntoView(false)
-            window.scrollBy({
-              top: 200,
-              behavior: 'smooth'
-            });
-          })
-        }).catch(() => {
-          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
-        });
-      },
-      openCustomWellPlateModal() {
-        this.customWellPlate = true;
-      },
-      closeCustomWellPlateModal() {
-        this.customWellPlate = false;
-      },
-      openCommentsSidebar() {
-        $('.comments-sidebar .close-btn').click();
-        this.showCommentsSidebar = true
-      },
-      updateAttachment(attachment) {
-        const index = this.attachments.findIndex(a => a.id === attachment.id);
-        if (index !== -1) {
-          this.attachments[index] = attachment;
-          this.$emit('stepUpdated');
-        }
-      },
-      closeCommentsSidebar() {
-        this.showCommentsSidebar = false
-      },
-      openReorderModal() {
-        this.reordering = true;
-      },
-      closeReorderModal() {
-        this.reordering = false;
-      },
-      handleDropdownPosition(refButton, refDropdown) {
-        refButton.classList.toggle("dropup", !this.isInViewport(refDropdown));
-      },
-      isInViewport(el) {
-          let rect = el.getBoundingClientRect();
-
-          return (
-              rect.top >= 0 &&
-              rect.left >= 0 &&
-              rect.bottom <= (window.innerHeight || $(window).height()) &&
-              rect.right <= (window.innerWidth || $(window).width())
-          );
-      },
-      insertElement(element) {
-        let position = element.position;
-        this.elements = this.elements.map( s => {
-          if (s.position >= position) {
-              s.position += 1;
-          }
-          return s;
-        })
-        this.elements.push(element);
-        this.$emit('stepUpdated');
-      },
-      moveElement(position, target_id) {
-        this.elements.splice(position, 1)
-        let unorderedElements = this.elements.map( e => {
-          if (e.position >= position) {
-            e.position -= 1;
-          }
-          return e;
-        })
-        this.$emit('stepUpdated')
-        this.$emit('step:move_element', target_id)
-      },
-      moveAttachment(id, target_id) {
-        this.attachments = this.attachments.filter((a) => a.id !== id );
-        this.$emit('stepUpdated')
-        this.$emit('step:move_attachment', target_id)
-      },
-      duplicateStep() {
-        axios.post(this.urls.duplicate_step_url).then((response) => {
-          const result = response.data;
-          let step = result.data;
-          step.attachments = [];
-          result.included?.forEach((included) => {
-            if (included.type === 'assets') {
-              step.attachments.push(included);
-            }
-          });
-          step.elements = step.attributes.elements || [];
-          this.$emit('step:insert', result.data);
-          HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.step_duplicated'), 'success');
-        }).catch(() => {
-          HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.step_duplication_failed'), 'danger');
-        });
-      },
-      updateLinkedResults(results) {
-        this.$emit('step:update', {
-          results: results,
-          position: this.step.attributes.position
-        });
+    activeDragStep() {
+      if (this.activeDragStep != this.step.id && this.dragingFile) {
+        this.dragingFile = false;
       }
     }
+  },
+  computed: {
+    reorderableElements() {
+      return this.orderedElements.map((e) => ({ id: e.id, attributes: e }));
+    },
+    orderedElements() {
+      return this.elements.sort((a, b) => (a.position) - (b.position));
+    },
+    urls() {
+      return this.step.attributes.urls || {};
+    },
+    isEmpty() {
+      return this.elements.length === 0 && this.attachments.length === 0;
+    },
+    cantUploadFiles() {
+      return !this.inRepository && (this.step.attributes.attachments_locked || this.step.attributes.locked);
+    }
+  },
+  methods: {
+    // Runs an Insert-menu or empty-tile action (the emits from the content_types mixin)
+    insertContent(action, params) {
+      const actions = {
+        'create:text': () => this.createElement('text'),
+        'create:table': () => this.createElement('table', params),
+        'create:checklist': () => this.createElement('checklist'),
+        'create:form': () => { this.openFormSelectModal = true; },
+        'create:custom_well_plate': () => this.openCustomWellPlateModal(),
+        'create:file': () => this.openLoadFromComputer(),
+        'create:wopi_file': () => this.openWopiFileModal(),
+        'create:ove_file': () => this.openOVEditor(),
+        'create:marvinjs_file': () => this.openMarvinJsModal(this.$refs.marvinJsButton)
+      };
+      actions[action]?.();
+    },
+    // Bootstrap animates the body; isCollapsed drives the chevron and the saved setting
+    toggleBody() {
+      $(`#stepBody${this.step.id}`).collapse(this.isCollapsed ? 'show' : 'hide');
+      this.toggleCollapsed();
+    },
+    // Overrides the attachments mixin, which expects a $refs.toggleElement link
+    toggleCollapsedSection() {
+      if (this.isCollapsed) {
+        this.toggleBody();
+      }
+    },
+    dragEnter(e) {
+      if (this.showFileModal || !this.urls.upload_attachment_url || this.cantUploadFiles) return;
+
+      // Detect if dragged element is a file
+      // https://stackoverflow.com/a/8494918
+      const dt = e.dataTransfer;
+      if (dt.types && (dt.types.indexOf ? dt.types.indexOf('Files') != -1 : dt.types.contains('Files'))) {
+        this.dragingFile = true;
+        this.$emit('step:drag_enter', this.step.id);
+      }
+    },
+    showStorageUsage() {
+      return (this.elements.length || this.attachments.length) && !this.isCollapsed && this.step.attributes.storage_limit;
+    },
+    showDeleteModal() {
+      this.confirmingDelete = true;
+    },
+    closeDeleteModal() {
+      this.confirmingDelete = false;
+    },
+    deleteStep() {
+      axios.delete(this.urls.delete_url).then((response) => {
+        this.$emit('step:delete', response.data.data, 'delete');
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+      });
+    },
+    showArchiveModal() {
+      if (this.elements.some((e) => e.type === 'Table')) {
+        this.confirmingArchive = true;
+      } else {
+        this.archiveStep();
+      }
+    },
+    closeArchiveModal() {
+      this.confirmingArchive = false;
+    },
+    archiveStep() {
+      axios.post(this.urls.archive_url).then((response) => {
+        this.$emit('step:archived', response.data.data, 'archive', this.step.attributes.position);
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+      });
+    },
+    toggleAttachmentsLock() {
+      axios.patch(this.urls.update_url, {
+        step: { attachments_locked: !this.step.attributes.attachments_locked }
+      }).then((response) => {
+        this.$emit('step:update', {
+          position: this.step.attributes.position,
+          attachments_locked: response.data.data.attributes.attachments_locked
+        });
+        this.loadAttachments();
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+      });
+    },
+    emitStateUpdate(extra = {}) {
+      this.$emit('step:update', {
+        completed: this.step.attributes.completed,
+        position: this.step.attributes.position,
+        skipped_at: this.step.attributes.skipped_at,
+        ...extra
+      });
+    },
+    // Both toggle endpoints render StepSerializer, which carries the refreshed status timestamp
+    applyStatusTimestamp(response) {
+      this.emitStateUpdate({ status_timestamp: response.data.data.attributes.status_timestamp });
+    },
+    changeState() {
+      if (!this.urls.state_url) return;
+
+      const currentSkipStatus = this.step.attributes.skipped_at;
+
+      this.step.attributes.completed = !this.step.attributes.completed;
+
+      if (this.step.attributes.skipped_at && this.isCollapsed) {
+        this.toggleBody();
+      }
+
+      this.step.attributes.skipped_at = null;
+      this.emitStateUpdate();
+      axios.post(this.urls.state_url, { completed: this.step.attributes.completed })
+        .then(this.applyStatusTimestamp)
+        .catch(() => {
+          this.step.attributes.completed = !this.step.attributes.completed;
+          this.step.attributes.skipped_at = currentSkipStatus;
+          this.emitStateUpdate();
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+        });
+    },
+    changeSkipped() {
+      if (!this.urls.skip_url) return;
+
+      const currentCompleteStatus = this.step.attributes.completed;
+
+      this.step.attributes.skipped_at = !this.step.attributes.skipped_at;
+      this.step.attributes.completed = false;
+      this.emitStateUpdate();
+
+      if ((this.step.attributes.skipped_at && !this.isCollapsed) || (!this.step.attributes.skipped_at && this.isCollapsed)) {
+        this.toggleBody();
+      }
+
+      axios.post(this.urls.skip_url, { skipped: this.step.attributes.skipped_at })
+        .then(this.applyStatusTimestamp)
+        .catch(() => {
+          this.step.attributes.skipped_at = !this.step.attributes.skipped_at;
+          this.step.attributes.completed = currentCompleteStatus;
+          this.emitStateUpdate();
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+        });
+    },
+    updateElement(element, skipRequest = false, callback = null) {
+      const index = this.elements.findIndex((e) => e.id === element.id && e.type === element.type);
+
+      if (!this.elements[index]) return;
+
+      element.isNew = false;
+
+      if (skipRequest || !element.urls?.update_url) {
+        this.elements.splice(index, 1, element);
+        this.$emit('stepUpdated');
+      } else {
+        axios.put(element.urls.update_url, element).then((result) => {
+          this.elements.splice(index, 1, result.data);
+          this.$emit('stepUpdated');
+
+          // optional callback after successful update
+          if (typeof callback === 'function') {
+            callback();
+          }
+        }).catch(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general_saving_data'), 'danger');
+        });
+      }
+    },
+    updateElementOrder(orderedElements) {
+      orderedElements.forEach((element, position) => {
+        const index = this.elements.findIndex((e) => e.id === element.id && e.type === element.attributes.type);
+        this.elements[index].position = position;
+      });
+
+      const elementPositions = {
+        step_orderable_element_positions: this.elements.map(
+          (element) => [element.step_orderable_element_id, element.position]
+        )
+      };
+
+      axios.post(this.urls.reorder_elements_url, elementPositions)
+        .then(() => this.$emit('stepUpdated'))
+        .catch(() => HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger'));
+    },
+    updateName(newName) {
+      axios.patch(this.urls.update_url, { step: { name: newName } }).then((response) => {
+        this.$emit('step:update', {
+          name: response.data.data.attributes.name,
+          status_timestamp: response.data.data.attributes.status_timestamp,
+          position: this.step.attributes.position
+        });
+      }).catch((error) => {
+        HelperModule.flashAlertMsg(error.response?.data?.errors ? Object.values(error.response.data.errors).join(', ') : this.i18n.t('errors.general'), 'danger');
+      });
+    },
+    toggleItemLock(item) {
+      const url = item.attributes.locked ? item.attributes.urls.unlock_url : item.attributes.urls.lock_url;
+      axios.post(url).then(() => {
+        item.attributes.locked = !item.attributes.locked;
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+      });
+    },
+    createElement(elementType, tableDimensions = null, name = '', formId = null) {
+      const plateTemplate = tableDimensions != null;
+      tableDimensions ||= [5, 8];
+      axios.post(this.urls[`create_${elementType}_url`], {
+        tableDimensions, plateTemplate, name, form_id: formId
+      }).then((response) => {
+        const result = response.data;
+        result.isNew = true;
+        this.elements.push(result);
+
+        if (this.isCollapsed) {
+          this.toggleBody();
+        }
+        this.$emit('stepUpdated');
+
+        this.$parent.$nextTick(() => {
+          const children = this.$refs.stepContainer.querySelectorAll('.step-element');
+          const lastChild = children[children.length - 1];
+
+          lastChild.scrollIntoView(false);
+          window.scrollBy({
+            top: 200,
+            behavior: 'smooth'
+          });
+        });
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+      });
+    },
+    openCustomWellPlateModal() {
+      this.customWellPlate = true;
+    },
+    closeCustomWellPlateModal() {
+      this.customWellPlate = false;
+    },
+    updateAttachment(attachment) {
+      const index = this.attachments.findIndex((a) => a.id === attachment.id);
+      if (index !== -1) {
+        this.attachments[index] = attachment;
+        this.$emit('stepUpdated');
+      }
+    },
+    openReorderModal() {
+      this.reordering = true;
+    },
+    closeReorderModal() {
+      this.reordering = false;
+    },
+    insertElement(element) {
+      const { position } = element;
+      this.elements = this.elements.map((s) => {
+        if (s.position >= position) {
+          s.position += 1;
+        }
+        return s;
+      });
+      this.elements.push(element);
+      this.$emit('stepUpdated');
+    },
+    moveElement(position, targetId) {
+      this.elements.splice(position, 1);
+      this.elements.forEach((e) => {
+        if (e.position >= position) {
+          e.position -= 1;
+        }
+      });
+      this.$emit('stepUpdated');
+      this.$emit('step:move_element', targetId);
+    },
+    moveAttachment(id, targetId) {
+      this.attachments = this.attachments.filter((a) => a.id !== id);
+      this.$emit('stepUpdated');
+      this.$emit('step:move_attachment', targetId);
+    },
+    duplicateStep() {
+      axios.post(this.urls.duplicate_step_url).then((response) => {
+        const result = response.data;
+        const step = result.data;
+        step.attachments = [];
+        result.included?.forEach((included) => {
+          if (included.type === 'assets') {
+            step.attachments.push(included);
+          }
+        });
+        step.elements = step.attributes.elements || [];
+        this.$emit('step:insert', result.data);
+        HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.step_duplicated'), 'success');
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('protocols.steps.step_duplication_failed'), 'danger');
+      });
+    },
+    updateLinkedResults(results) {
+      this.$emit('step:update', {
+        results,
+        position: this.step.attributes.position
+      });
+    }
   }
+};
 </script>
