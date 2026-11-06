@@ -5268,6 +5268,8 @@ en:
     leaving_warning: "You have made some changes, are you sure you want to leave this page?"
     older_version_available: "Older version of the text below has been saved in the browser. Do you want to restore it?"
     newer_version_available: "Newer version of the text below has been saved in the browser. Do you want to restore it?"
+  keyboard_shortcuts:
+    with_shortcut: "%{label} (%{shortcut})"
   general:
     save: "Save"
     move: "Move"
