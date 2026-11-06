@@ -1,7 +1,10 @@
 <template>
   <div ref="flyout" class="atwho-view bg-sn-white rounded shadow-sn-classic-drop-shadow"
        :class="{ old: everOpened }" :style="positionStyle" @mousedown="onRootMousedown">
-    <div class="flex items-center gap-1 bg-sn-grey-100 min-h-11 px-3 py-2 text-sm border-b border-sn-science-blue">
+    <div
+      class="flex items-center gap-1 bg-sn-grey-100 min-h-11 px-3 py-2 text-sm border border-transparent"
+      :class="{ '!border-b-sn-science-blue': searchFocused }"
+    >
       <span v-if="navStack.length > 0" type="button" class="p-1 text-sn-grey-700 hover:text-sn-black shrink-0 cursor-pointer" @click="navBack">
         <i class="sn-icon sn-icon-close"></i>
       </span>
@@ -17,7 +20,9 @@
               :placeholder="searchPlaceholder"
               class="border-0 bg-transparent focus:!outline-none focus:ring-0 focus:!border-0 w-full min-w-0 text-base"
               autocomplete="off"
-              @input="onSearchInput" @keydown="onSearchKeydown" @blur="onSearchBlur" />
+              @focus="searchFocused = true"
+              @blur="searchFocused = false; onSearchBlur()"
+              @input="onSearchInput" @keydown="onSearchKeydown" />
       </div>
     </div>
 
@@ -146,7 +151,8 @@ export default {
       onInsert: null,
       searchDebounceTimer: null,
       mentioningPageItem: null,
-      pageNumberInput: ''
+      pageNumberInput: '',
+      searchFocused: false
     };
   },
   beforeDestroy() {

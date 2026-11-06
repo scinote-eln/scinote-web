@@ -4,7 +4,7 @@
   }
 
   .btn {
-    @apply relative inline-flex items-center text-sm shrink-0 gap-2.5 justify-center px-4 rounded-lg border border-solid appearance-none whitespace-nowrap cursor-pointer h-[40px];
+    @apply relative inline-flex items-center text-sm shrink-0 gap-1.5 justify-center px-4 rounded-lg border border-solid appearance-none whitespace-nowrap cursor-pointer h-[40px];
     border-color: transparent;
   }
 
@@ -218,5 +218,11 @@
 
   .btn-rainbow:hover {
     @apply text-sn-white bg-transparent;
+  }
+}
+
+@media (max-width: 1200px) {
+  .btn {
+    @apply !pr-2;
   }
 }
