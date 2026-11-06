@@ -96,6 +96,14 @@
         :repositoryRowId="createEventModalRow"
         @event:created="createEventModalRow = null"
         @close="createEventModalRow = null"/>
+      <ConfirmationModal
+        :title="i18n.t('repositories.modal_delete_record.title')"
+        :description="deleteRowsDescription"
+        confirmClass="btn btn-danger"
+        :confirmText="i18n.t('repositories.modal_delete_record.delete')"
+        e2eValue="invInventoryDeleteMD"
+        ref="deleteRowsModal"
+      ></ConfirmationModal>
     </teleport>
   </div>
 </template>
@@ -113,6 +121,7 @@ import PrintModal from './modals/print_modal.vue';
 import CreateEventModal from '../equipment_bookings/manage_modal.vue';
 import RepositoryFilters from './filters.vue'
 import ManageColumnsModal from './modals/manage_columns.vue';
+import ConfirmationModal from '../shared/confirmation_modal.vue';
 
 import {
   repository_table_index_ag_path,
@@ -151,7 +160,8 @@ export default {
     ExportItemsModal,
     ExportConsumptionModal,
     PrintModal,
-    CreateEventModal
+    CreateEventModal,
+    ConfirmationModal
   },
   mixins: [ColumnsMixin],
   data: () => ({
@@ -184,6 +194,10 @@ export default {
     delete window.repositoryTable;
   },
   computed: {
+    deleteRowsDescription() {
+      return `<p>${this.i18n.t('repositories.modal_delete_record.notice')}</p>
+              <p>${this.i18n.t('repositories.modal_delete_record.notice_warning_html')}</p>`;
+    },
     toolbarActions() {
       const left = [];
       const right = [];
@@ -360,7 +374,10 @@ export default {
         HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
       });
     },
-    deleteRows(_e, rows) {
+    async deleteRows(_e, rows) {
+      const ok = await this.$refs.deleteRowsModal.show();
+      if (!ok) return;
+
       const rowIds = rows.map((row) => row.id);
       axios.post(repository_delete_records_path(this.repositoryId), {
         selected_rows: rowIds
