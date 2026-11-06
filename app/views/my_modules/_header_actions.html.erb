@@ -8,6 +8,8 @@
         href="<%= protocols_my_module_url(@my_module) %>"
         title="<%= t("nav2.modules.steps") %>"
         data-e2e="e2e-BT-taskTabs-protocol"
+        data-shortcut="alt+shift+1"
+        aria-current="<%= is_module_protocols? ? 'page' : 'false' %>"
     >
       <%=t "nav2.modules.steps" %>
     </a>
@@ -15,6 +17,8 @@
         href="<%= my_module_results_path(@my_module) %>"
         title="<%= t("nav2.modules.results") %>"
         data-e2e="e2e-BT-taskTabs-results"
+        data-shortcut="alt+shift+2"
+        aria-current="<%= is_module_results? ? 'page' : 'false' %>"
     >
       <%= t("nav2.modules.results") %>
       <%= "[#{@my_module.results_count(params[:view_mode])}]" %>
@@ -23,6 +27,8 @@
         href="<%= my_module_repositories_path(@my_module) %>"
         title="<%= t("nav2.modules.assigned_items") %>"
         data-e2e="e2e-BT-taskTabs-assignedItems"
+        data-shortcut="alt+shift+3"
+        aria-current="<%= is_module_assigned_items? ? 'page' : 'false' %>"
     >
       <%= t("nav2.modules.assigned_items") %>
       <%= "[#{@my_module.total_repository_rows_count}]" %>
@@ -31,6 +37,8 @@
         href="<%= activities_my_module_url(@my_module, view_mode: params[:view_mode]) %>"
         title="<%= t("nav2.modules.activities") %>"
         data-e2e="e2e-BT-taskTabs-activity"
+        data-shortcut="alt+shift+4"
+        aria-current="<%= is_module_activities? ? 'page' : 'false' %>"
     >
       <%= t("nav2.modules.activities") %>
     </a>
@@ -39,6 +47,8 @@
         href="<%= archive_my_module_path(@my_module, mode: params[:action] == 'protocols' ? 'steps' : 'results') %>"
         title="<%= t("nav2.modules.archive") %>"
         data-e2e="e2e-BT-taskTabs-archive"
+        data-shortcut="alt+shift+5"
+        aria-current="<%= is_module_archive? ? 'page' : 'false' %>"
     >
       <%= t("nav2.modules.archive") %>
     </a>
@@ -47,6 +57,8 @@
           href="<%= my_module_my_module_reports_path(@my_module) %>"
           title="<%= t("nav2.modules.analytical_reports") %>"
           data-e2e="e2e-BT-taskTabs-report"
+          data-shortcut="alt+shift+6"
+          aria-current="<%= is_module_reports? ? 'page' : 'false' %>"
       >
         <%= t("nav2.modules.analytical_reports") %>
       </a>
