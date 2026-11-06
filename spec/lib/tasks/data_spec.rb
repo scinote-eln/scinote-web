@@ -316,9 +316,6 @@ describe 'data' do
           dir = Dir.glob(File.join(tmp_dir, 'tmp', 'experiment_*_export_*')).first
         end
 
-        # bug: app/services/team_importer.rb:1084 uses @user_roles, which is only set by #import_from_dir,
-        # so importing an experiment template with user assignments raises NoMethodError
-        pending 'bug: TeamImporter#import_experiment_template_from_dir crashes on @user_roles'
         expect do
           expect do
             run_task('data:experiment_template_import', dir, project.id.to_s, owner.id.to_s)
