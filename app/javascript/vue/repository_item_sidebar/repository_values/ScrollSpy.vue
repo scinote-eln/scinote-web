@@ -53,13 +53,16 @@ export default {
     };
   },
   // Overlay scope, so the card wins over the task tab shortcuts while it is open.
-  // Only mounted while the card is open and loaded; a digit without a section passes on.
+  // Only mounted while the card is open and loaded. The card claims every digit, so one
+  // without a section does nothing rather than switching the task tab behind the card.
   shortcuts() {
     return [...Array(SECTION_SHORTCUTS).keys()].map((index) => ({
       keys: this.sectionKeys(index),
-      handler: () => this.navigateToSection(this.itemsToCreate[index]),
+      handler: () => {
+        if (index < this.itemsToCreate.length) this.navigateToSection(this.itemsToCreate[index]);
+      },
       scope: 'overlay',
-      when: () => this.thresholds.length > 0 && index < this.itemsToCreate.length
+      when: () => this.thresholds.length > 0
     }));
   },
   mounted() {
