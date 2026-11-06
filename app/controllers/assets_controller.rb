@@ -33,6 +33,7 @@ class AssetsController < ApplicationController
         can_edit: can_manage_asset?(@asset),
         gallery: params[:gallery],
         preview: params[:preview],
+        page: params[:page],
         # TODO: Currently inherited from step, will be controlled separately in the future
         locked: @asset.step ? @asset.step.locked : false
       },

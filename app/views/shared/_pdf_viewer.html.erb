@@ -24,6 +24,7 @@
       <canvas class="pdf-canvas <%= 'ready' unless blocked %>"
         data-pdf-url="<%= pdf_url %>"
         data-pdf-worker-url="<%= asset_path('pdf_js_worker.js') %>"
+        data-initial-page="<%= local_assigns[:page].presence || 1 %>"
       ></canvas>
       <div class="textLayer"></div>
     </div>

@@ -93,7 +93,7 @@ export default {
       if (!this.fieldDisabled) {
         this.editing = true;
         this.$nextTick(() => {
-          SmartAnnotation.init($(this.$refs.input), false);
+          SmartAnnotation.init($(this.$refs.input), false, this.assignableMyModuleId);
           this.$refs.input.focus();
         });
       }
