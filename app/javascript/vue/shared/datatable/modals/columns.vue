@@ -16,6 +16,7 @@
               v-model="columnsList"
               :forceAutoScrollFallback="true"
               :handle="'.element-grip'"
+              :disabled="!canOverrideState('columnsOrder')"
               item-key="field"
               @start="startReorder"
               @end="endReorder"
@@ -32,10 +33,10 @@
                 >
                   <div v-if="element.field == 'pinnedSeparator'" class="h-[1px] w-full bg-sn-sleepy-grey"></div>
                   <template v-else>
-                    <div class="opacity-0 group-hover/column:!opacity-100 element-grip cursor-pointer" :data-e2e="'e2e-BT-manageColumnsModal-'+element.field+'-drag'">
+                    <div v-if="canOverrideState('columnsOrder')" class="opacity-0 group-hover/column:!opacity-100 element-grip cursor-pointer" :data-e2e="'e2e-BT-manageColumnsModal-'+element.field+'-drag'">
                       <i class="sn-icon sn-icon-drag"></i>
                     </div>
-                    <div v-if="element.field === 'name'" class="w-6 h-6"></div>
+                    <div v-if="element.field === 'name' || !canOverrideState('columnsVisibility')" class="w-6 h-6"></div>
                     <template v-else>
                       <i v-if="columnVisbile(element)" @click="toggleColumn(element, true)"
                         class="sn-icon sn-icon-visibility-show cursor-pointer" :data-e2e="'e2e-BT-manageColumnsModal-'+element.field+'-hide'"></i>
@@ -43,7 +44,7 @@
                         class="sn-icon sn-icon-visibility-hide cursor-pointer" :data-e2e="'e2e-BT-manageColumnsModal-'+element.field+'-show'"></i>
                     </template>
                     <div class="truncate" :data-e2e="'e2e-TX-manageColumnsModal-'+element.field+'-columnName'">{{ element.headerName }}</div>
-                    <div class="ml-auto cursor-pointer" :data-e2e="'e2e-BT-manageColumnsModal-'+element.field+'-pin'">
+                    <div v-if="canOverrideState('columnsPinning')" class="ml-auto cursor-pointer" :data-e2e="'e2e-BT-manageColumnsModal-'+element.field+'-pin'">
                       <i v-if="columnPinned(element)" @click="unPinColumn(element)" class="sn-icon sn-icon-pinned"></i>
                       <i v-else @click="pinColumn(element)" class="sn-icon sn-icon-pin"></i>
                     </div>
@@ -66,12 +67,14 @@
 <script>
 import modalMixin from '../../modal_mixin';
 import Draggable from 'vuedraggable';
+import { canOverride, FULL_TABLE_STATE_PERMISSIONS } from '../table_state.js';
 
 export default {
   name: 'NewModal',
   props: {
     columnDefs: { type: Array, required: true },
-    tableState: { type: Object }
+    tableState: { type: Object },
+    tableStatePermissions: { type: Object, default: () => ({ ...FULL_TABLE_STATE_PERMISSIONS }) }
   },
   components: {
     Draggable
@@ -96,6 +99,9 @@ export default {
   },
   mixins: [modalMixin],
   methods: {
+    canOverrideState(attribute) {
+      return canOverride(this.tableStatePermissions, attribute);
+    },
     resetToDefault() {
       this.$emit('resetToDefault');
       this.close();
@@ -158,6 +164,8 @@ export default {
 
         const columnsOrdered = reordedColumns.map((col) => col.field);
         this.$emit('reorderColumns', columnsOrdered);
+
+        if (!this.canOverrideState('columnsPinning')) return;
 
         if (newIndex <= separatorIndex) {
           this.pinColumn(this.columnDefs.find((col) => col.field === columnName));
