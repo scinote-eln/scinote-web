@@ -26,6 +26,10 @@ describe ProtocolReportTemplatesController, type: :controller do
                                            content_type: 'application/octet-stream').signed_id
   end
 
+  def disable_analytical_reporting
+    allow(ReportTemplate).to receive(:analytical_reporting_enabled?).and_return(false)
+  end
+
   before do
     user.update!(current_team_id: team.id)
     allow(ReportTemplate).to receive(:analytical_reporting_enabled?).and_return(true)
@@ -38,11 +42,58 @@ describe ProtocolReportTemplatesController, type: :controller do
       expect(response).to have_http_status(:not_found)
     end
 
-    it 'returns 403 when analytical reporting is disabled' do
-      allow(ReportTemplate).to receive(:analytical_reporting_enabled?).and_return(false)
-      get :index, params: { protocol_id: protocol.id }, format: :json
+    context 'when analytical reporting is disabled' do
+      before { disable_analytical_reporting }
 
-      expect(response).to have_http_status(:forbidden)
+      it 'still returns 404 for an unknown protocol' do
+        get :index, params: { protocol_id: -1 }
+
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it 'renders the promo page when the protocol has no templates' do
+        get :index, params: { protocol_id: protocol.id }
+
+        expect(response).to render_template(:promo)
+        expect(assigns(:active_tab)).to be_nil
+      end
+
+      it 'renders the promo page for other read actions when the protocol has no templates' do
+        get :input_tags, params: { protocol_id: protocol.id }
+
+        expect(response).to render_template(:promo)
+      end
+
+      it 'keeps serving existing templates' do
+        template = create_template
+        get :index, params: { protocol_id: protocol.id }, format: :json
+
+        expect(response).to have_http_status(:ok)
+        expect(json['templates'].map { |t| t['id'] }).to eq [template.id]
+      end
+
+      it 'allows deleting existing templates' do
+        template = create_template
+
+        expect do
+          delete :destroy, params: { protocol_id: protocol.id, id: template.id }
+        end.to change { ReportTemplate.count }.by(-1)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns 403 on create' do
+        expect do
+          post :create, params: { protocol_id: protocol.id, name: 'x', file: signed_blob('my.odt') }, format: :json
+        end.not_to(change { ReportTemplate.count })
+
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    it 'does not render the promo page when analytical reporting is enabled' do
+      get :index, params: { protocol_id: protocol.id }
+
+      expect(response).to render_template(:index)
     end
   end
 
@@ -213,8 +264,8 @@ describe ProtocolReportTemplatesController, type: :controller do
       expect(json['error']).to be_present
     end
 
-    it 'returns forbidden without read permissions' do
-      allow(controller).to receive(:can_read_protocol_in_repository?).and_return(false)
+    it 'returns forbidden without manage permissions' do
+      allow(controller).to receive(:can_manage_protocol_draft_in_repository?).and_return(false)
       delete :destroy, params: { protocol_id: protocol.id, id: template.id }
 
       expect(response).to have_http_status(:forbidden)
