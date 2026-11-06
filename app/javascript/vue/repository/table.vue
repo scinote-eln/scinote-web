@@ -295,6 +295,9 @@ export default {
         .then(() => {
           this.hasActiveReminders = false;
           this.reloadingTable = true;
+        })
+        .catch(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
     },
     cancelCreation() {
