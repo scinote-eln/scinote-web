@@ -19,6 +19,7 @@
         :disabled="addingNewRow"
         :order="order"
         :tableState="tableState"
+        :tableStatePermissions="tableStatePermissions"
         :hideColumnsManagment="hideColumnsManagment"
         :enableBarcodeSearch="enableBarcodeSearch"
         :customManageColumnsModal="customManageColumnsModal"
@@ -113,7 +114,7 @@
         <div class="w-36">
           <SelectDropdown
             :value="perPage"
-            :disabled="addingNewRow"
+            :disabled="addingNewRow || !canOverrideState('perPage')"
             :options="perPageOptions"
             :data-e2e="'e2e-DD-tableInfo-rows'"
             @change="setPerPage"
@@ -156,6 +157,7 @@ import ActionToolbar from './action_toolbar.vue';
 import Toolbar from './toolbar.vue';
 import RowMenuRenderer from './row_menu_renderer.vue';
 import { user_setting_path } from '../../../routes.js';
+import { buildTableState, canOverride, FULL_TABLE_STATE_PERMISSIONS } from './table_state.js';
 
 export default {
   name: 'App',
@@ -258,6 +260,14 @@ export default {
       type: Boolean,
       default: false
     },
+    defaultTableState: {
+      type: Object,
+      default: null
+    },
+    tableStatePermissions: {
+      type: Object,
+      default: () => ({ ...FULL_TABLE_STATE_PERMISSIONS })
+    },
     hideColumnsManagment: {
       type: Boolean,
       default: false
@@ -283,7 +293,7 @@ export default {
       rowData: [],
       gridApi: null,
       defaultColDef: {
-        resizable: true
+        resizable: canOverride(this.tableStatePermissions, 'columnsWidth')
       },
       filledRowTemplate: {},
       perPage: 20,
@@ -354,13 +364,22 @@ export default {
       }
     },
     extendedColumnDefs() {
-      const columns = this.columnDefs.map((column) => ({
-        ...column,
-        minWidth: column.minWidth || 110,
-        cellRendererParams: { ...column.cellRendererParams, ...{ dtComponent: this } },
-        pinned: (this.withPinnedColumns && (column.field === 'name' || column.field === 'name_hash') ? 'left' : column.pinned),
-        comparator: () => null
-      }));
+      const columns = this.columnDefs.map((column) => {
+        const extendedColumn = {
+          ...column,
+          minWidth: column.minWidth || 110,
+          cellRendererParams: { ...column.cellRendererParams, ...{ dtComponent: this } },
+          pinned: (this.withPinnedColumns && (column.field === 'name' || column.field === 'name_hash') ? 'left' : column.pinned),
+          comparator: () => null
+        };
+
+        if (!this.canOverrideState('order')) extendedColumn.sortable = false;
+        if (!this.canOverrideState('columnsWidth')) extendedColumn.resizable = false;
+        if (!this.canOverrideState('columnsOrder')) extendedColumn.suppressMovable = true;
+        if (!this.canOverrideState('columnsPinning')) extendedColumn.lockPinned = true;
+
+        return extendedColumn;
+      });
 
       if (this.withRowMenu) {
         columns.push({
@@ -541,9 +560,13 @@ export default {
       this.saveTableState();
     },
     // Table states
+    canOverrideState(attribute) {
+      return canOverride(this.tableStatePermissions, attribute);
+    },
     fetchTableState() {
-      // don't load state if state saving is disabled
+      // don't load user state if state saving is disabled, but still apply the default state
       if (this.skipSaveTableState) {
+        this.setTableState(null);
         this.initializing = false;
         this.stateLoading = false;
         this.loadData();
@@ -552,22 +575,22 @@ export default {
 
       axios.get(user_setting_path(this.stateKey))
         .then((response) => {
-          if (response.data.value) {
-            this.tableState = response.data.value;
-            this.currentViewRender = this.tableOnly ? 'table' : this.tableState.currentViewRender;
-            this.perPage = this.tableState.perPage;
-            this.order = this.tableState.order;
-            if (this.currentViewRender === 'cards') {
-              this.initializing = false;
-            }
-          }
+          this.setTableState(response.data.value);
           this.stateLoading = false;
           this.loadData();
         }).catch(() => {
+          this.setTableState(null);
           this.initializing = false;
           this.stateLoading = false;
           this.loadData();
         });
+    },
+    setTableState(userState) {
+      const state = buildTableState(this.defaultTableState, userState, this.tableStatePermissions);
+
+      this.tableState = state.columnsState ? state : null;
+      this.perPage = state.perPage;
+      this.order = state.order;
     },
     applyTableState() {
       const columnsState = this.tableState?.columnsState;
@@ -579,24 +602,27 @@ export default {
 
       this.columnsState = columnsState;
 
-      if (this.order) {
-        this.tableState.columnsState.forEach((column) => {
-          if (!column) return;
+      // Sorting always follows the resolved order (default or user's, depending on permissions)
+      columnsState.forEach((column) => {
+        if (!column) return;
 
-          const updatedColumn = column;
-          updatedColumn.sort = this.order.column === column.colId ? this.order.dir : null;
-          return updatedColumn;
-        });
-      }
-      this.gridApi?.applyColumnState({
-        state: this.tableState.columnsState,
-        applyOrder: true
+        column.sort = this.order?.column === column.colId ? this.order.dir : null;
       });
+
+      this.gridApi?.applyColumnState({
+        state: columnsState,
+        // keep column definitions order when the user can't reorder and no default order is given
+        applyOrder: this.canOverrideState('columnsOrder') || !!this.defaultTableState?.columnsState
+      });
+
+      if (!this.canOverrideState('columnsWidth') && !this.defaultTableState?.columnsState) {
+        this.gridApi?.sizeColumnsToFit();
+      }
 
       setTimeout(() => {
         this.initializing = false;
 
-        if (this.tableState.columnsState.length !== this.columnDefs.length + 1) {
+        if (columnsState.length !== this.columnDefs.length + 1) {
           this.saveTableState();
         }
       }, 200);
@@ -759,6 +785,8 @@ export default {
       this.resize();
     },
     setPerPage(value) {
+      if (!this.canOverrideState('perPage')) return;
+
       this.perPage = value;
       this.page = 1;
       this.lastPage = false;
@@ -827,27 +855,44 @@ export default {
       this.selectedRows = [];
     },
     hideColumn(column) {
+      if (!this.canOverrideState('columnsVisibility')) return;
+
       this.gridApi.setColumnVisible(column.field, false);
     },
     showColumn(column) {
+      if (!this.canOverrideState('columnsVisibility')) return;
+
       this.gridApi.setColumnVisible(column.field, true);
     },
     pinColumn(column) {
+      if (!this.canOverrideState('columnsPinning')) return;
+
       this.gridApi.setColumnPinned(column.field, 'left');
       this.hideLastPinnedResizeCell();
     },
     unPinColumn(column) {
+      if (!this.canOverrideState('columnsPinning')) return;
+
       this.gridApi.setColumnPinned(column.field, null);
       this.hideLastPinnedResizeCell();
     },
     reorderColumns(columns) {
+      if (!this.canOverrideState('columnsOrder')) return;
+
       this.gridApi.moveColumns(columns, 1);
       this.saveTableState();
     },
     resetColumnsToDefault() {
       this.gridApi.resetColumnState();
-      this.gridApi.sizeColumnsToFit();
+
+      const defaultState = buildTableState(this.defaultTableState, null, this.tableStatePermissions);
+      if (defaultState.columnsState) {
+        this.gridApi.applyColumnState({ state: defaultState.columnsState, applyOrder: true });
+      } else {
+        this.gridApi.sizeColumnsToFit();
+      }
       this.hideLastPinnedResizeCell();
+      this.saveTableState();
     },
     getOrder(columnsState) {
       if (!columnsState) return null;
@@ -859,6 +904,8 @@ export default {
         }));
     },
     applyOrder(column, dir) {
+      if (!this.canOverrideState('order')) return;
+
       this.order = {
         column,
         dir

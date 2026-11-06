@@ -88,7 +88,7 @@
       </template>
       <FilterDropdown v-if="filters.length && !disabled" :filters="filters" @applyFilters="applyFilters" :data-e2e="'e2e-BT-topToolbar-filters'"/>
       <button
-        v-if="currentViewRender === 'table' && !hideColumnsManagment"
+        v-if="currentViewRender === 'table' && !hideColumnsManagment && canManageColumns"
         @click="showColumnsModal = true"
         :disabled="disabled"
         :data-e2e="'e2e-BT-topToolbar-manageColumns'"
@@ -124,6 +124,7 @@
       <component
         :is="ColumnsModalComponent"
         :tableState="tableState"
+        :tableStatePermissions="tableStatePermissions"
         :columnDefs="columnDefs"
         v-bind="manageColumnsModalProps"
         @hideColumn="(column) => $emit('hideColumn', column)"
@@ -156,6 +157,7 @@ import ColumnsModal from './modals/columns.vue';
 import ConfirmationModal from '../confirmation_modal.vue';
 import Search from './search.vue';
 import tooltipMixin from '../../mixins/tooltipMixin.js';
+import { canOverride, FULL_TABLE_STATE_PERMISSIONS } from './table_state.js';
 
 export default {
   name: 'Toolbar',
@@ -194,6 +196,10 @@ export default {
     },
     tableState: {
       type: Object
+    },
+    tableStatePermissions: {
+      type: Object,
+      default: () => ({ ...FULL_TABLE_STATE_PERMISSIONS })
     },
     order: {
       type: Object
@@ -284,6 +290,9 @@ export default {
     },
     sortableColumns() {
       return this.columnDefs.filter((column) => column.sortable);
+    },
+    canManageColumns() {
+      return ['columnsVisibility', 'columnsOrder', 'columnsPinning'].some((attribute) => this.canOverrideState(attribute));
     }
   },
   watch: {
@@ -299,6 +308,9 @@ export default {
     }
   },
   methods: {
+    canOverrideState(attribute) {
+      return canOverride(this.tableStatePermissions, attribute);
+    },
     openSearch() {
       this.showSearch = true;
     },
