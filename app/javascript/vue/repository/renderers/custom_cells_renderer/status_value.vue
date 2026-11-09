@@ -9,6 +9,7 @@
         :labelRenderer="optionRenderer"
         :optionRenderer="optionRenderer"
         size="sm"
+        :open-on-focus="false"
         :value="statusValue"
         @change="changeValue"
       />

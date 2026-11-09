@@ -39,3 +39,30 @@
     outline-offset: 0 !important;
   }
 }
+
+.sn-keyboard-navigation .ag-root-wrapper {
+  .ag-cell-focus:not(.ag-cell-range-selected):focus-within {
+    border: 0;
+  }
+
+  .ag-cell:focus-visible {
+    outline: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      display: block;
+      width: calc(100% - 8px);
+      height: calc(100% - 8px);
+      border: 1px solid var(--ag-input-focus-border-color);
+      background-color: transparent;
+      pointer-events: none;
+    }
+  }
+}
+
+.sn-keyboard-navigation:has(.ag-cell:focus-visible) .ag-row-focus:not(.ag-row-selected) {
+  background-color: var(--sn-super-light-grey);
+}

@@ -17,6 +17,7 @@
           <Breadcrumbs :breadcrumbs="location.breadcrumbs" :readOnly="!location.readable" />
           <i v-if="repositoryRow.permissions.can_manage && location.metadata.display_type !== 'grid'"
                  @click="unassignRow(location.id, location.positions[0].id)"
+                 v-keyboard-click
                  class="sn-icon sn-icon-unlink-italic-s cursor-pointer ml-auto"></i>
         </div>
         <div v-if="location.metadata.display_type === 'grid'" class="flex items-center gap-2 flex-wrap">
@@ -25,6 +26,7 @@
               {{ formatPosition(position.metadata.position) }}
               <i v-if="repositoryRow.permissions.can_manage"
                  @click="unassignRow(location.id, position.id)"
+                 v-keyboard-click
                  class="sn-icon sn-icon-unlink-italic-s cursor-pointer"></i>
             </div>
           </div>
@@ -54,6 +56,7 @@
 import AssignModal from '../storage_locations/modals/assign.vue';
 import ConfirmationModal from '../shared/confirmation_modal.vue';
 import Breadcrumbs from '../shared/breadcrumbs.vue';
+import keyboardClick from '../shared/directives/keyboard_click.js';
 import axios from '../../packs/custom_axios.js';
 
 import {
@@ -75,6 +78,9 @@ export default {
     AssignModal,
     ConfirmationModal,
     Breadcrumbs
+  },
+  directives: {
+    'keyboard-click': keyboardClick
   },
   data() {
     return {

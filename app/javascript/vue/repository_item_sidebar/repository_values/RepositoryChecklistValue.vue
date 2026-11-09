@@ -12,6 +12,7 @@
         :multiple="true"
         :clearable="true"
         :searchable="true"
+        :open-on-focus="false"
         :size="'sm'"
         >
       </select-dropdown>

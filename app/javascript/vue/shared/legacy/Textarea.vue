@@ -21,9 +21,12 @@
                   'max-h-[40rem]': !collapsed,
                   '!border-0 !pl-0': !canEdit,
                   [className]: true,
-                  'text-sn-dark-grey': value, 'text-sn-grey': !value
+                  'text-sn-dark-grey': value, 'text-sn-grey': !value,
+                  'focus-visible:border-sn-science-blue': canEdit
                 }"
-        @click="enableEdit">
+        :tabindex="canEdit ? 0 : null"
+        @click="enableEdit"
+        @focus="handleFocus">
     <span v-if="sanitizedValue" v-html="sanitizedValue"></span>
     <span v-else>{{ value || noContentPlaceholder }}</span>
   </div>
@@ -35,7 +38,8 @@ export default {
   data() {
     return {
       value: '',
-      editing: false
+      editing: false,
+      restoringFocus: false
     };
   },
   props: {
@@ -90,7 +94,19 @@ export default {
       if (event.key === 'Enter') {
         event.preventDefault();
         this.$refs.textareaRef.blur();
+        this.restoreFocus();
       }
+    },
+    restoreFocus() {
+      this.$nextTick(() => {
+        // The textarea is removed once editing ends; give focus back to the view so Tab continues from here
+        const view = this.$refs[this.unEditableRef];
+        if (document.activeElement !== document.body || !view) return;
+
+        this.restoringFocus = true;
+        view.focus();
+        this.restoringFocus = false;
+      });
     },
     handleBlur() {
       if ($('.atwho-view:visible').length) return;
@@ -98,9 +114,12 @@ export default {
       if (this.smartAnnotation) {
         this.value = this.$refs.textareaRef.value.trim(); // Fix for smart annotation
       }
+      const initialValue = this.smartAnnotation ? (this.initialValue || '').trim() : (this.initialValue || '');
+      const changed = (this.value || '') !== initialValue;
+
       this.editing = false;
       this.toggleExpandableState();
-      this.$emit('update', this.value);
+      if (changed) this.$emit('update', this.value);
       this.renderSmartAnnotations();
     },
     toggleExpandableState() {
@@ -127,6 +146,14 @@ export default {
           SmartAnnotation.init($(this.$refs.textareaRef), false);
         }
       });
+    },
+    handleFocus(event) {
+      if (this.editing || this.restoringFocus) return;
+      // Only keyboard focus enters edit mode here. Mouse focus goes through @click, whose target guards
+      // keep smart annotation links working (Safari focuses the view div instead of the link on mousedown).
+      if (!event.target.matches(':focus-visible')) return;
+
+      this.enableEdit();
     },
     refreshTextareaHeight() {
       this.$nextTick(() => {

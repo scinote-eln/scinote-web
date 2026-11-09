@@ -109,16 +109,25 @@ export default {
     isOpen(newValue) {
       this.$emit('menu-toggle', newValue);
       if (newValue) {
+        document.addEventListener('keydown', this.closeOnEscape);
         this.$nextTick(() => {
           this.tooltip_registerTooltipContainer(this.$refs.flyout);
           this.tooltip_initializeTooltipsInContainer(this.$refs.flyout);
         });
+      } else {
+        document.removeEventListener('keydown', this.closeOnEscape);
       }
     }
+  },
+  beforeUnmount() {
+    document.removeEventListener('keydown', this.closeOnEscape);
   },
   methods: {
     closeMenu() {
       this.isOpen = false;
+    },
+    closeOnEscape(e) {
+      if (e.key === 'Escape') this.closeMenu();
     },
     handleClick(event, item) {
       if (!item.url) {

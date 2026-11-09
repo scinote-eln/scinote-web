@@ -5,14 +5,14 @@
         {{ colName }}
       </div>
       <a v-if="!file_name && (!uploading || error) && canEdit"
-        class="btn-text-link font-normal min-w-fit pl-4" @click="openFileChooser">
+        class="btn-text-link font-normal min-w-fit pl-4" @click="openFileChooser" v-keyboard-click>
         {{ i18n.t('repositories.item_card.repository_asset_value.add_asset') }}
       </a>
       <div v-if="file_name && !uploading && canEdit" class="flex whitespace-nowrap gap-4 min-w-fit pl-4">
-        <a class="btn-text-link font-normal" @click="openFileChooser">
+        <a class="btn-text-link font-normal" @click="openFileChooser" v-keyboard-click>
           {{ i18n.t('general.replace') }}
         </a>
-        <a class="btn-text-link font-normal" @click="clearFile">
+        <a class="btn-text-link font-normal" @click="clearFile" v-keyboard-click>
           {{ i18n.t('general.delete') }}
         </a>
       </div>
@@ -62,10 +62,14 @@ import axios from '../../../packs/custom_axios.js';
 import { repository_repository_row_repository_cell_path } from '../../../routes.js';
 import TooltipPreview from './TooltipPreview.vue';
 import ConfirmationModal from '../../shared/confirmation_modal.vue';
+import keyboardClick from '../../shared/directives/keyboard_click.js';
 
 export default {
   name: 'RepositoryAssetvalue',
   components: { TooltipPreview, ConfirmationModal },
+  directives: {
+    'keyboard-click': keyboardClick
+  },
   data() {
     return {
       tooltipShowing: false,

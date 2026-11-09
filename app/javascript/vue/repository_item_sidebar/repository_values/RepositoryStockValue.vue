@@ -16,6 +16,7 @@
       </div>
       <a style="text-decoration: none;" class="absolute right-0 btn-text-link font-normal export-consumption-button"
         v-if="permissions?.can_export_repository_stock === true && values?.stock_formatted" :data-rows="JSON.stringify([repositoryRowId])"
+        v-keyboard-click
         :data-object-id="repositoryId">
         {{ i18n.t('repositories.item_card.stock_export') }}
       </a>
@@ -24,6 +25,7 @@
       class="text-sn-dark-grey font-inter text-sm font-normal leading-5 w-full rounded relative block"
       :class="editableClassName"
       @click="enableEditing"
+      v-keyboard-click="canEdit"
       :data-manage-stock-url="values?.stock_url"
       :data-repository-row-id="repositoryId"
       :data-e2e="'e2e-BT-repoItemSBcustomColumns-input' + colId"
@@ -41,11 +43,15 @@
 
 <script>
 import Reminder from '../reminder.vue';
+import keyboardClick from '../../shared/directives/keyboard_click.js';
 
 export default {
   name: 'RepositoryStockValue',
   components: {
     Reminder
+  },
+  directives: {
+    'keyboard-click': keyboardClick
   },
   computed: {
     editableClassName() {

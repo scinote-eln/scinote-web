@@ -53,7 +53,8 @@
           class="ag-theme-alpine w-full flex-grow h-full z-10"
           :class="{
             'opacity-0': initializing,
-            'adding-new-row': addingNewRow
+            'adding-new-row': addingNewRow,
+            'sn-keyboard-navigation': keyboardNavigation
           }"
           :columnDefs="extendedColumnDefs"
           :selectionColumnDef="selectionColumnDef"
@@ -73,6 +74,7 @@
           @columnVisible="handleVisibility"
           @rowSelected="setSelectedRows"
           @cellClicked="clickCell"
+          @cellKeyDown="onCellKeyDown"
           :CheckboxSelectionCallback="withCheckboxes"
         >
         </ag-grid-vue>
@@ -276,6 +278,10 @@ export default {
     manageColumnsModalProps: {
       type: Object,
       default: () => ({})
+    },
+    keyboardNavigation: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -283,8 +289,10 @@ export default {
       rowData: [],
       gridApi: null,
       defaultColDef: {
-        resizable: true
+        resizable: true,
+        ...(this.keyboardNavigation && { suppressKeyboardEvent: this.suppressCellChildKeyboardEvent })
       },
+      keyboardActivatedCell: null,
       filledRowTemplate: {},
       perPage: 20,
       page: 1,
@@ -336,7 +344,7 @@ export default {
     },
     gridOptions() {
       return {
-        suppressCellFocus: true,
+        suppressCellFocus: !this.keyboardNavigation,
         rowHeight: 40,
         headerHeight: 40,
         getRowId: (params) => `e2e-TB-row-${params.data.code || params.data.id}`,
@@ -467,6 +475,15 @@ export default {
     this.setGridColsClass();
 
     window.addEventListener('resize', this.resize);
+
+    if (this.keyboardNavigation) {
+      document.addEventListener('keydown', this.handleEscapeKey, true);
+      document.addEventListener('mousedown', this.clearKeyboardActivatedCell, true);
+    }
+  },
+  beforeUnmount() {
+    document.removeEventListener('keydown', this.handleEscapeKey, true);
+    document.removeEventListener('mousedown', this.clearKeyboardActivatedCell, true);
   },
   beforeDestroy() {
     delete window.resetGridColumns;
@@ -812,6 +829,83 @@ export default {
         e.node.setSelected(true);
         this.$emit('selectionChanged', this.selectedRows);
       }
+    },
+    // Keyboard navigation (opt-in via the keyboardNavigation prop)
+    suppressCellChildKeyboardEvent({ event }) {
+      // Let controls inside a cell (inputs, dropdowns) handle their own keys;
+      // only Tab is left to the grid so focus moves on to the next cell.
+      const cell = event.target.closest?.('.ag-cell');
+      return Boolean(cell) && event.target !== cell && event.key !== 'Tab';
+    },
+    onCellKeyDown(params) {
+      const { event } = params;
+      if (!this.keyboardNavigation || !event || event.key !== 'Enter') return;
+
+      const cell = event.target.closest?.('.ag-cell');
+      if (!cell || event.target !== cell) return;
+
+      event.preventDefault();
+      this.clickCell(params);
+      this.activateCellControl(cell, params);
+    },
+    activateCellControl(cell, params) {
+      const selector = [
+        'a[href]',
+        'button',
+        'input:not([type="checkbox"]):not([type="file"]):not([type="hidden"])',
+        '[tabindex]:not([tabindex="-1"])',
+        '[role="button"]',
+        '.cursor-pointer'
+      ].join(', ');
+      const isVisible = (el) => el.getClientRects().length > 0;
+      const controls = Array.from(cell.querySelectorAll(selector)).filter(isVisible);
+      const [primary] = controls;
+      if (!primary) return;
+
+      this.keyboardActivatedCell = { rowIndex: params.rowIndex, column: params.column };
+
+      // Click the innermost control of the primary one, so nested handlers
+      // (e.g. a dropdown field wrapping a loader) fire exactly as on a mouse click.
+      let target = primary;
+      let inner = controls.find((el) => el !== target && target.contains(el));
+      while (inner) {
+        target = inner;
+        const current = target;
+        inner = controls.find((el) => el !== current && current.contains(el));
+      }
+
+      if (primary.matches('a[href], button, input, [tabindex]')) primary.focus();
+      target.click();
+      this.$emit('cellKeyboardActivate', { column: params.column, rowIndex: params.rowIndex, cell });
+    },
+    handleEscapeKey(event) {
+      if (event.key !== 'Escape' || !this.gridApi) return;
+
+      const gridEl = this.$refs.agGrid?.$el;
+      const cell = event.target.closest?.('.ag-cell');
+      const insideCellControl = cell && event.target !== cell && gridEl?.contains(cell);
+      if (!insideCellControl && !this.keyboardActivatedCell) return;
+
+      let position = this.keyboardActivatedCell;
+      if (insideCellControl) {
+        position = {
+          rowIndex: Number(cell.closest('.ag-row')?.getAttribute('row-index')),
+          column: cell.getAttribute('col-id')
+        };
+      }
+
+      // Wait for the editor or picker to handle Escape itself, then return focus to the cell.
+      setTimeout(() => {
+        const active = document.activeElement;
+        const focusLost = !active || active === document.body || gridEl?.contains(active);
+        if (insideCellControl || focusLost) {
+          this.gridApi?.setFocusedCell(position.rowIndex, position.column);
+        }
+        this.keyboardActivatedCell = null;
+      });
+    },
+    clearKeyboardActivatedCell() {
+      this.keyboardActivatedCell = null;
     },
     applyFilters(filters) {
       this.activeFilters = filters;

@@ -17,9 +17,11 @@
       :no-today="true"
       :formats="{ input: format }"
       :six-weeks="true"
+      :arrow-navigation="true"
       :disabled="disabled"
       :config="{
-        monthChangeOnScroll: false
+        monthChangeOnScroll: false,
+        onInternalKeydown: handleInternalKeydown
       }"
       :input-attrs="{
         clearable: this.clearable,
@@ -234,6 +236,43 @@ export default {
     },
     closedHandler() {
       this.$emit('closed');
+      this.restoreFocus();
+    },
+    handleInternalKeydown(e) {
+      // Arrow navigation makes every calendar day a Tab stop. Treat the grid as one stop instead: Tab goes to the
+      // next control after the grid, or leaves the picker (closing it) when there is none.
+      if (e.key !== 'Tab' || !e.target.closest?.('.dp--calendar-item')) return undefined;
+
+      const menu = e.target.closest('.dp--menu');
+      const stops = Array.from(menu.querySelectorAll('button:not([disabled]), input:not([disabled]), [tabindex="0"]'))
+        .filter((el) => !el.closest('[inert]') && el.getClientRects().length > 0);
+      const isDay = (el) => el.closest('.dp--calendar-item');
+      const days = stops.filter(isDay);
+      const outside = (el) => !isDay(el);
+      const target = e.shiftKey
+        ? stops.slice(0, stops.indexOf(days[0])).reverse().find(outside)
+        : stops.slice(stops.indexOf(days[days.length - 1]) + 1).find(outside);
+
+      if (target) {
+        e.preventDefault();
+        target.focus();
+        return false;
+      }
+
+      // Nothing left in the menu: close it and let Tab move on from the input
+      this.$refs.datetimePicker?.closeMenu();
+      this.$refs.datetimePicker?.$el?.querySelector('input')?.focus();
+      return false;
+    },
+    restoreFocus() {
+      // The focused calendar cell is removed with the menu; give focus back to the input so Tab continues from it.
+      // Wait for the key event that closed the menu to finish, or its Enter would reopen the menu on the input.
+      setTimeout(() => {
+        const active = document.activeElement;
+        if (active && active !== document.body && !active.closest('.dp--menu')) return;
+
+        this.$refs.datetimePicker?.$el?.querySelector('input')?.focus();
+      });
     },
     clearedHandler() {
       this.$emit('cleared');
