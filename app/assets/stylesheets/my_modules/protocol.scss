@@ -1,7 +1,3 @@
-.my-module-position-container .protocol-content {
-  margin-left: 2.5rem;
-}
-
 .task-protocol {
   .protocol-step-actions {
     align-items: center;
@@ -36,44 +32,6 @@
     }
   }
 
-  .insert-step {
-    align-items: center;
-    color: var(--sn-blue);
-    cursor: pointer;
-    display: flex;
-    margin-bottom: .5rem;
-
-    &::before,
-    &::after {
-      background-image: linear-gradient(to right, var(--sn-sleepy-grey) 20%, rgba(255, 255, 255, 0) 0%);
-      background-position: top;
-      background-size: 5px 1px;
-      background-repeat: repeat-x;
-      border-bottom: 1px dotted transparent;
-      content: "";
-      display: inline-block;
-      flex-grow: 1;
-      height: 0;
-    }
-
-    .sn-icon-new-task {
-      margin: 0 .5em;
-    }
-
-    &:hover {
-      color: $brand-primary;
-
-      &::before,
-      &::after {
-        background-image: linear-gradient(to right, $brand-primary 15%, rgba(255, 255, 255, 0) 0%);
-      }
-    }
-
-    &.disabled {
-      color: var(--sn-sleepy-grey);
-      cursor: default;
-    }
-  }
   .protocol-description {
     margin-bottom: 1rem;
     padding-left: 2rem;

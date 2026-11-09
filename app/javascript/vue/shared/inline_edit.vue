@@ -20,8 +20,10 @@
         @focus="setCaretAtEnd"/>
       <textarea v-else
         ref="input"
-        class="overflow-hidden leading-5 inline-block outline-none px-0 py-1 border-0 border-solid border-y w-full border-t-transparent mb-0.5"
+        class="overflow-hidden inline-block outline-none px-0 border-0 border-solid border-y w-full border-t-transparent mb-0.5"
         :class="{
+          'leading-5 py-1': !flush,
+          'leading-6 py-0 border-t-0': flush,
           'inline-edit-placeholder text-sn-grey caret-black': isBlank,
           'border-sn-delete-red': error,
           'border-sn-science-blue': !error,
@@ -38,8 +40,14 @@
     <div
       v-else
       ref="view"
-      class="grid sci-cursor-edit leading-5 border-0 outline-none border-solid border-y border-transparent"
-      :class="{ 'text-sn-grey font-normal': isBlank, 'whitespace-pre-line py-1': !singleLine }"
+      class="grid sci-cursor-edit border-0 outline-none border-solid border-y border-transparent"
+      :class="{
+        'text-sn-grey font-normal': isBlank,
+        'whitespace-pre-line': !singleLine,
+        'leading-5': !flush,
+        'py-1': !singleLine && !flush,
+        'leading-6 border-t-0': flush
+      }"
       :data-e2e="`e2e-TX-${dataE2e}`"
       @click="enableEdit($event)"
     >
@@ -81,6 +89,8 @@ export default {
     defaultValue: { type: String, default: '' },
     singleLine: { type: Boolean, default: true },
     preventLeavingUntilFilled: { type: Boolean, default: false },
+    // Multi-line only: no vertical padding or top border, 24px line height, so the text lines up with neighbouring 16/24 text
+    flush: { type: Boolean, default: false },
     dataE2e: { type: String, default: '' }
   },
   data() {

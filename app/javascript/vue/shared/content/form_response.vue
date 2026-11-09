@@ -1,8 +1,11 @@
 <template>
-  <div class="content__form-container pr-8" :data-e2e="`e2e-CO-${dataE2e}-formElement${element.id}`">
-    <div class="sci-divider my-6" v-if="!inRepository"></div>
-    <div :class="{'!bg-sn-background-brittlebush p-4': element.archived}">
-      <div class="flex items-center gap-4">
+  <div class="content__form-container"
+    :class="card ? 'bg-sn-white rounded-lg p-4' : 'pr-8'"
+    :data-e2e="`e2e-CO-${dataE2e}-formElement${element.id}`">
+    <div class="sci-divider my-6" v-if="!inRepository && !card"></div>
+    <!-- As a card, the menu sits beside the form instead of above it -->
+    <div :class="[{'!bg-sn-background-brittlebush p-4': element.archived}, { 'flex flex-row-reverse items-start gap-2': card }]">
+      <div class="flex items-center gap-4" :class="{ 'shrink-0': card }">
         <template v-if="element.archived">
           <div class="sci-tag bg-sn-alert-brittlebush pointer-events-none text-sn-black">
             {{ i18n.t('my_modules.results.archived') }}
@@ -39,7 +42,7 @@
             v-if="inRepository || !this.element.locked"
             class="ml-auto"
             :listItems="this.actionMenu"
-            :btnClasses="'btn btn-light icon-btn btn-sm'"
+            :btnClasses="card ? 'btn btn-light icon-btn' : 'btn btn-light icon-btn btn-sm'"
             :position="'right'"
             :btnIcon="'sn-icon sn-icon-more-hori'"
             :dataE2e="`e2e-DD-${dataE2e}-formElement${element.id}-options`"
@@ -150,6 +153,11 @@ export default {
     element: {
       type: Object,
       required: true
+    },
+    // Step layout: a white card with its own padding, no divider or right gutter (Results use the default)
+    card: {
+      type: Boolean,
+      default: false
     },
     inRepository: {
       type: Boolean,
