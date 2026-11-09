@@ -1933,7 +1933,9 @@ CREATE TABLE public.repositories (
     restored_by_id bigint,
     external_id character varying,
     repository_rows_count integer DEFAULT 0 NOT NULL,
-    repository_template_id bigint
+    repository_template_id bigint,
+    enforce_table_state boolean DEFAULT false NOT NULL,
+    default_table_state jsonb
 );
 
 
@@ -2137,7 +2139,8 @@ CREATE TABLE public.repository_columns (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     metadata jsonb DEFAULT '{}'::jsonb NOT NULL,
-    parent_id bigint
+    parent_id bigint,
+    mandatory boolean DEFAULT false NOT NULL
 );
 
 
@@ -11010,6 +11013,8 @@ ALTER TABLE ONLY public.projects
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261109100100'),
+('20261109100000'),
 ('20261007123511'),
 ('20260907114439'),
 ('20260828093032'),

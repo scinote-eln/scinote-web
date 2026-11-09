@@ -3,10 +3,10 @@ class RepositoryColumnsController < ApplicationController
   include RepositoryColumnsHelper
 
   before_action :load_repository
-  before_action :load_column, only: %i(update destroy items)
-  before_action :check_read_permissions, except: %i(create update destroy)
+  before_action :load_column, only: %i(update update_mandatory destroy items)
+  before_action :check_read_permissions, except: %i(create update update_mandatory destroy)
   before_action :check_create_permissions, only: %i(create)
-  before_action :check_manage_permissions, only: %i(update)
+  before_action :check_manage_permissions, only: %i(update update_mandatory)
   before_action :check_delete_permissions, only: %i(destroy)
   before_action :load_asset_type_columns, only: :available_asset_type_columns
 
@@ -46,6 +46,16 @@ class RepositoryColumnsController < ApplicationController
 
   def update
     raise NotImplementedError
+  end
+
+  def update_mandatory
+    return render_422 if @repository_column.data_type == 'RepositoryStockValue'
+
+    if @repository_column.update(mandatory: ActiveModel::Type::Boolean.new.cast(params[:mandatory]))
+      render json: @repository_column, serializer: RepositoryColumnSerializer
+    else
+      render json: @repository_column.errors, status: :unprocessable_entity
+    end
   end
 
   def destroy

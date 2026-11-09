@@ -87,16 +87,20 @@
         </component>
       </template>
       <FilterDropdown v-if="filters.length && !disabled" :filters="filters" @applyFilters="applyFilters" :data-e2e="'e2e-BT-topToolbar-filters'"/>
-      <button
-        v-if="currentViewRender === 'table' && !hideColumnsManagment && canManageColumns"
-        @click="showColumnsModal = true"
-        :disabled="disabled"
-        :data-e2e="'e2e-BT-topToolbar-manageColumns'"
-        :data-sn-tooltip="i18n.t('experiments.table.column_display_modal.title')"
-        class="btn btn-light icon-btn btn-black"
+      <span
+        v-if="currentViewRender === 'table' && !hideColumnsManagment"
+        class="inline-flex"
+        :data-sn-tooltip="manageColumnsTooltip"
       >
-        <i class="sn-icon sn-icon-manage-columns"></i>
-      </button>
+        <button
+          @click="showColumnsModal = true"
+          :disabled="disabled || !canManageColumns"
+          :data-e2e="'e2e-BT-topToolbar-manageColumns'"
+          class="btn btn-light icon-btn btn-black"
+        >
+          <i class="sn-icon sn-icon-manage-columns"></i>
+        </button>
+      </span>
       <GeneralDropdown v-if="currentViewRender === 'cards'" ref="dropdown" position="right">
         <template v-slot:field>
           <button class="btn btn-light icon-btn btn-black" :disabled="disabled">
@@ -225,6 +229,9 @@ export default {
     manageColumnsModalProps: {
       type: Object,
       default: () => ({})
+    },
+    manageColumnsDisabledTooltip: {
+      type: String
     }
   },
   data() {
@@ -293,6 +300,11 @@ export default {
     },
     canManageColumns() {
       return ['columnsVisibility', 'columnsOrder', 'columnsPinning'].some((attribute) => this.canOverrideState(attribute));
+    },
+    manageColumnsTooltip() {
+      if (!this.canManageColumns && this.manageColumnsDisabledTooltip) return this.manageColumnsDisabledTooltip;
+
+      return this.i18n.t('experiments.table.column_display_modal.title');
     }
   },
   watch: {

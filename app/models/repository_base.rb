@@ -75,22 +75,6 @@ class RepositoryBase < ApplicationRecord
     cell_includes
   end
 
-  def default_table_state
-    raise NotImplementedError
-  end
-
-  def default_table_columns
-    default_table_state['columns'].to_json
-  end
-
-  def default_columns_count
-    default_table_state['columns'].length
-  end
-
-  def default_table_order_as_js_array
-    default_table_state['order'].to_json
-  end
-
   def destroy_discarded(discarded_by_id = nil)
     self.discarded_by_id = discarded_by_id
     destroy

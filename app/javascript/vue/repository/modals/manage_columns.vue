@@ -7,6 +7,14 @@
           :columnDefs="columnDefs"
           :tableState="tableState"
           :canManageColumns="canManageColumns"
+          :canEnforceTableState="canEnforceTableState"
+          :enforceTableState="enforceTableState"
+          :tableStatePermissions="tableStatePermissions"
+          :savingEnforceTableState="savingEnforceTableState"
+          :togglingMandatory="togglingMandatory"
+          :mandatoryColumns="mandatoryColumns"
+          @toggleEnforceTableState="toggleEnforceTableState"
+          @toggleMandatory="toggleMandatory"
           @hideColumn="(column) => $emit('hideColumn', column)"
           @showColumn="(column) => $emit('showColumn', column)"
           @unPinColumn="(column) => $emit('unPinColumn', column)"
@@ -43,7 +51,12 @@
 /* global HelperModule */
 import modalMixin from '../../shared/modal_mixin';
 import axios from '../../../packs/custom_axios.js';
-import { repository_repository_column_path } from '../../../routes.js';
+import {
+  repository_repository_column_path,
+  update_mandatory_repository_repository_column_path,
+  update_table_state_repository_path
+} from '../../../routes.js';
+import { FULL_TABLE_STATE_PERMISSIONS } from '../../shared/datatable/table_state.js';
 import ColumnsList from './manage_columns/columns_list.vue';
 import ColumnForm from './manage_columns/column_form.vue';
 import ConfirmationModal from '../../shared/confirmation_modal.vue';
@@ -54,7 +67,11 @@ export default {
     columnDefs: { type: Array, required: true },
     tableState: { type: Object },
     repositoryId: { type: [String, Number] },
-    canManageColumns: { type: Boolean, default: false }
+    canManageColumns: { type: Boolean, default: false },
+    canEnforceTableState: { type: Boolean, default: false },
+    enforceTableState: { type: Boolean, default: false },
+    tableStatePermissions: { type: Object, default: () => ({ ...FULL_TABLE_STATE_PERMISSIONS }) },
+    mandatoryColumns: { type: Object, default: () => ({}) }
   },
   components: {
     ColumnsList,
@@ -66,10 +83,50 @@ export default {
     return {
       view: 'list',
       editingColumn: null,
-      deleteDescription: ''
+      deleteDescription: '',
+      savingEnforceTableState: false,
+      togglingMandatory: null
     };
   },
   methods: {
+    toggleEnforceTableState(enforce) {
+      this.savingEnforceTableState = true;
+
+      const repositoryParams = { enforce_table_state: enforce };
+      if (enforce) repositoryParams.default_table_state = this.tableState;
+
+      axios.put(update_table_state_repository_path(this.repositoryId), { repository: repositoryParams })
+        .then((response) => {
+          this.$emit('enforceTableStateChanged', response.data);
+        })
+        .catch(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('general.error'), 'danger');
+        })
+        .finally(() => {
+          this.savingEnforceTableState = false;
+        });
+    },
+    toggleMandatory(column) {
+      const mandatory = !(this.mandatoryColumns[column.field] ?? column.cellRendererParams.mandatory);
+      this.togglingMandatory = column.field;
+
+      axios.put(
+        update_mandatory_repository_repository_column_path(this.repositoryId, column.cellRendererParams.columnId),
+        { mandatory }
+      )
+        .then((response) => {
+          const { mandatory: savedMandatory } = response.data.data.attributes;
+          this.$emit('mandatoryChanged', column.field, savedMandatory);
+          const columnState = this.tableState?.columnsState?.find((col) => col.colId === column.field);
+          if (mandatory && columnState?.hide) this.$emit('showColumn', column);
+        })
+        .catch(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('general.error'), 'danger');
+        })
+        .finally(() => {
+          this.togglingMandatory = null;
+        });
+    },
     openForm(column) {
       this.editingColumn = column;
       this.view = 'form';

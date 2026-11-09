@@ -4,7 +4,7 @@ class RepositoryColumnSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
   include InputSanitizeHelper
 
-  attributes :message, :name, :data_type, :metadata, :column_items
+  attributes :message, :name, :data_type, :metadata, :column_items, :mandatory
 
   def column_items
     if object.data_type == 'RepositoryListValue'

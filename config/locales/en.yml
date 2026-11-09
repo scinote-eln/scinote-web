@@ -3005,6 +3005,13 @@ en:
       title: "Confirm file deletion?"
       notice_html: "<p>Deleting this file will remove the entire column history.<br><br></p><p>This action is irreversible.<br><br></p><p>To retain version history, replace the file with a new one instead.</p>"
       delete: "Delete"
+    mandatory_column:
+      mark: "Mark as mandatory"
+      unmark: "Unmark as mandatory"
+    enforce_table_state:
+      title: "Enforce your column layout"
+      description: "Everyone in this inventory sees your column visibility, order, and pinning. Others can’t change them, and your future updates apply to them too."
+      locked_tooltip: "Your column view is set by your Inventory owner."
     modal_delete_column:
       title: "Delete a column"
       message: "Are you sure you wish to permanently delete selected column %{column}? This action is irreversible."

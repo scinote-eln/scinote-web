@@ -9,11 +9,27 @@
       </h4>
     </div>
     <div class="modal-body">
+      <div v-if="canEnforceTableState" class="flex items-start gap-4 p-4 mb-4 rounded bg-sn-super-light-grey" data-e2e="e2e-CT-manageColumnsModal-enforceTableState">
+        <div class="grow">
+          <div class="font-bold mb-1">{{ i18n.t('repositories.enforce_table_state.title') }}</div>
+          <div>{{ i18n.t('repositories.enforce_table_state.description') }}</div>
+        </div>
+        <span class="sci-toggle-checkbox-container shrink-0">
+          <input type="checkbox"
+                 class="sci-toggle-checkbox"
+                 data-e2e="e2e-TG-manageColumnsModal-enforceTableState"
+                 :checked="enforceTableState"
+                 :disabled="savingEnforceTableState"
+                 @change="$emit('toggleEnforceTableState', $event.target.checked)" />
+          <span class="sci-toggle-checkbox-label"></span>
+        </span>
+      </div>
       <div class="max-h-90 overflow-y-auto">
         <Draggable
           v-model="columnsList"
           :forceAutoScrollFallback="true"
           :handle="'.element-grip'"
+          :disabled="!canOverrideState('columnsOrder')"
           item-key="field"
           @start="startReorder"
           @end="endReorder"
@@ -30,10 +46,13 @@
             >
               <div v-if="element.field == 'pinnedSeparator'" class="h-[1px] w-full bg-sn-sleepy-grey"></div>
               <template v-else>
-                <div class="opacity-0 group-hover:!opacity-100 element-grip cursor-pointer" :data-e2e="'e2e-BT-manageColumnsModal-'+element.field+'-drag'">
+                <div v-if="canOverrideState('columnsOrder')" class="element-grip cursor-pointer" :data-e2e="'e2e-BT-manageColumnsModal-'+element.field+'-drag'">
                   <i class="sn-icon sn-icon-drag"></i>
                 </div>
-                <div v-if="element.field === 'name'" class="w-6 h-6"></div>
+                <div v-if="element.field === 'name' || !canOverrideState('columnsVisibility')" class="w-6 h-6"></div>
+                <i v-else-if="isMandatory(element)"
+                   class="sn-icon sn-icon-visibility-show text-sn-grey cursor-not-allowed"
+                   :data-e2e="'e2e-IC-manageColumnsModal-'+element.field+'-mandatoryVisible'"></i>
                 <template v-else>
                   <i v-if="columnVisbile(element)" @click="toggleColumn(element, true)"
                     class="sn-icon sn-icon-visibility-show cursor-pointer" :data-e2e="'e2e-BT-manageColumnsModal-'+element.field+'-hide'"></i>
@@ -52,7 +71,19 @@
                      :data-e2e="'e2e-BT-manageColumnsModal-'+element.field+'-delete'"
                      @click="$emit('delete', element)"></i>
                 </template>
-                <div class="ml-auto cursor-pointer" :data-e2e="'e2e-BT-manageColumnsModal-'+element.field+'-pin'">
+                <div v-if="canManageColumns && canBeMandatory(element)"
+                     class="cursor-pointer shrink-0"
+                     :class="{
+                       'tw-hidden group-hover:block': !isMandatory(element),
+                       'pointer-events-none opacity-50': togglingMandatory === element.field
+                     }"
+                     :title="isMandatory(element) ? i18n.t('repositories.mandatory_column.unmark') : i18n.t('repositories.mandatory_column.mark')"
+                     :data-e2e="'e2e-BT-manageColumnsModal-'+element.field+'-mandatory'"
+                     @click="$emit('toggleMandatory', element)">
+                  <i class="sn-icon"
+                     :class="isMandatory(element) ? 'sn-icon-required-columns-on' : 'sn-icon-required-columns-off'"></i>
+                </div>
+                <div v-if="canOverrideState('columnsPinning')" class="ml-auto cursor-pointer" :data-e2e="'e2e-BT-manageColumnsModal-'+element.field+'-pin'">
                   <i v-if="columnPinned(element)" @click="unPinColumn(element)" class="sn-icon sn-icon-pinned"></i>
                   <i v-else @click="pinColumn(element)" class="sn-icon sn-icon-pin"></i>
                 </div>
@@ -76,13 +107,20 @@
 <script>
 import Draggable from 'vuedraggable';
 import { typeLabel } from './column_types.js';
+import { canOverride, FULL_TABLE_STATE_PERMISSIONS } from '../../../shared/datatable/table_state.js';
 
 export default {
   name: 'ColumnsList',
   props: {
     columnDefs: { type: Array, required: true },
     tableState: { type: Object },
-    canManageColumns: { type: Boolean, default: false }
+    canManageColumns: { type: Boolean, default: false },
+    canEnforceTableState: { type: Boolean, default: false },
+    enforceTableState: { type: Boolean, default: false },
+    savingEnforceTableState: { type: Boolean, default: false },
+    togglingMandatory: { type: String, default: null },
+    mandatoryColumns: { type: Object, default: () => ({}) },
+    tableStatePermissions: { type: Object, default: () => ({ ...FULL_TABLE_STATE_PERMISSIONS }) }
   },
   components: {
     Draggable
@@ -111,8 +149,17 @@ export default {
     }
   },
   methods: {
+    canOverrideState(attribute) {
+      return canOverride(this.tableStatePermissions, attribute);
+    },
     isManageable(column) {
       return !!column.cellRendererParams?.columnId;
+    },
+    canBeMandatory(column) {
+      return this.isManageable(column) && column.cellRendererParams.columnDataType !== 'RepositoryStockValue';
+    },
+    isMandatory(column) {
+      return !!(this.mandatoryColumns[column.field] ?? column.cellRendererParams?.mandatory);
     },
     columnType(column) {
       const dataType = column.cellRendererParams?.columnDataType;
@@ -126,6 +173,7 @@ export default {
     },
     toggleColumn(column, visible) {
       if (column.field === 'name') return;
+      if (visible && this.isMandatory(column)) return;
 
       if (visible) {
         this.$emit('hideColumn', column);
@@ -176,6 +224,8 @@ export default {
 
         const columnsOrdered = reordedColumns.map((col) => col.field);
         this.$emit('reorderColumns', columnsOrdered);
+
+        if (!this.canOverrideState('columnsPinning')) return;
 
         if (newIndex <= separatorIndex) {
           this.pinColumn(this.columnDefs.find((col) => col.field === columnName));

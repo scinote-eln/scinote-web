@@ -21,6 +21,7 @@ class RepositoriesController < ApplicationController
                                                     import_records archive restore actions_toolbar
                                                     export_repositories list user_roles)
   before_action :check_manage_permissions, only: %i(rename_modal update)
+  before_action :check_enforce_table_state_permissions, only: :update_table_state
   before_action :check_delete_permissions, only: %i(destroy destroy_modal)
   before_action :check_archive_permissions, only: %i(archive restore)
   before_action :check_create_permissions, only: %i(create_modal create)
@@ -244,6 +245,17 @@ class RepositoriesController < ApplicationController
     render json: {
       message: t('repositories.index.delete_flash', name: @repository.name)
     }
+  end
+
+  def update_table_state
+    if @repository.update(table_state_params)
+      render json: {
+        enforce_table_state: @repository.enforce_table_state,
+        default_table_state: @repository.default_table_state
+      }
+    else
+      render json: @repository.errors, status: :unprocessable_entity
+    end
   end
 
   def rename_modal
@@ -609,12 +621,20 @@ class RepositoriesController < ApplicationController
     end
   end
 
+  def check_enforce_table_state_permissions
+    render_403 unless can_manage_repository_enforce_state?(@repository)
+  end
+
   def check_delete_permissions
     render_403 unless can_delete_repository?(@repository)
   end
 
   def repository_params
     params.require(:repository).permit(:name, :repository_template_id)
+  end
+
+  def table_state_params
+    params.require(:repository).permit(:enforce_table_state, default_table_state: {})
   end
 
   def import_params

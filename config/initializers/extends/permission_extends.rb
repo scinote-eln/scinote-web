@@ -159,6 +159,7 @@ module PermissionExtends
       COLUMNS_DELETE
       USERS_MANAGE
       FILTERS_MANAGE
+      ENFORCE_TABLE_STATE
     ).each { |permission| const_set(permission, "inventory_#{permission.parameterize}") }
   end
 

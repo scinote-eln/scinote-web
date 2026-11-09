@@ -960,6 +960,9 @@ Rails.application.routes.draw do
           get :index_new
           get :describe_all
         end
+        member do
+          put :update_mandatory
+        end
       end
       resources :repository_table_filters, only: %i(index show create update destroy)
       resources :repository_rows, only: %i(create show update) do
@@ -1013,6 +1016,7 @@ Rails.application.routes.draw do
         post 'parse_sheet', defaults: { format: 'json' }
         post 'import_records'
         post :export_repository_stock_items
+        put :update_table_state
       end
       namespace :repository_columns do
         resources :text_columns, only: %i(create update)

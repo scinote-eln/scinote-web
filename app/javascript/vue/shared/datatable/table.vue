@@ -24,6 +24,7 @@
         :enableBarcodeSearch="enableBarcodeSearch"
         :customManageColumnsModal="customManageColumnsModal"
         :manageColumnsModalProps="manageColumnsModalProps"
+        :manageColumnsDisabledTooltip="manageColumnsDisabledTooltip"
         @applyFilters="applyFilters"
         @setTableView="switchViewRender('table')"
         @setCardsView="switchViewRender('cards')"
@@ -263,6 +264,9 @@ export default {
     defaultTableState: {
       type: Object,
       default: null
+    },
+    manageColumnsDisabledTooltip: {
+      type: String
     },
     tableStatePermissions: {
       type: Object,
@@ -655,6 +659,7 @@ export default {
         HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
       this.tableState = tableState;
+      this.$emit('tableStateSaved', tableState);
     },
     getRowClass() {
       if (this.currentViewMode === 'archived') {
@@ -885,8 +890,9 @@ export default {
     resetColumnsToDefault() {
       this.gridApi.resetColumnState();
 
-      const defaultState = buildTableState(this.defaultTableState, null, this.tableStatePermissions);
-      if (defaultState.columnsState) {
+      const gridDefaultState = { columnsState: this.gridApi.getColumnState() };
+      const defaultState = buildTableState(this.defaultTableState, gridDefaultState, this.tableStatePermissions);
+      if (this.defaultTableState?.columnsState) {
         this.gridApi.applyColumnState({ state: defaultState.columnsState, applyOrder: true });
       } else {
         this.gridApi.sizeColumnsToFit();

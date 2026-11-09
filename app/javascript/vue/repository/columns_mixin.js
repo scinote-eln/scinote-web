@@ -190,7 +190,8 @@ export default {
                 columnDataType: column.attributes.data_type,
                 legacyId: parseInt(column.id, 10),
                 columnItems: column.attributes.column_items,
-                metadata: column.attributes.metadata
+                metadata: column.attributes.metadata,
+                mandatory: column.attributes.mandatory
               },
               suppressColumnsToolPanel: true
             });
