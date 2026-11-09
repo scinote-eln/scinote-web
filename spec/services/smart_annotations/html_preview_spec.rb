@@ -50,10 +50,12 @@ describe SmartAnnotations::HtmlPreview do
     let(:step_asset) { create :step_asset, step: step }
     let(:asset) { Asset.find(step_asset.asset_id) }
 
-    def file_link(asset, label)
+    def file_link(asset, label, page: nil)
+      page_attr = page.nil? ? '' : " data-page='#{page}'"
+
       "<a class='sa-link file-preview-link file-name' href='" \
         "#{Rails.application.routes.url_helpers.rails_blob_path(asset.file, disposition: 'attachment')}' " \
-        "data-no-turbolink='true' data-id='#{asset.id}' data-preview-url='/files/#{asset.id}/preview?preview=true'>" \
+        "data-no-turbolink='true' data-id='#{asset.id}' data-preview-url='/files/#{asset.id}/preview?preview=true'#{page_attr}>" \
         "<span class='sa-type'>Fl</span>#{label}</a>"
     end
 
@@ -70,7 +72,7 @@ describe SmartAnnotations::HtmlPreview do
 
     it 'appends the page number when a page is mentioned' do
       snippet = subject.html(nil, 'file', asset, page: '12')
-      expect(snippet).to eq(file_link(asset, "#{asset.file_name}_#{asset.code}_p12"))
+      expect(snippet).to eq(file_link(asset, "#{asset.file_name}_#{asset.code}_p12", page: '12'))
     end
 
     it 'returns an archived snippet when the file is archived' do

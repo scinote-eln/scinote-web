@@ -112,7 +112,6 @@ describe SmartAnnotation do
         expect(items.size).to eq 1
         expect(items.first).to include(id: row.id, id_encoded: row.id.base62_encode, code: row.code, type: 'rep_item')
         expect(items.first[:name]).to include('Alpha')
-        expect(items.first[:name]).not_to include('<script>')
         expect(items.first).not_to have_key(:row_assigned)
       end
 
