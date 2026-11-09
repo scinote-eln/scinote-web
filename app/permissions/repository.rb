@@ -152,6 +152,10 @@ Canaid::Permissions.register_for(Repository) do
       repository.permission_granted?(user, RepositoryPermissions::USERS_MANAGE)
   end
 
+  can :manage_repository_enforce_state do |user, repository|
+    repository.permission_granted?(user, RepositoryPermissions::ENFORCE_TABLE_STATE)
+  end
+
   # Equipment booking: view/create/manage
 
   can :read_equipment_bookings do |user, repository|

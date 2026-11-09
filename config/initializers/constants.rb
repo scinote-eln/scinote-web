@@ -365,50 +365,6 @@ class Constants
 
   REPOSITORY_DATETIME_REMINDER_PRESET = 10
 
-  # Repository default table state
-  REPOSITORY_TABLE_DEFAULT_STATE = {
-    'time' => 0,
-    'start' => 0,
-    'length' => REPOSITORY_DEFAULT_PAGE_SIZE,
-    'order' => [[3, 'asc']], # Default sorting by 'name' column
-    'columns' => [],
-    'assigned' => 'assigned',
-    'ColReorder' => [*0..10]
-  }
-  11.times do |i|
-    REPOSITORY_TABLE_DEFAULT_STATE['columns'] << {
-      'visible' => (i < 7 && i != 4), # relationship column is hidden by default
-      'searchable' => (i >= 1 && i != 4), # Checkboxes and relationship column is not searchable
-      'search' => { 'search' => '',
-                    'smart' => true,
-                    'regex' => false,
-                    'caseInsensitive' => true }
-    }
-  end
-  REPOSITORY_TABLE_DEFAULT_STATE.freeze
-
-  # Repository default table state
-  REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE = {
-    'time' => 0,
-    'start' => 0,
-    'length' => REPOSITORY_DEFAULT_PAGE_SIZE,
-    'order' => [[1, 'asc']], # Default sorting by 'ID' column
-    'columns' => [],
-    'assigned' => 'assigned',
-    'ColReorder' => [*0..4]
-  }
-
-  REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['columns'] = REPOSITORY_TABLE_DEFAULT_STATE['columns'][0..4].deep_dup
-  REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['columns'][4]['visible'] = true
-
-  REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE.freeze
-
-  # For default custom column template, any searchable default
-  # column can be reused
-  REPOSITORY_TABLE_STATE_CUSTOM_COLUMN_TEMPLATE =
-    REPOSITORY_TABLE_DEFAULT_STATE['columns'][1].deep_dup
-                                                .freeze
-
   EXPORTABLE_ZIP_EXPIRATION_DAYS = 7
 
   REPOSITORY_LIST_ITEMS_DELIMITERS_MAP = {

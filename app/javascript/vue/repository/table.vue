@@ -23,8 +23,12 @@
       :archivedPageUrl="archivedPageUrl"
       :currentViewMode="currentViewMode"
       :customManageColumnsModal="ManageColumnsModal"
-      :manageColumnsModalProps="{ repositoryId, canManageColumns: canManageRepository }"
+      :manageColumnsModalProps="manageColumnsModalProps"
+      :manageColumnsDisabledTooltip="i18n.t('repositories.enforce_table_state.locked_tooltip')"
+      :defaultTableState="defaultTableState"
+      :tableStatePermissions="tableStatePermissions"
       @reloadColumns="legacyReloadTableComponent"
+      @tableStateSaved="onTableStateSaved"
       :objectArchived="archived"
       :hiddenDataMessage="i18n.t('repositories.show.no_active_repository_rows_archived_repository')"
       @cancelCreation="cancelCreation"
@@ -113,6 +117,7 @@ import PrintModal from './modals/print_modal.vue';
 import CreateEventModal from '../equipment_bookings/manage_modal.vue';
 import RepositoryFilters from './filters.vue'
 import ManageColumnsModal from './modals/manage_columns.vue';
+import { FULL_TABLE_STATE_PERMISSIONS } from '../shared/datatable/table_state.js';
 
 import {
   repository_table_index_ag_path,
@@ -126,7 +131,8 @@ import {
   repository_copy_records_path,
   repository_archive_records_path,
   repository_restore_records_path,
-  repository_delete_records_path
+  repository_delete_records_path,
+  update_table_state_repository_path
 } from '../../routes.js';
 
 export default {
@@ -139,6 +145,7 @@ export default {
     currentViewMode: { type: String, default: 'active' },
     canManageRepository: { type: Boolean, default: false },
     canManageFilters: { type: Boolean, default: false },
+    canEnforceTableState: { type: Boolean, default: false },
     archived: { type: Boolean }
   },
   components: {
@@ -157,6 +164,7 @@ export default {
   data: () => ({
     ManageColumnsModal,
     repositoryVersion: null,
+    mandatoryColumns: {},
     addingNewRow: false,
     reloadingTable: false,
     textCellModalObject: null,
@@ -184,6 +192,35 @@ export default {
     delete window.repositoryTable;
   },
   computed: {
+    enforceTableState() {
+      return !!this.repositoryVersion?.attributes?.enforce_table_state;
+    },
+    defaultTableState() {
+      if (!this.enforceTableState) return null;
+
+      return this.repositoryVersion?.attributes?.default_table_state || null;
+    },
+    tableStatePermissions() {
+      if (!this.enforceTableState || this.canEnforceTableState) return { ...FULL_TABLE_STATE_PERMISSIONS };
+
+      return {
+        ...FULL_TABLE_STATE_PERMISSIONS,
+        columnsVisibility: false,
+        columnsOrder: false,
+        columnsPinning: false
+      };
+    },
+    manageColumnsModalProps() {
+      return {
+        repositoryId: this.repositoryId,
+        canManageColumns: this.canManageRepository,
+        canEnforceTableState: this.canEnforceTableState,
+        enforceTableState: this.enforceTableState,
+        onEnforceTableStateChanged: this.setEnforcedTableState,
+        mandatoryColumns: this.mandatoryColumns,
+        onMandatoryChanged: this.setMandatoryColumn
+      };
+    },
     toolbarActions() {
       const left = [];
       const right = [];
@@ -263,6 +300,21 @@ export default {
           this.hasActiveReminders = response.data.data.attributes.has_active_reminders;
           this.loadRepositoryColumns();
         });
+    },
+    setEnforcedTableState({ enforce_table_state: enforceTableState, default_table_state: defaultTableState }) {
+      this.repositoryVersion.attributes.enforce_table_state = enforceTableState;
+      this.repositoryVersion.attributes.default_table_state = defaultTableState;
+    },
+    onTableStateSaved(tableState) {
+      if (!this.enforceTableState || !this.canEnforceTableState) return;
+
+      axios.put(update_table_state_repository_path(this.repositoryId), {
+        repository: { default_table_state: tableState }
+      }).then((response) => {
+        this.setEnforcedTableState(response.data);
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('general.error'), 'danger');
+      });
     },
     onTableReloaded(rows) {
       this.reloadingTable = false;
@@ -428,7 +480,11 @@ export default {
       this.$refs.repositoryTable.updateRowData(updatedRow);
       if (count > 0) this.hasActiveReminders = true;
     },
+    setMandatoryColumn(field, mandatory) {
+      this.mandatoryColumns = { ...this.mandatoryColumns, [field]: mandatory };
+    },
     legacyReloadTableComponent() {
+      this.mandatoryColumns = {};
       this.repositoryColumnsDef = []
       this.loadRepositoryColumns();
     },

@@ -94,10 +94,6 @@ class Repository < RepositoryBase
     team
   end
 
-  def default_table_state
-    Constants::REPOSITORY_TABLE_DEFAULT_STATE
-  end
-
   def default_sortable_columns
     [
       'assigned',
