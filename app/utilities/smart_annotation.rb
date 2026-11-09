@@ -58,11 +58,13 @@ class SmartAnnotation
 
   def projects
     Project.search_by_name_and_id(@current_user, @current_team, @query, limit: LIMIT + 1)
+           .order(updated_at: :desc)
            .where(archived: false)
   end
 
   def experiments
     Experiment.search_by_name_and_id(@current_user, @current_team, @query, limit: LIMIT + 1)
+              .order(updated_at: :desc)
               .joins(:project)
               .where(projects: { archived: false }, experiments: { archived: false })
   end
@@ -70,6 +72,7 @@ class SmartAnnotation
   def my_modules
     MyModule.search_by_name_and_id(@current_user, @current_team, @query, limit: LIMIT + 1)
             .active
+            .order(updated_at: :desc)
             .joins(experiment: :project)
             .where(projects: { archived: false }, experiments: { archived: false })
   end
@@ -77,11 +80,13 @@ class SmartAnnotation
   def repositories
     Repository.search_by_name_and_id(@current_user, @current_team, @query, limit: LIMIT + 1)
               .where(archived: false)
+              .order(updated_at: :desc)
   end
 
   def repository_rows
     RepositoryRow.search_by_name_and_id(@current_user, @current_team, @query, limit: LIMIT + 1)
                  .active
+                 .order(updated_at: :desc)
                  .joins(:repository)
                  .where(repositories: { archived: false })
   end
@@ -119,19 +124,19 @@ class SmartAnnotation
   def experiments_of(project)
     return Experiment.none unless project
 
-    project.active_experiments.search_by_name_and_id(@current_user, @current_team, @query, limit: LIMIT + 1)
+    project.active_experiments.search_by_name_and_id(@current_user, @current_team, @query, limit: LIMIT + 1).order(updated_at: :desc)
   end
 
   def my_modules_of(experiment)
     return MyModule.none unless experiment
 
-    experiment.my_modules.active.search_by_name_and_id(@current_user, @current_team, @query, limit: LIMIT + 1)
+    experiment.my_modules.active.search_by_name_and_id(@current_user, @current_team, @query, limit: LIMIT + 1).order(updated_at: :desc)
   end
 
   def repository_rows_of(repository)
     return RepositoryRow.none unless repository
 
-    repository.repository_rows.active.search_by_name_and_id(@current_user, @current_team, @query, limit: LIMIT + 1)
+    repository.repository_rows.active.search_by_name_and_id(@current_user, @current_team, @query, limit: LIMIT + 1).order(updated_at: :desc)
   end
 
   def files_of(my_module)
