@@ -8,8 +8,10 @@
         class="text-sn-grey nav-text-item flex flex-col w-[130px] h-fit text-right hover:cursor-pointer"
         :class="{ 'text-sn-science-blue': navigationItemsStatus[index] }"
         :data-e2e="'e2e-BT-repoItemSB-' + navigationItem.labelAlias"
+        :data-sn-tooltip="sectionKeys(index) && withShortcut(sectionLabel(navigationItem), sectionKeys(index))"
+        :aria-keyshortcuts="sectionKeys(index) && shortcutAria(sectionKeys(index))"
         >
-        {{ i18n.t(`repositories.highlight_component.${navigationItem.labelAlias}`) }}
+        {{ sectionLabel(navigationItem) }}
       </div>
     </div>
 
@@ -23,8 +25,15 @@
 </template>
 
 <script>
+import tooltipMixin from '../../mixins/tooltipMixin.js';
+import keyboardShortcutsMixin from '../../shared/keyboard_shortcuts/mixin.js';
+import KEYMAP from '../../shared/keyboard_shortcuts/keymap.js';
+
+const SECTION_SHORTCUTS = 9;
+
 export default {
   name: 'ScrollSpy',
+  mixins: [tooltipMixin, keyboardShortcutsMixin],
 
   props: {
     itemsToCreate: { type: Array, default: [] },
@@ -42,6 +51,19 @@ export default {
       scrollPosition: null,
       centerOfScrollThumb: null
     };
+  },
+  // Overlay scope, so the card wins over the task tab shortcuts while it is open.
+  // Only mounted while the card is open and loaded. The card claims every digit, so one
+  // without a section does nothing rather than switching the task tab behind the card.
+  shortcuts() {
+    return [...Array(SECTION_SHORTCUTS).keys()].map((index) => ({
+      keys: this.sectionKeys(index),
+      handler: () => {
+        if (index < this.itemsToCreate.length) this.navigateToSection(this.itemsToCreate[index]);
+      },
+      scope: 'overlay',
+      when: () => this.thresholds.length > 0
+    }));
   },
   mounted() {
     window.addEventListener('resize', this.handleResize);
@@ -65,6 +87,15 @@ export default {
     this.removeScrollListener();
   },
   methods: {
+    // Alt+Shift+1..9 for the first nine sections, null after that
+    sectionKeys(index) {
+      return index < SECTION_SHORTCUTS ? KEYMAP.ITEM_CARD_SECTION(index + 1) : null;
+    },
+
+    sectionLabel(navigationItem) {
+      return this.i18n.t(`repositories.highlight_component.${navigationItem.labelAlias}`);
+    },
+
     initializeComponent() {
       const bodyWrapperEl = document.getElementById('body-wrapper');
       const scrollSpyContentEl = document.getElementById('scrollSpyContent');
