@@ -58,6 +58,49 @@
     });
   }
 
+  // The status toggle opens with Alt+Shift+S (data-shortcut). The options use display: contents and
+  // can't take focus, so focus stays on the toggle: Tab/Arrows move the keyboard-active highlight,
+  // Enter/Space applies it through the click handler above, Esc is handled by Bootstrap.
+  function initStatusKeyboard() {
+    const $flows = $('.task-sharing-and-flows');
+    const options = '#dropdownTaskFlowList > li[data-state-id]:not(.disabled)';
+
+    function highlight($option) {
+      $flows.find('.keyboard-active').removeClass('keyboard-active');
+      if ($option) $option.addClass('keyboard-active');
+    }
+
+    // Opened without a pointer (shortcut, Enter, Space): start on "next status"
+    $flows.on('click', '.status-flow-dropdown [data-toggle="dropdown"]', (e) => {
+      const $options = $flows.find(options);
+      const $next = $options.filter('#nextStatusSelector');
+      if (e.detail || $(e.currentTarget).hasClass('disabled')) return;
+
+      highlight($next.length ? $next : $options.first());
+    });
+
+    $flows.on('keydown', '.status-flow-dropdown.open [data-toggle="dropdown"]', (e) => {
+      const $options = $flows.find(options);
+      const index = $options.index($options.filter('.keyboard-active'));
+      const step = e.key === 'ArrowUp' || (e.key === 'Tab' && e.shiftKey) ? -1 : 1;
+
+      if (e.altKey || e.ctrlKey || e.metaKey || !$options.length) return;
+
+      if (['Tab', 'ArrowDown', 'ArrowUp'].includes(e.key)) {
+        e.preventDefault();
+        // .eq(-1) is the last option
+        highlight($options.eq(index === -1 && step < 0 ? -1 : (index + step) % $options.length));
+      } else if ((e.key === 'Enter' || e.key === ' ') && index !== -1) {
+        e.preventDefault();
+        $options.eq(index).trigger('click');
+      }
+    });
+
+    // Only one option looks selected: the pointer takes over, and closing clears it
+    $flows.on('mouseenter', '#dropdownTaskFlowList > li', () => highlight());
+    $flows.on('hidden.bs.dropdown', '.status-flow-dropdown', () => highlight());
+  }
+
   function reloadWhenTransitionEnds() {
     if (reloadPending) return;
 
@@ -78,6 +121,7 @@
       displayedState = state;
       $statusContainer.data('current-status-id', state.my_module_status_id);
       $statusContainer.html(partialData.html);
+      if (window.SciNoteShortcuts) window.SciNoteShortcuts.decorate($statusContainer[0]);
       if (statusIdChanged) $statusContainer.trigger('statusChanged');
     });
   }
@@ -134,6 +178,7 @@
   function initStatus() {
     initStatusFlowModal();
     applyTaskStatusChangeCallBack();
+    initStatusKeyboard();
     subscribeToStatusChannel();
   }
 
