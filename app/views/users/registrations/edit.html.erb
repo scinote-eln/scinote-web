@@ -47,7 +47,20 @@
   <!-- Manage devices -->
   <div class="manage-devices">
     <%= render partial: 'users/registrations/manage_devices' %>
-  <div>
+  </div>
+<% end %>
+
+<% if Rails.application.config.x.serverside_sessions_enabled %>
+  <!-- Active sessions -->
+  <div class="manage-devices">
+    <div id="userSessions">
+      <user-sessions
+        sessions-url="<%= sessions_management_index_path(format: :json) %>"
+        destroy-others-url="<%= destroy_others_sessions_management_index_path(format: :json) %>"
+      />
+    </div>
+  </div>
+  <%= javascript_include_tag 'vue_user_sessions' %>
 <% end %>
 
   <!-- User statistics -->
