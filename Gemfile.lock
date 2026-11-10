@@ -357,7 +357,7 @@ GEM
     grover (1.2.10)
       nokogiri (~> 1)
     hashdiff (1.2.1)
-    hashie (5.1.0)
+    hashie (5.2.0)
       logger
     htmlentities (4.4.2)
     http (6.0.4)
@@ -490,11 +490,11 @@ GEM
     oj (3.17.6)
       bigdecimal (>= 3.0)
       ostruct (>= 0.2)
-    omniauth (2.1.4)
-      hashie (>= 3.4.6)
+    omniauth (2.2.0)
+      hashie (>= 3.5.2)
       logger
-      rack (>= 2.2.3)
-      rack-protection
+      rack (>= 2.2.8)
+      rack-protection (>= 2.2.0)
     omniauth-azure-activedirectory-v2 (2.4.0)
       omniauth-oauth2 (~> 1.8)
     omniauth-linkedin-oauth2 (1.0.1)
