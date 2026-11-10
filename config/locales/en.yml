@@ -3146,6 +3146,7 @@ en:
           other: "days"
       stock_export: "Export"
       snapshot_label: "Snapshot on %{timestamp} by %{name}"
+      mandatory_columns_label: "Mandatory columns"
       custom_columns_label: "Custom columns"
       no_custom_columns_label: "No custom columns"
       repository_time_range_value:
@@ -3206,6 +3207,7 @@ en:
         load_error_description: 'To obtain access, reach out to your workspace administrator.'
     highlight_component:
       information_label: 'Information'
+      mandatory_columns_label: 'Mandatory columns'
       custom_columns_label: 'Custom columns'
       relationships_label: 'Relationships'
       assigned_label: 'Assigned'

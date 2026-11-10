@@ -193,6 +193,9 @@ export default {
                 metadata: column.attributes.metadata,
                 mandatory: column.attributes.mandatory
               },
+              headerComponentParams: {
+                isMandatory: () => this.mandatoryColumns?.[field] ?? column.attributes.mandatory
+              },
               suppressColumnsToolPanel: true
             });
 
