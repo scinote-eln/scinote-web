@@ -10,7 +10,7 @@
       class="flex items-center gap-1 bg-sn-grey-100 min-h-11 px-3 py-2 text-sm border border-transparent"
       :class="{ '!border-b-sn-science-blue': searchFocused }"
     >
-      <span v-if="navStack.length > 0" type="button" class="p-1 text-sn-grey-700 hover:text-sn-black shrink-0 cursor-pointer" @click="navBack">
+      <span v-if="navStack.length > 0 || query.length > 0" type="button" class="p-1 text-sn-grey-700 hover:text-sn-black shrink-0 cursor-pointer" @click="navBack">
         <i class="sn-icon sn-icon-close"></i>
       </span>
       <span v-for="(crumb, i) in navStack" :key="i" class="flex items-center gap-1 truncate">
@@ -51,7 +51,7 @@
       </div>
       <template v-else>
         <div v-for="(item, index) in (items || [])" :key="item.type + '-' + item.id"
-             class="group flex items-center gap-2 px-2 min-h-10 rounded cursor-pointer leading-[2.25em] hover:bg-sn-super-light-grey"
+             class="group flex items-center gap-2 px-2 min-h-10 rounded cursor-pointer leading-[2.25em] hover:bg-sn-super-light-grey hover:text-sn-blue"
              :class="{ 'bg-sn-super-light-grey': isActiveIndex(index) }"
              @click="rowClick(item)">
           <template v-if="flag === '@'">
@@ -60,7 +60,7 @@
               <div class="truncate" v-html="highlightMatch(item.full_name)"></div>
               <div class="truncate text-xs text-sn-grey-700" v-html="highlightMatch(item.email)"></div>
             </div>
-            <span class="tw-hidden group-hover:flex items-center gap-1.5 shrink-0 ml-auto">
+            <span class="items-center gap-1.5 shrink-0 ml-auto opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto">
               <button
                 type="button"
                 :class="['btn btn-xs btn-light', 'e2e-BT-smartAnnotations-resultRow-user-mention']"
@@ -73,19 +73,21 @@
             </span>
           </template>
           <template v-else>
-            <span class="text-[0.625rem] font-semibold uppercase text-sn-grey-700 shrink-0 leading-none" v-html="highlightMatch(item.code)"></span>
-            <span class="text-sn-grey-500 leading-none">&middot;</span>
-            <span
-              :class="['truncate leading-none', 'e2e-BT-smartAnnotations-resultRow-title']"
-              v-html="highlightMatch(itemDisplayName(item))"
-              :data-e2e="`e2e-BT-smartAnnotations-resultRow-${item.code}-title`"
-            ></span>
-            <span
-              v-if="isDrillable(item)"
-              @click.stop="addToStack(item)"
-              :class="['sn-icon sn-icon-arrow-right text-sn-grey-700 shrink-0', 'e2e-BT-smartAnnotations-resultRow-arrow']"
-              :data-e2e="`e2e-BT-smartAnnotations-resultRow-${item.code}-arrow`"
-            ></span>
+            <span class="text-[0.625rem] font-semibold uppercase group-hover:text-sn-blue text-sn-grey-700 shrink-0 leading-none" v-html="highlightMatch(item.code)"></span>
+            <span class="text-sn-grey-500 group-hover:text-sn-blue leading-none">&middot;</span>
+            <span class="flex items-center min-w-0">
+              <span
+                :class="['truncate leading-none', 'e2e-BT-smartAnnotations-resultRow-title']"
+                v-html="highlightMatch(itemDisplayName(item))"
+                :data-e2e="`e2e-BT-smartAnnotations-resultRow-${item.code}-title`"
+              ></span>
+              <span
+                v-if="isDrillable(item)"
+                @click.stop="addToStack(item)"
+                :class="['sn-icon sn-icon-arrow-right text-sn-grey-700 shrink-0 px-2', 'e2e-BT-smartAnnotations-resultRow-arrow']"
+                :data-e2e="`e2e-BT-smartAnnotations-resultRow-${item.code}-arrow`"
+              ></span>
+            </span>
             <span v-if="mentioningPageItem === item" class="flex items-center gap-1.5 shrink-0 ml-auto">
               <input type="text" inputmode="numeric" pattern="[0-9]*" class="page-number-input w-40 border border-sn-light-grey rounded px-2 py-1 text-sm"
                      :value="pageNumberInput" :placeholder="i18n.t('atwho.buttons.add_page_number')"
@@ -102,7 +104,7 @@
                 {{ i18n.t('atwho.buttons.add') }}
               </button>
             </span>
-            <span v-else class="tw-hidden group-hover:flex items-center gap-1.5 shrink-0 ml-auto">
+            <span v-else class="flex items-center gap-1.5 shrink-0 ml-auto opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto">
               <button
                 v-if="isPdfFile(item)"
                 type="button"
@@ -253,7 +255,7 @@ export default {
       if (this.flag === '@') return this.i18n.t('atwho.search_placeholder_users');
 
       const top = this.navStack[this.navStack.length - 1];
-      if (!top) return this.i18n.t('atwho.search_placeholder_reference');
+      if (!top) return this.i18n.t('atwho.search_placeholder');
 
       return this.i18n.t('atwho.search_placeholder_in', { name: top.code });
     }
