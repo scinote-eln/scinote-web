@@ -53,7 +53,7 @@
        <FileVersionsModal
         v-if="fileVersionsModal"
         :versionsUrl="attachment.attributes.urls.versions"
-        :restoreVersionUrl="attachment.attributes.urls.restore_version"
+        :restoreVersionUrl="canEdit ? attachment.attributes.urls.restore_version : null"
         @close="fileVersionsModal = false"
         @fileVersionRestored="refreshPreview"
       />
