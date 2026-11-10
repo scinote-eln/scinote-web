@@ -54,14 +54,43 @@
               <!-- CUSTOM COLUMNS, RELATIONSHIPS, ASSIGNED, QR CODE -->
               <div id="custom-col-assigned-qr-wrapper" class="flex flex-col gap-6">
 
+                <!-- MANDATORY COLUMNS -->
+                <template v-if="mandatoryColumnDefs.length > 0">
+                  <section id="mandatory-columns-section" class="flex flex-col min-h-[64px] h-auto"
+                    data-e2e="e2e-CO-itemCard-mandatoryColumns">
+                    <div ref="mandatory-columns-label" id="mandatory-columns-label"
+                      class="font-inter text-lg font-semibold leading-7 mb-6 transition-colors duration-300">
+                      {{ i18n.t('repositories.item_card.mandatory_columns_label') }}
+                    </div>
+                    <div class="flex flex-col gap-4 w-[350px] h-auto">
+                      <div v-for="(columnDef, index) in mandatoryColumnDefs" :key="columnDef.id" class="flex flex-col gap-4 w-[350px] h-auto relative">
+                        <div class="flex items-center justify-between">
+                          <div class="font-semibold">
+                            {{ columnDef.name }}<span class="text-sn-alert-passion" data-e2e="e2e-TX-itemCard-mandatory">*</span>
+                          </div>
+                        </div>
+                        <sidebar-cell-renderer
+                          :row="row"
+                          :columnDef="columnDef"
+                          :repositoryId="repository?.id"
+                          @updateCell="handleCellUpdate"
+                          @updateRow="handleRowReplace" />
+                        <div class="sci-divider" :class="{ 'hidden': index === mandatoryColumnDefs.length - 1 }"></div>
+                      </div>
+                    </div>
+                  </section>
+
+                  <div id="divider" class="bg-sn-light-grey flex px-8 items-center self-stretch h-px"></div>
+                </template>
+
                 <!-- CUSTOM COLUMNS -->
                 <section id="custom-columns-section" class="flex flex-col min-h-[64px] h-auto">
                   <div ref="custom-columns-label" id="custom-columns-label"
                     class="font-inter text-lg font-semibold leading-7 mb-6 transition-colors duration-300">
                     {{ i18n.t('repositories.item_card.custom_columns_label') }}
                   </div>
-                  <div v-if="columnDefs.length > 0" class="flex flex-col gap-4 w-[350px] h-auto">
-                    <div v-for="(columnDef, index) in columnDefs" :key="columnDef.id" class="flex flex-col gap-4 w-[350px] h-auto relative">
+                  <div v-if="customColumnDefs.length > 0" class="flex flex-col gap-4 w-[350px] h-auto">
+                    <div v-for="(columnDef, index) in customColumnDefs" :key="columnDef.id" class="flex flex-col gap-4 w-[350px] h-auto relative">
                       <div class="flex items-center justify-between">
                         <div class="font-semibold">{{ columnDef.name }}</div>
                         <a v-if="columnDef.data_type === 'RepositoryStockValue' && permissions.can_export_repository_stock && row?.stock?.value?.stock_formatted"
@@ -76,7 +105,7 @@
                         :repositoryId="repository?.id"
                         @updateCell="handleCellUpdate"
                         @updateRow="handleRowReplace" />
-                      <div class="sci-divider" :class="{ 'hidden': index === columnDefs.length - 1 }"></div>
+                      <div class="sci-divider" :class="{ 'hidden': index === customColumnDefs.length - 1 }"></div>
                     </div>
                   </div>
                   <div v-else class="text-sn-dark-grey font-inter text-sm font-normal leading-5">
@@ -190,6 +219,15 @@ const items = [
     showInSnapshot: true
   },
   {
+    id: 'highlight-item-mandatory',
+    textId: 'text-item-mandatory',
+    labelAlias: 'mandatory_columns_label',
+    label: 'mandatory-columns-label',
+    sectionId: 'mandatory-columns-section',
+    showInSnapshot: true,
+    onlyWithMandatoryColumns: true
+  },
+  {
     id: 'highlight-item-2',
     textId: 'text-item-2',
     labelAlias: 'custom_columns_label',
@@ -295,6 +333,12 @@ export default {
     repositoryRowName() {
       return this.row?.archived ? `${I18n.t('labels.archived')} ${this.row?.name}` : this.row?.name;
     },
+    mandatoryColumnDefs() {
+      return this.columnDefs.filter((columnDef) => columnDef.mandatory);
+    },
+    customColumnDefs() {
+      return this.columnDefs.filter((columnDef) => !columnDef.mandatory);
+    },
     isSameRepository() {
       const openedRepositoryId = window.repositoryAssignTable?.repository?.id || window.repositoryTable?.repositoryId;
 
@@ -309,10 +353,10 @@ export default {
   },
   methods: {
     filterNavigationItems() {
-      if (this.repository.is_snapshot) {
-        return items.filter((item) => item.showInSnapshot);
-      }
-      return items;
+      return items.filter((item) => (
+        (!this.repository.is_snapshot || item.showInSnapshot)
+        && (!item.onlyWithMandatoryColumns || this.mandatoryColumnDefs.length > 0)
+      ));
     },
     handleOutsideClick(event) {
       if (!this.isShowing) return;

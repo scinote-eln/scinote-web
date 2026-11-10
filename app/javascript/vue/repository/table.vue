@@ -482,6 +482,8 @@ export default {
     },
     setMandatoryColumn(field, mandatory) {
       this.mandatoryColumns = { ...this.mandatoryColumns, [field]: mandatory };
+      this.$refs.repositoryTable?.gridApi?.refreshHeader();
+      window.repositoryItemSidebarComponent?.reload();
     },
     legacyReloadTableComponent() {
       this.mandatoryColumns = {};

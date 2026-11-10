@@ -4,8 +4,11 @@ export default {
          :class="{'cursor-pointer': params.enableSorting}"
          :data-e2e="'e2e-CO-tableHeader-' + params.column.colId "
          @click="onSortRequested((activeSort == 'asc' ? 'desc' : 'asc'), $event)">
-      <div v-if="params.html" class="customHeaderLabel truncate" v-html="params.html"></div>
-      <div v-else class="customHeaderLabel truncate">{{ params.displayName }}</div>
+      <div class="flex items-center min-w-0">
+        <div v-if="params.html" class="customHeaderLabel truncate" v-html="params.html"></div>
+        <div v-else class="customHeaderLabel truncate">{{ params.displayName }}</div>
+        <span v-if="mandatory" class="shrink-0 text-sn-alert-passion" data-e2e="e2e-TX-tableHeader-mandatory">*</span>
+      </div>
       <div v-if="activeSort == 'asc'" class="customSortDownLabel text-sn-black" data-e2e="e2e-BT-tableHeader-sortedAsc">
         <i class="sn-icon sn-icon-sort-up"></i>
       </div>
@@ -22,7 +25,11 @@ export default {
       activeSort: null
     };
   },
-  beforeMount() {},
+  computed: {
+    mandatory() {
+      return !!this.params.isMandatory?.();
+    }
+  },
   mounted() {
     this.params.column.addEventListener('sortChanged', this.onSortChanged);
     this.onSortChanged();
