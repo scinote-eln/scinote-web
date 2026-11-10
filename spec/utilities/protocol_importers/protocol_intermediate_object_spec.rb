@@ -16,10 +16,14 @@ describe ProtocolImporters::ProtocolIntermediateObject do
   end
 
   before do
+    # restored in the after hook below: a leaked delay_jobs = true breaks every later example that expects jobs to run inline
+    @original_delay_jobs = Delayed::Worker.delay_jobs
     Delayed::Worker.delay_jobs = true
     stub_request(:get, 'https://pbs.twimg.com/media/Cwu3zrZWQAA7axs.jpg').to_return(status: 200, body: '', headers: {})
     stub_request(:get, 'http://something.com/wp-content/uploads/2014/11/14506718045_5b3e71dacd_o.jpg')
   end
+
+  after { Delayed::Worker.delay_jobs = @original_delay_jobs }
 
   describe '.build' do
     it { expect(subject.build).to be_instance_of(Protocol) }

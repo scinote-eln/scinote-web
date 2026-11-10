@@ -11,9 +11,9 @@ class SmartAnnotationsController < ApplicationController
   def show
     if params[:data]
       render json: {
-        name: resource_readable? && @resource.name,
+        name: resource_readable? && resource_name,
         type: resource_tag
-      }
+      }.merge(file_data)
     else
       redirect_to redirect_path
     end
@@ -46,7 +46,7 @@ class SmartAnnotationsController < ApplicationController
       if params[:tag][0] == '@'
         User.find_by(id: @sa_tag.base62_decode)
       else
-        resource_id = params[:tag][1..].split('~').last&.base62_decode
+        resource_id = params[:tag][1..].split('~')[2]&.base62_decode
         resource_class =
           case @sa_tag
           when 'prj'
@@ -57,6 +57,10 @@ class SmartAnnotationsController < ApplicationController
             MyModule
           when 'rep_item'
             RepositoryRow
+          when 'rep'
+            Repository
+          when 'file'
+            Asset
           end
         return render_404 unless resource_class && resource_id
 
@@ -66,14 +70,34 @@ class SmartAnnotationsController < ApplicationController
     render_404 if @resource.blank?
   end
 
+  def resource_name
+    case @resource
+    when Asset
+      @resource.file_title.presence || @resource.file_name
+    else
+      @resource.name
+    end
+  end
+
   def resource_tag
-    @resource.is_a?(RepositoryRow) ? repository_acronym(@resource.repository) : @sa_tag
+    case @resource
+    when RepositoryRow
+      repository_acronym(@resource.repository)
+    when Repository
+      :INV
+    when Asset
+      :Fl
+    else
+      @sa_tag
+    end
   end
 
   def resource_readable?
     case @resource
     when RepositoryRow
       @resource.repository.readable_by_user?(current_user)
+    when Asset
+      @resource.my_module.present? && can_read_my_module?(current_user, @resource.my_module)
     else
       @resource.readable_by_user?(current_user)
     end
@@ -89,7 +113,22 @@ class SmartAnnotationsController < ApplicationController
       protocols_my_module_path(@resource)
     when RepositoryRow
       repository_repository_row_path(@resource.repository, @resource, my_module_id: params[:my_module_id])
+    when Repository
+      repository_path(@resource)
+    when Asset
+      rails_blob_path(@resource.file, disposition: 'attachment')
     end
+  end
+
+  def file_data
+    return {} unless @resource.is_a?(Asset) && resource_readable?
+
+    {
+      id: @resource.id,
+      url: rails_blob_path(@resource.file, disposition: 'attachment'),
+      preview_url: asset_file_preview_path(@resource, preview: true),
+      page: params[:tag][1..].split('~')[3]
+    }
   end
 
   def repository_acronym(repository)

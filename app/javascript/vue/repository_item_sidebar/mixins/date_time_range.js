@@ -73,6 +73,9 @@ export default {
         }
         Object.assign($this.$data, { isEditing: false, isSaving: false, values: result?.value });
         if ($('.dataTable.repository-dataTable')[0]) $('.dataTable.repository-dataTable').DataTable().ajax.reload(null, false);
+      }).catch(() => {
+        Object.assign($this.$data, { isSaving: false });
+        HelperModule.flashAlertMsg(I18n.t('errors.general'), 'danger');
       });
     },
     setParams() {

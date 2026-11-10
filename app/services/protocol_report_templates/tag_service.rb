@@ -128,6 +128,8 @@ module ProtocolReportTemplates
       case element.orderable_type
       when 'StepTable', 'ResultTable'
         element.orderable.table.name
+      when 'FormResponse'
+        element.orderable.form.name
       else
         element.orderable.name
       end

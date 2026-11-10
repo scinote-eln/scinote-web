@@ -81,6 +81,10 @@ RSpec.configure do |config|
 
   Delayed::Worker.delay_jobs = false
 
+  # Inline jobs run analyze_later while the owner record is still committing, before the blob upload (an after_commit
+  # of the owner) has written the file. In production the job is queued and the file is there by then.
+  ActiveStorage::AnalyzeJob.discard_on ActiveStorage::FileNotFoundError
+
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
   # `post` in specs under `spec/controllers`.

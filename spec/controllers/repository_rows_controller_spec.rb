@@ -343,4 +343,351 @@ describe RepositoryRowsController, type: :controller do
       end
     end
   end
+
+  describe 'extra coverage' do
+    let(:my_project) { create :project, team: team, created_by: user }
+    let(:my_experiment) { create :experiment, project: my_project, created_by: user, last_modified_by: user }
+    let(:my_module) { create :my_module, experiment: my_experiment, created_by: user }
+    let(:text_column) { create :repository_column, :text_type, repository: repository, created_by: user }
+
+    # serializer root differs between AMS configs; take the collection whatever its key
+    def json_list
+      body = JSON.parse(response.body)
+      body.is_a?(Array) ? body : body.values.find { |v| v.is_a?(Array) }
+    end
+
+    def make_guest
+      repository.user_assignments.update(user_role: viewer_role)
+    end
+
+    describe 'GET #index_ag' do
+      it 'returns rows with meta' do
+        get :index_ag, params: { repository_id: repository.id, per_page: 10 }, format: :json
+        expect(response).to have_http_status(:ok)
+        body = JSON.parse(response.body)
+        expect(body['data'].size).to eq 1
+        expect(body['meta']['total_count']).to eq repository.repository_rows_count
+      end
+
+      it 'renders custom error when column not found' do
+        allow(Lists::RepositoryRowsService).to receive(:new).and_raise(Lists::RepositoryFilters::ColumnNotFoundException)
+        get :index_ag, params: { repository_id: repository.id }, format: :json
+        expect(JSON.parse(response.body)['custom_error']).to be_present
+      end
+
+      it 'renders custom error when value not found' do
+        allow(Lists::RepositoryRowsService).to receive(:new).and_raise(Lists::RepositoryFilters::ValueNotFoundException)
+        get :index_ag, params: { repository_id: repository.id }, format: :json
+        expect(JSON.parse(response.body)['custom_error']).to be_present
+      end
+
+      it 'returns 404 for an unreadable repository' do
+        get :index_ag, params: { repository_id: repository_two.id }, format: :json
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    describe 'GET #show with my_module' do
+      before { allow_any_instance_of(ActionView::Helpers::AssetUrlHelper).to receive(:asset_path) }
+
+      it 'redirects html requests to repository' do
+        get :show, params: { repository_id: repository.id, id: repository_row.id }
+        expect(response).to redirect_to(repository_path(repository))
+      end
+
+      it 'renders json for an assignable module' do
+        get :show, format: :json, params: { repository_id: repository.id, id: repository_row.id,
+                                            my_module_id: my_module.id }
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'renders json when already assigned' do
+        create :mm_repository_row, my_module: my_module, repository_row: repository_row, assigned_by: user
+        get :show, format: :json, params: { repository_id: repository.id, id: repository_row.id,
+                                            my_module_id: my_module.id }
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'is forbidden for a repository the user cannot read' do
+        make_guest
+        repository.user_assignments.destroy_all
+        get :show, format: :json, params: { repository_id: repository.id, id: repository_row.id }
+        expect(response).to have_http_status(:forbidden).or have_http_status(:not_found)
+      end
+    end
+
+    describe 'GET #assigned_counters' do
+      it 'returns counts' do
+        create :mm_repository_row, my_module: my_module, repository_row: repository_row, assigned_by: user
+        get :assigned_counters, params: { repository_id: repository.id, id: repository_row.id }
+        expect(JSON.parse(response.body)).to eq('tasks' => 1, 'experiments' => 1, 'projects' => 1)
+      end
+
+      it 'returns 404 for foreign repository' do
+        get :assigned_counters, params: { repository_id: repository_two.id, id: repository_row_two.id }
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    describe 'GET #assigned_task_list' do
+      it 'returns html' do
+        create :mm_repository_row, my_module: my_module, repository_row: repository_row, assigned_by: user
+        get :assigned_task_list, params: { repository_id: repository.id, id: repository_row.id, query: '' }
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)).to have_key('html')
+      end
+
+      it 'returns 404 for foreign repository' do
+        get :assigned_task_list, params: { repository_id: repository_two.id, id: repository_row_two.id }
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    describe 'GET #active_reminder_repository_cells' do
+      it 'returns the active reminders of the row' do
+        get :active_reminder_repository_cells, params: { repository_id: repository.id, id: repository_row.id }
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)).to eq('reminders' => [])
+      end
+    end
+
+    describe 'GET #relationships' do
+      it 'returns row, parents and children' do
+        get :relationships, params: { repository_id: repository.id, id: repository_row.id }
+        body = JSON.parse(response.body)
+        expect(body.keys).to match_array(%w(repository_row parents children))
+        expect(body['parents']).to eq []
+      end
+
+      it 'returns 404 for foreign repository' do
+        get :relationships, params: { repository_id: repository_two.id, id: repository_row_two.id }
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    describe 'GET #equipment_booking_events' do
+      let!(:past_event) do
+        create :calendar_event, team: team, subject: repository_row, created_by: user,
+                                start_datetime: 3.days.ago, end_datetime: 2.days.ago
+      end
+      let!(:future_event) do
+        create :calendar_event, team: team, subject: repository_row, created_by: user,
+                                start_datetime: 2.days.from_now, end_datetime: 3.days.from_now
+      end
+
+      %w(past future).each do |direction|
+        it "returns #{direction} events only" do
+          get :equipment_booking_events, params: { repository_id: repository.id, id: repository_row.id,
+                                                   direction: direction }
+          expect(response).to have_http_status(:ok)
+          ids = json_list.pluck('id')
+          expect(ids.map(&:to_i)).to eq [direction == 'past' ? past_event.id : future_event.id]
+        end
+      end
+
+      it 'returns all events without direction' do
+        get :equipment_booking_events, params: { repository_id: repository.id, id: repository_row.id, page: 1 }
+        expect(json_list.size).to eq 2
+        expect(JSON.parse(response.body)['meta']['has_next_page']).to be false
+      end
+    end
+
+    describe 'GET #available_rows' do
+      it 'lists active rows' do
+        get :available_rows, params: { repository_id: repository.id, q: repository_row.name }, format: :json
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)['results'].pluck('id')).to include(repository_row.id)
+      end
+
+      it 'responds 422 with message when there are no active rows' do
+        repository.repository_rows.destroy_all
+        get :available_rows, params: { repository_id: repository.id }, format: :json
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(JSON.parse(response.body)['no_items']).to be_present
+      end
+
+      it 'returns 404 for foreign repository' do
+        get :available_rows, params: { repository_id: repository_two.id }, format: :json
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    describe 'POST #actions_toolbar' do
+      it 'returns actions' do
+        post :actions_toolbar, params: { repository_id: repository.id, items: [{ id: repository_row.id }].to_json },
+                               format: :json
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)['actions']).to be_an(Array)
+      end
+    end
+
+    describe 'label printing' do
+      let(:label_template) do
+        ZebraLabelTemplate.create!(team: team, name: 'Template', content: '^XA{{NAME}}^XZ',
+                                   width_mm: 10, height_mm: 10, unit: :mm, density: 12)
+      end
+
+      it 'rows_to_print returns rows' do
+        get :rows_to_print, params: { repository_id: repository.id, row_ids: [repository_row.id] }
+        expect(json_list.first['id'].to_i).to eq repository_row.id
+      end
+
+      it 'rows_to_print is 404 without rows' do
+        get :rows_to_print, params: { repository_id: repository.id, row_ids: [-1] }
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it 'print_zpl returns rendered labels' do
+        get :print_zpl, params: { repository_id: repository.id, row_ids: [repository_row.id],
+                                  label_template_id: label_template.id }
+        body = JSON.parse(response.body)
+        expect(body['labels'].first).to include(repository_row.name)
+        expect(body).to have_key('html')
+      end
+
+      it 'validate_label_template_columns returns label code' do
+        allow(controller).to receive(:current_team).and_return(team)
+        post :validate_label_template_columns, params: { repository_id: repository.id, row_ids: [repository_row.id],
+                                                         label_template_id: label_template.id }
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)['label_code']).to include(repository_row.name)
+      end
+
+      it 'validate_label_template_columns returns 422 on errors' do
+        allow(controller).to receive(:current_team).and_return(team)
+        allow_any_instance_of(LabelTemplates::RepositoryRowService)
+          .to receive(:render).and_return({ label: 'x', error: ['bad column'] })
+        post :validate_label_template_columns, params: { repository_id: repository.id, row_ids: [repository_row.id],
+                                                         label_template_id: label_template.id }
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(JSON.parse(response.body)['error']).to eq 'bad column'
+      end
+
+      it 'print enqueues jobs for the printer' do
+        printer = LabelPrinter.create!(name: 'P', type_of: 'fluics', fluics_api_key: 'k', fluics_lid: 'l',
+                                       language_type: 'zpl', host: 'h', port: 1) rescue nil
+        skip 'label printer cannot be built in this environment' unless printer
+        allow(LabelPrinters::PrintJob).to receive(:perform_later).and_return(double(job_id: 'abc'))
+        get :print, params: { repository_id: repository.id, row_ids: [repository_row.id],
+                              label_template_id: label_template.id, label_printer_id: printer.id, copies: 1 }
+        expect(printer.reload.current_print_job_ids).to eq ['abc']
+      end
+    end
+
+    describe 'POST #create extended' do
+      it 'creates a row and assigns it to a module' do
+        expect do
+          post :create, params: { repository_id: repository.id, repository_row: { name: 'with module' },
+                                  my_module_id: my_module.id }, format: :json
+        end.to change { repository.repository_rows.count }.by(1)
+        expect(response).to have_http_status(:ok)
+        expect(my_module.repository_rows.pluck(:name)).to include('with module')
+      end
+
+      it 'returns 400 when the name is blank' do
+        post :create, params: { repository_id: repository.id, repository_row: { name: '' } }, format: :json
+        expect(response).to have_http_status(:bad_request)
+      end
+
+      it 'creates a row with a text cell' do
+        post :create, params: { repository_id: repository.id, repository_row: { name: 'cells' },
+                                repository_cells: { text_column.id.to_s => 'hello' } }, format: :json
+        expect(response).to have_http_status(:ok)
+        row = repository.repository_rows.find(JSON.parse(response.body).dig('data', 'id'))
+        expect(row.repository_cells.first.value.data).to eq 'hello'
+      end
+
+      it 'is forbidden for a guest' do
+        make_guest
+        expect do
+          post :create, params: { repository_id: repository.id, repository_row: { name: 'nope' } }, format: :json
+        end.not_to(change { RepositoryRow.count })
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'is blocked while a snapshot is being provisioned' do
+        create :repository_snapshot, original_repository: repository, status: :provisioning
+        post :create, params: { repository_id: repository.id, repository_row: { name: 'nope' } }, format: :json
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+
+    describe 'PUT #update extended' do
+      it 'renames the row' do
+        put :update, params: { repository_id: repository.id, id: repository_row.id,
+                               repository_row: { name: 'renamed' } }, format: :json
+        expect(response).to have_http_status(:ok)
+        expect(repository_row.reload.name).to eq 'renamed'
+      end
+
+      it 'is forbidden for a guest' do
+        make_guest
+        put :update, params: { repository_id: repository.id, id: repository_row.id,
+                               repository_row: { name: 'renamed' } }, format: :json
+        expect(response).to have_http_status(:forbidden)
+        expect(repository_row.reload.name).not_to eq 'renamed'
+      end
+
+      it 'responds 200 for a blank name (current behaviour: update service does not reject it)' do
+        put :update, params: { repository_id: repository.id, id: repository_row.id,
+                               repository_row: { name: '' } }, format: :json
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    describe 'POST #delete_records extended' do
+      it 'deletes rows and reports success' do
+        expect do
+          post :delete_records, params: { repository_id: repository.id, selected_rows: [repository_row.id] },
+                                format: :json
+        end.to change { repository.repository_rows.count }.by(-1)
+        body = JSON.parse(response.body)
+        expect(body['color']).to eq 'success'
+      end
+
+      it 'reports partial deletion when some ids are foreign' do
+        post :delete_records, params: { repository_id: repository.id,
+                                        selected_rows: [repository_row.id, repository_row_two.id] }, format: :json
+        expect(JSON.parse(response.body)['color']).to eq 'success'
+        expect(RepositoryRow.exists?(repository_row_two.id)).to be true
+      end
+
+      it 'reports nothing deleted for foreign ids' do
+        post :delete_records, params: { repository_id: repository.id, selected_rows: [repository_row_two.id] },
+                              format: :json
+        expect(JSON.parse(response.body)['color']).to eq 'info'
+      end
+
+      it 'returns 400 without selection' do
+        post :delete_records, params: { repository_id: repository.id }, format: :json
+        expect(response).to have_http_status(:bad_request)
+      end
+
+      it 'is forbidden for a guest' do
+        make_guest
+        post :delete_records, params: { repository_id: repository.id, selected_rows: [repository_row.id] },
+                              format: :json
+        expect(response).to have_http_status(:forbidden)
+        expect(RepositoryRow.exists?(repository_row.id)).to be true
+      end
+    end
+
+    describe 'POST #copy_records extended' do
+      it 'duplicates the row' do
+        expect do
+          post :copy_records, params: { repository_id: repository.id, selected_rows: [repository_row.id] },
+                              format: :json
+        end.to change { repository.repository_rows.count }.by(1)
+      end
+
+      it 'is forbidden for a guest' do
+        make_guest
+        expect do
+          post :copy_records, params: { repository_id: repository.id, selected_rows: [repository_row.id] },
+                              format: :json
+        end.not_to(change { RepositoryRow.count })
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
 end

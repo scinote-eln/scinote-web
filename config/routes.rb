@@ -82,7 +82,6 @@ Rails.application.routes.draw do
         as: 'zebra_settings'
 
     resources :label_printers, only: [] do
-      post :print, on: :member
       get :update_progress_modal, on: :member
     end
 
@@ -290,12 +289,7 @@ Rails.application.routes.draw do
         get 'disable_tasks_sharing_modal'
         # Used for atwho (smart annotations)
         get 'atwho_users', to: 'at_who#users'
-        get 'atwho_menu', to: 'at_who#menu'
-        get 'atwho_rep_items', to: 'at_who#rep_items'
-        get 'atwho_projects', to: 'at_who#projects'
-        get 'atwho_experiments', to: 'at_who#experiments'
-        get 'atwho_my_modules', to: 'at_who#my_modules'
-        get 'atwho_menu_items', to: 'at_who#menu_items'
+        get 'atwho_search', to: 'at_who#search'
         get :automations
         get :automation_settings
         put :update_automation_settings
@@ -1141,6 +1135,7 @@ Rails.application.routes.draw do
     post 'files/:id/unlock', to: 'assets#unlock', as: 'asset_unlock'
     delete 'files/:id/', to: 'assets#destroy', as: 'asset_destroy'
     patch 'files/:id/rename', to: 'assets#rename', as: 'asset_rename'
+    patch 'files/:id/update_title', to: 'assets#update_title', as: 'update_asset_title'
     post 'files/:id/duplicate', to: 'assets#duplicate', as: 'asset_duplicate'
     post 'files/create_wopi_file',
          to: 'assets#create_wopi_file',

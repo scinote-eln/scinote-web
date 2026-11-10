@@ -14,5 +14,34 @@
     <%= render partial: 'shared/pdf_viewer', locals: { asset: report.report, report_document: true } %>
   </div>
 </div>
+<% if defined?(gallery) && gallery %>
+  <div class="modal-footer">
+    <div class="gallery">
+      <% previous_report = AnalyticalReport.find_by(id: gallery.split(report.id)[0]&.last) %>
+      <% next_report = AnalyticalReport.find_by(id: gallery.split(report.id)[1]&.first) %>
+      <% if previous_report %>
+        <%= link_to preview_path.call(previous_report),
+          class: "previous-asset gallery-switcher",
+          data: { id: previous_report.id, gallery_elements: gallery} do %>
+          <i class="sn-icon sn-icon-arrow-left"></i>
+          <i class="sn-icon sn-icon-file-pdf"></i>
+          <span class="file-name"><%= previous_report.name %></span>
+        <% end %>
+      <% end %>
+      <span class="file-counter">
+        <%= gallery.split(report.id)[0].length + 1 %> of <%= gallery.length %> attachments
+      </span>
+      <% if next_report %>
+        <%= link_to preview_path.call(next_report),
+          class: "next-asset gallery-switcher",
+          data: { id: next_report.id, gallery_elements: gallery } do %>
+          <i class="sn-icon sn-icon-file-pdf"></i>
+          <span class="file-name"><%= next_report.name %></span>
+          <i class="sn-icon sn-icon-arrow-right"></i>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+ <% end %>
 
 <%= javascript_include_tag 'shared/file_preview', nonce: true %>

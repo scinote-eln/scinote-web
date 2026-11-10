@@ -4,12 +4,6 @@ module MyModules
   class GenerateReportJob < ApplicationJob
     def perform(analytical_report_id, team_id:)
       analytical_report = AnalyticalReport.find(analytical_report_id)
-      asset_ids = analytical_report.params["asset_ids"]
-      header_text = analytical_report.params["header"]
-      footer_text = analytical_report.params["footer"]
-      add_numarization = analytical_report.params["add_numarization"]
-      add_blank_page = analytical_report.params["add_blank_page"]
-
       user = analytical_report.created_by
       team = Team.find(team_id)
 
@@ -18,9 +12,8 @@ module MyModules
       MyModuleReports::GenerateReportService.new(analytical_report.reference.protocol, analytical_report.report_template, team, user).call(analytical_report)
 
       PdfPreviewService.new(analytical_report.report, analytical_report.report).generate!
-      if asset_ids.present?
-        MyModuleReports::MergePdfsWithWatermarkService.new(user, analytical_report, asset_ids, header_text, footer_text, add_numarization, add_blank_page).generate!
-      end
+      MyModuleReports::MergePdfsWithWatermarkService.new(user, analytical_report).generate! if analytical_report.params['asset_groups'].present?
+
       analytical_report&.update(generating_status: :done)
 
       log_activity(analytical_report)

@@ -117,7 +117,13 @@ RSpec.describe 'Api::V1::ResultsController', type: :request do
   end
 
   describe 'POST result, #create' do
-    before :all do
+    # Built for every example: several examples modify the body, so a shared one made them order dependent.
+    before do
+      # The base64 image in the result text is extracted into a TinyMceAsset, and its token replaces the
+      # client's token "1" in the text; the API only accepts it while the new asset id encodes to "1".
+      # Sequences are not rolled back between examples, so start from an empty sequence.
+      ActiveRecord::Base.connection.reset_pk_sequence!('tiny_mce_assets')
+
       @valid_tinymce_hash_body = {
         data:
           { type: 'results',
