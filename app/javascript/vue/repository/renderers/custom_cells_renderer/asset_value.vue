@@ -2,7 +2,12 @@
   <div>
     <div v-if="canManage" class="relative">
       <div v-if="params.value" class="relative flex items-center gap-2 group">
-        <a  :href="params.value.value.url"
+        <span v-if="isDraft" class="file-name grow truncate" :title="params.value.value.file_name"
+              data-e2e="e2e-TX-itemCard-assetDraftName">
+          {{ params.value.value.file_name }}
+        </span>
+        <a  v-else
+            :href="params.value.value.url"
             class="file-preview-link file-name grow truncate"
             :id="`modal_link${params.value.value.id}`"
             data-no-turbolink="true"
@@ -78,11 +83,15 @@ export default {
     ConfirmationModal
   },
   watch: {
-    'params.value': () => {
+    'params.value'() {
       this.uploading = false;
     }
   },
   computed: {
+    // A file for a file that is not created yet has not been uploaded.
+    isDraft() {
+      return !this.params.data.id;
+    },
     previewUrl() {
       return asset_file_preview_path(this.params.value.value.id);
     },
@@ -109,7 +118,7 @@ export default {
       );
     },
     async deleteFile() {
-      const ok = await this.$refs.deleteModal.show();
+      const ok = this.isDraft || await this.$refs.deleteModal.show();
       if (ok) {
         this.params.dtComponent.$emit(
           'updateCell',

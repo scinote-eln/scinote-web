@@ -7,7 +7,12 @@
     <div ref="wrapper" v-show="isShowing" id="repository-item-sidebar-wrapper"
       class='items-sidebar-wrapper bg-white gap-2.5 self-stretch rounded-tl-4 rounded-bl-4 sn-shadow-menu-lg h-full w-[565px]'>
 
-      <div id="repository-item-sidebar" data-e2e="e2e-CO-itemCard" class="w-full h-full pl-6 bg-white flex flex-col">
+      <NewItem v-if="newItemRepositoryId" ref="newItem" :key="newItemKey"
+        :repositoryId="newItemRepositoryId"
+        @created="onNewItemCreated"
+        @close="toggleShowHideSidebar(null)" />
+
+      <div v-else id="repository-item-sidebar" data-e2e="e2e-CO-itemCard" class="w-full h-full pl-6 bg-white flex flex-col">
 
         <div ref="stickyHeaderRef" id="sticky-header-wrapper"
           class="sticky top-0 right-0 bg-white flex z-50 flex-col pt-6">
@@ -176,6 +181,7 @@ import Relationships from './relationships.vue';
 import AssignedModules from './assigned_modules.vue';
 import Locations from './locations.vue';
 import Schedule from './schedule.vue';
+import NewItem from './new_item.vue';
 import ExportConsumptionModal from '../repository/modals/export_stock_consumption_modal.vue';
 import axios from '../../packs/custom_axios.js';
 import { repository_repository_row_path } from '../../routes.js';
@@ -248,6 +254,7 @@ export default {
     AssignedModules,
     Locations,
     Schedule,
+    NewItem,
     ExportConsumptionModal,
     'repository-item-sidebar-title': RepositoryItemSidebarTitle,
     'inline-edit': InlineEdit,
@@ -277,7 +284,10 @@ export default {
       initialSectionId: null,
       loadingError: false,
       snapshotAt: null,
-      snapshotByName: null
+      snapshotByName: null,
+      newItemRepositoryId: null,
+      newItemKey: 0,
+      onNewItemCreated: null
     };
   },
   provide() {
@@ -337,7 +347,16 @@ export default {
         this.toggleShowHideSidebar(null);
       }
     },
-    toggleShowHideSidebar(repositoryRowUrl, myModuleId = null, initialSectionId = null) {
+    async toggleShowHideSidebar(repositoryRowUrl, myModuleId = null, initialSectionId = null) {
+      if (this.newItemRepositoryId) {
+        if (this.isShowing && !(await this.$refs.newItem.confirmDiscard())) return;
+        if (repositoryRowUrl === null) {
+          this.isShowing = false;
+          return;
+        }
+        this.newItemRepositoryId = null;
+      }
+
       this.handleOpeningFromBootstrapModal();
       if (initialSectionId) {
         this.initialSectionId = initialSectionId;
@@ -366,6 +385,16 @@ export default {
       this.myModuleId = myModuleId;
       this.loadRepositoryRow(repositoryRowUrl);
       this.currentItemUrl = repositoryRowUrl;
+    },
+    async openNewItemCard(repositoryId, onCreated) {
+      if (this.newItemRepositoryId && this.isShowing && !(await this.$refs.newItem.confirmDiscard())) return;
+
+      this.currentItemUrl = null;
+      this.myModuleId = null;
+      this.onNewItemCreated = onCreated;
+      this.newItemRepositoryId = repositoryId;
+      this.newItemKey += 1;
+      this.isShowing = true;
     },
     handleOpeningFromBootstrapModal() {
       const layout = document.querySelector('.sci--layout');
@@ -411,7 +440,7 @@ export default {
       });
     },
     reload() {
-      if (this.isShowing) {
+      if (this.isShowing && this.currentItemUrl) {
         this.loadRepositoryRow(this.currentItemUrl, this.$refs.bodyWrapper.scrollTop);
       }
     },
