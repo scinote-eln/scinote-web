@@ -53,6 +53,7 @@ gem 'httparty', '~> 0.24.0'
 gem 'i18n-js', '~> 3.6' # Localization in javascript files
 gem 'image_processing'
 gem 'jbuilder' # JSON structures via a Builder-style DSL
+gem 'json', '~> 2.21' # json 3.x rejects httparty's quirks_mode option
 gem 'mime-types', '~> 3.4'
 gem 'nested_form_fields'
 gem 'nokogiri', '~> 1.19.4' # HTML/XML parser
