@@ -50,6 +50,7 @@ export default {
     isNumber: { type: Boolean, default: false },
     unEditableRef: { type: String, required: true },
     smartAnnotation: { type: Boolean, default: false },
+    smartAnnotationAssignableObjectId: {type: Number },
     className: { type: String, default: false }
   },
   mounted() {
@@ -124,7 +125,7 @@ export default {
       this.editing = true;
       this.$nextTick(() => {
         if (this.smartAnnotation) {
-          SmartAnnotation.init($(this.$refs.textareaRef), false);
+          SmartAnnotation.init($(this.$refs.textareaRef), false, this.smartAnnotationAssignableObjectId);
         }
       });
     },

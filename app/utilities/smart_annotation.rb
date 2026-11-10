@@ -94,7 +94,7 @@ class SmartAnnotation
   def files
     filter_files_by_query(
       Asset.active
-           .where('assets.id IN (?) OR assets.id IN (?)', assets_in_readable_steps, assets_in_readable_results)
+           .where('assets.id IN (?) OR assets.id IN (?)', assets_in_readable_steps(readable_my_module_ids), assets_in_readable_results(readable_my_module_ids))
            .joins(file_attachment: :blob)
     ).order(updated_at: :desc).limit(LIMIT + 1)
   end
@@ -160,12 +160,12 @@ class SmartAnnotation
             .select(:id)
   end
 
-  def assets_in_readable_steps
-    Asset.joins(step: :protocol).with_active_step.where(protocols: { my_module_id: readable_my_module_ids }).select(:id)
+  def assets_in_readable_steps(my_module_ids)
+    Asset.joins(step: :protocol).with_active_step.where(protocols: { my_module_id: my_module_ids }).select(:id)
   end
 
-  def assets_in_readable_results
-    Asset.joins(:result).with_active_result.where(results: { my_module_id: readable_my_module_ids }).select(:id)
+  def assets_in_readable_results(my_module_ids)
+    Asset.joins(:result).with_active_result.where(results: { my_module_id: my_module_ids }).select(:id)
   end
 
   def filter_files_by_query(scope)
@@ -181,24 +181,33 @@ class SmartAnnotation
   # ---- serialization ---------------------------------------------------------------------------
 
   def serialize_projects(scope)
-    scope.map { |r| base_item(r, 'prj') }
+    scope.map { |r| base_item(r, 'prj', r.experiments.any?) }
   end
 
   def serialize_experiments(scope)
-    scope.map { |r| base_item(r, 'exp') }
+    scope.map { |r| base_item(r, 'exp', r.my_modules.any?) }
   end
 
   def serialize_my_modules(scope)
-    scope.map { |r| base_item(r, 'tsk') }
+    module_ids = scope.reselect(:id)
+
+    step_module_ids = assets_in_readable_steps(module_ids).merge(Asset.active).reselect('protocols.my_module_id')
+    result_module_ids = assets_in_readable_results(module_ids).merge(Asset.active).reselect('results.my_module_id')
+
+    scope.select(
+      'my_modules.*',
+      "(my_modules.id IN (#{step_module_ids.to_sql}) OR " \
+      "my_modules.id IN (#{result_module_ids.to_sql})) AS has_active_assets"
+    ).map { |r| base_item(r, 'tsk', r.has_active_assets) }
   end
 
   def serialize_repositories(scope)
-    scope.map { |r| base_item(r, 'rep') }
+    scope.map { |r| base_item(r, 'rep', r.repository_rows.any?) }
   end
 
   def serialize_repository_rows(scope, assignable_my_module_id, assignable_protocol_id = nil)
     scope.map do |r|
-      item = base_item(r, 'rep_item')
+      item = base_item(r, 'rep_item', false)
 
       if assignable_my_module_id.present?
         item.merge(
@@ -228,7 +237,8 @@ class SmartAnnotation
         code: asset.code,
         type: 'file',
         pdf: asset.pdf?,
-        updated_at: asset.updated_at
+        updated_at: asset.updated_at,
+        has_children: false
       }
     end
   end
@@ -245,14 +255,15 @@ class SmartAnnotation
       ProtocolRepositoryRow.where(protocol_id: protocol_id).pluck(:repository_row_id).to_set
   end
 
-  def base_item(record, type)
+  def base_item(record, type, has_children)
     {
       id: record.id,
       id_encoded: record.id.base62_encode,
       name: record.name,
       code: record.code,
       type: type,
-      updated_at: record.updated_at
+      updated_at: record.updated_at,
+      has_children: has_children
     }
   end
 end

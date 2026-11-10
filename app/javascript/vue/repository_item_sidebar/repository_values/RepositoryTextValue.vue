@@ -23,6 +23,7 @@
                   :expandable="expandable"
                   :collapsed="collapsed"
                   :canEdit="canEdit"
+                  :smartAnnotationAssignableObjectId="smartAnnotationAssignableObjectId"
                   @toggleExpandableState="toggleExpandableState"
                   @update="update"
                   className="px-3"
@@ -49,7 +50,8 @@ export default {
     return {
       expandable: false,
       collapsed: true,
-      textValue: ''
+      textValue: '',
+      smartAnnotationAssignableObjectId: ''
     };
   },
   props: {
@@ -71,6 +73,7 @@ export default {
       const isExpandable = textRefEl.scrollHeight > maxCollapsedHeight;
       this.expandable = isExpandable;
     });
+    this.smartAnnotationAssignableObjectId = document.querySelector('.my-module-content')?.dataset?.taskId;
   },
   methods: {
     toggleCollapse() {
