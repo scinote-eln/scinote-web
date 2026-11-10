@@ -65,6 +65,7 @@
       <repository-table
         ref='tableContainer'
         :repository-id="<%= @repository.id %>"
+        repository-name="<%= @repository.name %>"
         :can-manage-repository="<%= can_manage_repository?(@repository) %>"
         :can-manage-filters="<%= can_manage_repository_filters?(@repository)%>"
         :archived="<%= @repository.archived? %>"

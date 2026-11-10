@@ -142,6 +142,7 @@ export default {
   name: 'RepositoryTable',
   props: {
     repositoryId: Number,
+    repositoryName: String,
     createUrl: String,
     activePageUrl: String,
     archivedPageUrl: String,
@@ -311,6 +312,10 @@ export default {
       }).then((response) => {
         this.addingNewRow = false;
         this.$refs.repositoryTable.updateRowData(response.data.data);
+        HelperModule.flashAlertMsg(
+          this.i18n.t('repositories.create.success_flash', { record: response.data.data.attributes.name, repository: this.repositoryName }),
+          'success'
+        );
       }).catch(() => {
         HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
       });
