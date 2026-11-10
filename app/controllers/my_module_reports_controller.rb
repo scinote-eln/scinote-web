@@ -6,14 +6,15 @@ class MyModuleReportsController < ApplicationController
   include TeamsHelper
 
   before_action :load_my_module
-  before_action :check_analytical_reporting
+  before_action :check_analytical_reporting, only: :create
   before_action :check_view_permissions, except: %i(create destroy)
   before_action :check_manage_permissions, only: %i(create destroy)
-  before_action :load_analytical_report, only: %i(download destroy preview)
-  before_action :load_protocol_report_template, only: :create
   before_action :set_breadcrumbs_items, only: %i(index)
   before_action :set_navigator, only: %i(index)
   before_action :set_inline_name_editing, only: %i(index)
+  before_action :render_promo, except: :create
+  before_action :load_analytical_report, only: %i(download destroy preview)
+  before_action :load_protocol_report_template, only: :create
 
   def index
     respond_to do |format|
@@ -100,6 +101,10 @@ class MyModuleReportsController < ApplicationController
 
   def check_analytical_reporting
     render_403 unless ReportTemplate.analytical_reporting_enabled?
+  end
+
+  def render_promo
+    render :promo if !ReportTemplate.analytical_reporting_enabled? && @my_module.analytical_reports.none?
   end
 
   def create_params
