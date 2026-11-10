@@ -1,6 +1,11 @@
 <template>
-  <div ref="flyout" class="atwho-view bg-sn-white rounded shadow-sn-classic-drop-shadow"
-       :class="{ old: everOpened }" :style="positionStyle" @mousedown="onRootMousedown">
+  <div ref="flyout"
+    class="atwho-view bg-sn-white rounded shadow-sn-classic-drop-shadow"
+    :class="{ old: everOpened }"
+    :style="positionStyle"
+    @mousedown="onRootMousedown"
+    data-e2e="e2e-FO-smartAnnotations"
+  >
     <div
       class="flex items-center gap-1 bg-sn-grey-100 min-h-11 px-3 py-2 text-sm border border-transparent"
       :class="{ '!border-b-sn-science-blue': searchFocused }"
@@ -22,6 +27,7 @@
               autocomplete="off"
               @focus="searchFocused = true"
               @blur="searchFocused = false; onSearchBlur()"
+              data-e2e="e2e-IF-smartAnnotations-search"
               @input="onSearchInput" @keydown="onSearchKeydown" />
       </div>
     </div>
@@ -32,6 +38,7 @@
         <span v-for="(pill, index) in pills" :key="pill.tag" type="button"
                 class="px-3 py-1.5 cursor-pointer rounded-full text-sm text-sn-black bg-sn-super-light-grey hover:bg-sn-light-grey"
                 :class="{ 'outline outline-4 outline-sn-science-blue-hover': isActiveIndex(index) }"
+                :data-e2e="`e2e-BT-smartAnnotations-category-${pill.label.replace(/\W/g, '')}`"
                 @click="openPill(pill)">
           {{ pill.label }}
         </span>
@@ -49,12 +56,17 @@
              @click="rowClick(item)">
           <template v-if="flag === '@'">
             <img :src="item.avatar_url" class="w-[30px] h-[30px] rounded-full shrink-0" alt="" />
-            <div class="min-w-0 py-1">
+            <div :class="['min-w-0 py-1', 'e2e-BT-smartAnnotations-resultRow-user']" :data-e2e="`e2e-BT-smartAnnotations-resultRow-user-${item.email}`">
               <div class="truncate" v-html="highlightMatch(item.full_name)"></div>
               <div class="truncate text-xs text-sn-grey-700" v-html="highlightMatch(item.email)"></div>
             </div>
             <span class="tw-hidden group-hover:flex items-center gap-1.5 shrink-0 ml-auto">
-              <button type="button" class="btn btn-xs btn-light" @click.stop="selectItem(item)">
+              <button
+                type="button"
+                :class="['btn btn-xs btn-light', 'e2e-BT-smartAnnotations-resultRow-user-mention']"
+                :data-e2e="`e2e-BT-smartAnnotations-resultRow-user-${item.email}-mention`"
+                @click.stop="selectItem(item)"
+              >
                 <i class="sn-icon sn-icon-mention"></i>
                 {{ i18n.t('atwho.buttons.mention') }}
               </button>
@@ -63,33 +75,70 @@
           <template v-else>
             <span class="text-[0.625rem] font-semibold uppercase text-sn-grey-700 shrink-0 leading-none" v-html="highlightMatch(item.code)"></span>
             <span class="text-sn-grey-500 leading-none">&middot;</span>
-            <span class="truncate leading-none" v-html="highlightMatch(itemDisplayName(item))"></span>
-            <span v-if="isDrillable(item)" @click.stop="addToStack(item)" class="sn-icon sn-icon-arrow-right text-sn-grey-700 shrink-0"></span>
+            <span
+              :class="['truncate leading-none', 'e2e-BT-smartAnnotations-resultRow-title']"
+              v-html="highlightMatch(itemDisplayName(item))"
+              :data-e2e="`e2e-BT-smartAnnotations-resultRow-${item.code}-title`"
+            ></span>
+            <span
+              v-if="isDrillable(item)"
+              @click.stop="addToStack(item)"
+              :class="['sn-icon sn-icon-arrow-right text-sn-grey-700 shrink-0', 'e2e-BT-smartAnnotations-resultRow-arrow']"
+              :data-e2e="`e2e-BT-smartAnnotations-resultRow-${item.code}-arrow`"
+            ></span>
             <span v-if="mentioningPageItem === item" class="flex items-center gap-1.5 shrink-0 ml-auto">
               <input type="text" inputmode="numeric" pattern="[0-9]*" class="page-number-input w-40 border border-sn-light-grey rounded px-2 py-1 text-sm"
                      :value="pageNumberInput" :placeholder="i18n.t('atwho.buttons.add_page_number')"
+                     data-e2e="e2e-IF-smartAnnotations-resultRow-pageMention-pageNumber"
                      @click.stop @input="onPageNumberInput" @keydown.stop="onPageInputKeydown($event, item)" />
-              <button type="button" class="btn btn-xs btn-light" :disabled="!pageNumberInput" @click.stop="confirmPageMention(item)">
+              <button
+                type="button"
+                :class="['btn btn-xs btn-light', 'e2e-BT-smartAnnotations-resultRow-pageMention-add']"
+                :disabled="!pageNumberInput"
+                @click.stop="confirmPageMention(item)"
+                :data-e2e="`e2e-BT-smartAnnotations-resultRow-pageMention-${item.code}-add`"
+              >
                 <i class="sn-icon sn-icon-assign"></i>
                 {{ i18n.t('atwho.buttons.add') }}
               </button>
             </span>
             <span v-else class="tw-hidden group-hover:flex items-center gap-1.5 shrink-0 ml-auto">
-              <button v-if="isPdfFile(item)" type="button" class="btn btn-xs btn-light" @click.stop="startPageMention(item)">
+              <button
+                v-if="isPdfFile(item)"
+                type="button"
+                :class="['btn btn-xs btn-light', 'e2e-BT-smartAnnotations-resultRow-mentionPage']"
+                @click.stop="startPageMention(item)"
+                :data-e2e="`e2e-BT-smartAnnotations-resultRow-${item.code}-mentionPage`"
+              >
                 <i class="sn-icon sn-icon-page"></i>
                 {{ i18n.t('atwho.buttons.mention_page') }}
               </button>
-              <button type="button" class="btn btn-xs btn-light" @click.stop="selectItem(item)">
+              <button
+                type="button"
+                :class="['btn btn-xs btn-light', 'e2e-BT-smartAnnotations-resultRow-add']"
+                @click.stop="selectItem(item)"
+                :data-e2e="`e2e-BT-smartAnnotations-resultRow-${item.code}-add`"
+              >
                 <i class="sn-icon sn-icon-assign"></i>
                 {{ i18n.t('atwho.buttons.add') }}
               </button>
-              <button v-if="item.my_module_id && !item.row_assigned" type="button" class="btn btn-xs btn-light"
-                      @click.stop="assignItem(item)">
+              <button
+                v-if="item.my_module_id && !item.row_assigned"
+                type="button"
+                :class="['btn btn-xs btn-light', 'e2e-BT-smartAnnotations-resultRow-assignTask']"
+                @click.stop="assignItem(item)"
+                :data-e2e="`e2e-BT-smartAnnotations-resultRow-${item.code}-assignTask`"
+              >
                 <i class="sn-icon sn-icon-assign-to-task"></i>
                 {{ i18n.t('atwho.buttons.assign') }}
               </button>
-              <button v-if="item.protocol_id && !item.row_assigned" type="button" class="btn btn-xs btn-light"
-                      @click.stop="assignToProtocol(item)">
+              <button
+                v-if="item.protocol_id && !item.row_assigned"
+                type="button"
+                :class="['btn btn-xs btn-light', 'e2e-BT-smartAnnotations-resultRow-assignProtocol']"
+                @click.stop="assignToProtocol(item)"
+                :data-e2e="`e2e-BT-smartAnnotations-resultRow-${item.code}-assignProtocol`"
+              >
                 <i class="sn-icon sn-icon-protocols-templates"></i>
                 {{ i18n.t('atwho.buttons.assign_to_protocol') }}
               </button>
@@ -97,16 +146,34 @@
           </template>
         </div>
         <template v-if="!loading">
-          <div v-if="limitReached" class="text-sn-grey-700 text-sm py-1 px-2">{{ i18n.t('atwho.more_results') }}</div>
+          <div
+            v-if="limitReached"
+            class="text-sn-grey-700 text-sm py-1 px-2"
+            data-e2e="e2e-TX-smartAnnotations-results-moreResults"
+          >
+            {{ i18n.t('atwho.more_results') }}
+          </div>
 
           <div v-if="items && items.length === 0 && query" class="py-6 px-8 text-center text-sn-grey-700">
-            <h1 class="text-sm font-semibold text-sn-black"
-                v-html="i18n.t('atwho.no_results.no_matches_html', { query: escapeHtml(query) })"></h1>
-            <div class="text-sm mt-2">{{ i18n.t('atwho.no_results.no_matches_hint') }}</div>
+            <h1
+              class="text-sm font-semibold text-sn-black"
+              v-html="i18n.t('atwho.no_results.no_matches_html', { query: escapeHtml(query) })"
+              data-e2e="e2e-TX-smartAnnotations-results-noMatches"
+            ></h1>
+            <div
+              class="text-sm mt-2" data-e2e="e2e-TX-smartAnnotations-results-noMatchesHint">
+              {{ i18n.t('atwho.no_results.no_matches_hint') }}
+            </div>
           </div>
           <div v-else-if="items && items.length === 0" class="py-6 px-8 text-center text-sn-grey-700">
-            <h1 class="text-sm font-semibold text-sn-black">{{ i18n.t(`atwho.no_results.${noResultsKey}`) }}</h1>
-            <div class="text-sm mt-2">{{ i18n.t('atwho.no_results.description') }}</div>
+            <h1
+              class="text-sm font-semibold text-sn-black" data-e2e="e2e-TX-smartAnnotations-results-noResults">
+              {{ i18n.t(`atwho.no_results.${noResultsKey}`) }}
+            </h1>
+            <div
+              class="text-sm mt-2" data-e2e="e2e-TX-smartAnnotations-results-noResultsDescription">
+              {{ i18n.t('atwho.no_results.description') }}
+            </div>
           </div>
         </template>
       </template>
