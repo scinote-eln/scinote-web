@@ -44,6 +44,7 @@ const entryList = {
   vue_components_repository_item_relationships: './app/javascript/packs/vue/legacy/repository_item_relationships.js',
   vue_components_export_stock_consumption_modal: './app/javascript/packs/vue/legacy/export_stock_consumption_modal.js',
   vue_user_preferences: './app/javascript/packs/vue/user_preferences.js',
+  vue_user_sessions: './app/javascript/packs/vue/user_sessions.js',
   vue_components_manage_stock_value_modal: './app/javascript/packs/vue/legacy/manage_stock_value_modal.js',
   vue_legacy_datetime_picker: './app/javascript/packs/vue/legacy/datetime_picker.js',
   vue_smart_annotation_flyout: './app/javascript/packs/vue/smart_annotation_flyout.js',

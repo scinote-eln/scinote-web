@@ -50,4 +50,13 @@ if ENV['SCINOTE_SCHEDULER_ENABLED'] == 'true'
   schedule_task(scheduler, '1d') do
     NotificationCleanupJob.perform_now
   end
+
+  if ENV['SCINOTE_SERVERSIDE_SESSIONS'] == 'true'
+    # Clean up expired server-side sessions (abandoned browsers, anonymous visits), which are never deleted otherwise
+    schedule_task(scheduler, '1d') do
+      # User#timeout_in can be overridden by organization settings, keep at least a day of margin
+      cutoff = [User.new.timeout_in, 1.day].max.ago
+      ActiveRecord::SessionStore::Session.where(updated_at: ...cutoff).delete_all
+    end
+  end
 end

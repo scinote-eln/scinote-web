@@ -1046,6 +1046,11 @@ Rails.application.routes.draw do
     end
 
     resources :connected_devices, controller: 'users/connected_devices', only: %i(destroy)
+    resources :sessions_management, controller: 'users/sessions_management', only: %i(index destroy) do
+      collection do
+        delete :destroy_others
+      end
+    end
 
     resources :storage_locations, only: %i(index create destroy update show) do
       collection do
