@@ -11,6 +11,11 @@ class RepositoryCellsController < ApplicationController
 
   def update
     value = params[:value]
+    if @repository_column.mandatory? && value.blank?
+      error = I18n.t('repositories.mandatory_column.missing_value', column: @repository_column.name)
+      return render json: { errors: [error] }, status: :unprocessable_content
+    end
+
     @cell = @repository_row.repository_cells.find_by(repository_column: @repository_column)
 
     ActiveRecord::Base.transaction do

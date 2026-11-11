@@ -440,9 +440,12 @@ export default {
         }
         this.updateRowData(updatedRow);
         this.textCellModalObject = null;
-      }).catch(() => {
-        HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
+      }).catch((error) => {
+        const errors = error.response?.data?.errors;
+        HelperModule.flashAlertMsg(errors?.length ? errors.join(' ') : I18n.t('general.error'), 'danger');
         this.textCellModalObject = null;
+        // re-render the cell so it shows the stored value again
+        this.$refs.repositoryTable.gridApi?.refreshCells({ columns: [columnDef.field], force: true });
       });
     },
     openStockModal(row) {

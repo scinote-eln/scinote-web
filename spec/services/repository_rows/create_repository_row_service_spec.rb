@@ -50,4 +50,52 @@ describe RepositoryRows::CreateRepositoryRowService do
       end
     end
   end
+
+  context 'when repository has mandatory columns' do
+    before { column.update!(mandatory: true) }
+
+    context 'when mandatory cell is missing' do
+      let(:params) do
+        {
+          repository_cells: Hash[date_column.id, '2026-11-11'],
+          repository_row: { name: 'repo name' }
+        }
+      end
+
+      it 'does not create a row' do
+        expect { service_call }.not_to(change(RepositoryRow, :count))
+      end
+
+      it 'returns mandatory cell error' do
+        expect(service_call.succeed?).to be_falsey
+        expect(service_call.errors[:repository_cells]).to be_present
+      end
+    end
+
+    context 'when mandatory cell is blank' do
+      let(:params) do
+        {
+          repository_cells: Hash[column.id, ' '],
+          repository_row: { name: 'repo name' }
+        }
+      end
+
+      it 'does not create a row' do
+        expect { service_call }.not_to(change(RepositoryRow, :count))
+      end
+    end
+
+    context 'when mandatory cell is present' do
+      let(:params) do
+        {
+          repository_cells: Hash[column.id, 'some value'],
+          repository_row: { name: 'repo name' }
+        }
+      end
+
+      it 'creates new row' do
+        expect { service_call }.to change(RepositoryRow, :count).by(1)
+      end
+    end
+  end
 end

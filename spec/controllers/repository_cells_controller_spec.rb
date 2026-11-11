@@ -128,6 +128,35 @@ describe RepositoryCellsController, type: :controller do
         end
       end
 
+      context 'and the new value is blank for a mandatory column' do
+        let(:params) do
+          {
+            repository_id: repository.id,
+            repository_row_id: repository_row.id,
+            repository_column_id: repository_column.id,
+            value: ''
+          }
+        end
+
+        before { repository_column.update!(mandatory: true) }
+
+        it 'does not destroy the existing cell' do
+          expect { action }.not_to(change { RepositoryCell.count })
+        end
+
+        it 'renders an error' do
+          action
+          expect(response).to have_http_status(:unprocessable_content)
+          expect(JSON.parse(response.body)['errors']).to be_present
+        end
+
+        it 'does not log an activity' do
+          expect(Activities::CreateActivityService).not_to receive(:call)
+
+          action
+        end
+      end
+
       context 'and the new value is the same' do
         let(:params) do
           {
