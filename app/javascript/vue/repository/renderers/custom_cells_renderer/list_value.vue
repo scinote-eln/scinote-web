@@ -1,16 +1,19 @@
 <template>
   <div>
-    <div v-if="canManage" class="relative">
+    <div v-if="canManage" :title="mandatoryErrorTitle" class="relative">
       <SelectDropdown
         class="h-10 flex w-full"
         :searchable="true"
         :options="options"
-        :borderless="true"
+        :borderless="!params.inSidebar"
         :clearable="true"
+        :error="showError"
         size="sm"
         :value="listValue"
         @change="changeValue"
+        @close="touch"
       />
+      <MandatoryError :show="params.inSidebar && showError" />
     </div>
     <div v-else>
       {{ selectedOption ? selectedOption[1] : '' }}
@@ -20,6 +23,8 @@
 
 <script>
 import SelectDropdown from '../../../shared/select_dropdown.vue';
+import MandatoryError from './shared/mandatory_error.vue';
+import mandatoryCellMixin from './mixins/mandatory_cell.js';
 
 export default {
   name: 'ListValue',
@@ -28,10 +33,15 @@ export default {
       required: true
     }
   },
+  mixins: [mandatoryCellMixin],
   components: {
+    MandatoryError,
     SelectDropdown
   },
   computed: {
+    isEmpty() {
+      return this.listValue === null || this.listValue === undefined;
+    },
     options() {
       return this.params.colDef.cellRendererParams.columnItems.map(item => ([
         item.id, item.label
@@ -53,6 +63,7 @@ export default {
   methods: {
     changeValue(newValue) {
       this.listValue = newValue;
+      if (this.blockedByMandatory()) return;
 
       this.params.dtComponent.$emit(
         'updateCell',
