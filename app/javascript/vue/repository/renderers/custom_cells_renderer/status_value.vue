@@ -1,17 +1,20 @@
 <template>
   <div>
-    <div v-if="canManage" class="relative">
+    <div v-if="canManage" :title="mandatoryErrorTitle" class="relative">
       <SelectDropdown
         class="h-10 flex w-full"
         :options="options"
-        :borderless="true"
+        :borderless="!params.inSidebar"
         :clearable="true"
         :labelRenderer="optionRenderer"
         :optionRenderer="optionRenderer"
+        :error="showError"
         size="sm"
         :value="statusValue"
         @change="changeValue"
+        @close="touch"
       />
+      <MandatoryError :show="params.inSidebar && showError" />
     </div>
     <div v-else-if="selectedOption">
       <div ref="container" class="flex items-center gap-1">
@@ -24,6 +27,8 @@
 <script>
 import twemoji from 'twemoji';
 import SelectDropdown from '../../../shared/select_dropdown.vue';
+import MandatoryError from './shared/mandatory_error.vue';
+import mandatoryCellMixin from './mixins/mandatory_cell.js';
 import optionRenderer from './option_renderer/status.vue';
 
 export default {
@@ -33,11 +38,16 @@ export default {
       required: true
     }
   },
+  mixins: [mandatoryCellMixin],
   components: {
+    MandatoryError,
     SelectDropdown,
     optionRenderer
   },
   computed: {
+    isEmpty() {
+      return this.statusValue === null || this.statusValue === undefined;
+    },
     options() {
       return this.params.colDef.cellRendererParams.columnItems.map(item => ([
         item.id, item.label, { icon: item.icon }
@@ -72,6 +82,7 @@ export default {
     },
     changeValue(newValue) {
       this.statusValue = newValue;
+      if (this.blockedByMandatory()) return;
 
       this.params.dtComponent.$emit(
         'updateCell',

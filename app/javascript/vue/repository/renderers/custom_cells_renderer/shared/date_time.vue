@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="canManage" class="relative flex items-center gap-1" :title="!params.inSidebar && showError ? mandatoryError : null">
+    <div v-if="canManage" class="relative flex items-center gap-1" :title="mandatoryErrorTitle">
       <DateTimePicker
         :class="{ 'borderless-input -mt-[1px]': !params.inSidebar }"
         :error="showError"
@@ -14,11 +14,7 @@
         :range="isRange"
         valueType="stringWithoutTimezone"
         :clearable="true"/>
-      <div v-if="params.inSidebar && showError"
-        class="absolute top-full left-0 w-full truncate text-xs text-sn-delete-red"
-        data-e2e="e2e-TX-itemCard-mandatoryError">
-        {{ mandatoryError }}
-      </div>
+      <MandatoryError :show="params.inSidebar && showError" />
     </div>
     <div v-else-if="params.value">
       <div v-if="isRange" class="flex items-center gap-1">
@@ -39,6 +35,8 @@
 
 <script>
 import DateTimePicker from '../../../../shared/date_time_picker.vue';
+import MandatoryError from './mandatory_error.vue';
+import mandatoryCellMixin from '../mixins/mandatory_cell.js';
 
 export default {
   name: 'DateTimeShared',
@@ -47,8 +45,10 @@ export default {
       required: true
     }
   },
+  mixins: [mandatoryCellMixin],
   components: {
-    DateTimePicker
+    DateTimePicker,
+    MandatoryError
   },
   created() {
     if (this.isRange) {
@@ -64,26 +64,14 @@ export default {
   },
   data() {
     return {
-      value: null,
-      touched: false
+      value: null
     };
   },
   computed: {
-    mandatory() {
-      const { isMandatory, mandatory } = this.params.colDef?.cellRendererParams || {};
-
-      return isMandatory ? !!isMandatory() : !!mandatory;
-    },
     isEmpty() {
       if (Array.isArray(this.value)) return !this.value[0] || !this.value[1];
 
       return !this.value;
-    },
-    showError() {
-      return this.mandatory && this.touched && this.isEmpty;
-    },
-    mandatoryError() {
-      return this.i18n.t('repositories.mandatory_column.field_error');
     },
     canManage() {
       return this.params?.data?.permissions?.manage || false;
@@ -148,8 +136,7 @@ export default {
       }
     },
     saveValue() {
-      this.touched = true;
-      if (this.showError && this.params.data?.id) return;
+      if (this.blockedByMandatory()) return;
 
       let valueToSend;
 

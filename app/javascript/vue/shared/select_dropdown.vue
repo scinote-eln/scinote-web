@@ -10,11 +10,12 @@
       class="px-3 py-1 rounded flex items-center cursor-pointer grow"
       @click="open"
       :class="[{
-        'border border-solid': !borderless,
-        '!border-sn-science-blue': isOpen && !borderless,
-        '!border-sn-light-grey': !isOpen && !borderless,
+        'border border-solid': !borderless || error,
+        '!border-sn-delete-red': error,
+        '!border-sn-science-blue': isOpen && !borderless && !error,
+        '!border-sn-light-grey': !isOpen && !borderless && !error,
         'bg-sn-super-light-grey': disabled,
-        'pl-0': borderless
+        'pl-0': borderless && !error
       }]"
       :style="sizeStyle"
     >
@@ -154,7 +155,8 @@ export default {
     e2eValue: { type: String, default: '' },
     ajaxMethod: { type: String, default: 'get' },
     oneLineLabel: { type: Boolean, default: false },
-    hideSelectAll: { type: Boolean, default: false }
+    hideSelectAll: { type: Boolean, default: false },
+    error: { type: Boolean, default: false }
   },
   directives: {
     'click-outside': vOnClickOutside
