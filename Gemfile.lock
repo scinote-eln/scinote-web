@@ -472,7 +472,7 @@ GEM
     newrelic_rpm (10.7.1)
       logger
     nio4r (2.7.5)
-    nokogiri (1.19.4-x86_64-linux-gnu)
+    nokogiri (1.19.5-x86_64-linux-gnu)
       racc (~> 1.4)
     noticed (1.6.3)
       http (>= 4.0.0)
@@ -928,7 +928,7 @@ DEPENDENCIES
   mime-types (~> 3.4)
   nested_form_fields
   newrelic_rpm
-  nokogiri (~> 1.19.4)
+  nokogiri (~> 1.19.5)
   noticed (< 2)
   odf-report!
   oj
