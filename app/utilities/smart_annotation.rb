@@ -42,7 +42,7 @@ class SmartAnnotation
       serialize_my_modules(my_modules) +
       serialize_repositories(repositories) +
       serialize_repository_rows(repository_rows, assignable_my_module_id, assignable_protocol_id) +
-      serialize_files(files)
+      serialize_files(files_of(find_my_module(assignable_my_module_id)))
     ).sort_by { |item| item[:updated_at] }.reverse
 
     cap(items)
