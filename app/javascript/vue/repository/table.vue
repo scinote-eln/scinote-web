@@ -17,8 +17,6 @@
       }"
       :enableBarcodeSearch="true"
       :fetchColumnsOnReload="true"
-      :addingNewRow="addingNewRow"
-      :newRowTemplate="newRowTemplate"
       :activePageUrl="activePageUrl"
       :archivedPageUrl="archivedPageUrl"
       :currentViewMode="currentViewMode"
@@ -31,17 +29,15 @@
       @tableStateSaved="onTableStateSaved"
       :objectArchived="archived"
       :hiddenDataMessage="i18n.t('repositories.show.no_active_repository_rows_archived_repository')"
-      @cancelCreation="cancelCreation"
       @showTextCell="showTextCellModal"
       @updateCell="updateCell"
       @uploadFile="uploadFile"
       @openStockModal="openStockModal"
       @updateRemindersCount="updateRemindersCount"
-      @createRow="createRow"
       @changeName="changeName"
       @tableReloaded="onTableReloaded"
       @applyFilters="applyFilters"
-      @startCreate="addingNewRow = true"
+      @startCreate="startCreate"
       @importItems="importItems"
       @clearAllReminders="clearAllReminders"
       @assign="openAssignToTaskModal"
@@ -122,7 +118,6 @@ import { FULL_TABLE_STATE_PERMISSIONS } from '../shared/datatable/table_state.js
 import {
   repository_table_index_ag_path,
   repository_path,
-  repository_repository_rows_path,
   repository_repository_row_path,
   repository_repository_row_repository_cell_path,
   rails_direct_uploads_path,
@@ -165,7 +160,6 @@ export default {
     ManageColumnsModal,
     repositoryVersion: null,
     mandatoryColumns: {},
-    addingNewRow: false,
     reloadingTable: false,
     textCellModalObject: null,
     stockValueModalUrl: null,
@@ -176,13 +170,7 @@ export default {
     printLabelRows: null,
     createEventModalRow: null,
     currentPageRows: [],
-    activeFilter: [],
-    newRowTemplate: {
-      name: {
-        value: '',
-        isValid: false
-      },
-    },
+    activeFilter: []
   }),
   created() {
     window.repositoryTable = this;
@@ -275,9 +263,6 @@ export default {
     repositoryUrl() {
       return repository_path(this.repositoryId);
     },
-    createRowUrl() {
-      return repository_repository_rows_path(this.repositoryId);
-    },
     toolbarActionsUrl() {
       return actions_toolbar_repository_repository_rows_path(this.repositoryId)
     },
@@ -335,19 +320,15 @@ export default {
           this.reloadingTable = true;
         });
     },
-    cancelCreation() {
-      this.addingNewRow = false;
+    startCreate() {
+      window.repositoryItemSidebarComponent.openNewItemCard(this.repositoryId, this.addCreatedRow);
     },
-    createRow(newRow) {
-      axios.post(this.createRowUrl, {
-        repository_row: {
-          name: newRow.name.value
-        }
-      }).then((response) => {
-        this.addingNewRow = false;
-        this.$refs.repositoryTable.updateRowData(response.data.data);
-      }).catch(() => {
-        HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
+    addCreatedRow(row) {
+      this.$refs.repositoryTable.updateRowData(row);
+      if (row.attributes.active_reminders_count > 0) this.hasActiveReminders = true;
+      this.$nextTick(() => {
+        const viewport = this.$refs.repositoryTable.$refs.agGrid?.$el.querySelector('.ag-body-viewport');
+        if (viewport) viewport.scrollTop = 0;
       });
     },
     changeName(name, row) {

@@ -18,7 +18,7 @@ class RepositoryRowsController < ApplicationController
   before_action :check_read_permissions, except: %i(create update delete_records
                                                     copy_records archive_records restore_records)
   before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
-  before_action :check_create_permissions, only: :create
+  before_action :check_create_permissions, only: %i(new create)
   before_action :check_delete_permissions, only: :delete_records
   before_action :check_manage_permissions, only: %i(update archive_records restore_records copy_records)
 
@@ -68,9 +68,7 @@ class RepositoryRowsController < ApplicationController
       end
 
       format.json do
-        @my_module = if params[:my_module_id].present?
-                       MyModule.repository_row_assignable_by_user(current_user).find_by(id: params[:my_module_id])
-                     end
+        @my_module = (MyModule.repository_row_assignable_by_user(current_user).find_by(id: params[:my_module_id]) if params[:my_module_id].present?)
         return render_403 if @my_module && !can_read_my_module?(@my_module)
 
         if @my_module
@@ -87,7 +85,7 @@ class RepositoryRowsController < ApplicationController
         # matches index_ag's own `view_mode == 'archived' -> can_manage_repository_rows = false`:
         # an archived row's custom columns/stock are read-only in the table, so they must be here too
         editable_context = @repository_row.snapshot_at.nil? && !@repository_row.archived? &&
-                            @repository.is_a?(Repository) && !@repository.is_a?(SoftLockedRepository)
+                           @repository.is_a?(Repository) && !@repository.is_a?(SoftLockedRepository)
 
         @row = Lists::RepositoryRowSerializer.new(
           @repository_row,
@@ -107,6 +105,13 @@ class RepositoryRowsController < ApplicationController
     end
   end
 
+  def new
+    render json: {
+      column_defs: new_item_column_defs,
+      can_manage_stock: can_manage_repository_stock?(@repository)
+    }
+  end
+
   def assigned_counters
     assigned_my_modules_count, assigned_experiments_count, assigned_projects_count =
       @repository_row.my_module_repository_rows
@@ -122,6 +127,9 @@ class RepositoryRowsController < ApplicationController
   end
 
   def create
+    stock_payload = stock_cell_payload
+    return render_403 if stock_payload && !can_manage_repository_stock?(@repository)
+
     service = RepositoryRows::CreateRepositoryRowService
               .call(repository: @repository, user: current_user, params: update_params)
 
@@ -129,6 +137,7 @@ class RepositoryRowsController < ApplicationController
       repository_row = service.repository_row
       log_activity(:create_item_inventory, repository_row, { repository_row: repository_row.id,
                                                              repository: @repository.id })
+      log_stock_activity(repository_row, stock_payload) if stock_payload
       repository_row.repository_cells.where(value_type: 'RepositoryTextValue').each do |repository_cell|
         record_annotation_notification(repository_row, repository_cell)
       end
@@ -170,7 +179,7 @@ class RepositoryRowsController < ApplicationController
     if label_code[:error].empty?
       render json: { label_code: label_code[:label] }
     else
-      render json: { error: label_code[:error].first, label_code: label_code[:label] }, status: :unprocessable_entity
+      render json: { error: label_code[:error].first, label_code: label_code[:label] }, status: :unprocessable_content
     end
   end
 
@@ -327,7 +336,7 @@ class RepositoryRowsController < ApplicationController
         "#{link_to(t('projects.reports.new.save_PDF_to_inventory_modal.here'),
                    repository_path(@repository),
                    data: { 'no-turbolink' => true })}"
-      render json: { no_items: no_items_string }, status: :unprocessable_entity
+      render json: { no_items: no_items_string }, status: :unprocessable_content
     else
       render json: { results: load_available_rows }, status: :ok
     end
@@ -363,7 +372,7 @@ class RepositoryRowsController < ApplicationController
     if service.succeed?
       render json: { flash: t('repositories.archive_records.success_flash', repository: escape_input(@repository.name)) }
     else
-      render json: { error: service.error_message }, status: :unprocessable_entity
+      render json: { error: service.error_message }, status: :unprocessable_content
     end
   end
 
@@ -376,7 +385,7 @@ class RepositoryRowsController < ApplicationController
     if service.succeed?
       render json: { flash: t('repositories.restore_records.success_flash', repository: escape_input(@repository.name)) }
     else
-      render json: { error: service.error_message }, status: :unprocessable_entity
+      render json: { error: service.error_message }, status: :unprocessable_content
     end
   end
 
@@ -443,6 +452,7 @@ class RepositoryRowsController < ApplicationController
   private
 
   include StringUtility
+
   AvailableRepositoryRow = Struct.new(:id, :name, :has_file_attached)
 
   def load_repository
@@ -494,7 +504,7 @@ class RepositoryRowsController < ApplicationController
 
     render json: {
       flash: t('repositories.index.snapshot_provisioning_in_progress')
-    }, status: :unprocessable_entity
+    }, status: :unprocessable_content
   end
 
   def check_create_permissions
@@ -574,6 +584,7 @@ class RepositoryRowsController < ApplicationController
 
   def fetch_list_items(cell)
     return [] if cell.value_type != 'RepositoryListValue'
+
     RepositoryListItem.where(repository: @repository)
                       .where(repository_column: cell.repository_column)
                       .limit(Constants::SEARCH_LIMIT)
@@ -600,6 +611,43 @@ class RepositoryRowsController < ApplicationController
 
   def update_params
     params.permit(:my_module_id, :is_output, repository_row: :name, repository_cells: {}).to_h
+  end
+
+  def new_item_column_defs
+    repository_columns_ordered_by_state(RepositoryRow.new(repository: @repository)).map do |column|
+      column_def = RepositoryColumnSerializer.new(column).as_json.merge(id: column.id)
+      column_def[:column_items] = stock_unit_items(column) if column.data_type == 'RepositoryStockValue'
+      column_def
+    end
+  end
+
+  def stock_unit_items(column)
+    column.repository_stock_unit_items.map { |item| { id: item.id, label: item.data } }
+  end
+
+  def stock_cell_payload
+    stock_column = @repository.repository_stock_column
+    return unless stock_column
+
+    update_params[:repository_cells]&.find { |column_id, value| column_id.to_i == stock_column.id && value.present? }&.last
+  end
+
+  def log_stock_activity(repository_row, stock_payload)
+    stock_value = repository_row.repository_stock_value
+
+    Activities::CreateActivityService
+      .call(activity_type: :inventory_item_stock_set,
+            owner: current_user,
+            subject: @repository,
+            team: @repository.team,
+            message_items: {
+              repository: @repository.id,
+              repository_row: repository_row.id,
+              change_amount: stock_value.amount,
+              unit: stock_value.repository_stock_unit_item&.data,
+              new_amount: stock_value.amount,
+              comment: stock_payload[:comment]
+            })
   end
 
   def log_activity(type_of, repository_row, message_items = {})

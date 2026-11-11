@@ -41,7 +41,7 @@ class RepositoryStockValue < ApplicationRecord
     if repository_cell
       number_with_precision(
         amount,
-        precision: (repository_cell.repository_column.metadata['decimals'].to_i || 0),
+        precision: repository_cell.repository_column.metadata['decimals'].to_i || 0,
         strip_insignificant_zeros: false
       )
     end
@@ -51,7 +51,7 @@ class RepositoryStockValue < ApplicationRecord
     if repository_cell && low_stock_threshold
       number_with_precision(
         low_stock_threshold,
-        precision: (repository_cell.repository_column.metadata['decimals'].to_i || 0),
+        precision: repository_cell.repository_column.metadata['decimals'].to_i || 0,
         strip_insignificant_zeros: false
       )
     end
@@ -164,6 +164,7 @@ class RepositoryStockValue < ApplicationRecord
       value = new(attributes)
       value.amount = payload[:amount]
       value.low_stock_threshold = payload[:low_stock_threshold]
+      value.comment = payload[:comment]
       value.repository_stock_unit_item = value.repository_cell
                                               .repository_column
                                               .repository_stock_unit_items

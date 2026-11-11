@@ -965,7 +965,7 @@ Rails.application.routes.draw do
         end
       end
       resources :repository_table_filters, only: %i(index show create update destroy)
-      resources :repository_rows, only: %i(create show update) do
+      resources :repository_rows, only: %i(new create show update) do
         member do
           get :relationships
           get :assigned_task_list

@@ -59,4 +59,24 @@ describe RepositoryStockValue, type: :model do
       expect { repository_stock_value.save }.to (change(RepositoryLedgerRecord, :count).by(1))
     end
   end
+
+  describe '.new_with_payload' do
+    let(:column) { create :repository_column, :stock_type }
+    let(:unit_item) { create :repository_stock_unit_item, repository_column: column, data: 'kg' }
+    let(:repository_row) { create :repository_row, repository: column.repository }
+    let(:repository_cell) { RepositoryCell.new(repository_row: repository_row, repository_column: column) }
+    let(:attributes) { { repository_cell: repository_cell, created_by: column.created_by } }
+
+    it 'assigns amount, unit, threshold and comment from the payload' do
+      value = described_class.new_with_payload(
+        { amount: '4', unit_item_id: unit_item.id, low_stock_threshold: '1', comment: 'From the card' }.with_indifferent_access,
+        attributes
+      )
+
+      expect(value).to have_attributes(amount: BigDecimal('4'),
+                                       low_stock_threshold: BigDecimal('1'),
+                                       repository_stock_unit_item: unit_item,
+                                       comment: 'From the card')
+    end
+  end
 end

@@ -10,6 +10,9 @@
             <template v-if="stockObject && stockObject.id">
               {{ i18n.t('repository_stock_values.manage_modal.edit_title', { item: repositoryRowName }) }}
             </template>
+            <template v-else-if="!repositoryRowName">
+              {{ i18n.t('repository_stock_values.manage_modal.title_new_item') }}
+            </template>
             <template v-else>
               {{ i18n.t('repository_stock_values.manage_modal.title', { item: repositoryRowName }) }}
             </template>
@@ -162,8 +165,12 @@ export default {
   props: {
     stockUrl: {
       type: String,
-      required: true
+      default: null
     },
+    stockData: {
+      type: Object,
+      default: null
+    }
   },
   data() {
     return {
@@ -224,7 +231,11 @@ export default {
     }
   },
   created() {
-    this.fetchStockObject();
+    if (this.stockData) {
+      this.setStockData(this.stockData);
+    } else {
+      this.fetchStockObject();
+    }
   },
   methods: {
     validateDecimals(rawValue) {
@@ -251,18 +262,19 @@ export default {
     },
     fetchStockObject() {
       axios.get(this.stockUrl)
-        .then((response) => {
-          this.repositoryRowName = response.data.repository_row_name;
-          this.initialStockObject = {...response.data.stock_value};
-          this.stockObject = {...response.data.stock_value};
-          this.updateStockUrl = response.data.stock_url;
-          this.$nextTick(() => {
-            this.initializing = false;
-          });
-        })
+        .then((response) => this.setStockData(response.data))
         .catch(() => {
           HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
         });
+    },
+    setStockData(data) {
+      this.repositoryRowName = data.repository_row_name;
+      this.initialStockObject = {...data.stock_value};
+      this.stockObject = {...data.stock_value};
+      this.updateStockUrl = data.stock_url;
+      this.$nextTick(() => {
+        this.initializing = false;
+      });
     },
     validateStockObject() {
       if (this.initializing) return;
@@ -281,15 +293,22 @@ export default {
 
       if (this.isSaving || !this.isValid) return;
 
+      const stockValue = {
+        unit_item_id: this.stockObject.unit,
+        amount: this.newAmount,
+        comment: this.stockObject.comment,
+        low_stock_threshold: this.stockObject.reminder_enabled ? this.stockObject.low_stock_treshold : null
+      };
+
+      if (this.stockData) {
+        this.$emit('saveDraft', stockValue);
+        return;
+      }
+
       this.isSaving = true;
 
       axios.post(this.updateStockUrl, {
-        repository_stock_value: {
-          unit_item_id: this.stockObject.unit,
-          amount: this.newAmount,
-          comment: this.stockObject.comment,
-          low_stock_threshold: this.stockObject.reminder_enabled ? this.stockObject.low_stock_treshold : null
-        },
+        repository_stock_value: stockValue,
         operator: this.operation,
         change_amount: Math.abs(new Decimal(this.stockObject.amount))
       })

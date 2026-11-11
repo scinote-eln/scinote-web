@@ -3149,6 +3149,15 @@ en:
       mandatory_columns_label: "Mandatory columns"
       custom_columns_label: "Custom columns"
       no_custom_columns_label: "No custom columns"
+      new_item:
+        title_placeholder: "Enter name"
+        create_item: "Create item"
+        creating: "Creating..."
+        create_another: "Create another"
+        discard_title: "Discard new item?"
+        discard_description: "The information you entered will be lost and the item won't be created."
+        discard_confirm: "Discard Item"
+        discard_cancel: "Keep editing"
       repository_time_range_value:
         no_time_range: 'No time range'
         placeholder: 'Enter time range'
@@ -3228,6 +3237,7 @@ en:
   repository_stock_values:
     manage_modal:
       title: "Stock %{item}"
+      title_new_item: "Set stock"
       edit_title: "Edit %{item} stock"
       save_stock: "Save stock"
       enter_amount: "Enter the amount and unit of the item you wish to stock."

@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center gap-2 relative">
-    <template v-if="!editing && this.params.data.id">
+    <template v-if="!editing">
       <template v-if="params.data.name">
         <div class="w-full flex relative gap-1 group">
           <a v-if="params.data.name"
@@ -90,23 +90,9 @@ export default {
       saving: false
     };
   },
-  mounted() {
-    if (this.$refs.nameInput) {
-      this.$nextTick(() => {
-        this.$refs.nameInput.focus();
-      });
-    }
-  },
-  watch: {
-    rowName(newVal) {
-      if (!this.params.data.id) {
-        this.params.dtComponent.setTemplateValue(newVal, 'name', this.isValid);
-      }
-    }
-  },
   methods: {
     startEditing() {
-      if (this.editing || !this.params.data.id) return;
+      if (this.editing) return;
       this.rowName = this.params.data.name;
       this.editing = true;
       this.$nextTick(() => {
@@ -114,7 +100,7 @@ export default {
       });
     },
     saveNameClickAway() {
-      if (this.editing && this.params.data.id) {
+      if (this.editing) {
         this.saveName();
       }
     },
@@ -122,7 +108,6 @@ export default {
       this.editing = false;
       this.rowName = this.params.data.name;
       this.error = null;
-      this.params.dtComponent.cancelCreation();
     },
     handleKeydown(event) {
       // Prevent arrow keys from moving the table selection
@@ -149,7 +134,6 @@ export default {
         } else if (this.rowName.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH) {
           this.error = this.i18n.t('repositories.table.name.errors.too_long', { max_length: GLOBAL_CONSTANTS.NAME_MAX_LENGTH });
         }
-        this.params.dtComponent.setTemplateValue(this.rowName, 'name', this.isValid);
         return;
       } else {
         this.error = null;
@@ -163,12 +147,7 @@ export default {
 
       this.saving = true;
 
-      if (this.params.data.id) {
-        this.params.dtComponent.$emit('changeName', this.rowName, this.params.data);
-      } else {
-        this.params.dtComponent.setTemplateValue(this.rowName, 'name', this.isValid);
-        this.params.dtComponent.createRow();
-      }
+      this.params.dtComponent.$emit('changeName', this.rowName, this.params.data);
     }
   }
 };
