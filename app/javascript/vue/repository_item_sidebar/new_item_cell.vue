@@ -104,7 +104,8 @@ export default {
             columnId: this.column.id,
             columnDataType: this.dataType,
             columnItems: this.column.column_items,
-            metadata: this.column.metadata
+            metadata: this.column.metadata,
+            mandatory: this.column.mandatory
           }
         },
         repositoryId: this.repositoryId,
@@ -112,6 +113,7 @@ export default {
         columnDataType: this.dataType,
         columnItems: this.column.column_items,
         metadata: this.column.metadata,
+        inSidebar: true,
         dtComponent: { $emit: this.handleRendererEvent }
       };
     }

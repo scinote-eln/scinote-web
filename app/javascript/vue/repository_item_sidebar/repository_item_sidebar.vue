@@ -375,6 +375,7 @@ export default {
         'a',
         '.modal',
         '.dp--instance-calendar',
+        '.dp--outer-menu-wrap',
         '.label-printing-progress-modal',
         '.atwho-view',
         '.sn-select-dropdown',

@@ -191,7 +191,8 @@ export default {
                 legacyId: parseInt(column.id, 10),
                 columnItems: column.attributes.column_items,
                 metadata: column.attributes.metadata,
-                mandatory: column.attributes.mandatory
+                mandatory: column.attributes.mandatory,
+                isMandatory: () => this.mandatoryColumns?.[field] ?? column.attributes.mandatory
               },
               headerComponentParams: {
                 isMandatory: () => this.mandatoryColumns?.[field] ?? column.attributes.mandatory

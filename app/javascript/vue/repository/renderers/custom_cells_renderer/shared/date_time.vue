@@ -1,8 +1,9 @@
 <template>
   <div>
-    <div v-if="canManage" class="flex items-center gap-1">
+    <div v-if="canManage" class="relative flex items-center gap-1" :title="!params.inSidebar && showError ? mandatoryError : null">
       <DateTimePicker
-        class="borderless-input -mt-[1px]"
+        :class="{ 'borderless-input -mt-[1px]': !params.inSidebar }"
+        :error="showError"
         :defaultValue="value"
         @change="updateValue"
         @closed="saveValue"
@@ -13,6 +14,11 @@
         :range="isRange"
         valueType="stringWithoutTimezone"
         :clearable="true"/>
+      <div v-if="params.inSidebar && showError"
+        class="absolute top-full left-0 w-full truncate text-xs text-sn-delete-red"
+        data-e2e="e2e-TX-itemCard-mandatoryError">
+        {{ mandatoryError }}
+      </div>
     </div>
     <div v-else-if="params.value">
       <div v-if="isRange" class="flex items-center gap-1">
@@ -58,10 +64,27 @@ export default {
   },
   data() {
     return {
-      value: null
+      value: null,
+      touched: false
     };
   },
   computed: {
+    mandatory() {
+      const { isMandatory, mandatory } = this.params.colDef?.cellRendererParams || {};
+
+      return isMandatory ? !!isMandatory() : !!mandatory;
+    },
+    isEmpty() {
+      if (Array.isArray(this.value)) return !this.value[0] || !this.value[1];
+
+      return !this.value;
+    },
+    showError() {
+      return this.mandatory && this.touched && this.isEmpty;
+    },
+    mandatoryError() {
+      return this.i18n.t('repositories.mandatory_column.field_error');
+    },
     canManage() {
       return this.params?.data?.permissions?.manage || false;
     },
@@ -125,6 +148,9 @@ export default {
       }
     },
     saveValue() {
+      this.touched = true;
+      if (this.showError && this.params.data?.id) return;
+
       let valueToSend;
 
       if (this.isRange) {

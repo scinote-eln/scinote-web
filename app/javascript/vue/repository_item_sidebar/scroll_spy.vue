@@ -2,10 +2,10 @@
   <div class="flex gap-3">
     <div id="navigation-text"
          v-if="thresholds.length"
-         class="flex flex-col w-[130px] gap-3 py-2">
+         class="flex flex-col min-w-[130px] gap-3 py-2">
       <div v-for="(navigationItem, index) in itemsToCreate" :key="navigationItem.textId"
         @click="navigateToSection(navigationItem)"
-        class="text-sn-grey nav-text-item flex flex-col w-[130px] h-fit text-right hover:cursor-pointer"
+        class="text-sn-grey nav-text-item flex flex-col h-fit text-right whitespace-nowrap hover:cursor-pointer"
         :class="{ 'text-sn-science-blue': navigationItemsStatus[index] }"
         :data-e2e="'e2e-BT-repoItemSB-' + navigationItem.labelAlias"
         >

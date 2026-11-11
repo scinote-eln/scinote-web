@@ -3008,6 +3008,8 @@ en:
     mandatory_column:
       mark: "Mark as mandatory"
       unmark: "Unmark as mandatory"
+      missing_value: "%{column} is mandatory"
+      field_error: "Mandatory field"
     enforce_table_state:
       title: "Enforce your column layout"
       description: "Everyone in this inventory sees your column visibility, order, and pinning. Others can’t change them, and your future updates apply to them too."

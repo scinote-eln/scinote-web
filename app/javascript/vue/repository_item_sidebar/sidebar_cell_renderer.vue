@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="max-h-11">
-      <cell-renderer :params="params" />
+      <cell-renderer :key="renderKey" :params="params" />
     </div>
     <Teleport to="body">
       <TextCellModal
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-/* global ActiveStorage HelperModule */
+/* global ActiveStorage HelperModule I18n */
 
 import axios from '../../packs/custom_axios.js';
 import CellRenderer from '../repository/renderers/cell_renderer.vue';
@@ -47,7 +47,8 @@ export default {
   data() {
     return {
       textCellModalObject: null,
-      stockValueModalUrl: null
+      stockValueModalUrl: null,
+      renderKey: 0
     };
   },
   computed: {
@@ -63,7 +64,8 @@ export default {
           columnId: this.columnDef.id,
           columnDataType: this.columnDef.data_type,
           columnItems: this.columnDef.column_items,
-          metadata: this.columnDef.metadata
+          metadata: this.columnDef.metadata,
+          mandatory: this.columnDef.mandatory
         }
       };
     },
@@ -77,6 +79,7 @@ export default {
         columnDataType: this.columnDef.data_type,
         columnItems: this.columnDef.column_items,
         metadata: this.columnDef.metadata,
+        inSidebar: true,
         dtComponent: { $emit: this.handleRendererEvent }
       };
     }
@@ -125,8 +128,12 @@ export default {
           result: response.data.cell,
           activeRemindersCount: response.data.active_reminders_count
         });
-      }).catch(() => {
+      }).catch((error) => {
+        const errors = error.response?.data?.errors;
+        HelperModule.flashAlertMsg(errors?.length ? errors.join(' ') : I18n.t('general.error'), 'danger');
         this.textCellModalObject = null;
+        // re-render the cell so it shows the stored value again
+        this.renderKey += 1;
       });
     },
     uploadFile(rowData, colDef, file) {

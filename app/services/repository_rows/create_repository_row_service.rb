@@ -57,7 +57,21 @@ module RepositoryRows
           end.compact
         return false
       end
-      true
+
+      validate_mandatory_cells
+    end
+
+    def validate_mandatory_cells
+      cells = (@params[:repository_cells] || {}).to_h.stringify_keys
+      missing = @repository.repository_columns.where(mandatory: true).reject do |column|
+        cells[column.id.to_s].present?
+      end
+      return true if missing.empty?
+
+      @errors[:repository_cells] = missing.map do |column|
+        I18n.t('repositories.mandatory_column.missing_value', column: column.name)
+      end
+      false
     end
   end
 end
