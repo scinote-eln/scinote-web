@@ -243,7 +243,7 @@ GEM
     crack (1.0.1)
       bigdecimal
       rexml
-    crass (1.0.7)
+    crass (1.0.8)
     cssbundling-rails (1.4.3)
       railties (>= 6.0.0)
     csv (3.3.6)
@@ -428,9 +428,9 @@ GEM
       rb-inotify (~> 0.9, >= 0.9.10)
     llhttp (0.6.2)
     logger (1.7.0)
-    loofah (2.25.2)
+    loofah (2.25.3)
       crass (~> 1.0.2)
-      nokogiri (>= 1.12.0)
+      nokogiri (>= 1.19.5)
     mail (2.9.1)
       logger
       mini_mime (>= 0.1.1)
@@ -472,7 +472,7 @@ GEM
     newrelic_rpm (10.7.1)
       logger
     nio4r (2.7.5)
-    nokogiri (1.19.4-x86_64-linux-gnu)
+    nokogiri (1.19.7-x86_64-linux-gnu)
       racc (~> 1.4)
     noticed (1.6.3)
       http (>= 4.0.0)
