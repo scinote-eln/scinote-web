@@ -5,40 +5,55 @@ module MyModuleReports
     include Canaid::Helpers::PermissionsHelper
     PDFUNITE_ENCRYPTED_PDF_ERROR_STRING = 'Unimplemented Feature: Could not merge encrypted files'
 
-    def initialize(user, analytical_report, asset_ids, header_text, footer_text, add_numarization, add_blank_page)
+    def initialize(user, analytical_report)
       @user = user
       @analytical_report = analytical_report
       @my_module = @analytical_report.reference
-      @asset_ids = asset_ids
-      @header_text = header_text
-      @footer_text = footer_text
-      @add_numarization = add_numarization
-      @add_blank_page = add_blank_page
+      @asset_groups = analytical_report.params['asset_groups']
+      @header_text = analytical_report.params['header']
+      @display_attachment_references = analytical_report.params['display_attachment_references']
+      @add_reference_page_numbers = analytical_report.params['add_reference_page_numbers']
+      @display_attachment_groups = analytical_report.params['display_attachment_groups']
+      @add_group_numeration = analytical_report.params['add_group_numeration']
+      @add_blank_page = analytical_report.params['add_blank_page_after_group']
+
       @tempfiles = []
     end
 
     def generate!
       load_report!
 
-      assets = (@my_module.assets_in_steps.pdfs.active.with_active_step.where(id: @asset_ids) +
-                @my_module.assets_in_results.pdfs.active.with_active_result.where(id: @asset_ids)).in_order_of(:id, @asset_ids)
+      @asset_groups.each do |asset_group|
+        group_type, asset_ids = asset_group.values_at('type', 'asset_ids')
 
-      assets.each do |asset|
-        next unless can_read_asset?(@user, asset)
+        assets, parents = case group_type
+                          when 'step'
+                            [@my_module.assets_in_steps.with_active_step, @my_module.steps]
+                          when 'result'
+                            [@my_module.assets_in_results.with_active_result, @my_module.results]
+                          else
+                            next
+                          end
 
-        process_asset!(asset)
+        readable_assets = assets.pdfs.active
+                                .in_order_of(:id, asset_ids)
+                                .select { |asset| can_read_asset?(@user, asset) }
+        next if readable_assets.empty?
+
+        footer_text = parents.where(id: asset_group['id']).pick(:name).to_s
+        last_index = readable_assets.size - 1
+        current_page = 0
+
+        readable_assets.each_with_index do |asset, i|
+          current_page = process_asset!(asset, footer_text, current_page, i == last_index)
+        end
       end
 
-      File.open(@report) do |file|
+      File.open(@report, 'rb') do |file|
         @analytical_report.report.attach(io: file, filename: @original_filename)
       end
     ensure
-      @tempfiles.each do |tempfile|
-        tempfile.close
-        tempfile.unlink
-      rescue Errno::ENOENT
-        # already removed, nothing to do
-      end
+      @tempfiles&.each(&:close!)
     end
 
     private
@@ -52,27 +67,33 @@ module MyModuleReports
       @report = report_tempfile.path
     end
 
-    def process_asset!(asset)
+    def process_asset!(asset, footer_text, current_page, last_asset)
       asset.blob.open do |tempfile|
         pages, format, orientation = pdf_info(tempfile.path)
         content_path = tempfile.path
 
-        if @add_blank_page
-          blank_path = Rails.root.join("app/assets/report_templates/#{format}_#{orientation}_empty_page.pdf")
-          content_path = merge_pdf_files(content_path, blank_path.to_s)
-          pages += 1
-        end
+        if @header_text.present? || @display_attachment_references || @display_attachment_groups
+          file_name = "#{I18n.t('atwho.tags.file')}#{asset.file_title || asset.file_name}" if @display_attachment_references
 
-        if @header_text.present? || @footer_text.present? || @add_numarization
-          page_entries = Array.new(pages) { |i| { header: @header_text, footer: footer(i + 1) } }
+          page_entries = Array.new(pages) do |i|
+            {
+              header: @header_text,
+              group_footer: @display_attachment_groups ? footer(footer_text, @add_group_numeration, current_page + i + 1) : '',
+              reference_footer: @display_attachment_references ? footer(file_name, @add_reference_page_numbers, i + 1) : ''
+            }
+          end
+
           watermark_path = render_watermark(page_entries, format, orientation)
           content_path = overlay_watermark(content_path, watermark_path)
         end
 
+        current_page += pages
+        content_path = add_blank_page(content_path, footer_text, current_page, format, orientation) if last_asset && @add_blank_page
         @report = merge_pdf_files(@report, content_path)
+        current_page
       end
     rescue StandardError => e
-      raise e.class, "#{e.message} (asset_id: #{asset.id})", e.backtrace
+      raise e.exception("#{e.message} (asset_id: #{asset.id})")
     end
 
     def pdf_info(path)
@@ -122,7 +143,8 @@ module MyModuleReports
 
       ODFReport::Report.new(template_path.to_s) do |report|
         report.add_field :REPORT_HEADER, page_entry[:header]
-        report.add_field :REPORT_FOOTER, page_entry[:footer]
+        report.add_field :REPORT_FOOTER_REFERENCE, page_entry[:reference_footer]
+        report.add_field :REPORT_FOOTER_GROUP, page_entry[:group_footer]
       end.generate(filled_odt.path)
 
       filled_odt
@@ -161,11 +183,27 @@ module MyModuleReports
       merged_file.path
     end
 
-    def footer(index)
-      return @footer_text unless @add_numarization
-      return index.to_s if @footer_text.blank?
+    def add_blank_page(content_path, footer_text, current_page, format, orientation)
+      blank_path = Rails.root.join('app/assets/report_templates', "#{format}_#{orientation}_empty_page.pdf").to_s
+      raise ArgumentError, "Missing blank page template: #{format}_#{orientation}" unless File.exist?(blank_path)
 
-      "#{@footer_text}_#{index}"
+      if @header_text.present? || @display_attachment_groups
+        page_entry = {
+          header: @header_text,
+          group_footer: @display_attachment_groups ? footer(footer_text, @add_group_numeration, current_page + 1) : '',
+          reference_footer: ''
+        }
+        blank_path = overlay_watermark(blank_path, render_watermark([page_entry], format, orientation))
+      end
+
+      merge_pdf_files(content_path, blank_path)
+    end
+
+    def footer(footer_text, add_numarization, index)
+      return footer_text unless add_numarization
+      return index.to_s if footer_text.blank?
+
+      "#{footer_text}_#{index}"
     end
 
     def run_command(*cmd)

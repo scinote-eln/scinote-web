@@ -12,8 +12,11 @@
        :data-gallery-view-id="parentId"
        :data-preview-url="attachment.attributes.urls.preview"
     >
-      <span class="attachment-name" data-toggle="tooltip"
+      <span class="attachment-name flex gap-2 items-center" data-toggle="tooltip"
            data-placement="bottom">
+        <div v-if="attachment.attributes.file_title" class=" text-sn-black">
+          {{ attachment.attributes.file_title }}
+        </div>
         {{ attachment.attributes.file_name }}
 
       </span>
@@ -28,6 +31,7 @@
             @load="ActiveStoragePreviews.showPreview"/>
     </div>
     <div class="flex items-center gap-2 text-xs text-sn-grey overflow-hidden ml-auto">
+      <div class=" text-sn-grey-700 shrink-0">{{ attachment.attributes.code }}</div>
       <span v-if="!attachment.attributes.archived" class="truncate" :title="i18n.t('assets.placeholder.modified_label') + ' ' + attachment.attributes.updated_at_formatted">
           {{ i18n.t('assets.placeholder.modified_label') }}
           {{ attachment.attributes.updated_at_formatted }}

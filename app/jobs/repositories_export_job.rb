@@ -71,6 +71,7 @@ class RepositoriesExportJob < ApplicationJob
     end
 
     col_ids << -12 if StorageLocation.storage_locations_enabled?
+    col_ids.push(-9, -10) # push archived by and archived on columns
 
     # Define callback function for file name
     assets = {}
@@ -88,7 +89,7 @@ class RepositoriesExportJob < ApplicationJob
 
     # Generate CSV / XLSX
     service = RepositoryExportService
-              .new(@file_type, repository.repository_rows, col_ids, repository, @user, handle_name_func)
+              .new(@file_type, repository.repository_rows, col_ids.compact, repository, @user, handle_name_func)
     exported_data = service.export!
 
     File.binwrite(repository_items_file_name, exported_data)

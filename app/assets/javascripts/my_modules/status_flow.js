@@ -18,6 +18,9 @@
         $.get($(this).data('status-flow-url'), function(result) {
           animateSpinner($modalBody, false);
           $modalBody.html(result.html);
+        }).fail(function() {
+          animateSpinner($modalBody, false);
+          HelperModule.flashAlertMsg(I18n.t('errors.general'), 'danger');
         });
       });
 
@@ -48,10 +51,10 @@
           animateSpinner(null, false);
           if (e.status === 403) {
             HelperModule.flashAlertMsg(I18n.t('my_module_statuses.update_status.error.no_permission'), 'danger');
-          } else if (e.status === 422) {
+          } else if (e.status === 422 && e.responseJSON?.errors) {
             HelperModule.flashAlertMsg(e.responseJSON.errors, 'danger');
           } else {
-            HelperModule.flashAlertMsg('error', 'danger');
+            HelperModule.flashAlertMsg(I18n.t('errors.general'), 'danger');
           }
         }
       });

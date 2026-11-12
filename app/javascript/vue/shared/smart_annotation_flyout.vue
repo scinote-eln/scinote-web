@@ -1,0 +1,423 @@
+<template>
+  <div ref="flyout"
+    class="atwho-view bg-sn-white rounded-lg shadow-sn-classic-drop-shadow"
+    :class="{ old: everOpened }"
+    :style="positionStyle"
+    @mousedown="onRootMousedown"
+    data-e2e="e2e-FO-smartAnnotations"
+  >
+    <div
+      class="flex items-center gap-1 bg-sn-grey-100 min-h-11 px-3 py-2 text-sm border !border-transparent"
+      :class="{ '!border-b-sn-science-blue': searchFocused }"
+    >
+      <span v-if="navStack.length > 0 || query.length > 0" type="button" class="pr-1 text-sn-grey-700 hover:text-sn-black shrink-0 cursor-pointer" @click="navBack">
+        <i class="sn-icon sn-icon-close"></i>
+      </span>
+      <i v-else class="pr-1 sn-icon sn-icon-search text-sn-grey-700 shrink-0"></i>
+      <span v-for="(crumb, i) in navStack" :key="i" class="flex text-base items-center gap-1 truncate">
+        <i v-if="i > 0" class="text-sn-grey-500 sn-icon sn-icon-right"></i>
+        <span type="button" class="truncate hover:underline cursor-pointer text-sn-black font-medium"
+                @click="navTo(i)">{{ crumb.code }}</span>
+      </span>
+      <div class="flex items-center gap-1 min-w-0 flex-1">
+        <i v-if="navStack.length > 0" class="text-sn-grey-500 sn-icon sn-icon-right"></i>
+        <input ref="searchInput" type="text" :value="query"
+              :placeholder="searchPlaceholder"
+              class="border-0 bg-transparent focus:!outline-none focus:ring-0 focus:!border-0 w-full min-w-0 text-base"
+              autocomplete="off"
+              @focus="searchFocused = true"
+              @blur="searchFocused = false; onSearchBlur()"
+              data-e2e="e2e-IF-smartAnnotations-search"
+              @input="onSearchInput" @keydown="onSearchKeydown" />
+      </div>
+    </div>
+
+    <div v-if="showPills" class="p-4">
+      <div class="text-xs font-semibold text-sn-grey-700 mb-1.5">{{ i18n.t('atwho.navigate') }}</div>
+      <div class="flex flex-wrap gap-1.5">
+        <span v-for="(pill, index) in pills" :key="pill.tag" type="button"
+                class="px-3 py-1.5 cursor-pointer rounded-full text-sm text-sn-black bg-sn-super-light-grey hover:bg-sn-light-grey"
+                :class="{ 'outline outline-4 outline-sn-science-blue-hover': isActiveIndex(index) }"
+                :data-e2e="`e2e-BT-smartAnnotations-category-${pill.label.replace(/\W/g, '')}`"
+                @click="openPill(pill)">
+          {{ pill.label }}
+        </span>
+      </div>
+    </div>
+
+    <div v-else class="max-h-[270px] overflow-y-auto relative">
+      <div v-if="loading" class="p-5 flex items-center justify-center  w-full h-48">
+        <img src="/images/medium/loading.svg" alt="Loading" />
+      </div>
+      <template v-else>
+        <div v-for="(item, index) in (items || [])" :key="item.type + '-' + item.id"
+             class="group flex items-center gap-2 px-2 min-h-10 rounded cursor-pointer leading-[2.25em] hover:bg-sn-super-light-grey hover:text-sn-blue"
+             :class="{ 'bg-sn-super-light-grey': isActiveIndex(index) }"
+             @click="rowClick(item)">
+          <template v-if="flag === '@'">
+            <img :src="item.avatar_url" class="w-[30px] h-[30px] rounded-full shrink-0" alt="" />
+            <div :class="['min-w-0 py-1', 'e2e-BT-smartAnnotations-resultRow-user']" :data-e2e="`e2e-BT-smartAnnotations-resultRow-user-${item.email}`">
+              <div class="truncate" v-html="highlightMatch(item.full_name)"></div>
+              <div class="truncate text-xs text-sn-grey-700" v-html="highlightMatch(item.email)"></div>
+            </div>
+            <span class="items-center gap-1.5 shrink-0 ml-auto opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto">
+              <button
+                type="button"
+                :class="['btn btn-xs btn-light', 'e2e-BT-smartAnnotations-resultRow-user-mention']"
+                :data-e2e="`e2e-BT-smartAnnotations-resultRow-user-${item.email}-mention`"
+                @click.stop="selectItem(item)"
+              >
+                <i class="sn-icon sn-icon-mention"></i>
+                {{ i18n.t('atwho.buttons.mention') }}
+              </button>
+            </span>
+          </template>
+          <template v-else>
+            <span class="text-[0.625rem] font-semibold uppercase group-hover:text-sn-blue text-sn-grey-700 shrink-0 leading-none" v-html="highlightMatch(item.code)"></span>
+            <span class="text-sn-grey-500 group-hover:text-sn-blue leading-none">&middot;</span>
+            <span class="flex items-center min-w-0">
+              <span
+                :class="['truncate leading-none', 'e2e-BT-smartAnnotations-resultRow-title']"
+                v-html="highlightMatch(itemDisplayName(item))"
+                :data-e2e="`e2e-BT-smartAnnotations-resultRow-${item.code}-title`"
+              ></span>
+              <span
+                v-if="isDrillable(item)"
+                @click.stop="addToStack(item)"
+                :class="['sn-icon sn-icon-arrow-right text-sn-grey-700 shrink-0 px-2', 'e2e-BT-smartAnnotations-resultRow-arrow']"
+                :data-e2e="`e2e-BT-smartAnnotations-resultRow-${item.code}-arrow`"
+              ></span>
+            </span>
+            <span v-if="mentioningPageItem === item" class="flex items-center gap-1.5 shrink-0 ml-auto">
+              <input type="text" inputmode="numeric" pattern="[0-9]*" class="page-number-input w-40 border border-sn-light-grey rounded px-2 py-1 text-sm"
+                     :value="pageNumberInput" :placeholder="i18n.t('atwho.buttons.add_page_number')"
+                     data-e2e="e2e-IF-smartAnnotations-resultRow-pageMention-pageNumber"
+                     @click.stop @input="onPageNumberInput" @keydown.stop="onPageInputKeydown($event, item)" />
+              <button
+                type="button"
+                :class="['btn btn-xs btn-light', 'e2e-BT-smartAnnotations-resultRow-pageMention-add']"
+                :disabled="!pageNumberInput"
+                @click.stop="confirmPageMention(item)"
+                :data-e2e="`e2e-BT-smartAnnotations-resultRow-pageMention-${item.code}-add`"
+              >
+                <i class="sn-icon sn-icon-assign"></i>
+                {{ i18n.t('atwho.buttons.add') }}
+              </button>
+            </span>
+            <span v-else class="flex items-center gap-1.5 shrink-0 ml-auto opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto">
+              <button
+                v-if="isPdfFile(item)"
+                type="button"
+                :class="['btn btn-xs btn-light', 'e2e-BT-smartAnnotations-resultRow-mentionPage']"
+                @click.stop="startPageMention(item)"
+                :data-e2e="`e2e-BT-smartAnnotations-resultRow-${item.code}-mentionPage`"
+              >
+                <i class="sn-icon sn-icon-page"></i>
+                {{ i18n.t('atwho.buttons.mention_page') }}
+              </button>
+              <button
+                type="button"
+                :class="['btn btn-xs btn-light', 'e2e-BT-smartAnnotations-resultRow-add']"
+                @click.stop="selectItem(item)"
+                :data-e2e="`e2e-BT-smartAnnotations-resultRow-${item.code}-add`"
+              >
+                <i class="sn-icon sn-icon-assign"></i>
+                {{ i18n.t('atwho.buttons.add') }}
+              </button>
+              <button
+                v-if="item.my_module_id && !item.row_assigned"
+                type="button"
+                :class="['btn btn-xs btn-light', 'e2e-BT-smartAnnotations-resultRow-assignTask']"
+                @click.stop="assignItem(item)"
+                :data-e2e="`e2e-BT-smartAnnotations-resultRow-${item.code}-assignTask`"
+              >
+                <i class="sn-icon sn-icon-assign-to-task"></i>
+                {{ i18n.t('atwho.buttons.assign') }}
+              </button>
+              <button
+                v-if="item.protocol_id && !item.row_assigned"
+                type="button"
+                :class="['btn btn-xs btn-light', 'e2e-BT-smartAnnotations-resultRow-assignProtocol']"
+                @click.stop="assignToProtocol(item)"
+                :data-e2e="`e2e-BT-smartAnnotations-resultRow-${item.code}-assignProtocol`"
+              >
+                <i class="sn-icon sn-icon-protocols-templates"></i>
+                {{ i18n.t('atwho.buttons.assign_to_protocol') }}
+              </button>
+            </span>
+          </template>
+        </div>
+        <template v-if="!loading">
+          <div
+            v-if="limitReached"
+            class="text-sn-grey-700 text-sm py-1 px-2"
+            data-e2e="e2e-TX-smartAnnotations-results-moreResults"
+          >
+            {{ i18n.t('atwho.more_results') }}
+          </div>
+
+          <div v-if="items && items.length === 0 && query" class="py-6 px-8 text-center text-sn-grey-700">
+            <h1
+              class="text-sm font-semibold text-sn-black"
+              v-html="i18n.t('atwho.no_results.no_matches_html', { query: escapeHtml(query) })"
+              data-e2e="e2e-TX-smartAnnotations-results-noMatches"
+            ></h1>
+            <div
+              class="text-sm mt-2" data-e2e="e2e-TX-smartAnnotations-results-noMatchesHint">
+              {{ i18n.t('atwho.no_results.no_matches_hint') }}
+            </div>
+          </div>
+        </template>
+      </template>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from '../../packs/custom_axios.js';
+import escapeHtml from './escape_html.js';
+import flyoutPositioningMixin from './smart_annotation_mixins/flyout_positioning_mixin.js';
+import keyboardNavigationMixin from './smart_annotation_mixins/keyboard_navigation_mixin.js';
+import searchHighlightMixin from './smart_annotation_mixins/search_highlight_mixin.js';
+import {
+  atwho_search_team_path,
+  atwho_users_team_path,
+  my_module_repositories_path,
+  protocol_repository_rows_path
+} from '../../routes.js';
+
+const CHILD_TAG = { prj: 'sa-projects', exp: 'sa-experiments', tsk: 'sa-task-files', rep: 'sa-repositories' };
+const NO_RESULTS_KEY = {
+  'sa-projects': 'projects',
+  'sa-experiments': 'experiments',
+  'sa-tasks': 'my_modules',
+  'sa-repositories': 'repository_rows',
+  'sa-task-files': 'files'
+};
+
+export default {
+  name: 'SmartAnnotationFlyout',
+  mixins: [flyoutPositioningMixin, keyboardNavigationMixin, searchHighlightMixin],
+  data() {
+    return {
+      flag: '@',
+      query: '',
+      loading: false,
+      limitReached: false,
+      items: null,
+      navStack: [],
+      assignableMyModuleId: null,
+      onInsert: null,
+      searchDebounceTimer: null,
+      mentioningPageItem: null,
+      pageNumberInput: '',
+      searchFocused: false
+    };
+  },
+  beforeDestroy() {
+    clearTimeout(this.searchDebounceTimer);
+  },
+  computed: {
+    pills() {
+      const pills = [
+        { tag: 'sa-projects', label: this.i18n.t('atwho.projects') },
+        { tag: 'sa-experiments', label: this.i18n.t('atwho.experiments') },
+        { tag: 'sa-tasks', label: this.i18n.t('atwho.tasks') },
+        { tag: 'sa-repositories', label: this.i18n.t('atwho.inventories') }
+      ];
+
+      if (this.assignableMyModuleId) {
+        pills.push({ tag: 'sa-task-files', label: this.i18n.t('atwho.files'), id: this.assignableMyModuleId });
+      }
+
+      return pills;
+    },
+    showPills() {
+      return this.flag === '#' && this.navStack.length === 0 && !this.query;
+    },
+    noResultsKey() {
+      if (this.flag === '@') return 'users';
+
+      const top = this.navStack[this.navStack.length - 1];
+      return (top && NO_RESULTS_KEY[top.tag]) || 'mixed';
+    },
+    searchPlaceholder() {
+      if (this.flag === '@') return this.i18n.t('atwho.search_placeholder_users');
+
+      const top = this.navStack[this.navStack.length - 1];
+      if (!top) return this.i18n.t('atwho.search_placeholder');
+
+      return this.i18n.t('atwho.search_placeholder_in', { name: top.code });
+    }
+  },
+  methods: {
+    escapeHtml,
+    teamId() {
+      return document.body.dataset.currentTeamId;
+    },
+    assignableProtocolId() {
+      const field = document.getElementById('assignable_protocol_id');
+      return field?.value || null;
+    },
+    runQuery() {
+      const teamId = this.teamId();
+      if (!teamId) return;
+
+      this.mentioningPageItem = null;
+      this.pageNumberInput = '';
+      this.loading = true;
+      const request = this.flag === '@' ? this.fetchUsers(teamId) : this.fetchReference(teamId);
+
+      request.then((result) => {
+        this.loading = false;
+
+        this.items = result.items;
+        this.limitReached = result.limitReached;
+        this.resetActiveIndex();
+      });
+    },
+    fetchUsers(teamId) {
+      return axios.get(atwho_users_team_path(teamId), { params: { query: this.query } })
+        .then((response) => ({ items: response.data.users || [], limitReached: !!response.data.limit_reached }));
+    },
+    fetchReference(teamId) {
+      const top = this.navStack[this.navStack.length - 1];
+      const params = { query: this.query };
+      if (top) params.parent_type = top.tag;
+      if (top && top.id) params.parent_id = top.id;
+      if (this.assignableMyModuleId) params.assignable_my_module_id = this.assignableMyModuleId;
+      const protocolId = this.assignableProtocolId();
+      if (protocolId) params.assignable_protocol_id = protocolId;
+
+      return axios.get(atwho_search_team_path(teamId), { params })
+        .then((response) => ({ items: response.data.items || [], limitReached: !!response.data.limit_reached }));
+    },
+    openPill(pill) {
+      this.navStack = [{ tag: pill.tag, id: pill.id || null, code: pill.label }];
+      this.query = '';
+      this.resetActiveIndex();
+      this.runQuery();
+    },
+    isDrillable(item) {
+      if (!item.has_children) return false;
+
+      if (item.type == 'tsk' && !this.assignableMyModuleId){
+        return false;
+      }
+
+      return this.flag === '#' && !!CHILD_TAG[item.type];
+    },
+    isPdfFile(item) {
+      return this.flag === '#' && item.type === 'file' && !!item.pdf;
+    },
+    itemDisplayName(item) {
+      return item.type === 'file' ? (item.display_name || item.name) : item.name;
+    },
+    rowClick(item) {
+      if (this.mentioningPageItem === item) return;
+
+      this.selectItem(item);
+    },
+    startPageMention(item) {
+      this.mentioningPageItem = item;
+      this.pageNumberInput = '';
+      this.$nextTick(() => {
+        const input = this.$refs.flyout && this.$refs.flyout.querySelector('.page-number-input');
+        if (input) input.focus();
+      });
+    },
+    onPageNumberInput(e) {
+      this.pageNumberInput = e.target.value.replace(/\D/g, '');
+    },
+    onPageInputKeydown(e, item) {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        this.mentioningPageItem = null;
+        this.pageNumberInput = '';
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        this.confirmPageMention(item);
+      }
+    },
+    confirmPageMention(item) {
+      if (!this.pageNumberInput) return;
+
+      this.selectItem(item, this.pageNumberInput);
+      this.mentioningPageItem = null;
+      this.pageNumberInput = '';
+    },
+    addToStack(item) {
+      this.navStack.push({ tag: CHILD_TAG[item.type], id: item.id, code: item.code });
+      this.query = '';
+      this.resetActiveIndex();
+      this.runQuery();
+    },
+    navTo(index) {
+      this.navStack = index < 0 ? [] : this.navStack.slice(0, index + 1);
+      this.query = '';
+      this.resetActiveIndex();
+      this.runQuery();
+    },
+    navBack() {
+      this.query = '';
+      this.navStack = [];
+      this.items = [];
+      this.limitReached = false;
+      this.resetActiveIndex();
+    },
+    selectItem(item, page) {
+      if (!this.onInsert) return;
+
+      const tag = this.flag === '@'
+        ? `[@${item.full_name}~${item.id}]`
+        : `[#${item.name}~${item.type}~${item.id_encoded}${page ? `~${page}` : ''}]`;
+      this.onInsert(tag);
+    },
+    assignItem(item) {
+      axios.post(my_module_repositories_path(item.my_module_id), { repository_row_id: item.repository_row_id })
+        .then((response) => {
+          HelperModule.flashAlertMsg(response.data.flash, 'success');
+        })
+        .catch((error) => {
+          const flash = error.response && error.response.data && error.response.data.flash;
+          HelperModule.flashAlertMsg(flash || this.i18n.t('errors.general'), 'danger');
+        });
+    },
+    assignToProtocol(item) {
+      axios.post(protocol_repository_rows_path(item.protocol_id), { repository_row_ids: [item.repository_row_id] })
+        .then(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('atwho.buttons.assign_to_protocol_success'), 'success');
+        })
+        .catch((error) => {
+          const errors = error.response?.data?.errors;
+          HelperModule.flashAlertMsg(errors || this.i18n.t('errors.general'), 'danger');
+        });
+    },
+    onSearchInput(e) {
+      this.query = e.target.value;
+      clearTimeout(this.searchDebounceTimer);
+      this.searchDebounceTimer = setTimeout(() => {
+        this.runQuery();
+      }, 300);
+    },
+    onSearchKeydown(e) {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        this.closeAndRefocus();
+        return;
+      }
+      if (e.key === 'Backspace' && !this.query && this.navStack.length > 0) {
+        e.preventDefault();
+        this.navTo(this.navStack.length - 2);
+        return;
+      }
+      this.handleNavigationKeydown(e);
+    },
+    onSearchBlur(e) {
+      if (e.relatedTarget && this.$refs.flyout && this.$refs.flyout.contains(e.relatedTarget)) return;
+
+      this.requestClose();
+    }
+  }
+};
+</script>

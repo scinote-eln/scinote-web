@@ -1,0 +1,23 @@
+json.id item[:id]
+json.id_encoded item[:id_encoded]
+json.name item[:name]
+json.code item[:code]
+json.type item[:type]
+json.has_children item[:has_children]
+
+if item[:type] == 'file'
+  json.pdf item[:pdf]
+  json.display_name item[:display_name]
+end
+
+if item.key?(:my_module_id)
+  json.row_assigned item[:row_assigned]
+  json.my_module_id item[:my_module_id]
+  json.repository_row_id item[:repository_row_id]
+end
+
+if item.key?(:protocol_id)
+  json.row_assigned item[:row_assigned]
+  json.protocol_id item[:protocol_id]
+  json.repository_row_id item[:repository_row_id]
+end

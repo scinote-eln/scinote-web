@@ -19,6 +19,8 @@ module WopiUtil
 
   def get_action(extension, action)
     discovery = current_wopi_discovery
+    return if discovery.nil?
+
     discovery[:actions].find { |i| i[:extension] == extension && i[:action] == action }
   end
 
@@ -87,6 +89,7 @@ module WopiUtil
   rescue StandardError => e
     Rails.logger.warn 'WOPI: initialization failed: ' + e.message
     e.backtrace.each { |line| Rails.logger.error line }
+    nil
   end
 
   # Generates a public key from given modulus and exponent

@@ -741,7 +741,16 @@ export default {
           }
           window.assignedItemsTable?.$refs?.assignedItems?.loadAssingedRepositories();
         }
-      });
+      }).catch(this.handleUpdateError);
+    },
+    handleUpdateError(error) {
+      const errors = error.response?.data?.errors;
+      HelperModule.flashAlertMsg(
+        (Array.isArray(errors) && errors.length > 0) ? errors.join(', ') : this.i18n.t('errors.general'),
+        'danger'
+      );
+      // reload to revert the item card to the persisted state
+      this.reload();
     },
     updateCustomColumn(params) {
       const colId = Object.keys(params.repository_cells)[0];
@@ -769,7 +778,7 @@ export default {
           }
           window.assignedItemsTable?.$refs?.assignedItems?.loadAssingedRepositories();
         }
-      });
+      }).catch(this.handleUpdateError);
     },
     updateOpenState(code, isOpen) {
       this.relationshipDetailsState[code] = isOpen;

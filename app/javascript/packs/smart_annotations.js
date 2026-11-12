@@ -1,6 +1,6 @@
 /* global I18n */
 
-const SA_REGEX = /\[@([^~\]]+)~([0-9a-zA-Z]+)\]|\[#(.*?)~(rep_item|prj|exp|tsk)~([0-9a-zA-Z]+)\]/g;
+const SA_REGEX = /\[@([^~\]]+)~([0-9a-zA-Z]+)\]|\[#(.*?)~(rep_item|rep|prj|exp|tsk|file)~([0-9a-zA-Z]+)(?:~\d+)?\]/g;
 
 const escapeHtml = (unsafe) => (
   unsafe.replaceAll('&', '&amp;')
@@ -47,6 +47,8 @@ window.renderSmartAnnotations = (text) => (
     switch (type) {
       case 'rep_item':
         return `<a class="sa-link record-info-link" href="/sa?tag=${tag}"><span class="sa-type"></span><span class="sa-name"><span class="sci-loader-inline"></span></span></a>`;
+      case 'file':
+        return `<a class="sa-link file-preview-link file-name" data-no-turbolink="true" href="/sa?tag=${tag}"><span class="sa-type"></span><span class="sa-name"><span class="sci-loader-inline"></span></span></a>`;
       default:
         return `<a class="sa-link" href="/sa?tag=${tag}" target="_blank"><span class="sa-type"></span><span class="sa-name"><span class="sci-loader-inline"></span></span></a>`;
     }
@@ -62,6 +64,13 @@ async function fetchSmartAnnotationData(element) {
 
   if (element.querySelector('.sa-type')) {
     element.querySelector('.sa-type').innerHTML = escapeHtml(data.type);
+  }
+
+  if (data.preview_url) {
+    element.setAttribute('href', data.url);
+    element.setAttribute('data-preview-url', data.preview_url);
+    element.setAttribute('data-id', data.id);
+    if (data.page) element.setAttribute('data-page', data.page);
   }
 }
 

@@ -475,6 +475,8 @@ window.TinyMCE = (() => {
                   HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
                 } else if (data.status === 422) {
                   HelperModule.flashAlertMsg(data.responseJSON ? Object.values(data.responseJSON).join(', ') : I18n.t('errors.general'), 'danger');
+                } else {
+                  HelperModule.flashAlertMsg(I18n.t('errors.general'), 'danger');
                 }
               });
 
@@ -514,7 +516,7 @@ window.TinyMCE = (() => {
             editor.isBlurTempDisabled = false;
 
             editor.on('keydown', (e) => {
-              if (e.key === 'Enter' && $(editor.contentDocument.activeElement).atwho('isSelecting')) {
+              if (e.key === 'Enter' && window.SmartAnnotation.isSelecting(editor.contentDocument.activeElement)) {
                 return false;
               }
               return true;

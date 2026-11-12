@@ -112,6 +112,9 @@ export default {
       axios.post(url)
         .then((response) => {
           this.loadReminders();
+        })
+        .catch(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
     }
   }

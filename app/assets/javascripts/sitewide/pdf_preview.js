@@ -102,6 +102,7 @@ var PdfPreview = (function() {
   }
 
   function renderPdfPreview(canvas) {
+    var initialPage = parseInt(canvas.dataset.initialPage, 10) || 1;
     $(canvas).removeClass('ready');
     initZoomDropdown($(canvas));
     animateSpinner($(canvas).closest('.pdf-viewer'), true);
@@ -110,7 +111,7 @@ var PdfPreview = (function() {
       new PerfectScrollbar($(canvas).closest('.page-container')[0])
     ).data('load-attempts', 0);
     pdfjsLib.GlobalWorkerOptions.workerSrc = canvas.dataset.pdfWorkerUrl;
-    loadPdfDocument(canvas);
+    loadPdfDocument(canvas, initialPage);
   }
 
 

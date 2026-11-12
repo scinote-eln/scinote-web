@@ -77,6 +77,7 @@ export default {
     allowNewLine: { type: Boolean, default: false },
     multilinePaste: { type: Boolean, default: false },
     smartAnnotation: { type: Boolean, default: false },
+    smartAnnotationAssignableObjectId: {type: String, default: '' },
     editOnload: { type: Boolean, default: false },
     defaultValue: { type: String, default: '' },
     singleLine: { type: Boolean, default: true },
@@ -227,7 +228,7 @@ export default {
           selection.addRange(range);
         }
         if (this.smartAnnotation) {
-          SmartAnnotation.init($(this.$refs.input), false);
+          SmartAnnotation.init($(this.$refs.input), false, this.smartAnnotationAssignableObjectId);
         }
       });
       this.$emit('editingEnabled');

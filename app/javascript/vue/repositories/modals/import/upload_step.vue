@@ -138,7 +138,7 @@ export default {
         .then((response) => {
           this.$emit('uploadFile', { ...this.params, ...response.data, file_name: file.name });
         }).catch((error) => {
-          this.handleError(error.response.data.error);
+          this.handleError(error.response?.data?.error || this.i18n.t('errors.general'));
         });
     }
   }
