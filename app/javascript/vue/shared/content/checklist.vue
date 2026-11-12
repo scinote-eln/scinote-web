@@ -14,6 +14,7 @@
             :allowBlank="false"
             :autofocus="editingName"
             :smartAnnotation="true"
+            :smartAnnotationAssignableObjectId="assignableMyModuleId"
             :attributeName="`${i18n.t('Checklist')} ${i18n.t('name')}`"
             :dataE2e="`${dataE2e}-checklist${element.id}`"
             @editingEnabled="editingName = true"
@@ -91,6 +92,7 @@
               :inRepository="inRepository"
               :draggable="checklistItems.length > 1"
               :data-e2e="`${dataE2e}-checklistItem${element.id}`"
+              :assignableMyModuleId="assignableMyModuleId"
               :class="{
                 'select-none': reordering
               }"

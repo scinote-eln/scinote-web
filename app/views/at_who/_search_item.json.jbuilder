@@ -3,6 +3,7 @@ json.id_encoded item[:id_encoded]
 json.name item[:name]
 json.code item[:code]
 json.type item[:type]
+json.has_children item[:has_children]
 
 if item[:type] == 'file'
   json.pdf item[:pdf]

@@ -167,16 +167,6 @@
               {{ i18n.t('atwho.no_results.no_matches_hint') }}
             </div>
           </div>
-          <div v-else-if="items && items.length === 0" class="py-6 px-8 text-center text-sn-grey-700">
-            <h1
-              class="text-sm font-semibold text-sn-black" data-e2e="e2e-TX-smartAnnotations-results-noResults">
-              {{ i18n.t(`atwho.no_results.${noResultsKey}`) }}
-            </h1>
-            <div
-              class="text-sm mt-2" data-e2e="e2e-TX-smartAnnotations-results-noResultsDescription">
-              {{ i18n.t('atwho.no_results.description') }}
-            </div>
-          </div>
         </template>
       </template>
     </div>
@@ -309,6 +299,12 @@ export default {
       this.runQuery();
     },
     isDrillable(item) {
+      if (!item.has_children) return false;
+
+      if (item.type == 'tsk' && !this.assignableMyModuleId){
+        return false;
+      }
+
       return this.flag === '#' && !!CHILD_TAG[item.type];
     },
     isPdfFile(item) {
