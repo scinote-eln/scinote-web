@@ -1,25 +1,25 @@
 <template>
   <div ref="flyout"
-    class="atwho-view bg-sn-white rounded shadow-sn-classic-drop-shadow"
+    class="atwho-view bg-sn-white rounded-lg shadow-sn-classic-drop-shadow"
     :class="{ old: everOpened }"
     :style="positionStyle"
     @mousedown="onRootMousedown"
     data-e2e="e2e-FO-smartAnnotations"
   >
     <div
-      class="flex items-center gap-1 bg-sn-grey-100 min-h-11 px-3 py-2 text-sm border border-transparent"
+      class="flex items-center gap-1 bg-sn-grey-100 min-h-11 px-3 py-2 text-sm border !border-transparent"
       :class="{ '!border-b-sn-science-blue': searchFocused }"
     >
-      <span v-if="navStack.length > 0 || query.length > 0" type="button" class="p-1 text-sn-grey-700 hover:text-sn-black shrink-0 cursor-pointer" @click="navBack">
+      <span v-if="navStack.length > 0 || query.length > 0" type="button" class="pr-1 text-sn-grey-700 hover:text-sn-black shrink-0 cursor-pointer" @click="navBack">
         <i class="sn-icon sn-icon-close"></i>
       </span>
-      <span v-for="(crumb, i) in navStack" :key="i" class="flex items-center gap-1 truncate">
+      <i v-else class="pr-1 sn-icon sn-icon-search text-sn-grey-700 shrink-0"></i>
+      <span v-for="(crumb, i) in navStack" :key="i" class="flex text-base items-center gap-1 truncate">
         <i v-if="i > 0" class="text-sn-grey-500 sn-icon sn-icon-right"></i>
         <span type="button" class="truncate hover:underline cursor-pointer text-sn-black font-medium"
                 @click="navTo(i)">{{ crumb.code }}</span>
       </span>
       <div class="flex items-center gap-1 min-w-0 flex-1">
-        <i class="sn-icon sn-icon-search text-sn-grey-700 shrink-0"></i>
         <i v-if="navStack.length > 0" class="text-sn-grey-500 sn-icon sn-icon-right"></i>
         <input ref="searchInput" type="text" :value="query"
               :placeholder="searchPlaceholder"
