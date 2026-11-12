@@ -179,7 +179,6 @@ describe MarvinJsActions do
     end
 
     it 'logs a step activity for an asset attached directly to a step' do
-      pending 'bug: marvinjs_step_activity calls step on the object, which is already a Step'
 
       asset = build_tiny_asset(step)
       host.create_delete_marvinjs_activity(asset, user)
