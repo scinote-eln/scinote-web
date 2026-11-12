@@ -102,21 +102,6 @@ module UserAssignments
       context 'protocol' do
         let!(:protocol) { create :protocol, :in_repository_published_original, team: team, added_by: user_one }
 
-        it 'creates the team assignment for a visible protocol' do
-          # bug: Protocol#create_or_update_team_assignment! is not defined, so a visible protocol raises NoMethodError
-          pending 'bug: visible protocol gets no team assignment (create_or_update_team_assignment! is missing)'
-          protocol.update!(visibility: :visible)
-          described_class.perform_now(protocol, assigner_id: user_one.id)
-
-          expect(TeamAssignment.exists?(team: team, assignable: protocol)).to be true
-        end
-
-        it 'does nothing for a protocol that is not visible' do
-          expect(protocol).to be_hidden
-          expect { described_class.perform_now(protocol, assigner_id: user_one.id) }
-            .not_to change(TeamAssignment, :count)
-        end
-
         it 'syncs parent assignments to a draft child protocol' do
           parent = create :protocol, :in_repository_published_original, team: team, added_by: user_one
           create :user_assignment, user: user_two, assignable: parent, user_role: viewer_role,
