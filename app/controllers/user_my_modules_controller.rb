@@ -55,7 +55,7 @@ class UserMyModulesController < ApplicationController
   end
 
   def create
-    @um = UserMyModule.new(um_params.merge(my_module: @my_module))
+    @um = @my_module.user_my_modules.new(um_params)
     @um.assigned_by = current_user
 
     if @um.save
@@ -144,7 +144,7 @@ class UserMyModulesController < ApplicationController
   def load_vars
     @my_module = MyModule.find(params[:my_module_id])
     @project = @my_module.experiment.project
-    @um = UserMyModule.find(params[:id]) if action_name == 'destroy'
+    @um = @my_module.user_my_modules.find(params[:id]) if action_name == 'destroy'
   rescue ActiveRecord::RecordNotFound
     render_404
   end
