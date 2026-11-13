@@ -99,5 +99,58 @@ describe RepositoryImportParser::Importer do
       expect(sample_type_cell.value.formatted).to eq 'type 2'
       expect(custom_column_cell.value.formatted).to eq 'test test'
     end
+
+    context 'when a mandatory column is empty' do
+      before { custom_column.update!(mandatory: true) }
+
+      it 'skips rows with empty mandatory cells on import' do
+        response = subject.run
+
+        expect(response).to include(status: :ok, created_rows_count: 3)
+        expect(repository.repository_rows.pluck(:name)).to match_array(['Sample 1', 'Sample 4', 'Sample 5'])
+      end
+
+      context 'with preview' do
+        let(:subject) do
+          RepositoryImportParser::Importer.new(sheet, mappings, user, repository, true, true, true)
+        end
+
+        it 'marks rows with empty mandatory cells as invalid' do
+          rows = subject.run[:changes][:data].index_by { |row| row[:attributes][:name] }
+
+          expect(rows['Sample 3'][:attributes]).to include(
+            import_status: 'invalid',
+            import_mandatory_missing: [custom_column.id.to_s]
+          )
+          expect(rows['Sample 1'][:attributes]).to include(import_status: 'created', import_mandatory_missing: [])
+          expect(repository.repository_rows.count).to eq 0
+        end
+
+        it 'returns changed columns for new rows' do
+          rows = subject.run[:changes][:data].index_by { |row| row[:attributes][:name] }
+
+          expect(rows['Sample 4'][:attributes][:import_changed_columns]).to match_array(
+            ['name', sample_group_column.id.to_s, sample_type_column.id.to_s, custom_column.id.to_s]
+          )
+        end
+      end
+    end
+
+    context 'when an unmapped mandatory column has no value' do
+      let!(:mandatory_column) do
+        create :repository_column, repository: repository,
+                                   created_by: user,
+                                   name: 'Mandatory text',
+                                   data_type: 'RepositoryTextValue',
+                                   mandatory: true
+      end
+
+      it 'does not import any row' do
+        response = subject.run
+
+        expect(response).to include(status: :ok, created_rows_count: 0)
+        expect(repository.repository_rows.count).to eq 0
+      end
+    end
   end
 end

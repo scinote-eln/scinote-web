@@ -174,6 +174,7 @@ export default {
 
       Object.entries(this.params.import_data.available_fields).forEach(([key, value]) => {
         let columnTypeName = '';
+        let mandatory = false;
         if (key === '-1') {
           columnTypeName = this.i18n.t('repositories.import_records.steps.step2.computedDropdownOptions.name');
         } else if (key === '0') {
@@ -181,9 +182,10 @@ export default {
         } else {
           const column = this.repositoryColumns.find((el) => el[0] === parseInt(key, 10));
           columnTypeName = this.i18n.t(`repositories.import_records.steps.step2.computedDropdownOptions.${column[2]}`);
+          mandatory = !!column[3];
         }
         const field = {
-          key, value, alreadySelected: false, typeName: columnTypeName
+          key, value, alreadySelected: false, typeName: columnTypeName, mandatory
         };
         this.availableFields.push(field);
       });
@@ -210,7 +212,8 @@ export default {
   },
   computed: {
     computedDropdownOptions() {
-      let options = this.availableFields.map((el) => [String(el.key), `${String(el.value)} (${el.typeName})`]);
+      let options = this.availableFields.map((el) => [String(el.key), `${String(el.value)} (${el.typeName})`,
+        { mandatory: el.mandatory, name: String(el.value), typeName: el.typeName }]);
       options = [
         ['do_not_import', this.i18n.t('repositories.import_records.steps.step2.table.tableRow.placeholders.doNotImport')]
       ].concat(options);
