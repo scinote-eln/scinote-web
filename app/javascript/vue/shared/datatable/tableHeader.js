@@ -76,40 +76,29 @@ export default {
       return !!this.dtComponent?.wrappedColumns?.includes(this.colId);
     },
     menuItems() {
-      const t = (key) => this.i18n.t(`datatable.column_menu.${key}`);
-      const e2e = (name) => `e2e-BT-tableHeader-${this.colId}-${name}`;
+      // emit doubles as the MenuDropdown event and the e2e suffix; key is the i18n key.
+      const item = (icon, key, emit, active = false) => ({
+        text: menuItemHtml(icon, this.i18n.t(`datatable.column_menu.${key}`)),
+        emit,
+        active,
+        data_e2e: `e2e-BT-tableHeader-${this.colId}-${emit}`
+      });
       const items = [];
 
-      if (this.pinned) {
-        items.push({ text: menuItemHtml(fontIcon('pinned'), t('unpin')), emit: 'unpinColumn', data_e2e: e2e('unpin') });
-      } else {
-        items.push({ text: menuItemHtml(fontIcon('pin'), t('pin')), emit: 'pinColumn', data_e2e: e2e('pin') });
-      }
+      items.push(this.pinned ? item(fontIcon('pinned'), 'unpin', 'unpinColumn') : item(fontIcon('pin'), 'pin', 'pinColumn'));
 
       if (this.params.wrappable) {
         items.push(this.wrapped
-          ? { text: menuItemHtml(WRAP_TEXT_ICON, t('unwrap_text')), emit: 'unwrapText', data_e2e: e2e('unwrapText') }
-          : { text: menuItemHtml(WRAP_TEXT_ICON, t('wrap_text')), emit: 'wrapText', data_e2e: e2e('wrapText') });
+          ? item(WRAP_TEXT_ICON, 'unwrap_text', 'unwrapText')
+          : item(WRAP_TEXT_ICON, 'wrap_text', 'wrapText'));
       }
 
       if (this.params.enableSorting) {
-        items.push({
-          text: menuItemHtml(fontIcon('sort-down'), t('sort_down')),
-          emit: 'sortDesc',
-          active: this.activeSort === 'desc',
-          data_e2e: e2e('sortDown')
-        });
-        items.push({
-          text: menuItemHtml(fontIcon('sort-up'), t('sort_up')),
-          emit: 'sortAsc',
-          active: this.activeSort === 'asc',
-          data_e2e: e2e('sortUp')
-        });
+        items.push(item(fontIcon('sort-down'), 'sort_down', 'sortDesc', this.activeSort === 'desc'));
+        items.push(item(fontIcon('sort-up'), 'sort_up', 'sortAsc', this.activeSort === 'asc'));
       }
 
-      if (this.params.hideable) {
-        items.push({ text: menuItemHtml(fontIcon('visibility-show'), t('hide')), emit: 'hideColumn', data_e2e: e2e('hide') });
-      }
+      if (this.params.hideable) items.push(item(fontIcon('visibility-show'), 'hide', 'hideColumn'));
 
       return items;
     }

@@ -53,8 +53,7 @@
           class="ag-theme-alpine w-full flex-grow h-full z-10"
           :class="{
             'opacity-0': initializing,
-            'adding-new-row': addingNewRow,
-            'with-column-menu': columnMenu
+            'adding-new-row': addingNewRow
           }"
           :columnDefs="extendedColumnDefs"
           :selectionColumnDef="selectionColumnDef"
@@ -66,6 +65,7 @@
           :enableCellTextSelection="true"
           @grid-ready="onGridReady"
           @first-data-rendered="onFirstDataRendered"
+          @newColumnsLoaded="onNewColumnsLoaded"
           @sortChanged="setOrder"
           @columnResized="onColumnResized"
           @columnMoved="onColumnMoved"
@@ -352,7 +352,9 @@ export default {
           checkboxes: this.withCheckboxes,
           headerCheckbox: this.withCheckboxes,
           enableClickSelection: false,
-        }
+        },
+        // Column menu tables update column defs at runtime (wrap text), so keep the user's column order.
+        maintainColumnOrder: this.columnMenu
       };
     },
     selectionColumnDef() {
@@ -366,7 +368,7 @@ export default {
           && column.headerComponentParams?.wrappable
           && this.wrappedColumns.includes(column.field);
 
-        return {
+        const def = {
           ...column,
           minWidth: column.minWidth || 110,
           cellRendererParams: { ...column.cellRendererParams, ...{ dtComponent: this } },
@@ -382,6 +384,19 @@ export default {
           autoHeight: !!wrapped,
           comparator: () => null
         };
+
+        // With the column menu, defs change at runtime (wrap text). Stateful pinned/hide would then
+        // override what the user set, so pass them as initial values only (resetColumnState still uses them).
+        if (this.columnMenu) {
+          def.initialPinned = def.pinned;
+          delete def.pinned;
+          if ('hide' in def) {
+            def.initialHide = def.hide;
+            delete def.hide;
+          }
+        }
+
+        return def;
       });
 
       if (this.withRowMenu) {
@@ -864,34 +879,32 @@ export default {
       this.gridApi.setColumnPinned(column.field, null);
       this.hideLastPinnedResizeCell();
     },
-    async setColumnWrapped(colId, wrap) {
-      if (!this.gridApi) return;
-
-      // New column defs re-apply stateful attributes (e.g. the name column's default pin),
-      // so keep the user's current column state and restore it once the grid has the new defs.
-      const columnState = this.gridApi.getColumnState();
+    // The new wrapText/autoHeight defs reach the grid through extendedColumnDefs;
+    // onNewColumnsLoaded then re-measures the rows.
+    setColumnWrapped(colId, wrap) {
       this.wrappedColumns = wrap
         ? [...new Set([...this.wrappedColumns, colId])]
         : this.wrappedColumns.filter((id) => id !== colId);
-
-      await this.$nextTick();
-      this.gridApi.applyColumnState({ state: columnState, applyOrder: true });
-      this.gridApi.resetRowHeights();
-      this.gridApi.redrawRows();
       this.saveTableState();
+    },
+    onNewColumnsLoaded() {
+      if (!this.columnMenu || !this.gridApi) return;
+
+      const autoHeightActive = this.gridApi.getColumns()?.some((col) => col.isVisible() && col.getColDef().autoHeight);
+      // AG Grid ignores resetRowHeights while an autoHeight column is visible; it measures those rows itself.
+      if (!autoHeightActive) this.gridApi.resetRowHeights();
+      this.gridApi.redrawRows();
     },
     reorderColumns(columns) {
       this.gridApi.moveColumns(columns, 1);
       this.saveTableState();
     },
-    async resetColumnsToDefault() {
-      if (this.wrappedColumns.length) {
-        this.wrappedColumns = [];
-        await this.$nextTick();
-      }
+    resetColumnsToDefault() {
+      this.wrappedColumns = [];
       this.gridApi.resetColumnState();
       this.gridApi.sizeColumnsToFit();
       this.hideLastPinnedResizeCell();
+      this.saveTableState();
     },
     getOrder(columnsState) {
       if (!columnsState) return null;

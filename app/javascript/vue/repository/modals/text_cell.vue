@@ -115,7 +115,8 @@ export default {
     },
     cancelEdit() {
       if (this.savedValue === '') {
-        this.close();
+        // Same path as data-dismiss: Bootstrap hides first, then hidden.bs.modal emits close.
+        $(this.$refs.modal).modal('hide');
         return;
       }
 
