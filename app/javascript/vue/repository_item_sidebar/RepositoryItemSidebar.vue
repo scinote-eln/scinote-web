@@ -4,8 +4,8 @@
               leave-active-class="transition-all ease-sharp duration-[588ms]"
               leave-to-class="translate-x-full w-0"
               v-click-outside="handleOutsideClick">
-    <div ref="wrapper" v-show="isShowing" id="repository-item-sidebar-wrapper"
-      class='items-sidebar-wrapper bg-white gap-2.5 self-stretch rounded-tl-4 rounded-bl-4 sn-shadow-menu-lg h-full w-[565px]'>
+    <div ref="wrapper" v-show="isShowing" id="repository-item-sidebar-wrapper" tabindex="-1"
+      class='items-sidebar-wrapper outline-none bg-white gap-2.5 self-stretch rounded-tl-4 rounded-bl-4 sn-shadow-menu-lg h-full w-[565px]'>
 
       <div id="repository-item-sidebar" data-e2e="e2e-CO-itemCard" class="w-full h-full pl-6 bg-white flex flex-col">
 
@@ -20,6 +20,8 @@
               data-e2e="e2e-TX-itemCard-title">
             </repository-item-sidebar-title>
             <i id="close-icon" data-e2e="e2e-BT-itemCard-close" @click="toggleShowHideSidebar(null)"
+              @keydown.enter.prevent="toggleShowHideSidebar(null)"
+              tabindex="0" role="button" :aria-label="i18n.t('general.close')"
               class="sn-icon sn-icon-close ml-auto cursor-pointer my-auto mx-0"></i>
           </div>
           <div v-if="snapshotAt" class="text-sn-grey mt-2">
@@ -62,7 +64,7 @@
                       <span v-if="repository?.is_snapshot" class="repository-name text-sn-dark-grey line-clamp-3" :title="repository?.name" data-e2e="e2e-TX-itemCard-inventory">
                         {{ repository?.name }}
                       </span>
-                      <a v-else :href="repository?.url" target="_blank" class="repository-name line-clamp-3" :title="repository?.name" data-e2e="e2e-TX-itemCard-inventory">
+                      <a v-else :href="repository?.url" target="_blank" tabindex="-1" class="repository-name line-clamp-3" :title="repository?.name" data-e2e="e2e-TX-itemCard-inventory">
                         {{ repository?.name }}
                         <i class="sn-icon sn-icon-open"></i>
                       </a>
@@ -182,6 +184,7 @@
                         v-if="permissions.can_connect_rows"
                         class="relationships-add-link btn-text-link font-normal"
                         @click="handleOpenAddRelationshipsModal($event, 'parent')"
+                        v-keyboard-click
                         data-e2e="e2e-BT-itemCard-addParent"
                         >
                         {{ i18n.t('repositories.item_card.add_relationship_button_text') }}
@@ -231,6 +234,7 @@
                         v-if="permissions.can_connect_rows"
                         class="relationships-add-link btn-text-link font-normal"
                         @click="handleOpenAddRelationshipsModal($event, 'child')"
+                        v-keyboard-click
                         data-e2e="e2e-BT-itemCard-addChild"
                         >
                         {{ i18n.t('repositories.item_card.add_relationship_button_text') }}
@@ -290,7 +294,8 @@
                         'disabled': actions?.assign_repository_row && actions.assign_repository_row.disabled
                       }"
                       :data-assign-url="actions?.assign_repository_row ? actions.assign_repository_row.assign_url : ''"
-                      :data-repository-row-id="repositoryRowId" @click="showRepositoryAssignModal" data-e2e="e2e-TL-repoItemSB-assignToTask">
+                      :data-repository-row-id="repositoryRowId" @click="showRepositoryAssignModal"
+                      v-keyboard-click="!actions?.assign_repository_row?.disabled" data-e2e="e2e-TL-repoItemSB-assignToTask">
                       {{ i18n.t('repositories.item_card.assigned.assign') }}
                     </a>
                   </div>
@@ -389,6 +394,7 @@ import RepositoryItemSidebarTitle from './Title.vue';
 import UnlinkModal from './unlink_modal.vue';
 import Locations from './locations.vue';
 import Schedule from './schedule.vue';
+import keyboardClick from '../shared/directives/keyboard_click.js';
 import axios from '../../packs/custom_axios.js';
 import {
   repository_repository_row_repository_cell_path,
@@ -466,7 +472,8 @@ export default {
     'unlink-modal': UnlinkModal
   },
   directives: {
-    'click-outside': vOnClickOutside
+    'click-outside': vOnClickOutside,
+    'keyboard-click': keyboardClick
   },
   data() {
     return {
@@ -523,6 +530,13 @@ export default {
     }
   },
   watch: {
+    isShowing(showing) {
+      if (showing) {
+        document.addEventListener('keydown', this.handleEscape, true);
+      } else {
+        document.removeEventListener('keydown', this.handleEscape, true);
+      }
+    },
     parents(newParents) {
       newParents.forEach((parent) => {
         this.relationshipDetailsState[parent.code] = false;
@@ -539,9 +553,30 @@ export default {
     this.inRepository = $('.assign-items-to-task-modal-container').length > 0;
   },
   beforeUnmount() {
+    document.removeEventListener('keydown', this.handleEscape, true);
     delete window.repositoryItemSidebarComponent;
   },
   methods: {
+    handleEscape(event) {
+      if (event.key !== 'Escape' || event.defaultPrevented || !this.isShowing) return;
+
+      // Leave Escape to whatever is open on top of the card (modals, dropdowns, pickers, smart annotation list)
+      const layers = document.querySelectorAll(
+        '.modal.in:not(.modal-full-screen), .sci-modal, .sn-select-dropdown, .sn-dropdown, .sn-menu-dropdown, .dp--menu, .atwho-view'
+      );
+      if (Array.from(layers).some((layer) => layer.getClientRects().length > 0)) return;
+
+      const { target } = event;
+      if (target.matches?.('input, textarea, select, [contenteditable="true"]')) {
+        // Let the field handle Escape first (e.g. cancel an edit); close only if it kept focus
+        setTimeout(() => {
+          if (this.isShowing && document.activeElement === target) this.toggleShowHideSidebar(null);
+        });
+        return;
+      }
+
+      this.toggleShowHideSidebar(null);
+    },
     filterNavigationItems() {
       if (this.repository.is_snapshot) {
         return items.filter((item) => item.showInSnapshot);
@@ -622,6 +657,7 @@ export default {
         this.isShowing = true;
         this.loadRepositoryRow(repositoryRowUrl);
         this.currentItemUrl = repositoryRowUrl;
+        this.focusWrapper();
         return;
       }
       // same item click
@@ -643,6 +679,11 @@ export default {
       this.myModuleId = myModuleId;
       this.loadRepositoryRow(repositoryRowUrl);
       this.currentItemUrl = repositoryRowUrl;
+      this.focusWrapper();
+    },
+    focusWrapper() {
+      // Move focus into the card, so the first Tab lands on the Name field
+      this.$nextTick(() => this.$refs.wrapper?.focus({ preventScroll: true }));
     },
     handleOpeningFromBootstrapModal() {
       const layout = document.querySelector('.sci--layout');

@@ -55,17 +55,25 @@ export default {
     isOpen() {
       if (this.isOpen) {
         this.$emit('open');
+        document.addEventListener('keydown', this.closeOnEscape);
         this.$nextTick(() => {
           this.setPosition();
           this.registerFlyoutForTooltips();
         });
       } else {
         this.$emit('close');
+        document.removeEventListener('keydown', this.closeOnEscape);
         this.unregisterFlyoutFromTooltips();
       }
     }
   },
+  beforeUnmount() {
+    document.removeEventListener('keydown', this.closeOnEscape);
+  },
   methods: {
+    closeOnEscape(e) {
+      if (e.key === 'Escape') this.closeMenu();
+    },
     toggleMenu() {
       if (this.canOpen && (!this.isOpen || this.fieldOnlyOpen)) {
         this.isOpen = true;

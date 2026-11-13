@@ -39,9 +39,11 @@
       v-else
       ref="view"
       class="grid sci-cursor-edit leading-5 border-0 outline-none border-solid border-y border-transparent"
-      :class="{ 'text-sn-grey font-normal': isBlank, 'whitespace-pre-line py-1': !singleLine }"
+      :class="{ 'text-sn-grey font-normal': isBlank, 'whitespace-pre-line py-1': !singleLine, 'focus-visible:border-b-sn-science-blue': tabbable }"
+      :tabindex="tabbable ? 0 : null"
       :data-e2e="`e2e-TX-${dataE2e}`"
       @click="enableEdit($event)"
+      @focus="handleFocus"
     >
       <span :class="{'truncate py-1': singleLine }" :title="sa_value || placeholder" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
       <span :class="{'truncate py-1': singleLine}" :title="newValue || placeholder" v-else>{{newValue || placeholder}}</span>
@@ -82,13 +84,15 @@ export default {
     defaultValue: { type: String, default: '' },
     singleLine: { type: Boolean, default: true },
     preventLeavingUntilFilled: { type: Boolean, default: false },
-    dataE2e: { type: String, default: '' }
+    dataE2e: { type: String, default: '' },
+    tabbable: { type: Boolean, default: false }
   },
   data() {
     return {
       editing: false,
       dirty: false,
-      newValue: ''
+      newValue: '',
+      restoringFocus: false
     };
   },
   mixins: [UtilsMixin],
@@ -233,6 +237,25 @@ export default {
       });
       this.$emit('editingEnabled');
     },
+    handleFocus(event) {
+      if (!this.tabbable || this.editing || this.restoringFocus) return;
+      // Only keyboard focus enters edit mode here; mouse clicks keep going through @click as before.
+      if (!event.target.matches(':focus-visible')) return;
+
+      this.enableEdit();
+    },
+    restoreFocus() {
+      if (!this.tabbable) return;
+
+      this.$nextTick(() => {
+        // The input is removed once editing ends; give focus back to the view so Tab continues from here
+        if (document.activeElement !== document.body || !this.$refs.view) return;
+
+        this.restoringFocus = true;
+        this.$refs.view.focus();
+        this.restoringFocus = false;
+      });
+    },
     cancelEdit() {
       this.editing = false;
       this.newValue = this.value || '';
@@ -254,9 +277,11 @@ export default {
 
       if (e.key == 'Escape') {
         this.cancelEdit();
+        this.restoreFocus();
       } else if (e.key == 'Enter' && this.saveOnEnter && e.shiftKey == false) {
         e.preventDefault();
         this.update(e.key);
+        this.restoreFocus();
       } else {
         if (!this.error) this.$emit('error-cleared');
         this.dirty = true;
@@ -266,7 +291,9 @@ export default {
     update(withKey = null) {
       this.refreshTexareaHeight();
 
-      if (!this.dirty && !this.isBlank) {
+      // Tab keydown marks the field dirty, so tabbable fields also compare against the original value
+      const unchanged = this.tabbable && this.newValue === (this.value || '');
+      if ((!this.dirty || unchanged) && !this.isBlank) {
         this.editing = false;
         return;
       }

@@ -5,6 +5,7 @@
       <div class="truncate" :class="{ 'w-4/5': expandable }" :title="colName">{{ colName }}</div>
       <div @click="toggleCollapse"
            v-show="expandable"
+           v-keyboard-click
            class="font-normal leading-5 btn-text-link">
         {{
           collapsed
@@ -39,12 +40,16 @@
 <script>
 import repositoryValueMixin from './mixins/repository_value.js';
 import Textarea from '../../shared/legacy/Textarea.vue';
+import keyboardClick from '../../shared/directives/keyboard_click.js';
 
 export default {
   name: 'RepositoryTextValue',
   mixins: [repositoryValueMixin],
   components: {
     'text-area': Textarea
+  },
+  directives: {
+    'keyboard-click': keyboardClick
   },
   data() {
     return {

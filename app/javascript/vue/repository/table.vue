@@ -16,6 +16,7 @@
         }
       }"
       :enableBarcodeSearch="true"
+      :keyboardNavigation="true"
       :fetchColumnsOnReload="true"
       :addingNewRow="addingNewRow"
       :newRowTemplate="newRowTemplate"
@@ -49,6 +50,7 @@
       @restore="restoreRows"
       @delete="deleteRows"
       @createEvent="createEvent"
+      @cellKeyboardActivate="onCellKeyboardActivate"
     ></DataTable>
     <div v-else class="flex items-center justify-center w-full h-96 text-sn-grey-500">
       {{ i18n.t('repositories.show.laoding_table_configuration') }}
@@ -171,6 +173,7 @@ export default {
     addingNewRow: false,
     reloadingTable: false,
     textCellModalObject: null,
+    textCellFocus: null,
     stockValueModalUrl: null,
     hasActiveReminders: false,
     assignToTasksModalRows: null,
@@ -180,6 +183,7 @@ export default {
     createEventModalRow: null,
     currentPageRows: [],
     activeFilter: [],
+    itemCardFocus: null,
     newRowTemplate: {
       name: {
         value: '',
@@ -193,6 +197,7 @@ export default {
   },
   beforeUnmount() {
     delete window.repositoryTable;
+    this.stopItemCardFocus(false);
   },
   computed: {
     deleteRowsDescription() {
@@ -260,7 +265,93 @@ export default {
       return actions_toolbar_repository_repository_rows_path(this.repositoryId)
     },
   },
+  watch: {
+    textCellModalObject(modal) {
+      if (!modal) this.restoreTextCellFocus();
+    }
+  },
   methods: {
+    onCellKeyboardActivate({ column, rowIndex }) {
+      if (column.getColId() !== 'name') return;
+
+      this.$nextTick(() => {
+        if (this.isItemCardShowing()) this.startItemCardFocus(rowIndex);
+      });
+    },
+    isItemCardShowing() {
+      return Boolean(window.repositoryItemSidebarComponent?.isShowing);
+    },
+    startItemCardFocus(rowIndex) {
+      this.stopItemCardFocus(false);
+      const wrapper = document.getElementById('repository-item-sidebar-wrapper');
+      if (!wrapper) return;
+
+      const observer = new MutationObserver(() => {
+        if (!this.isItemCardShowing()) this.stopItemCardFocus(true);
+      });
+      observer.observe(wrapper, { attributes: true, attributeFilter: ['style', 'class'] });
+      this.itemCardFocus = { rowIndex, wrapper, observer };
+      document.addEventListener('keydown', this.handleItemCardKeydown, true);
+      // The card handles Escape itself, so the table must not pull focus back to the cell while it is open
+      this.$refs.repositoryTable?.clearKeyboardActivatedCell();
+      wrapper.focus({ preventScroll: true });
+    },
+    stopItemCardFocus(restoreFocus) {
+      if (!this.itemCardFocus) return;
+
+      const { rowIndex, wrapper, observer } = this.itemCardFocus;
+      observer.disconnect();
+      document.removeEventListener('keydown', this.handleItemCardKeydown, true);
+      this.itemCardFocus = null;
+
+      if (!restoreFocus) return;
+      // Don't take focus back if the card was closed by clicking somewhere else
+      const active = document.activeElement;
+      if (!active || active === document.body || wrapper.contains(active)) {
+        this.$refs.repositoryTable?.gridApi?.setFocusedCell(rowIndex, 'name');
+      }
+    },
+    handleItemCardKeydown(event) {
+      if (!this.itemCardFocus) return;
+      if (!this.isItemCardShowing()) {
+        this.stopItemCardFocus(true);
+        return;
+      }
+      // Leave keys alone while a modal opened from the card is in front of it
+      if (document.querySelector('.modal.in')) return;
+
+      // Escape is handled by the item card itself
+      if (event.key === 'Tab') this.trapTabInItemCard(event);
+    },
+    trapTabInItemCard(event) {
+      const { wrapper } = this.itemCardFocus;
+      const focusable = Array.from(wrapper.querySelectorAll([
+        'a[href]',
+        'button:not([disabled])',
+        'input:not([disabled]):not([type="hidden"])',
+        'select:not([disabled])',
+        'textarea:not([disabled])',
+        '[contenteditable="true"]',
+        '[tabindex]:not([tabindex="-1"])'
+      ].join(', '))).filter((el) => el.getClientRects().length > 0 && el.getAttribute('tabindex') !== '-1');
+
+      // No stopPropagation: card dropdowns close themselves on Tab
+      event.preventDefault();
+      if (focusable.length === 0) {
+        wrapper.focus({ preventScroll: true });
+        return;
+      }
+
+      const index = focusable.indexOf(document.activeElement);
+      let next;
+      if (index === -1) {
+        next = event.shiftKey ? focusable[focusable.length - 1] : focusable[0];
+      } else {
+        const step = event.shiftKey ? -1 : 1;
+        next = focusable[(index + step + focusable.length) % focusable.length];
+      }
+      next.focus();
+    },
     updateRowData(row) {
       // DataTable prepends unknown rows, so skip pushes for rows that aren't loaded
       if (!this.findLoadedRow(row.id)) return;
@@ -332,10 +423,40 @@ export default {
       });
     },
     showTextCellModal(_e, rows, colDef) {
+      const focused = this.$refs.repositoryTable?.gridApi?.getFocusedCell();
+      this.textCellFocus = focused ? { rowIndex: focused.rowIndex, colId: focused.column.getColId() } : null;
       this.textCellModalObject = {
         row: rows[0],
         colDef
       }
+    },
+    // Applying a cell update re-renders the grid cells, which drops focus to the page body. Give it back to
+    // the cell that had it, so Tab keeps moving along the row.
+    keepCellFocus(update) {
+      const gridApi = this.$refs.repositoryTable?.gridApi;
+      const focused = document.activeElement?.closest('.ag-cell') ? gridApi?.getFocusedCell() : null;
+
+      update();
+      if (!focused) return;
+
+      setTimeout(() => {
+        const active = document.activeElement;
+        if (!active || active === document.body) gridApi.setFocusedCell(focused.rowIndex, focused.column.getColId());
+      });
+    },
+    // The modal is removed when it closes (save, close, Escape), so give focus back to the cell it was
+    // opened from and Tab keeps moving along the row.
+    restoreTextCellFocus() {
+      const cell = this.textCellFocus;
+      this.textCellFocus = null;
+      if (!cell) return;
+
+      setTimeout(() => {
+        const active = document.activeElement;
+        if (active && active !== document.body) return;
+
+        this.$refs.repositoryTable?.gridApi?.setFocusedCell(cell.rowIndex, cell.colId);
+      });
     },
     openAssignToTaskModal(_e, rows) {
       this.assignToTasksModalRows = rows.map((row) => ( row.id ));
@@ -430,7 +551,7 @@ export default {
         if (response.data.active_reminders_count !== undefined) {
           updatedRow.active_reminders_count = response.data.active_reminders_count;
         }
-        this.updateRowData(updatedRow);
+        this.keepCellFocus(() => this.updateRowData(updatedRow));
         this.textCellModalObject = null;
       }).catch(() => {
         HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');

@@ -10,6 +10,7 @@
         :withCheckboxes="true"
         :clearable="true"
         size="sm"
+        :open-on-focus="false"
         :value="checkListValue"
         @change="changeValue"
       />

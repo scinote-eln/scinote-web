@@ -12,6 +12,7 @@
         :options="options"
         :searchable="true"
         :clearable="true"
+        :open-on-focus="false"
         :placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
         :no-options-placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
         :data-e2e="'e2e-DD-repoItemSBcustomColumns-input' + colId"

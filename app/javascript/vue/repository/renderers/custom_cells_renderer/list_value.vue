@@ -8,6 +8,7 @@
         :borderless="true"
         :clearable="true"
         size="sm"
+        :open-on-focus="false"
         :value="listValue"
         @change="changeValue"
       />

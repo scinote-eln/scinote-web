@@ -13,6 +13,7 @@
         :searchable="true"
         :clearable="true"
         :size="'sm'"
+        :open-on-focus="false"
         :placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
         :no-options-placeholder="i18n.t('repositories.item_card.dropdown_placeholder')"
         :data-e2e="'e2e-IF-repoItemSBcustomColumns-input' + colId"

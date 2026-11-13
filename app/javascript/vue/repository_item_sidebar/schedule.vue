@@ -19,7 +19,7 @@
             <span class="truncate" :title="event.attributes.name">{{ event.attributes.name }}</span>
             <span class="grow shrink-0">{{ event.attributes.start_at_formatted }} - {{ event.attributes.end_at_formatted }}</span>
           </div>
-          <div v-if="futurePage" class="cursor-pointer text-sn-science-blue" @click="fetchEvents('future', futurePage)">
+          <div v-if="futurePage" class="cursor-pointer text-sn-science-blue" @click="fetchEvents('future', futurePage)" v-keyboard-click>
             {{ i18n.t('repositories.equipment_booking.show_more') }}
           </div>
         </div>
@@ -29,7 +29,7 @@
             <span class="truncate" :title="event.attributes.name">{{ event.attributes.name }}</span>
             <span class="grow shrink-0">{{ event.attributes.start_at_formatted }} - {{ event.attributes.end_at_formatted }}</span>
           </div>
-          <div v-if="pastPage" class="cursor-pointer text-sn-blue" @click="fetchEvents('past', pastPage)">
+          <div v-if="pastPage" class="cursor-pointer text-sn-blue" @click="fetchEvents('past', pastPage)" v-keyboard-click>
             {{ i18n.t('repositories.equipment_booking.show_more') }}
           </div>
         </div>
@@ -56,6 +56,7 @@
 <script>
 import axios from '../../packs/custom_axios.js';
 import manageEventModal from '../equipment_bookings/manage_modal.vue';
+import keyboardClick from '../shared/directives/keyboard_click.js';
 
 import {
   equipment_booking_events_repository_repository_row_path
@@ -69,6 +70,9 @@ export default {
   },
   components: {
     manageEventModal
+  },
+  directives: {
+    'keyboard-click': keyboardClick
   },
   computed: {
     equipmentBookingEventsPath() {

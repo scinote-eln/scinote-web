@@ -1,8 +1,9 @@
 <template>
   <div v-click-outside="close"
-       @focus="open"
+       @focus="openOnFocus && open()"
        @keydown="keySelectOptions($event)"
        tabindex="0" class="w-full focus:outline-none"
+       :class="{ 'group/sd': !openOnFocus }"
        :data-e2e="e2eValue"
   >
     <div
@@ -13,6 +14,7 @@
         'border border-solid': !borderless,
         '!border-sn-science-blue': isOpen && !borderless,
         '!border-sn-light-grey': !isOpen && !borderless,
+        'group-focus-visible/sd:!border-sn-science-blue': !openOnFocus && !borderless,
         'bg-sn-super-light-grey': disabled,
         'pl-0': borderless
       }]"
@@ -75,7 +77,7 @@
           :data-e2e="`${e2eValue}-dropdownOptions`"
         >
           <div v-if="multiple && withCheckboxes && !hideSelectAll" class="p-2.5 pb-0">
-            <div @click="selectAll" :style="sizeStyle"
+            <div @click="selectAll" @mousedown="keepFocus" :style="sizeStyle"
                 class="border border-x-0 !border-transparent border-solid !border-b-sn-light-grey
                         py-1.5 px-3  cursor-pointer flex items-center gap-2 shrink-0">
               <div class="sn-checkbox-icon"
@@ -88,6 +90,7 @@
             <template v-for="(option, i) in filteredOptions" :key="option[0]">
               <div
                 @click.stop="handleOptionClick(option)"
+                @mousedown="keepFocus"
                 ref="options"
                 :title="option[2]?.tooltip || option[1]"
                 class="py-1.5 px-3 rounded flex items-center gap-2 shrink-0"
@@ -154,7 +157,8 @@ export default {
     e2eValue: { type: String, default: '' },
     ajaxMethod: { type: String, default: 'get' },
     oneLineLabel: { type: Boolean, default: false },
-    hideSelectAll: { type: Boolean, default: false }
+    hideSelectAll: { type: Boolean, default: false },
+    openOnFocus: { type: Boolean, default: true }
   },
   directives: {
     'click-outside': vOnClickOutside
@@ -374,6 +378,9 @@ export default {
 
       if (!this.isOpen) return;
 
+      // The search input is removed on close, so keep focus on the field if it was inside it
+      const refocus = !this.openOnFocus && this.$el.contains(document.activeElement);
+
       this.$nextTick(() => {
         this.isOpen = false;
         this.$emit('close');
@@ -381,7 +388,13 @@ export default {
           this.$emit('change', this.newValue, this.getLabels(this.newValue));
         }
         this.query = '';
+
+        if (refocus) this.$el.focus();
       });
+    },
+    keepFocus(e) {
+      // Pressing an option must not take focus away from the field, so Tab and Escape keep working
+      if (!this.openOnFocus) e.preventDefault();
     },
     handleOptionClick(option) {
       if (option[2]?.disabled) return;
@@ -482,6 +495,19 @@ export default {
       return true;
     },
     keySelectOptions(e) {
+      if (!this.openOnFocus && !this.isOpen) {
+        if (['Enter', ' ', 'ArrowDown', 'ArrowUp'].includes(e.key)) {
+          e.preventDefault();
+          this.open();
+        }
+        return;
+      }
+
+      if (e.key === 'Escape') {
+        this.close();
+        return;
+      }
+
       if (e.key === 'Tab') this.close();
       if (['ArrowDown', 'ArrowUp', 'Enter'].some((key) => e.key === key)) {
         if (e.key === 'ArrowDown') {
