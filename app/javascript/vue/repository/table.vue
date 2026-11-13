@@ -24,6 +24,7 @@
       :currentViewMode="currentViewMode"
       :customManageColumnsModal="ManageColumnsModal"
       :manageColumnsModalProps="{ repositoryId, canManageColumns: canManageRepository }"
+      :columnMenu="true"
       @reloadColumns="legacyReloadTableComponent"
       :objectArchived="archived"
       :hiddenDataMessage="i18n.t('repositories.show.no_active_repository_rows_archived_repository')"

@@ -44,6 +44,8 @@ export default {
         headerName: this.i18n.t('repositories.table.row_name'),
         sortable: true,
         suppressColumnsToolPanel: true,
+        // Like in the manage columns modal, the name column can't be hidden.
+        headerComponentParams: { hideable: false },
         cellRenderer: 'nameRenderer',
         cellRendererParams: {
           legacyId: -4
@@ -184,6 +186,9 @@ export default {
               cellRenderer: 'cellRenderer',
               hide: !(field == 'stock') && this.columnHidden,
               minWidth: this.minWidth[column.attributes.data_type] || 150,
+              headerComponentParams: {
+                wrappable: column.attributes.data_type === 'RepositoryTextValue'
+              },
               cellRendererParams: {
                 repositoryId: this.repositoryVersion.id,
                 columnId: column.id,
