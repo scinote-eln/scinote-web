@@ -13,7 +13,8 @@ const WRAP_TEXT_ICON = `<svg class="shrink-0" width="24" height="24" viewBox="0 
   <path d="${WRAP_TEXT_PATH}"/>
 </svg>`;
 
-const menuItemHtml = (icon, text) => `<span class="flex items-center gap-2">${icon}<span>${text}</span></span>`;
+// Flyout rows in Figma are dark text, not the link blue MenuDropdown gives <a> items.
+const menuItemHtml = (icon, text) => `<span class="flex items-center gap-2 text-sn-black">${icon}<span>${text}</span></span>`;
 const fontIcon = (name) => `<i class="sn-icon sn-icon-${name} shrink-0"></i>`;
 
 export default {
