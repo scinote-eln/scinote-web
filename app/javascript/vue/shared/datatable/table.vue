@@ -373,9 +373,10 @@ export default {
           minWidth: column.minWidth || 110,
           cellRendererParams: { ...column.cellRendererParams, ...{ dtComponent: this } },
           headerComponentParams: {
-            // Mirrors the manage columns modal, where the name column can't be hidden.
-            hideable: column.field !== 'name',
             ...column.headerComponentParams,
+            // Hidden columns can only come back through the manage columns modal, so no Hide without it.
+            // A column opts out with headerComponentParams: { hideable: false }.
+            hideable: !this.hideColumnsManagment && column.headerComponentParams?.hideable !== false,
             columnMenu: this.columnMenu,
             dtComponent: this
           },

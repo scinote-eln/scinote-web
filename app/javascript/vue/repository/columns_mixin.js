@@ -44,6 +44,8 @@ export default {
         headerName: this.i18n.t('repositories.table.row_name'),
         sortable: true,
         suppressColumnsToolPanel: true,
+        // Like in the manage columns modal, the name column can't be hidden.
+        headerComponentParams: { hideable: false },
         cellRenderer: 'nameRenderer',
         cellRendererParams: {
           legacyId: -4
