@@ -184,6 +184,9 @@ export default {
               cellRenderer: 'cellRenderer',
               hide: !(field == 'stock') && this.columnHidden,
               minWidth: this.minWidth[column.attributes.data_type] || 150,
+              headerComponentParams: {
+                wrappable: column.attributes.data_type === 'RepositoryTextValue'
+              },
               cellRendererParams: {
                 repositoryId: this.repositoryVersion.id,
                 columnId: column.id,

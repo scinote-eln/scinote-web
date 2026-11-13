@@ -53,7 +53,8 @@
           class="ag-theme-alpine w-full flex-grow h-full z-10"
           :class="{
             'opacity-0': initializing,
-            'adding-new-row': addingNewRow
+            'adding-new-row': addingNewRow,
+            'with-column-menu': columnMenu
           }"
           :columnDefs="extendedColumnDefs"
           :selectionColumnDef="selectionColumnDef"
@@ -276,6 +277,11 @@ export default {
     manageColumnsModalProps: {
       type: Object,
       default: () => ({})
+    },
+    // Opt-in "more" menu on every column header (pin, wrap text, sort, hide).
+    columnMenu: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -303,6 +309,7 @@ export default {
       stateLoading: true,
       lastPage: false,
       tableState: null,
+      wrappedColumns: [],
       gridReady: false,
       windowScrollerSeen: false,
       resetGridCols: false,
@@ -354,13 +361,28 @@ export default {
       }
     },
     extendedColumnDefs() {
-      const columns = this.columnDefs.map((column) => ({
-        ...column,
-        minWidth: column.minWidth || 110,
-        cellRendererParams: { ...column.cellRendererParams, ...{ dtComponent: this } },
-        pinned: (this.withPinnedColumns && (column.field === 'name' || column.field === 'name_hash') ? 'left' : column.pinned),
-        comparator: () => null
-      }));
+      const columns = this.columnDefs.map((column) => {
+        const wrapped = this.columnMenu
+          && column.headerComponentParams?.wrappable
+          && this.wrappedColumns.includes(column.field);
+
+        return {
+          ...column,
+          minWidth: column.minWidth || 110,
+          cellRendererParams: { ...column.cellRendererParams, ...{ dtComponent: this } },
+          headerComponentParams: {
+            // Mirrors the manage columns modal, where the name column can't be hidden.
+            hideable: column.field !== 'name',
+            ...column.headerComponentParams,
+            columnMenu: this.columnMenu,
+            dtComponent: this
+          },
+          pinned: (this.withPinnedColumns && (column.field === 'name' || column.field === 'name_hash') ? 'left' : column.pinned),
+          wrapText: !!wrapped,
+          autoHeight: !!wrapped,
+          comparator: () => null
+        };
+      });
 
       if (this.withRowMenu) {
         columns.push({
@@ -557,6 +579,7 @@ export default {
             this.currentViewRender = this.tableOnly ? 'table' : this.tableState.currentViewRender;
             this.perPage = this.tableState.perPage;
             this.order = this.tableState.order;
+            this.wrappedColumns = this.tableState.wrappedColumns || [];
             if (this.currentViewRender === 'cards') {
               this.initializing = false;
             }
@@ -617,7 +640,8 @@ export default {
         columnsState,
         order: this.order,
         currentViewRender: this.currentViewRender,
-        perPage: this.perPage
+        perPage: this.perPage,
+        wrappedColumns: this.wrappedColumns
       };
 
       let checkboxColumn = columnsState.find((column) => column.colId === 'checkbox');
@@ -840,11 +864,31 @@ export default {
       this.gridApi.setColumnPinned(column.field, null);
       this.hideLastPinnedResizeCell();
     },
+    async setColumnWrapped(colId, wrap) {
+      if (!this.gridApi) return;
+
+      // New column defs re-apply stateful attributes (e.g. the name column's default pin),
+      // so keep the user's current column state and restore it once the grid has the new defs.
+      const columnState = this.gridApi.getColumnState();
+      this.wrappedColumns = wrap
+        ? [...new Set([...this.wrappedColumns, colId])]
+        : this.wrappedColumns.filter((id) => id !== colId);
+
+      await this.$nextTick();
+      this.gridApi.applyColumnState({ state: columnState, applyOrder: true });
+      this.gridApi.resetRowHeights();
+      this.gridApi.redrawRows();
+      this.saveTableState();
+    },
     reorderColumns(columns) {
       this.gridApi.moveColumns(columns, 1);
       this.saveTableState();
     },
-    resetColumnsToDefault() {
+    async resetColumnsToDefault() {
+      if (this.wrappedColumns.length) {
+        this.wrappedColumns = [];
+        await this.$nextTick();
+      }
       this.gridApi.resetColumnState();
       this.gridApi.sizeColumnsToFit();
       this.hideLastPinnedResizeCell();
