@@ -116,7 +116,8 @@ class RepositoryRow < ApplicationRecord
             length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :created_by, presence: true
 
-  attr_accessor :import_status, :import_message, :snapshot_at, :snapshot_by_id, :snapshot_by_name
+  attr_accessor :import_status, :import_message, :import_cell_errors, :import_changed_columns,
+                :import_mandatory_missing, :snapshot_at, :snapshot_by_id, :snapshot_by_name
 
   scope :active, -> { where(archived: false) }
   scope :archived, -> { where(archived: true) }

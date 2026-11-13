@@ -1,6 +1,6 @@
 <template>
   <div ref="modal" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog !w-[90vw]" role="document">
       <Loading v-if="loading" />
       <div class="modal-content grow">
         <div class="modal-header gap-4">
@@ -16,42 +16,31 @@
           <p class="text-sn-dark-grey mb-6">
             {{ i18n.t('repositories.import_records.steps.step3.subtitle', { inventory: params.attributes.name }) }}
           </p>
-          <div class="flex items-center justify-between text-sn-dark-gray text-sm">
-            <div>
-              <div v-html="i18n.t('repositories.import_records.steps.step3.updated_items')"></div>
-              <hr class="my-1">
-              <h2 class="m-0 text-sn-alert-green">{{ counters.updated }}</h2>
+          <div class="flex items-center justify-between gap-4 mb-4">
+            <div class="flex items-center gap-1 p-1 rounded-lg bg-sn-grey-100">
+              <button
+                v-for="tab in tabs"
+                :key="tab.status"
+                type="button"
+                class="px-4 py-1.5 rounded-md border-0 text-sm whitespace-nowrap"
+                :class="{
+                  'bg-sn-white shadow font-bold text-sn-black': activeTab === tab.status,
+                  'bg-transparent text-sn-dark-grey': activeTab !== tab.status,
+                  'cursor-not-allowed': tab.count === 0,
+                  'cursor-pointer': tab.count > 0
+                }"
+                :data-e2e="`e2e-BT-importPreview-tab-${tab.status}`"
+                @click="selectTab(tab)"
+              >
+                {{ tab.label }}
+                (<span :class="tab.count > 0 ? tab.countClass : ''">{{ tab.count }}</span>)
+              </button>
             </div>
-            <div>
-              <div v-html="i18n.t('repositories.import_records.steps.step3.new_items')"></div>
-              <hr class="my-1">
-              <h2 class="m-0 text-sn-alert-green">{{ counters.created }}</h2>
-            </div>
-            <div>
-              <div v-html="i18n.t('repositories.import_records.steps.step3.unchanged_items')"></div>
-              <hr class="my-1">
-              <h2 class="m-0 ">{{ counters.unchanged }}</h2>
-            </div>
-            <div>
-              <div v-html="i18n.t('repositories.import_records.steps.step3.duplicated_items')"></div>
-              <hr class="my-1">
-              <h2 class="m-0 text-sn-alert-passion">{{ counters.duplicated }}</h2>
-            </div>
-            <div>
-              <div v-html="i18n.t('repositories.import_records.steps.step3.invalid_items')"></div>
-              <hr class="my-1">
-              <h2 class="m-0 text-sn-alert-passion">{{ counters.invalid }}</h2>
-            </div>
-            <div>
-              <div v-html="i18n.t('repositories.import_records.steps.step3.archived_items')"></div>
-              <hr class="my-1">
-              <h2 class="m-0">{{ counters.archived }}</h2>
+            <div class="truncate" :title="params.file_name">
+              {{ i18n.t('repositories.import_records.steps.step2.importedFileText') }} {{ params.file_name }}
             </div>
           </div>
-          <div class="my-6">
-            {{ i18n.t('repositories.import_records.steps.step2.importedFileText') }} {{ params.file_name }}
-          </div>
-          <div class="h-80">
+          <div style="height: 540px">
             <ag-grid-vue
               class="ag-theme-alpine w-full flex-grow h-full z-10"
               :columnDefs="columnDefs"
@@ -60,7 +49,7 @@
                 sortable: false,
                 suppressMovable: true
               }"
-              :rowData="tableData"
+              :rowData="filteredTableData"
               :suppressRowTransform="true"
               :suppressRowClickSelection="true"
               :enableCellTextSelection="true"
@@ -69,11 +58,13 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" @click="$emit('changeStep', 'MappingStep')">
-            {{ i18n.t('general.back') }}
+            {{ i18n.t('general.cancel') }}
           </button>
-          <button type="button" class="btn btn-primary" @click="$emit('importRows')">
-            {{ i18n.t('repositories.import_records.steps.step3.import') }}
-          </button>
+          <span :data-sn-tooltip="hasMandatoryErrors ? i18n.t('repositories.import_records.steps.step3.mandatory_columns_error') : null">
+            <button type="button" class="btn btn-primary" :disabled="hasMandatoryErrors" @click="$emit('importRows')">
+              {{ i18n.t('repositories.import_records.steps.step3.import') }}
+            </button>
+          </span>
         </div>
       </div>
     </div>
@@ -86,10 +77,12 @@ import modalMixin from '../../../shared/modal_mixin';
 import Loading from '../../../shared/loading.vue';
 import HighlightRenderer from './renderers/highlight_renderer.vue';
 import StatusRenderer from './renderers/status_renderer.vue';
+import tooltipMixin from '../../../mixins/tooltipMixin.js';
+import CustomHeader from '../../../shared/datatable/tableHeader';
 
 export default {
   name: 'PreviewStep',
-  mixins: [modalMixin],
+  mixins: [modalMixin, tooltipMixin],
   props: {
     params: {
       type: Object,
@@ -102,10 +95,12 @@ export default {
   },
   components: {
     AgGridVue,
-    Loading
+    Loading,
+    agColumnHeader: CustomHeader
   },
   data() {
     return {
+      activeTab: 'all'
     };
   },
   computed: {
@@ -119,17 +114,42 @@ export default {
         archived: this.filterRows('archived').length
       };
     },
+    tabs() {
+      const t = (key) => this.i18n.t(`repositories.import_records.steps.step3.${key}`);
+      const green = 'text-sn-alert-green';
+      const red = 'text-sn-alert-passion';
+
+      return [
+        { status: 'all', label: t('all_items'), count: this.params.preview.data.length },
+        { status: 'updated', label: t('updated_items'), count: this.counters.updated, countClass: green },
+        { status: 'created', label: t('new_items'), count: this.counters.created, countClass: green },
+        { status: 'unchanged', label: t('unchanged_items'), count: this.counters.unchanged },
+        { status: 'duplicated', label: t('duplicated_items'), count: this.counters.duplicated, countClass: red },
+        { status: 'invalid', label: t('invalid_items'), count: this.counters.invalid, countClass: red },
+        { status: 'archived', label: t('archived_items'), count: this.counters.archived }
+      ];
+    },
+    hasMandatoryErrors() {
+      return this.params.preview.data.some((row) => row.attributes.import_mandatory_missing?.length > 0);
+    },
+    filteredTableData() {
+      if (this.activeTab === 'all') return this.tableData;
+
+      return this.tableData.filter((row) => row.import_status === this.activeTab);
+    },
     columnDefs() {
       const columns = [
         {
           field: 'code',
           headerName: this.i18n.t('repositories.import_records.steps.step3.code'),
-          cellRenderer: HighlightRenderer
+          cellRenderer: HighlightRenderer,
+          cellRendererParams: { columnKey: 'code' }
         },
         {
           field: 'name',
           headerName: this.i18n.t('repositories.import_records.steps.step3.name'),
-          cellRenderer: HighlightRenderer
+          cellRenderer: HighlightRenderer,
+          cellRendererParams: { columnKey: 'name' }
         }
       ];
 
@@ -137,7 +157,9 @@ export default {
         columns.push({
           field: `col_${col[0]}`,
           headerName: col[1],
-          cellRenderer: HighlightRenderer
+          cellRenderer: HighlightRenderer,
+          cellRendererParams: { columnKey: String(col[0]) },
+          headerComponentParams: { isMandatory: () => !!col[3] }
         });
       });
 
@@ -165,6 +187,11 @@ export default {
     }
   },
   methods: {
+    selectTab(tab) {
+      if (tab.count === 0) return;
+
+      this.activeTab = tab.status;
+    },
     filterRows(status) {
       return this.params.preview.data.filter((r) => r.attributes.import_status === status);
     }

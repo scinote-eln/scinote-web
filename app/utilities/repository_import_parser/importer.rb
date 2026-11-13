@@ -24,6 +24,7 @@ module RepositoryImportParser
       @mappings = mappings
       @user = user
       @repository_columns = @repository.repository_columns
+      @mandatory_columns = @repository_columns.where(mandatory: true).to_a
       @can_edit_existing_items = true # can_edit_existing_items
       @should_overwrite_with_empty_cells = true # should_overwrite_with_empty_cells
       @preview = preview
@@ -85,13 +86,18 @@ module RepositoryImportParser
           if id.present?
             existing_row = @repository.repository_rows.includes(repository_cells: :value).find_by(id: id)
 
-            existing_row ||= @repository.repository_rows.new(
-              id: SecureRandom.uuid,
-              created_by: @user,
-              last_modified_by: @user,
-              import_status: 'invalid',
-              import_message: I18n.t('repositories.import_records.steps.step3.status_message.not_exist', id: id.to_i)
-            )
+            if existing_row.nil?
+              not_exist_message =
+                I18n.t('repositories.import_records.steps.step3.status_message.not_exist', id: id.to_i)
+              existing_row = @repository.repository_rows.new(
+                id: SecureRandom.uuid,
+                created_by: @user,
+                last_modified_by: @user,
+                import_status: 'invalid',
+                import_message: not_exist_message,
+                import_cell_errors: { 'code' => { message: not_exist_message, value: incoming_row[@id_index].to_s } }
+              )
+            end
           end
         end
 
@@ -102,6 +108,12 @@ module RepositoryImportParser
             existing_row.import_status = 'archived'
           elsif duplicate_ids.include?(existing_row.code)
             existing_row.import_status = 'duplicated'
+            existing_row.import_cell_errors = {
+              'code' => {
+                message: I18n.t('repositories.import_records.steps.step3.status_message.duplicated'),
+                value: existing_row.code
+              }
+            }
           end
 
           if existing_row.import_status.present?
@@ -129,6 +141,9 @@ module RepositoryImportParser
     def import_row(repository_row, import_row)
       @repository.transaction do
         @errors = []
+        @cell_errors = {}
+        @changed_columns = []
+        @mandatory_missing = []
         @updated = false
         repository_row_name = try_decimal_to_string(import_row[@name_index])
         if repository_row.present?
@@ -141,6 +156,9 @@ module RepositoryImportParser
                                              import_status: 'created')
         end
 
+        name_changed = repository_row.new_record? ? repository_row.name.present? : repository_row.name_changed?
+        @changed_columns << 'name' if name_changed
+
         if @preview
           repository_row.validate
           repository_row.id = SecureRandom.uuid.gsub(/[a-zA-Z-]/, '') unless repository_row.id.present?  # ID required for preview with serializer
@@ -148,6 +166,8 @@ module RepositoryImportParser
           repository_row.save!
         end
         @errors << repository_row.errors.full_messages.join(',') if repository_row.errors.present?
+        name_errors = repository_row.errors.full_messages_for(:name)
+        @cell_errors['name'] = { message: name_errors.join(', ') } if name_errors.present?
 
         @updated = repository_row.changed?
 
@@ -156,6 +176,8 @@ module RepositoryImportParser
 
           value = import_row[index]
           value = try_decimal_to_string(value) unless column.repository_number_value?
+
+          @mandatory_missing << column.id.to_s if column.mandatory? && value.blank?
 
           cell_value = if value.present?
                          column.data_type.constantize.import_from_text(
@@ -176,11 +198,14 @@ module RepositoryImportParser
           if value.present? && cell_value.nil?
             raise ActiveRecord::Rollback unless @preview
 
-            @errors << I18n.t('activerecord.errors.models.repository_cell.incorrect_format')
+            incorrect_format_message = I18n.t('activerecord.errors.models.repository_cell.incorrect_format')
+            @errors << incorrect_format_message
+            @cell_errors[column.id.to_s] = { message: incorrect_format_message, value: value.to_s }
             next
           end
 
           existing_cell = repository_row.repository_cells.find { |c| c.repository_column_id == column.id }
+          previous_formatted = formatted_cell_value(existing_cell) if @preview
 
           existing_cell = if cell_value.nil?
                             handle_nil_cell_value(existing_cell)
@@ -189,8 +214,25 @@ module RepositoryImportParser
                           end
 
           @updated ||= @preview ? existing_cell&.value&.changed? : existing_cell&.value&.saved_changes?
-          @errors << existing_cell.value.errors.full_messages.join(',') if existing_cell&.value&.errors.present?
+          cell_changed = @preview && previous_formatted != formatted_cell_value(existing_cell)
+          @changed_columns << column.id.to_s if cell_changed
+
+          next if existing_cell&.value&.errors.blank?
+
+          cell_error_message = existing_cell.value.errors.full_messages.join(',')
+          @errors << cell_error_message
+          @cell_errors[column.id.to_s] = { message: cell_error_message }
         end
+
+        validate_unmapped_mandatory_columns(repository_row)
+        if @mandatory_missing.present?
+          @errors << I18n.t('repositories.import_records.steps.step3.status_message.mandatory_missing')
+          raise ActiveRecord::Rollback unless @preview
+        end
+
+        repository_row.import_cell_errors = @cell_errors
+        repository_row.import_changed_columns = @changed_columns
+        repository_row.import_mandatory_missing = @mandatory_missing
 
         repository_row.import_status = if @errors.present?
                                          'invalid'
@@ -208,6 +250,25 @@ module RepositoryImportParser
       rescue ActiveRecord::RecordInvalid
         raise ActiveRecord::Rollback
       end
+    end
+
+    def validate_unmapped_mandatory_columns(repository_row)
+      mapped_column_ids = @columns.compact.map(&:id)
+
+      @mandatory_columns.each do |column|
+        next if mapped_column_ids.include?(column.id)
+
+        cell_present = repository_row.repository_cells.any? do |cell|
+          cell.repository_column_id == column.id && !cell.to_destroy && cell.value.present?
+        end
+        @mandatory_missing << column.id.to_s unless cell_present
+      end
+    end
+
+    def formatted_cell_value(repository_cell)
+      return if repository_cell.nil? || repository_cell.to_destroy || repository_cell.value.nil?
+
+      repository_cell.value.formatted
     end
 
     def handle_nil_cell_value(repository_cell)
