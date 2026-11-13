@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="group/text relative flex gap-2 w-full text-sm"
+    <div class="group relative flex gap-1 w-full text-sm"
          :class="wrapped ? 'items-start py-2.5 leading-5' : 'items-center h-full max-h-10 leading-[unset]'">
       <div ref="descripitonBox" class="min-w-0 grow">
         <template v-if="sanitizedTextValue && sanitizedTextValue.length > 0">
@@ -24,11 +24,13 @@
           </span>
         </template>
       </div>
-      <i v-if="hasText && canManage"
-         class="sn-icon sn-icon-edit cursor-pointer shrink-0 tw-hidden group-hover/text:block"
-         :title="i18n.t('general.edit')"
-         data-e2e="e2e-BT-invItems-textCell-edit"
-         @click.stop="showTextCellModal"></i>
+      <div v-if="hasText && canManage"
+           class="shrink-0 tw-hidden group-hover:block"
+           :title="i18n.t('general.edit')"
+           data-e2e="e2e-BT-invItems-textCell-edit"
+           @click.stop="showTextCellModal">
+        <i class="sn-icon sn-icon-edit cursor-pointer"></i>
+      </div>
     </div>
   </div>
 </template>
