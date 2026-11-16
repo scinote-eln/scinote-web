@@ -81,6 +81,9 @@ module Scinote
     # Max uploaded file size in MB
     config.x.file_max_size_mb = (ENV['FILE_MAX_SIZE_MB'] || 50).to_i
 
+    # Max inventory import file size in MB
+    config.x.inventory_import_max_size_mb = (ENV['SCINOTE_INV_IMPORT_MAX_SIZE_MB'] || 5).to_i
+
     config.x.webhooks_enabled = ENV['ENABLE_WEBHOOKS'] == 'true'
 
     config.x.connected_devices_enabled = ENV['CONNECTED_DEVICES_ENABLED'] == 'true'
