@@ -16,10 +16,14 @@
           </h4>
         </div>
         <div class="modal-body">
-          <div v-if="row.permissions.manage" class="sci-input-container-v2 !h-40">
+          <div v-if="row.permissions.manage"
+               class="sci-input-container-v2 !h-40"
+               :class="{ error: showError }"
+               :data-error="showError ? i18n.t('repositories.mandatory_column.field_error') : null">
             <textarea
               v-model="textValue"
               ref="input"
+              @blur="touched = true"
               class="sci-input-field w-full "
               data-e2e="e2e-TX-invItems-addTextModal-textArea"
             ></textarea>
@@ -59,8 +63,22 @@ export default {
     row: Object
   },
   data: () => ({
-    textValue: ''
+    textValue: '',
+    touched: false
   }),
+  computed: {
+    mandatory() {
+      const { isMandatory, mandatory } = this.colDef.cellRendererParams || {};
+
+      return isMandatory ? !!isMandatory() : !!mandatory;
+    },
+    isEmpty() {
+      return this.textValue.trim() === '';
+    },
+    showError() {
+      return this.mandatory && this.touched && this.isEmpty;
+    }
+  },
   mounted() {
     this.textValue = this.row[this.colDef.field]?.value?.edit || '';
 
@@ -77,6 +95,10 @@ export default {
   mixins: [modalMixin],
   methods: {
     saveCell() {
+      this.textValue = this.$refs.input.value;
+      this.touched = true;
+      if (this.showError && this.row.id) return;
+
       this.$emit(
         'updateCell',
         this.row,
