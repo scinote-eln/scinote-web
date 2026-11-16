@@ -97,6 +97,8 @@ var SmartAnnotation = (function() {
     var composing = false;
 
     function evaluateMatch() {
+      if (isFlyoutOpenFor(field)) closeSession();
+
       var subtext = adapter.getSubtext();
       var flag = AtWhoMatchers.isTriggerFlag('#', subtext)
         ? '#'
