@@ -1,5 +1,6 @@
 en:
   global_activities:
+    untitled_file: "(untitled)"
     index:
       teams: "Workspaces"
       activity: "Activity created"
