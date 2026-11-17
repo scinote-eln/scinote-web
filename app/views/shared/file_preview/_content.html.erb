@@ -5,9 +5,8 @@
   <% if locked %>
     <span class="bg-sn-super-light-grey rounded-full text-xs shrink-0 py-1 px-2 mr-2 pointer-events-none">Locked <i class="sn-icon mini sn-icon-locked-fill !align-sub"></i></span>
   <% end %>
-  <span class="file-name">
-    <%= asset.file.metadata[:name] || asset.file_name %>
-  </span>
+  <% file_name = asset.file.metadata[:name] || asset.file_name %>
+  <span class="file-name" title="<%= file_name %>"><%= file_name %></span>
 
   <div class="sci-btn-group">
     <div class="dropdown file-metadata-dropdown">

@@ -82,12 +82,23 @@
     display: flex;
     flex-direction: row;
     flex-shrink: 0;
+    flex-wrap: nowrap;
     height: 4em;
     padding: 0 1em;
 
     .file-name {
       font-weight: bold;
       margin-right: auto;
+      min-width: 0;
+      overflow: hidden;
+      padding-right: 1em;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    > .sci-tag,
+    .sci-btn-group {
+      flex-shrink: 0;
     }
 
     .asset-context-menu {
