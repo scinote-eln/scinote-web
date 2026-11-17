@@ -8,6 +8,7 @@
         @update:modelValue="$emit('update:name', $event)"
         :error="!!nameError"
         :errorMessage="nameError"
+        :disabled="disabledName"
         data-e2e="e2e-IF-invItems-manageColumns-columnName"
       />
     </div>
@@ -43,6 +44,7 @@ export default {
     nameError: { type: String, default: null },
     dataType: { type: String, required: true },
     disabledType: { type: Boolean, default: false },
+    disabledName: { type: Boolean, default: false },
     options: { type: Array, required: true }
   }
 };

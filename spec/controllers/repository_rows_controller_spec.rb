@@ -497,4 +497,41 @@ describe RepositoryRowsController, type: :controller do
       end
     end
   end
+
+  describe 'unique item names' do
+    before do
+      repository.update!(enforce_unique_item_names: true)
+      repository_row.update!(name: 'Existing item')
+    end
+
+    describe 'POST create' do
+      let(:action) do
+        post :create, params: { repository_id: repository.id, repository_row: { name: ' existing ITEM ' } }, format: :json
+      end
+
+      it 'rejects a duplicate name' do
+        expect { action }.not_to change(RepositoryRow, :count)
+        expect(response).to have_http_status(:bad_request)
+        expect(response.parsed_body['name']).to eq(['An item with this name already exists'])
+      end
+    end
+
+    describe 'PUT update' do
+      let!(:other_row) do
+        create :repository_row, name: 'Other item', repository: repository, created_by: user, last_modified_by: user
+      end
+      let(:action) do
+        put :update, params: { repository_id: repository.id, id: other_row.id,
+                               repository_row: { name: 'existing item' } }, format: :json
+      end
+
+      it 'rejects renaming to a duplicate name' do
+        action
+
+        expect(response).to have_http_status(:bad_request)
+        expect(response.parsed_body['name']).to eq(['An item with this name already exists'])
+        expect(other_row.reload.name).to eq 'Other item'
+      end
+    end
+  end
 end

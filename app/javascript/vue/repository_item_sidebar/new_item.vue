@@ -153,6 +153,7 @@ export default {
       canManageStock: false,
       name: '',
       nameTouched: false,
+      itemNameError: null,
       cells: {},
       createAnother: false,
       creating: false,
@@ -171,7 +172,7 @@ export default {
       if (name.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH) {
         return this.i18n.t('inline_edit.errors.over_limit', { attribute, limit: GLOBAL_CONSTANTS.NAME_MAX_LENGTH });
       }
-      return null;
+      return this.itemNameError;
     },
     sections() {
       const mandatory = this.columns.filter((column) => column.mandatory);
@@ -192,6 +193,11 @@ export default {
     canCreate() {
       return !this.loading && !this.creating && this.name.trim() !== '' && !this.nameError
         && this.columns.every((column) => !column.mandatory || column.id in this.filledCells);
+    }
+  },
+  watch: {
+    name() {
+      this.itemNameError = null;
     }
   },
   created() {
@@ -226,7 +232,13 @@ export default {
     },
     async createItem() {
       this.creating = true;
-      const row = await this.postItem().catch(() => {
+      const row = await this.postItem().catch((error) => {
+        const nameError = error.response?.data?.name?.[0];
+        if (nameError) {
+          this.itemNameError = nameError;
+          return;
+        }
+
         HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
       });
       this.creating = false;

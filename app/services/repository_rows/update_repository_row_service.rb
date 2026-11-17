@@ -55,6 +55,7 @@ module RepositoryRows
         end
       rescue ActiveRecord::RecordInvalid => e
         @errors[e.record.class.name.underscore] = e.record.errors.full_messages
+        @errors[:name] = e.record.errors.messages_for(:name) if e.record.is_a?(RepositoryRow) && e.record.errors.key?(:name)
         @record_updated = false
         raise ActiveRecord::Rollback
       end

@@ -13,6 +13,7 @@
           :savingEnforceTableState="savingEnforceTableState"
           :togglingMandatory="togglingMandatory"
           :mandatoryColumns="mandatoryColumns"
+          :canEditNameColumn="canUpdateNameColumn"
           @toggleEnforceTableState="toggleEnforceTableState"
           @toggleMandatory="toggleMandatory"
           @hideColumn="(column) => $emit('hideColumn', column)"
@@ -30,8 +31,10 @@
           :column="editingColumn"
           :repositoryId="repositoryId"
           :columnDefs="columnDefs"
+          :enforceUniqueItemNames="enforceUniqueItemNames"
           @back="view = 'list'"
           @saved="onSaved"
+          @uniqueItemNamesSaved="onUniqueItemNamesSaved"
         />
       </div>
     </div>
@@ -71,7 +74,9 @@ export default {
     canEnforceTableState: { type: Boolean, default: false },
     enforceTableState: { type: Boolean, default: false },
     tableStatePermissions: { type: Object, default: () => ({ ...FULL_TABLE_STATE_PERMISSIONS }) },
-    mandatoryColumns: { type: Object, default: () => ({}) }
+    mandatoryColumns: { type: Object, default: () => ({}) },
+    canUpdateNameColumn: { type: Boolean, default: false },
+    enforceUniqueItemNames: { type: Boolean, default: false }
   },
   components: {
     ColumnsList,
@@ -136,6 +141,11 @@ export default {
       this.view = 'list';
       this.editingColumn = null;
       this.$emit('reloadColumns');
+    },
+    onUniqueItemNamesSaved(enforce) {
+      this.$emit('uniqueItemNamesChanged', enforce);
+      this.view = 'list';
+      this.editingColumn = null;
     },
     onResetToDefault() {
       this.$emit('resetToDefault');

@@ -15,8 +15,19 @@
         v-model:dataType="dataType"
         :nameError="nameError"
         :disabledType="!!column"
+        :disabledName="isNameColumn"
         :options="typeOptions"
       />
+      <div v-if="isNameColumn" class="flex items-center gap-2 mt-4">
+        <span class="sci-checkbox-container">
+          <input type="checkbox"
+                 class="sci-checkbox"
+                 v-model="uniqueItemNames"
+                 data-e2e="e2e-CB-invItems-manageColumns-enforceUniqueItemNames" />
+          <span class="sci-checkbox-label"></span>
+        </span>
+        {{ i18n.t('repositories.unique_item_names.enforce_label') }}
+      </div>
       <hr v-if="typeComponent" />
       <component
         :is="typeComponent"
@@ -57,7 +68,8 @@ import {
   repository_repository_columns_stock_columns_path,
   repository_repository_columns_stock_column_path,
   repository_repository_columns_date_time_columns_path,
-  repository_repository_columns_date_time_column_path
+  repository_repository_columns_date_time_column_path,
+  update_unique_item_names_repository_path
 } from '../../../../routes.js';
 import NameTypeFields from './name_type_fields.vue';
 import NumberColumnType from './column_types/number.vue';
@@ -104,17 +116,26 @@ export default {
   props: {
     column: { type: Object, default: null },
     repositoryId: { type: [String, Number], required: true },
-    columnDefs: { type: Array, required: true }
+    columnDefs: { type: Array, required: true },
+    enforceUniqueItemNames: { type: Boolean, default: false }
   },
+  emits: ['back', 'saved', 'uniqueItemNamesSaved'],
   data() {
+    const isNameColumn = this.column?.field === 'name';
+    const columnDataType = this.column?.cellRendererParams?.columnDataType;
+
     return {
       name: this.column?.headerName || '',
-      dataType: this.column ? this.column.cellRendererParams.columnDataType.replace('RangeValue', 'Value') : 'RepositoryTextValue',
+      dataType: (!isNameColumn && columnDataType) ? columnDataType.replace('RangeValue', 'Value') : 'RepositoryTextValue',
       nameError: null,
-      saving: false
+      saving: false,
+      uniqueItemNames: this.enforceUniqueItemNames
     };
   },
   computed: {
+    isNameColumn() {
+      return this.column?.field === 'name';
+    },
     typeComponent() {
       return TYPE_COMPONENTS[this.dataType] || null;
     },
@@ -143,7 +164,24 @@ export default {
     }
   },
   methods: {
+    saveNameColumn() {
+      this.saving = true;
+      axios.put(update_unique_item_names_repository_path(this.repositoryId), {
+        repository: { enforce_unique_item_names: this.uniqueItemNames }
+      }).then((response) => {
+        this.saving = false;
+        this.$emit('uniqueItemNamesSaved', response.data.enforce_unique_item_names);
+      }).catch(() => {
+        this.saving = false;
+        HelperModule.flashAlertMsg(this.i18n.t('general.error'), 'danger');
+      });
+    },
     save() {
+      if (this.isNameColumn) {
+        this.saveNameColumn();
+        return;
+      }
+
       this.nameError = null;
 
       if (!this.name.trim()) {

@@ -236,6 +236,10 @@ en:
         repository_row_connection:
           self_connection: 'A repository_row cannot have a connection with itself'
           reciprocal_connection: 'Reciprocal connections are not allowed'
+        repository_row:
+          attributes:
+            name:
+              not_unique: 'An item with this name already exists'
         repository_cell:
           incorrect_format: 'Incorrect data format'
         webhook:
@@ -2573,6 +2577,7 @@ en:
         success_flash_html: "Inventory <strong>%{name}</strong> successfully created."
         repository_template_label: "Select inventory template"
         only_system_defined_columns: 'Only system defined columns.'
+        enforce_unique_item_names: "Enforce unique item names"
       modal_confirm_sharing:
         title: "Inventory sharing changes"
         description_1: "You will no longer share this inventory with some of the workspaces. All unshared inventory items assigned to tasks will be automatically removed and this action is irreversible. Any item relationship links (if they exist) will also be deleted."
@@ -3010,6 +3015,9 @@ en:
       unmark: "Unmark as mandatory"
       missing_value: "%{column} is mandatory"
       field_error: "Mandatory field"
+    unique_item_names:
+      enforce_label: "Enforce unique item names"
+      name_not_unique: "An item with this name already exists"
     enforce_table_state:
       title: "Enforce your column layout"
       description: "Everyone in this inventory sees your column visibility, order, and pinning. Others can’t change them, and your future updates apply to them too."
