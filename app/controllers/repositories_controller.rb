@@ -20,7 +20,7 @@ class RepositoriesController < ApplicationController
   before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet
                                                     import_records archive restore actions_toolbar
                                                     export_repositories list user_roles)
-  before_action :check_manage_permissions, only: %i(rename_modal update)
+  before_action :check_manage_permissions, only: %i(rename_modal update update_unique_item_names)
   before_action :check_enforce_table_state_permissions, only: :update_table_state
   before_action :check_delete_permissions, only: %i(destroy destroy_modal)
   before_action :check_archive_permissions, only: %i(archive restore)
@@ -178,6 +178,8 @@ class RepositoriesController < ApplicationController
     Repository.transaction do
       @repository = Repository.new(team: current_team, created_by: current_user)
       @repository.assign_attributes(repository_params)
+      @repository.enforce_unique_item_names =
+        ActiveModel::Type::Boolean.new.cast(params.dig(:repository, :enforce_unique_item_names)) || false
 
       @repository.save!
       log_activity(:create_inventory)
@@ -255,6 +257,16 @@ class RepositoriesController < ApplicationController
       }
     else
       render json: @repository.errors, status: :unprocessable_entity
+    end
+  end
+
+  def update_unique_item_names
+    enforce = ActiveModel::Type::Boolean.new.cast(params.dig(:repository, :enforce_unique_item_names)) || false
+
+    if @repository.update(enforce_unique_item_names: enforce)
+      render json: { enforce_unique_item_names: @repository.enforce_unique_item_names }
+    else
+      render json: @repository.errors, status: :unprocessable_content
     end
   end
 

@@ -1935,7 +1935,8 @@ CREATE TABLE public.repositories (
     repository_rows_count integer DEFAULT 0 NOT NULL,
     repository_template_id bigint,
     enforce_table_state boolean DEFAULT false NOT NULL,
-    default_table_state jsonb
+    default_table_state jsonb,
+    enforce_unique_item_names boolean DEFAULT false NOT NULL
 );
 
 
@@ -11013,6 +11014,7 @@ ALTER TABLE ONLY public.projects
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261117100000'),
 ('20261109100100'),
 ('20261109100000'),
 ('20261007123511'),

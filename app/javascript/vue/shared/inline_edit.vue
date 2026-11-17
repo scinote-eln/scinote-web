@@ -81,13 +81,15 @@ export default {
     defaultValue: { type: String, default: '' },
     singleLine: { type: Boolean, default: true },
     preventLeavingUntilFilled: { type: Boolean, default: false },
-    dataE2e: { type: String, default: '' }
+    dataE2e: { type: String, default: '' },
+    errorMessage: { type: String, default: null }
   },
   data() {
     return {
       editing: false,
       dirty: false,
-      newValue: ''
+      newValue: '',
+      rejectedValue: null
     };
   },
   mixins: [UtilsMixin],
@@ -117,6 +119,16 @@ export default {
     },
     autofocus() {
       this.handleAutofocus();
+    },
+    errorMessage(newVal) {
+      if (!newVal) {
+        this.rejectedValue = null;
+        return;
+      }
+
+      this.rejectedValue = this.newValue.trim();
+      this.dirty = true;
+      this.enableEdit();
     }
   },
   computed: {
@@ -158,6 +170,10 @@ export default {
             }
           )
         );
+      }
+
+      if (this.errorMessage && this.rejectedValue !== null && this.newValue.trim() === this.rejectedValue) {
+        return this.errorMessage;
       }
 
       this.removePreventFromLeaving(document.body);

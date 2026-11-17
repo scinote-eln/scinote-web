@@ -21,6 +21,8 @@
               :editable="permissions.can_manage && !row?.archived"
               :name="row.name"
               :archived="row.archived"
+              :error="titleError"
+              @clearError="titleError = null"
               @update="updateTitle"
               data-e2e="e2e-TX-itemCard-title">
             </repository-item-sidebar-title>
@@ -198,7 +200,7 @@
 </template>
 
 <script>
-/* global I18n */
+/* global I18n HelperModule */
 
 import { vOnClickOutside } from '@vueuse/components';
 import InlineEdit from '../shared/inline_edit.vue';
@@ -323,6 +325,7 @@ export default {
       loadingError: false,
       snapshotAt: null,
       snapshotByName: null,
+      titleError: null,
       newItemRepositoryId: null,
       newItemKey: 0,
       onNewItemCreated: null
@@ -452,6 +455,7 @@ export default {
       if (this.row?.name) {
         this.row.name = '';
       }
+      this.titleError = null;
       return axios.get(
         repositoryRowUrl,
         { params: { my_module_id: this.myModuleId } }
@@ -517,6 +521,13 @@ export default {
         if (this.isSameRepository) {
           this.syncTableRow(row);
           window.assignedItemsTable?.$refs?.assignedItems?.loadAssingedRepositories();
+        }
+      }).catch((error) => {
+        const nameError = error.response?.data?.name?.[0];
+        if (nameError) {
+          this.titleError = nameError;
+        } else {
+          HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
         }
       });
     },

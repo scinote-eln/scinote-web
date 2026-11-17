@@ -87,6 +87,7 @@ export default {
       editing: false,
       rowName: this.params.data.name,
       error: null,
+      rejectedName: null,
       saving: false
     };
   },
@@ -108,6 +109,11 @@ export default {
       this.editing = false;
       this.rowName = this.params.data.name;
       this.error = null;
+      this.rejectedName = null;
+    },
+    isRejectedName() {
+      return this.rejectedName !== null
+        && this.rowName.trim().toLowerCase() === this.rejectedName.trim().toLowerCase();
     },
     handleKeydown(event) {
       // Prevent arrow keys from moving the table selection
@@ -135,8 +141,12 @@ export default {
           this.error = this.i18n.t('repositories.table.name.errors.too_long', { max_length: GLOBAL_CONSTANTS.NAME_MAX_LENGTH });
         }
         return;
+      } else if (this.isRejectedName()) {
+        this.error = this.i18n.t('repositories.unique_item_names.name_not_unique');
+        return;
       } else {
         this.error = null;
+        this.rejectedName = null;
       }
 
       this.editing = false;
@@ -147,7 +157,24 @@ export default {
 
       this.saving = true;
 
-      this.params.dtComponent.$emit('changeName', this.rowName, this.params.data);
+      const submittedName = this.rowName;
+      this.params.dtComponent.$emit('changeName', submittedName, this.params.data, {
+        onSuccess: () => {
+          this.saving = false;
+        },
+        onError: (message) => {
+          this.saving = false;
+          if (!message) return;
+
+          this.rejectedName = submittedName;
+          this.rowName = submittedName;
+          this.error = message;
+          this.editing = true;
+          this.$nextTick(() => {
+            this.$refs.nameInput?.focus();
+          });
+        }
+      });
     }
   }
 };

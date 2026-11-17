@@ -205,6 +205,50 @@ describe RepositoriesController, type: :controller do
       expect(response.media_type).to eq 'application/json'
       expect(Repository.order(created_at: :desc).first.repository_template).to eq repository_template
     end
+
+    it 'does not enforce unique item names by default' do
+      action
+
+      expect(Repository.order(created_at: :desc).first.enforce_unique_item_names).to be false
+    end
+
+    context 'when enforcing unique item names' do
+      let(:params) { { repository: { name: 'My Repository', enforce_unique_item_names: '1' } } }
+
+      it 'stores the setting on the new inventory' do
+        action
+
+        expect(Repository.order(created_at: :desc).first.enforce_unique_item_names).to be true
+      end
+    end
+  end
+
+  describe 'PUT update_unique_item_names' do
+    let(:params) { { id: repository.id, repository: { enforce_unique_item_names: true } } }
+    let(:action) { put :update_unique_item_names, params: params, format: :json }
+
+    it 'updates the setting' do
+      action
+
+      expect(response).to have_http_status(:success)
+      expect(response.parsed_body['enforce_unique_item_names']).to be true
+      expect(repository.reload.enforce_unique_item_names).to be true
+    end
+
+    context 'when user cannot manage the inventory' do
+      before do
+        allow_any_instance_of(Repository).to receive(:permission_granted?).and_call_original
+        allow_any_instance_of(Repository).to receive(:permission_granted?)
+          .with(anything, RepositoryPermissions::MANAGE).and_return(false)
+      end
+
+      it 'returns forbidden' do
+        action
+
+        expect(response).to have_http_status(:forbidden)
+        expect(repository.reload.enforce_unique_item_names).to be false
+      end
+    end
   end
 
   describe 'DELETE destroy' do

@@ -48,6 +48,58 @@ describe RepositoryRow, type: :model do
     describe '#created_by' do
       it { is_expected.to validate_presence_of :created_by }
     end
+
+    describe 'unique name within inventory' do
+      let(:user) { create :user }
+      let(:repository) { create :repository, created_by: user, enforce_unique_item_names: true }
+      let!(:existing_row) { create :repository_row, name: 'Sample A', repository: repository, created_by: user }
+      let(:new_row) { build :repository_row, repository: repository, created_by: user }
+
+      it 'rejects a duplicate name case-insensitively and ignoring surrounding whitespace' do
+        new_row.name = '  sample a '
+
+        expect(new_row).not_to be_valid
+        expect(new_row.errors.of_kind?(:name, :not_unique)).to be true
+        expect(new_row.errors.messages_for(:name)).to include('An item with this name already exists')
+      end
+
+      it 'counts archived items as existing names' do
+        existing_row.update!(archived: true, archived_on: Time.zone.now, archived_by: user)
+        new_row.name = 'Sample A'
+
+        expect(new_row).not_to be_valid
+      end
+
+      it 'allows a different name' do
+        new_row.name = 'Sample B'
+
+        expect(new_row).to be_valid
+      end
+
+      it 'allows the same name in another inventory' do
+        other_row = build :repository_row, name: 'Sample A', created_by: user,
+                                           repository: create(:repository, created_by: user,
+                                                                           enforce_unique_item_names: true)
+
+        expect(other_row).to be_valid
+      end
+
+      it 'does not block saving an existing row whose name did not change' do
+        repository.update!(enforce_unique_item_names: false)
+        duplicate = create :repository_row, name: 'Sample A', repository: repository, created_by: user
+        repository.update!(enforce_unique_item_names: true)
+
+        duplicate.reload.last_modified_by = user
+        expect(duplicate).to be_valid
+      end
+
+      it 'does not apply when the inventory does not enforce unique names' do
+        repository.update!(enforce_unique_item_names: false)
+        new_row.name = 'Sample A'
+
+        expect(new_row).to be_valid
+      end
+    end
   end
 
   describe '.archived' do

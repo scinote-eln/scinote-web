@@ -55,8 +55,18 @@
                 </template>
               </div>
             </div>
+            <div class="flex gap-2 items-center">
+              <div class="sci-checkbox-container">
+                <input type="checkbox"
+                       class="sci-checkbox"
+                       v-model="enforceUniqueItemNames"
+                       data-e2e="e2e-CB-newInventoryModal-enforceUniqueItemNames"/>
+                <span class="sci-checkbox-label"></span>
+              </div>
+              <span>{{ i18n.t('repositories.index.modal_create.enforce_unique_item_names') }}</span>
+            </div>
             <div>
-              <div class="flex gap-2 text-xs items-center">
+              <div class="flex gap-2 items-center">
                 <div class="sci-checkbox-container">
                   <input type="checkbox" class="sci-checkbox" v-model="visible" value="visible" data-e2e="e2e-CB-repositories-newRepositoryModal-access"/>
                   <span class="sci-checkbox-label"></span>
@@ -117,6 +127,7 @@ export default {
       submitting: false,
       repositoryTemplates: [],
       repositoryTemplate: null,
+      enforceUniqueItemNames: false,
       showColumnInfo: false,
       hoveredRow: {},
       loadingHoveredRow: false
@@ -153,6 +164,7 @@ export default {
         repository: {
           name: this.name,
           repository_template_id: this.repositoryTemplate,
+          enforce_unique_item_names: this.enforceUniqueItemNames,
           default_public_user_role_id: this.defaultRole
         }
       }).then((response) => {

@@ -206,7 +206,10 @@ export default {
         enforceTableState: this.enforceTableState,
         onEnforceTableStateChanged: this.setEnforcedTableState,
         mandatoryColumns: this.mandatoryColumns,
-        onMandatoryChanged: this.setMandatoryColumn
+        onMandatoryChanged: this.setMandatoryColumn,
+        canUpdateNameColumn: this.canManageRepository,
+        enforceUniqueItemNames: !!this.repositoryVersion?.attributes?.enforce_unique_item_names,
+        onUniqueItemNamesChanged: this.setEnforceUniqueItemNames
       };
     },
     toolbarActions() {
@@ -331,14 +334,22 @@ export default {
         if (viewport) viewport.scrollTop = 0;
       });
     },
-    changeName(name, row) {
+    changeName(name, row, callbacks = {}) {
       axios.patch(repository_repository_row_path(row.repository_id, row.id), {
         repository_row: {
           name
         }
       }).then((response) => {
+        callbacks.onSuccess?.();
         this.$refs.repositoryTable.updateRowData(response.data.data);
-      }).catch(() => {
+      }).catch((error) => {
+        const nameError = error.response?.data?.name?.[0];
+        if (nameError && callbacks.onError) {
+          callbacks.onError(nameError);
+          return;
+        }
+
+        callbacks.onError?.(null);
         HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
       });
     },
@@ -463,6 +474,9 @@ export default {
       updatedRow['active_reminders_count'] = count;
       this.$refs.repositoryTable.updateRowData(updatedRow);
       if (count > 0) this.hasActiveReminders = true;
+    },
+    setEnforceUniqueItemNames(enforce) {
+      this.repositoryVersion.attributes.enforce_unique_item_names = enforce;
     },
     setMandatoryColumn(field, mandatory) {
       this.mandatoryColumns = { ...this.mandatoryColumns, [field]: mandatory };
