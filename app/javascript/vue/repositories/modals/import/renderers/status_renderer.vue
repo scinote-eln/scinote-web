@@ -1,7 +1,7 @@
 <template>
-  <div :title="message" :class="divClass">
+  <div :class="divClass">
     <i :class="iconClass"></i>
-    <span class="truncate">{{message}}</span>
+    <span class="truncate" :data-sn-tooltip="message">{{ message }}</span>
   </div>
 </template>
 
@@ -18,11 +18,11 @@ export default {
       message: null,
       icon: null,
       color: null
-    }
+    };
   },
   computed: {
     divClass() {
-      return `flex items-center gap-2.5 ${this.color}`;
+      return `flex items-center gap-2.5 ${this.color || ''}`;
     },
     iconClass() {
       return `sn-icon sn-icon-${this.icon}`;

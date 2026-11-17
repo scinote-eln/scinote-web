@@ -7,7 +7,7 @@ class RepositorySerializer < ActiveModel::Serializer
              :enforce_table_state, :default_table_state, :enforce_unique_item_names
 
   def repository_columns
-    object.repository_columns.pluck(:id, :name, :data_type)
+    object.repository_columns.pluck(:id, :name, :data_type, :mandatory)
   end
 
   def has_active_reminders
