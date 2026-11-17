@@ -19,7 +19,7 @@ class RepositoryBase < ApplicationRecord
   attribute :discarded_by_id, :integer
 
   belongs_to :team
-  belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
+  belongs_to :created_by, class_name: 'User'
   has_many :repository_columns, foreign_key: :repository_id, inverse_of: :repository, dependent: :destroy
   has_one :repository_stock_column,
           -> { where(data_type: 'RepositoryStockValue') },
@@ -44,6 +44,11 @@ class RepositoryBase < ApplicationRecord
 
   def self.repository_row_connections_enabled?
     ApplicationSettings.instance.values['repository_row_connections_enabled']
+  end
+
+  # TODO:  SCI-13751 replaces the body with the inventory integrity env variable read.
+  def self.inventory_integrity_enabled?
+    true
   end
 
   def self.reminders_enabled?

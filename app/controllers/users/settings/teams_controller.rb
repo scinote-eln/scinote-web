@@ -17,6 +17,7 @@ module Users
         users_datatable
         members
         data_integrity
+        inventory_settings_repositories
       )
 
       before_action :load_team, only: %i(
@@ -28,12 +29,15 @@ module Users
         destroy
         members
         data_integrity
+        inventory_settings_repositories
       )
 
       before_action :check_create_team_permission,
                     only: %i(new create)
 
-      before_action :check_data_integrity_enabled, only: %i(data_integrity)
+      before_action :check_data_integrity_enabled, only: %i(data_integrity inventory_settings_repositories)
+
+      before_action :check_inventory_integrity_enabled, only: %i(inventory_settings_repositories)
 
       before_action :set_breadcrumbs_items, only: %i(index show members data_integrity)
 
@@ -45,6 +49,10 @@ module Users
 
       def datatable
         render json: ::TeamsDatatable.new(view_context, @user)
+      end
+
+      def show
+        @active_tab = :details
       end
 
       def new
@@ -63,16 +71,18 @@ module Users
         end
       end
 
-      def show
-        @active_tab = :details
-      end
-
       def members
         @active_tab = :members
       end
 
       def data_integrity
         @active_tab = :data_integrity
+      end
+
+      def inventory_settings_repositories
+        repositories = @team.repositories.active.managable_by_user(current_user, @team)
+                            .order(Arel.sql('LOWER(repositories.name) ASC'))
+        render json: { data: repositories.pluck(:id, :name) }
       end
 
       def users_datatable
@@ -112,7 +122,7 @@ module Users
             )
           }
         else
-          render json: @team.errors, status: :unprocessable_entity
+          render json: @team.errors, status: :unprocessable_content
         end
       end
 
@@ -136,7 +146,7 @@ module Users
                               team: current_user.current_team.name)
           render json: { current_team: team.id }
         else
-          render json: { message: t('users.settings.changed_team_error_flash') }, status: :unprocessable_entity
+          render json: { message: t('users.settings.changed_team_error_flash') }, status: :unprocessable_content
         end
       end
 
@@ -148,6 +158,10 @@ module Users
 
       def check_data_integrity_enabled
         render_403 unless Team.deletion_prevention_enabled?
+      end
+
+      def check_inventory_integrity_enabled
+        render_403 unless RepositoryBase.inventory_integrity_enabled?
       end
 
       def load_user
