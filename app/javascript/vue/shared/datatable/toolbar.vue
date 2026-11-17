@@ -93,6 +93,7 @@
         :data-sn-tooltip="manageColumnsTooltip"
       >
         <button
+          id="manage-columns"
           @click="showColumnsModal = true"
           :disabled="disabled || !canManageColumns"
           :data-e2e="'e2e-BT-topToolbar-manageColumns'"
