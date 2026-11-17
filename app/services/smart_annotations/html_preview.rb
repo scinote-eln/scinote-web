@@ -26,7 +26,7 @@ module SmartAnnotations
       def generate_prj_snippet(_, object)
         return "<span class='sa-type'>Prj</span>#{esc(object.name)} #{I18n.t('atwho.res.archived')}" if object.archived?
 
-        "<a class='sa-link' href='#{ROUTES.experiments_path(project_id: object)}'>" \
+        "<a class='sa-link' href='#{ROUTES.experiments_url(project_id: object)}'>" \
           "<span class='sa-type'>Prj</span>#{esc(object.name)}</a>"
       end
 
@@ -35,7 +35,7 @@ module SmartAnnotations
           return "<span class='sa-type'>Exp</span>#{esc(object.name)} #{I18n.t('atwho.res.archived')}"
         end
 
-        "<a class='sa-link' href='#{ROUTES.my_modules_experiment_path(object)}'>" \
+        "<a class='sa-link' href='#{ROUTES.my_modules_experiment_url(object)}'>" \
           "<span class='sa-type'>Exp</span>#{esc(object.name)}</a>"
       end
 
@@ -44,14 +44,14 @@ module SmartAnnotations
           return "<span class='sa-type'>Tsk</span>#{esc(object.name)} #{I18n.t('atwho.res.archived')}"
         end
 
-        "<a class='sa-link' href='#{ROUTES.protocols_my_module_path(object)}'>" \
+        "<a class='sa-link' href='#{ROUTES.protocols_my_module_url(object)}'>" \
           "<span class='sa-type'>Tsk</span>#{esc(object.name)}</a>"
       end
 
       def generate_rep_item_snippet(name, object)
         if object&.repository
           repository_name = fetch_repository_name(object)
-          "<a href='#{ROUTES.repository_repository_row_path(object.repository, object)}' " \
+          "<a href='#{ROUTES.repository_repository_row_url(object.repository, object)}' " \
             "class='sa-link record-info-link'><span class='sa-type'>#{esc(trim_repository_name(repository_name))}</span>" \
             "#{esc(object.name)} #{object.archived? ? I18n.t('atwho.res.archived') : ''}</a>"
         else
@@ -62,7 +62,7 @@ module SmartAnnotations
       def generate_rep_item_print_snippet(name, object)
         if object&.repository
           repository_name = fetch_repository_name(object)
-          "<a class='sa-link' href='#{ROUTES.repository_path(object.repository)}' " \
+          "<a class='sa-link' href='#{ROUTES.repository_url(object.repository)}' " \
             "><span class='sa-type'>#{esc(trim_repository_name(repository_name))}</span>" \
             "#{esc(object.name)} #{object.archived? ? I18n.t('atwho.res.archived') : ''}</a>"
         else
@@ -78,7 +78,7 @@ module SmartAnnotations
           return "<span class='sa-type'>Inv</span>#{esc(object.name)} #{I18n.t('atwho.res.archived')}"
         end
 
-        "<a class='sa-link' href='#{ROUTES.repository_path(object)}'>" \
+        "<a class='sa-link' href='#{ROUTES.repository_url(object)}'>" \
           "<span class='sa-type'>Inv</span>#{esc(object.name)}</a>"
       end
 
@@ -86,8 +86,8 @@ module SmartAnnotations
         return "<span class='sa-type'>Fl</span>#{esc(name)} #{I18n.t('atwho.res.deleted')}" if object.nil?
         return "<span class='sa-type'>Fl</span>#{esc(file_label(object, page))} #{I18n.t('atwho.res.archived')}" if object.archived? || file_my_module_archived?(object)
 
-        "<a class='sa-link file-preview-link file-name' href='#{ROUTES.rails_blob_path(object.file, disposition: 'attachment')}' " \
-          "data-no-turbolink='true' data-id='#{object.id}' data-preview-url='#{ROUTES.asset_file_preview_path(object, preview: true)}'" \
+        "<a class='sa-link file-preview-link file-name' href='#{ROUTES.rails_blob_url(object.file, disposition: 'attachment')}' " \
+          "data-no-turbolink='true' data-id='#{object.id}' data-preview-url='#{ROUTES.asset_file_preview_url(object, preview: true)}'" \
           "#{" data-page='#{page}'" if page.present?}>" \
           "<span class='sa-type'>Fl</span>#{esc(file_label(object, page))}</a>"
       end

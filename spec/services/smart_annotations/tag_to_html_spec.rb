@@ -22,11 +22,13 @@ describe SmartAnnotations::TagToHtml do
   describe 'Parsed text' do
     it 'returns a existing string with smart annotation' do
       expect(subject.html).to eq(
-        "My annotation of <a class='sa-link' href='/projects/#{project.id}/experiments'>" \
+        "My annotation of <a class='sa-link' href='#{routes.experiments_url(project)}'>" \
         "<span class='sa-type'>Prj</span>my project</a>"
       )
     end
   end
+
+  let(:routes) { Rails.application.routes.url_helpers }
 
   describe 'Parsed text with file annotation' do
     let!(:experiment) { create :experiment, project: project, created_by: user }
@@ -41,8 +43,8 @@ describe SmartAnnotations::TagToHtml do
     it 'returns a html snippet for the file' do
       expect(subject.html).to eq(
         "File: <a class='sa-link file-preview-link file-name' href='" \
-        "#{Rails.application.routes.url_helpers.rails_blob_path(asset.file, disposition: 'attachment')}' " \
-        "data-no-turbolink='true' data-id='#{asset.id}' data-preview-url='/files/#{asset.id}/preview?preview=true'>" \
+        "#{routes.rails_blob_url(asset.file, disposition: 'attachment')}' " \
+        "data-no-turbolink='true' data-id='#{asset.id}' data-preview-url='#{routes.asset_file_preview_url(asset, preview: true)}'>" \
         "<span class='sa-type'>Fl</span>#{asset.file_name}_#{asset.code}</a>"
       )
     end
