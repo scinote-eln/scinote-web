@@ -171,6 +171,7 @@ Rails.application.routes.draw do
           member do
             get :members
             get :data_integrity
+            get :inventory_settings_repositories
           end
 
           collection do

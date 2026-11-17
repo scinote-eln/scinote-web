@@ -13,12 +13,10 @@ class Repository < RepositoryBase
   include PrefixedIdModel
 
   belongs_to :archived_by,
-             foreign_key: :archived_by_id,
              class_name: 'User',
              inverse_of: :archived_repositories,
              optional: true
   belongs_to :restored_by,
-             foreign_key: :restored_by_id,
              class_name: 'User',
              inverse_of: :restored_repositories,
              optional: true
@@ -52,6 +50,11 @@ class Repository < RepositoryBase
   scope :appendable_by_user, lambda { |user, teams = user.current_team|
     active.with_granted_permissions(user, RepositoryPermissions::ROWS_CREATE, teams)
           .where(type: Extends::REPOSITORY_APPENDABLE_TYPES)
+  }
+
+  scope :columns_manageable_by_user, lambda { |user, teams = user.permission_team|
+    active.where(id: with_granted_permissions(user, RepositoryPermissions::COLUMNS_UPDATE, teams).select(:id))
+          .or(active.where(id: with_granted_permissions(user, RepositoryPermissions::ENFORCE_TABLE_STATE, teams).select(:id)))
   }
 
   def self.permission_class
@@ -138,7 +141,7 @@ class Repository < RepositoryBase
     begin
       Repository.transaction do
         # Clone the repository object
-        new_repo = Repository.create!(name: new_name, team:, created_by:)
+        new_repo = Repository.create!(name: new_name, team: team, created_by: created_by)
 
         # Clone columns (only if new_repo was saved)
         repository_columns.find_each do |col|
