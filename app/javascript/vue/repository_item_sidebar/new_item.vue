@@ -43,7 +43,12 @@
                     :repositoryId="repositoryId"
                     :itemName="name"
                     :canManageStock="canManageStock"
-                    @change="cells[column.id] = $event"/>
+                    @change="onCellChange(column.id, $event)"/>
+                  <div v-if="cellErrors[column.id]"
+                       class="-mt-3 text-xs text-sn-delete-red"
+                       data-e2e="e2e-TX-itemCard-cellUniqueError">
+                    {{ cellErrors[column.id] }}
+                  </div>
                 </template>
               </div>
               <div v-else class="text-sn-dark-grey text-sm leading-5">
@@ -154,6 +159,7 @@ export default {
       name: '',
       nameTouched: false,
       itemNameError: null,
+      cellErrors: {},
       cells: {},
       createAnother: false,
       creating: false,
@@ -192,6 +198,7 @@ export default {
     },
     canCreate() {
       return !this.loading && !this.creating && this.name.trim() !== '' && !this.nameError
+        && Object.keys(this.cellErrors).length === 0
         && this.columns.every((column) => !column.mandatory || column.id in this.filledCells);
     }
   },
@@ -234,8 +241,14 @@ export default {
       this.creating = true;
       const row = await this.postItem().catch((error) => {
         const nameError = error.response?.data?.name?.[0];
-        if (nameError) {
-          this.itemNameError = nameError;
+        const uniqueCells = error.response?.data?.unique_cells;
+        if (nameError || uniqueCells) {
+          if (nameError) this.itemNameError = nameError;
+          if (uniqueCells) {
+            this.cellErrors = Object.fromEntries(
+              Object.entries(uniqueCells).map(([columnId, messages]) => [columnId, messages[0]])
+            );
+          }
           return;
         }
 
@@ -264,7 +277,15 @@ export default {
       });
       return response.data.data;
     },
+    onCellChange(columnId, value) {
+      this.cells[columnId] = value;
+      if (this.cellErrors[columnId]) {
+        const { [columnId]: _removed, ...rest } = this.cellErrors;
+        this.cellErrors = rest;
+      }
+    },
     reset() {
+      this.cellErrors = {};
       this.name = '';
       this.nameTouched = false;
       this.cells = {};

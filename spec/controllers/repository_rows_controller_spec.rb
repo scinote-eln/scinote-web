@@ -534,4 +534,23 @@ describe RepositoryRowsController, type: :controller do
       end
     end
   end
+
+  describe 'unique entries in text columns' do
+    let!(:text_column) do
+      create :repository_column, :text_type, repository: repository, created_by: user,
+                                             enforce_unique: true, unique_case_sensitive: false
+    end
+    let(:action) do
+      post :create, params: { repository_id: repository.id, repository_row: { name: 'New item' },
+                              repository_cells: { text_column.id => 'lot 42' } }, format: :json
+    end
+
+    before { RepositoryCell.create_with_value!(repository_row, text_column, 'Lot 42', user) }
+
+    it 'rejects an item with a duplicate value' do
+      expect { action }.not_to change(RepositoryRow, :count)
+      expect(response).to have_http_status(:bad_request)
+      expect(response.parsed_body['unique_cells']).to eq(text_column.id.to_s => ['An item with this value already exists'])
+    end
+  end
 end

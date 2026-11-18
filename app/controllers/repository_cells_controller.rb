@@ -45,6 +45,11 @@ class RepositoryCellsController < ApplicationController
 
     render json: response_json
   rescue ActiveRecord::RecordInvalid => e
+    if e.record.is_a?(RepositoryTextValue) && e.record.not_unique_error?
+      return render json: { errors: e.record.errors.messages_for(:data), not_unique: true },
+                    status: :unprocessable_content
+    end
+
     render json: { errors: e.record.errors.full_messages }, status: :unprocessable_content
   end
 

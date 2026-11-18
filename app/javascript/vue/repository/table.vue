@@ -62,6 +62,7 @@
         v-if="textCellModalObject"
         :row="textCellModalObject.row"
         :colDef="textCellModalObject.colDef"
+        :errorMessage="textCellModalObject.errorMessage"
         @updateCell="updateCell"
         @close="textCellModalObject = null"/>
       <StockValueModal
@@ -209,7 +210,8 @@ export default {
         onMandatoryChanged: this.setMandatoryColumn,
         canUpdateNameColumn: this.canManageRepository,
         enforceUniqueItemNames: !!this.repositoryVersion?.attributes?.enforce_unique_item_names,
-        onUniqueItemNamesChanged: this.setEnforceUniqueItemNames
+        uniqueItemNamesCaseSensitive: !!this.repositoryVersion?.attributes?.unique_item_names_case_sensitive,
+        onUniqueItemNamesChanged: this.setUniqueItemNamesSettings
       };
     },
     toolbarActions() {
@@ -436,6 +438,10 @@ export default {
       });
     },
     updateCell(row, columnDef, value) {
+      if (this.textCellModalObject?.errorMessage) {
+        this.textCellModalObject = { ...this.textCellModalObject, errorMessage: null };
+      }
+
       axios.post(repository_repository_row_repository_cell_path({
         repository_id: row.repository_id,
         repository_row_id: row.id,
@@ -453,6 +459,11 @@ export default {
         this.textCellModalObject = null;
       }).catch((error) => {
         const errors = error.response?.data?.errors;
+        if (error.response?.data?.not_unique && this.textCellModalObject) {
+          this.textCellModalObject = { ...this.textCellModalObject, errorMessage: errors[0] };
+          return;
+        }
+
         HelperModule.flashAlertMsg(errors?.length ? errors.join(' ') : I18n.t('general.error'), 'danger');
         this.textCellModalObject = null;
         // re-render the cell so it shows the stored value again
@@ -475,8 +486,9 @@ export default {
       this.$refs.repositoryTable.updateRowData(updatedRow);
       if (count > 0) this.hasActiveReminders = true;
     },
-    setEnforceUniqueItemNames(enforce) {
-      this.repositoryVersion.attributes.enforce_unique_item_names = enforce;
+    setUniqueItemNamesSettings(settings) {
+      this.repositoryVersion.attributes.enforce_unique_item_names = settings.enforce_unique_item_names;
+      this.repositoryVersion.attributes.unique_item_names_case_sensitive = settings.unique_item_names_case_sensitive;
     },
     setMandatoryColumn(field, mandatory) {
       this.mandatoryColumns = { ...this.mandatoryColumns, [field]: mandatory };

@@ -279,8 +279,11 @@ class RepositoryRow < ApplicationRecord
 
   def name_unique_in_repository
     return unless repository.is_a?(Repository) && repository.enforce_unique_item_names?
-    return unless repository.repository_rows.where.not(id: id).where('LOWER(repository_rows.name) = LOWER(?)', name.to_s.strip).exists?
 
-    errors.add(:name, :not_unique)
+    value = name.to_s.strip
+    duplicates = repository.repository_rows.where.not(id: id).where('LOWER(repository_rows.name) = LOWER(?)', value)
+    duplicates = duplicates.where(name: value) if repository.unique_item_names_case_sensitive?
+
+    errors.add(:name, :not_unique) if duplicates.exists?
   end
 end

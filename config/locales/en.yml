@@ -240,6 +240,10 @@ en:
           attributes:
             name:
               not_unique: 'An item with this name already exists'
+        repository_text_value:
+          attributes:
+            data:
+              not_unique: 'An item with this value already exists'
         repository_cell:
           incorrect_format: 'Incorrect data format'
         webhook:
@@ -3022,6 +3026,10 @@ en:
     unique_item_names:
       enforce_label: "Enforce unique item names"
       name_not_unique: "An item with this name already exists"
+    unique_entries:
+      title: "Enforce unique entries"
+      case_sensitive: "Case sensitive unique entries (Text ≠ text)"
+      case_insensitive: "Case insensitive unique entries (Text = text)"
     enforce_table_state:
       title: "Enforce your column layout"
       description: "Everyone in this inventory sees your column visibility, order, and pinning. Others can’t change them, and your future updates apply to them too."

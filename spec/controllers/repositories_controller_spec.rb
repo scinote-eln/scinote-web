@@ -224,7 +224,9 @@ describe RepositoriesController, type: :controller do
   end
 
   describe 'PUT update_unique_item_names' do
-    let(:params) { { id: repository.id, repository: { enforce_unique_item_names: true } } }
+    let(:params) do
+      { id: repository.id, repository: { enforce_unique_item_names: true, unique_item_names_case_sensitive: true } }
+    end
     let(:action) { put :update_unique_item_names, params: params, format: :json }
 
     it 'updates the setting' do
@@ -232,7 +234,9 @@ describe RepositoriesController, type: :controller do
 
       expect(response).to have_http_status(:success)
       expect(response.parsed_body['enforce_unique_item_names']).to be true
+      expect(response.parsed_body['unique_item_names_case_sensitive']).to be true
       expect(repository.reload.enforce_unique_item_names).to be true
+      expect(repository.unique_item_names_case_sensitive).to be true
     end
 
     context 'when user cannot manage the inventory' do

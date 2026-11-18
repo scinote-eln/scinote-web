@@ -33,6 +33,77 @@ describe RepositoryTextValue, type: :model do
     it do
       should validate_length_of(:data).is_at_most(Constants::TEXT_MAX_LENGTH)
     end
+
+    describe 'unique entries' do
+      let(:user) { create :user }
+      let(:repository) { create :repository, created_by: user }
+      let(:column) { create :repository_column, :text_type, repository: repository, created_by: user, enforce_unique: true }
+      let(:row) { create :repository_row, repository: repository, created_by: user }
+      let(:other_row) { create :repository_row, repository: repository, created_by: user }
+      let!(:existing_cell) { RepositoryCell.create_with_value!(row, column, 'Lot 42', user) }
+
+      def build_value(data, repository_row = other_row, repository_column = column)
+        RepositoryTextValue.new_with_payload(
+          data,
+          repository_cell: RepositoryCell.new(repository_row: repository_row, repository_column: repository_column),
+          created_by: user, last_modified_by: user
+        )
+      end
+
+      it 'rejects a duplicate value ignoring surrounding whitespace' do
+        value = build_value("  Lot 42\n")
+
+        expect(value).not_to be_valid
+        expect(value.not_unique_error?).to be true
+        expect(value.errors.messages_for(:data)).to include('An item with this value already exists')
+      end
+
+      it 'is case sensitive by default' do
+        expect(column.unique_case_sensitive?).to be true
+        expect(build_value('lot 42')).to be_valid
+      end
+
+      context 'when case insensitive' do
+        before { column.update!(unique_case_sensitive: false) }
+
+        it 'rejects a value differing only in case' do
+          expect(build_value('LOT 42')).not_to be_valid
+        end
+      end
+
+      it 'counts values of archived items' do
+        row.update!(archived: true, archived_on: Time.zone.now, archived_by: user)
+
+        expect(build_value('Lot 42')).not_to be_valid
+      end
+
+      it 'allows a different value' do
+        expect(build_value('Lot 43')).to be_valid
+      end
+
+      it 'allows the same value in another column' do
+        other_column = create :repository_column, :text_type, repository: repository, created_by: user,
+                                                              enforce_unique: true
+
+        expect(build_value('Lot 42', other_row, other_column)).to be_valid
+      end
+
+      it 'does not apply when the column does not enforce unique entries' do
+        column.update!(enforce_unique: false)
+
+        expect(build_value('Lot 42')).to be_valid
+      end
+
+      it 'does not block saving an existing value that did not change' do
+        column.update!(enforce_unique: false)
+        duplicate_cell = RepositoryCell.create_with_value!(other_row, column, 'Lot 42', user)
+        column.update!(enforce_unique: true)
+
+        duplicate_value = duplicate_cell.value.reload
+        duplicate_value.last_modified_by = user
+        expect(duplicate_value).to be_valid
+      end
+    end
   end
 
   describe 'data_different?' do

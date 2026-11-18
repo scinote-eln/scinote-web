@@ -18,8 +18,8 @@
         <div class="modal-body">
           <div v-if="row.permissions.manage"
                class="sci-input-container-v2 !h-40"
-               :class="{ error: showError }"
-               :data-error="showError ? i18n.t('repositories.mandatory_column.field_error') : null">
+               :class="{ error: fieldError }"
+               :data-error="fieldError">
             <textarea
               v-model="textValue"
               ref="input"
@@ -60,12 +60,19 @@ export default {
   name: 'TextCellModal',
   props: {
     colDef: Object,
-    row: Object
+    row: Object,
+    errorMessage: { type: String, default: null }
   },
   data: () => ({
     textValue: '',
-    touched: false
+    touched: false,
+    rejectedValue: null
   }),
+  watch: {
+    errorMessage(newVal) {
+      this.rejectedValue = newVal ? this.textValue.trim().toLowerCase() : null;
+    }
+  },
   computed: {
     mandatory() {
       const { isMandatory, mandatory } = this.colDef.cellRendererParams || {};
@@ -77,6 +84,16 @@ export default {
     },
     showError() {
       return this.mandatory && this.touched && this.isEmpty;
+    },
+    showUniqueError() {
+      return !!this.errorMessage && this.rejectedValue !== null
+        && this.textValue.trim().toLowerCase() === this.rejectedValue;
+    },
+    fieldError() {
+      if (this.showError) return this.i18n.t('repositories.mandatory_column.field_error');
+      if (this.showUniqueError) return this.errorMessage;
+
+      return null;
     }
   },
   mounted() {
@@ -98,6 +115,7 @@ export default {
       this.textValue = this.$refs.input.value;
       this.touched = true;
       if (this.showError && this.row.id) return;
+      if (this.showUniqueError) return;
 
       this.$emit(
         'updateCell',

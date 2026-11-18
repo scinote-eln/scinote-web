@@ -35,6 +35,9 @@ module RepositoryRows
       rescue ActiveRecord::RecordInvalid => e
         @errors[e.record.class.name.underscore] = e.record.errors.full_messages
         @errors[:name] = e.record.errors.messages_for(:name) if e.record.is_a?(RepositoryRow) && e.record.errors.key?(:name)
+        if e.record.is_a?(RepositoryTextValue) && e.record.not_unique_error?
+          @errors[:unique_cells] = { e.record.repository_cell.repository_column_id => e.record.errors.messages_for(:data) }
+        end
         raise ActiveRecord::Rollback
       end
 

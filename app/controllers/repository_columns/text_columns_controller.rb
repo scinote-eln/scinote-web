@@ -34,7 +34,7 @@ module RepositoryColumns
     private
 
     def repository_column_params
-      params.require(:repository_column).permit(:name)
+      params.require(:repository_column).permit(:name, :enforce_unique, :unique_case_sensitive)
     end
   end
 end

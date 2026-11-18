@@ -26,7 +26,7 @@ class RepositoryColumn < ApplicationRecord
 
   enum :data_type, Extends::REPOSITORY_DATA_TYPES
 
-  store_accessor :metadata, %i(reminder_value reminder_unit reminder_message)
+  store_accessor :metadata, %i(reminder_value reminder_unit reminder_message enforce_unique unique_case_sensitive)
 
   validates :data_type, uniqueness: { if: :repository_stock_value?, scope: :repository_id }
   validates :data_type, uniqueness: { if: :repository_stock_consumption_value?, scope: :repository_id }
@@ -87,6 +87,22 @@ class RepositoryColumn < ApplicationRecord
     column_snapshot.save!
     snapshot_stock_consumption!(repository_snapshot) if repository_stock_value?
     column_snapshot
+  end
+
+  def enforce_unique=(value)
+    super(ActiveModel::Type::Boolean.new.cast(value) || false)
+  end
+
+  def enforce_unique?
+    enforce_unique == true
+  end
+
+  def unique_case_sensitive=(value)
+    super(ActiveModel::Type::Boolean.new.cast(value) != false)
+  end
+
+  def unique_case_sensitive?
+    unique_case_sensitive != false
   end
 
   def delimiter_char
