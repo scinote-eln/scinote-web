@@ -137,6 +137,11 @@ var PdfPreview = (function() {
     var pdfDocument = $(canvas).data('pdfDocument');
     if (pageRendering) return false;
     pageRendering = true;
+
+    if (pdfDocument.numPages && page > pdfDocument.numPages ) {
+      page = 1;
+    }
+
     pdfDocument.getPage(page).then(function(pdfPage) {
       var ctx;
       var renderTask;
