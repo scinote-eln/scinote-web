@@ -32,6 +32,7 @@
           :repositoryId="repositoryId"
           :columnDefs="columnDefs"
           :enforceUniqueItemNames="enforceUniqueItemNames"
+          :uniqueItemNamesCaseSensitive="uniqueItemNamesCaseSensitive"
           @back="view = 'list'"
           @saved="onSaved"
           @uniqueItemNamesSaved="onUniqueItemNamesSaved"
@@ -76,7 +77,8 @@ export default {
     tableStatePermissions: { type: Object, default: () => ({ ...FULL_TABLE_STATE_PERMISSIONS }) },
     mandatoryColumns: { type: Object, default: () => ({}) },
     canUpdateNameColumn: { type: Boolean, default: false },
-    enforceUniqueItemNames: { type: Boolean, default: false }
+    enforceUniqueItemNames: { type: Boolean, default: false },
+    uniqueItemNamesCaseSensitive: { type: Boolean, default: false }
   },
   components: {
     ColumnsList,
@@ -142,8 +144,8 @@ export default {
       this.editingColumn = null;
       this.$emit('reloadColumns');
     },
-    onUniqueItemNamesSaved(enforce) {
-      this.$emit('uniqueItemNamesChanged', enforce);
+    onUniqueItemNamesSaved(settings) {
+      this.$emit('uniqueItemNamesChanged', settings);
       this.view = 'list';
       this.editingColumn = null;
     },

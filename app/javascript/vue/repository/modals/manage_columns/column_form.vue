@@ -18,17 +18,13 @@
         :disabledName="isNameColumn"
         :options="typeOptions"
       />
-      <div v-if="isNameColumn" class="flex items-center gap-2 mt-4">
-        <span class="sci-checkbox-container">
-          <input type="checkbox"
-                 class="sci-checkbox"
-                 v-model="uniqueItemNames"
-                 data-e2e="e2e-CB-invItems-manageColumns-enforceUniqueItemNames" />
-          <span class="sci-checkbox-label"></span>
-        </span>
-        {{ i18n.t('repositories.unique_item_names.enforce_label') }}
-      </div>
-      <hr v-if="typeComponent" />
+      <NameColumnType
+        v-if="isNameColumn"
+        ref="nameFields"
+        :enforceUniqueItemNames="enforceUniqueItemNames"
+        :uniqueItemNamesCaseSensitive="uniqueItemNamesCaseSensitive"
+      />
+      <hr v-if="typeComponent && dataType !== 'RepositoryTextValue'" />
       <component
         :is="typeComponent"
         v-if="typeComponent"
@@ -72,6 +68,8 @@ import {
   update_unique_item_names_repository_path
 } from '../../../../routes.js';
 import NameTypeFields from './name_type_fields.vue';
+import NameColumnType from './column_types/name.vue';
+import TextColumnType from './column_types/text.vue';
 import NumberColumnType from './column_types/number.vue';
 import ListColumnType from './column_types/list.vue';
 import ChecklistColumnType from './column_types/checklist.vue';
@@ -94,6 +92,7 @@ const ROUTES = {
 };
 
 const TYPE_COMPONENTS = {
+  RepositoryTextValue: TextColumnType,
   RepositoryNumberValue: NumberColumnType,
   RepositoryListValue: ListColumnType,
   RepositoryChecklistValue: ChecklistColumnType,
@@ -112,12 +111,13 @@ const TYPE_KINDS = {
 
 export default {
   name: 'ColumnForm',
-  components: { NameTypeFields },
+  components: { NameTypeFields, NameColumnType },
   props: {
     column: { type: Object, default: null },
     repositoryId: { type: [String, Number], required: true },
     columnDefs: { type: Array, required: true },
-    enforceUniqueItemNames: { type: Boolean, default: false }
+    enforceUniqueItemNames: { type: Boolean, default: false },
+    uniqueItemNamesCaseSensitive: { type: Boolean, default: false }
   },
   emits: ['back', 'saved', 'uniqueItemNamesSaved'],
   data() {
@@ -128,8 +128,7 @@ export default {
       name: this.column?.headerName || '',
       dataType: (!isNameColumn && columnDataType) ? columnDataType.replace('RangeValue', 'Value') : 'RepositoryTextValue',
       nameError: null,
-      saving: false,
-      uniqueItemNames: this.enforceUniqueItemNames
+      saving: false
     };
   },
   computed: {
@@ -137,6 +136,8 @@ export default {
       return this.column?.field === 'name';
     },
     typeComponent() {
+      if (this.isNameColumn) return null;
+
       return TYPE_COMPONENTS[this.dataType] || null;
     },
     typeKind() {
@@ -167,10 +168,10 @@ export default {
     saveNameColumn() {
       this.saving = true;
       axios.put(update_unique_item_names_repository_path(this.repositoryId), {
-        repository: { enforce_unique_item_names: this.uniqueItemNames }
+        repository: this.$refs.nameFields.payload()
       }).then((response) => {
         this.saving = false;
-        this.$emit('uniqueItemNamesSaved', response.data.enforce_unique_item_names);
+        this.$emit('uniqueItemNamesSaved', response.data);
       }).catch(() => {
         this.saving = false;
         HelperModule.flashAlertMsg(this.i18n.t('general.error'), 'danger');

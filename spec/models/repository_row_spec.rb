@@ -63,6 +63,22 @@ describe RepositoryRow, type: :model do
         expect(new_row.errors.messages_for(:name)).to include('An item with this name already exists')
       end
 
+      context 'when case sensitive' do
+        before { repository.update!(unique_item_names_case_sensitive: true) }
+
+        it 'allows a name differing only in case' do
+          new_row.name = 'sample a'
+
+          expect(new_row).to be_valid
+        end
+
+        it 'rejects an exact duplicate' do
+          new_row.name = ' Sample A '
+
+          expect(new_row).not_to be_valid
+        end
+      end
+
       it 'counts archived items as existing names' do
         existing_row.update!(archived: true, archived_on: Time.zone.now, archived_by: user)
         new_row.name = 'Sample A'

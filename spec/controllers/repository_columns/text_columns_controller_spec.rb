@@ -161,4 +161,24 @@ RSpec.describe RepositoryColumns::TextColumnsController, type: :controller do
       end
     end
   end
+
+  describe 'enforce unique entries' do
+    it 'stores the setting on create' do
+      post :create, params: { repository_id: repository.id,
+                              repository_column: { name: 'Lot', enforce_unique: true,
+                                                   unique_case_sensitive: false } }, format: :json
+
+      column = repository.repository_columns.find_by(name: 'Lot')
+      expect(column.enforce_unique?).to be true
+      expect(column.unique_case_sensitive?).to be false
+    end
+
+    it 'updates the setting' do
+      patch :update, params: { repository_id: repository.id, id: repository_column.id,
+                               repository_column: { name: repository_column.name, enforce_unique: true } },
+                     format: :json
+
+      expect(repository_column.reload.enforce_unique).to be true
+    end
+  end
 end

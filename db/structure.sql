@@ -237,7 +237,6 @@ CREATE TABLE public.analytical_reports (
     reference_type character varying,
     reference_id bigint,
     report_template_id bigint,
-    params jsonb DEFAULT '{}'::jsonb NOT NULL,
     created_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -366,7 +365,8 @@ CREATE TABLE public.assets (
     restored_on timestamp(6) without time zone,
     archived_by_id bigint,
     restored_by_id bigint,
-    locked boolean DEFAULT false NOT NULL
+    locked boolean DEFAULT false NOT NULL,
+    file_title character varying
 );
 
 
@@ -1936,7 +1936,8 @@ CREATE TABLE public.repositories (
     repository_template_id bigint,
     enforce_table_state boolean DEFAULT false NOT NULL,
     default_table_state jsonb,
-    enforce_unique_item_names boolean DEFAULT false NOT NULL
+    enforce_unique_item_names boolean DEFAULT false NOT NULL,
+    unique_item_names_case_sensitive boolean DEFAULT false NOT NULL
 );
 
 
@@ -7778,6 +7779,13 @@ CREATE INDEX index_repository_rows_on_repository_id ON public.repository_rows US
 
 
 --
+-- Name: index_repository_rows_on_repository_id_and_lower_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_rows_on_repository_id_and_lower_name ON public.repository_rows USING btree (repository_id, lower((name)::text));
+
+
+--
 -- Name: index_repository_rows_on_repository_row_code; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7936,6 +7944,13 @@ CREATE INDEX index_repository_templates_on_team_id ON public.repository_template
 --
 
 CREATE INDEX index_repository_text_values_on_data ON public.repository_text_values USING gin (public.trim_html_tags((data)::text) public.gin_trgm_ops);
+
+
+--
+-- Name: index_repository_text_values_on_lower_data; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_text_values_on_lower_data ON public.repository_text_values USING hash (lower((data)::text));
 
 
 --
@@ -11014,9 +11029,12 @@ ALTER TABLE ONLY public.projects
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261118110000'),
+('20261118100000'),
 ('20261117100000'),
 ('20261109100100'),
 ('20261109100000'),
+('20261016090734'),
 ('20261007123511'),
 ('20260907114439'),
 ('20260828093032'),

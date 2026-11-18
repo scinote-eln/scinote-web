@@ -261,10 +261,11 @@ class RepositoriesController < ApplicationController
   end
 
   def update_unique_item_names
-    enforce = ActiveModel::Type::Boolean.new.cast(params.dig(:repository, :enforce_unique_item_names)) || false
-
-    if @repository.update(enforce_unique_item_names: enforce)
-      render json: { enforce_unique_item_names: @repository.enforce_unique_item_names }
+    if @repository.update(unique_item_names_params)
+      render json: {
+        enforce_unique_item_names: @repository.enforce_unique_item_names,
+        unique_item_names_case_sensitive: @repository.unique_item_names_case_sensitive
+      }
     else
       render json: @repository.errors, status: :unprocessable_content
     end
@@ -643,6 +644,10 @@ class RepositoriesController < ApplicationController
 
   def repository_params
     params.require(:repository).permit(:name, :repository_template_id)
+  end
+
+  def unique_item_names_params
+    params.require(:repository).permit(:enforce_unique_item_names, :unique_item_names_case_sensitive)
   end
 
   def table_state_params
