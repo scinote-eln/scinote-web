@@ -13,12 +13,13 @@ describe SmartAnnotations::HtmlPreview do
                         last_modified_by: user
   end
   let(:task) { create :my_module, name: 'task', experiment: experiment, created_by: experiment.created_by }
+  let(:routes) { Rails.application.routes.url_helpers }
 
   describe 'Project annotations with type prj' do
     it 'returns a html snippet' do
       snippet = subject.html(nil, 'prj', project)
       expect(snippet).to eq(
-        "<a class='sa-link' href='/projects/#{project.id}/experiments'>" \
+        "<a class='sa-link' href='#{routes.experiments_url(project)}'>" \
         "<span class='sa-type'>Prj</span>my project</a>"
       )
     end
@@ -28,7 +29,7 @@ describe SmartAnnotations::HtmlPreview do
     it 'returns a html snippet' do
       snippet = subject.html(nil, 'exp', experiment)
       expect(snippet).to eq(
-        "<a class='sa-link' href='/experiments/#{experiment.id}/my_modules'>" \
+        "<a class='sa-link' href='#{routes.my_modules_experiment_url(experiment)}'>" \
         "<span class='sa-type'>Exp</span>my experiment</a>"
       )
     end
@@ -38,7 +39,7 @@ describe SmartAnnotations::HtmlPreview do
     it 'returns a html snippet' do
       snippet = subject.html(nil, 'tsk', task)
       expect(snippet).to eq(
-        "<a class='sa-link' href='/modules/#{task.id}/protocols'>" \
+        "<a class='sa-link' href='#{routes.protocols_my_module_url(task)}'>" \
         "<span class='sa-type'>Tsk</span>task</a>"
       )
     end
@@ -54,8 +55,8 @@ describe SmartAnnotations::HtmlPreview do
       page_attr = page.nil? ? '' : " data-page='#{page}'"
 
       "<a class='sa-link file-preview-link file-name' href='" \
-        "#{Rails.application.routes.url_helpers.rails_blob_path(asset.file, disposition: 'attachment')}' " \
-        "data-no-turbolink='true' data-id='#{asset.id}' data-preview-url='/files/#{asset.id}/preview?preview=true'#{page_attr}>" \
+        "#{routes.rails_blob_url(asset.file, disposition: 'attachment')}' " \
+        "data-no-turbolink='true' data-id='#{asset.id}' data-preview-url='#{routes.asset_file_preview_url(asset, preview: true)}'#{page_attr}>" \
         "<span class='sa-type'>Fl</span>#{label}</a>"
     end
 

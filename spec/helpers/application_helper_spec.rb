@@ -193,7 +193,7 @@ describe ApplicationHelper, type: :helper do
       result = helper.smart_annotation_parser(text, team)
 
       expect(result).to include "<span class=\"sa-type\">Prj</span>#{project.name}</a>"
-      expect(result).to include "href=\"#{Rails.application.routes.url_helpers.experiments_path(project_id: project)}\""
+      expect(result).to include "href=\"#{Rails.application.routes.url_helpers.experiments_url(project_id: project)}\""
       expect(result).not_to include '[#Proj~prj~'
       expect(result).not_to include '[@'
       expect(result).to include user.full_name
