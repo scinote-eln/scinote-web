@@ -109,8 +109,12 @@ module MyModuleReports
     end
 
     def render_table(report, table_tag, table, block_element)
-      data = JSON.parse(add_smart_annotations(table.contents_utf_8).presence || '{}')
-      table_data = table.table_data.merge(table_name: table.name, contents: (data['data'] if data.is_a?(Hash)) || [])
+      table_data = table.table_data
+
+      table_data = table_data.merge(
+        contents: table_data[:contents].map { |row| row.map { |cell| add_smart_annotations(cell) } },
+        table_name: table.name
+      )
 
       # Specific element placeholder
       add_block_text(report, table_tag, "<div>#{table.name}</div><div>{{#{table_tag}}}</div>")
