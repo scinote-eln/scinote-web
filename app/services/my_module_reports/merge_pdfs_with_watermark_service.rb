@@ -41,6 +41,7 @@ module MyModuleReports
         next if readable_assets.empty?
 
         footer_text = parents.where(id: asset_group['id']).pick(:name).to_s
+        footer_text = "#{footer_text}_" if @add_group_numeration
         last_index = readable_assets.size - 1
         current_page = 0
 
@@ -73,7 +74,8 @@ module MyModuleReports
         content_path = tempfile.path
 
         if @header_text.present? || @display_attachment_references || @display_attachment_groups
-          file_name = "#{I18n.t('atwho.tags.file')}#{asset.file_title || asset.file_name}" if @display_attachment_references
+          file_name = SmartAnnotations::TextPreview.text(nil, 'file', asset, add_prefix_type: true) if @display_attachment_references
+          file_name = "#{file_name}_p" if @add_reference_page_numbers
 
           page_entries = Array.new(pages) do |i|
             {
@@ -201,9 +203,8 @@ module MyModuleReports
 
     def footer(footer_text, add_numarization, index)
       return footer_text unless add_numarization
-      return index.to_s if footer_text.blank?
 
-      "#{footer_text}_#{index}"
+      "#{footer_text}#{index}"
     end
 
     def run_command(*cmd)
