@@ -11,10 +11,9 @@
       {{ data.value.consumed_stock_formatted }}
     </span>
     <span v-else-if="!data.value.consumed_stock"
-          class="text-sn-blue cursor-pointer"
+          class="text-sn-grey cursor-pointer"
           @click="params.dtComponent.$emit('openConsumeModal', this.params.data)"
     >
-      <i class="sn-icon sn-icon-test-tube"></i>
       {{ i18n.t('libraries.manange_modal_column.stock_type.add_stock_consumption') }}
     </span>
     <span v-else class="cursor-pointer text-sn-blue" @click="params.dtComponent.$emit('openConsumeModal', this.params.data)">

@@ -65,6 +65,7 @@
           :enableCellTextSelection="true"
           @grid-ready="onGridReady"
           @first-data-rendered="onFirstDataRendered"
+          @newColumnsLoaded="onNewColumnsLoaded"
           @sortChanged="setOrder"
           @columnResized="onColumnResized"
           @columnMoved="onColumnMoved"
@@ -276,6 +277,11 @@ export default {
     manageColumnsModalProps: {
       type: Object,
       default: () => ({})
+    },
+    // Opt-in "more" menu on every column header (pin, wrap text, sort, hide).
+    columnMenu: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -303,6 +309,7 @@ export default {
       stateLoading: true,
       lastPage: false,
       tableState: null,
+      wrappedColumns: [],
       gridReady: false,
       windowScrollerSeen: false,
       resetGridCols: false,
@@ -345,7 +352,9 @@ export default {
           checkboxes: this.withCheckboxes,
           headerCheckbox: this.withCheckboxes,
           enableClickSelection: false,
-        }
+        },
+        // Column menu tables update column defs at runtime (wrap text), so keep the user's column order.
+        maintainColumnOrder: this.columnMenu
       };
     },
     selectionColumnDef() {
@@ -354,13 +363,42 @@ export default {
       }
     },
     extendedColumnDefs() {
-      const columns = this.columnDefs.map((column) => ({
-        ...column,
-        minWidth: column.minWidth || 110,
-        cellRendererParams: { ...column.cellRendererParams, ...{ dtComponent: this } },
-        pinned: (this.withPinnedColumns && (column.field === 'name' || column.field === 'name_hash') ? 'left' : column.pinned),
-        comparator: () => null
-      }));
+      const columns = this.columnDefs.map((column) => {
+        const wrapped = this.columnMenu
+          && column.headerComponentParams?.wrappable
+          && this.wrappedColumns.includes(column.field);
+
+        const def = {
+          ...column,
+          minWidth: column.minWidth || 110,
+          cellRendererParams: { ...column.cellRendererParams, ...{ dtComponent: this } },
+          headerComponentParams: {
+            ...column.headerComponentParams,
+            // Hidden columns can only come back through the manage columns modal, so no Hide without it.
+            // A column opts out with headerComponentParams: { hideable: false }.
+            hideable: !this.hideColumnsManagment && column.headerComponentParams?.hideable !== false,
+            columnMenu: this.columnMenu,
+            dtComponent: this
+          },
+          pinned: (this.withPinnedColumns && (column.field === 'name' || column.field === 'name_hash') ? 'left' : column.pinned),
+          wrapText: !!wrapped,
+          autoHeight: !!wrapped,
+          comparator: () => null
+        };
+
+        // With the column menu, defs change at runtime (wrap text). Stateful pinned/hide would then
+        // override what the user set, so pass them as initial values only (resetColumnState still uses them).
+        if (this.columnMenu) {
+          def.initialPinned = def.pinned;
+          delete def.pinned;
+          if ('hide' in def) {
+            def.initialHide = def.hide;
+            delete def.hide;
+          }
+        }
+
+        return def;
+      });
 
       if (this.withRowMenu) {
         columns.push({
@@ -557,6 +595,7 @@ export default {
             this.currentViewRender = this.tableOnly ? 'table' : this.tableState.currentViewRender;
             this.perPage = this.tableState.perPage;
             this.order = this.tableState.order;
+            this.wrappedColumns = this.tableState.wrappedColumns || [];
             if (this.currentViewRender === 'cards') {
               this.initializing = false;
             }
@@ -617,7 +656,8 @@ export default {
         columnsState,
         order: this.order,
         currentViewRender: this.currentViewRender,
-        perPage: this.perPage
+        perPage: this.perPage,
+        wrappedColumns: this.wrappedColumns
       };
 
       let checkboxColumn = columnsState.find((column) => column.colId === 'checkbox');
@@ -840,14 +880,32 @@ export default {
       this.gridApi.setColumnPinned(column.field, null);
       this.hideLastPinnedResizeCell();
     },
+    // The new wrapText/autoHeight defs reach the grid through extendedColumnDefs;
+    // onNewColumnsLoaded then re-measures the rows.
+    setColumnWrapped(colId, wrap) {
+      this.wrappedColumns = wrap
+        ? [...new Set([...this.wrappedColumns, colId])]
+        : this.wrappedColumns.filter((id) => id !== colId);
+      this.saveTableState();
+    },
+    onNewColumnsLoaded() {
+      if (!this.columnMenu || !this.gridApi) return;
+
+      const autoHeightActive = this.gridApi.getColumns()?.some((col) => col.isVisible() && col.getColDef().autoHeight);
+      // AG Grid ignores resetRowHeights while an autoHeight column is visible; it measures those rows itself.
+      if (!autoHeightActive) this.gridApi.resetRowHeights();
+      this.gridApi.redrawRows();
+    },
     reorderColumns(columns) {
       this.gridApi.moveColumns(columns, 1);
       this.saveTableState();
     },
     resetColumnsToDefault() {
+      this.wrappedColumns = [];
       this.gridApi.resetColumnState();
       this.gridApi.sizeColumnsToFit();
       this.hideLastPinnedResizeCell();
+      this.saveTableState();
     },
     getOrder(columnsState) {
       if (!columnsState) return null;

@@ -2742,7 +2742,6 @@ en:
         uploading: "Uploading..."
       text:
         add_text: "Add text"
-        more: more
         errors:
           too_long: "Text is too long (maximum is %{max_length} characters)"
         enter_text: "Enter text"
@@ -5286,6 +5285,15 @@ en:
       total: "%{count} total"
     show: 'Show:'
     rows: 'rows'
+    column_menu:
+      title: 'Column options'
+      pin: 'Pin column'
+      unpin: 'Unpin column'
+      wrap_text: 'Wrap text'
+      unwrap_text: 'Unwrap text'
+      sort_down: 'Sort down'
+      sort_up: 'Sort up'
+      hide: 'Hide column'
   tiny_mce:
     upload_window_title: 'Insert an image from your computer'
     upload_window_label: 'Choose an image'

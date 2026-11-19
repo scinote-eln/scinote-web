@@ -8,8 +8,9 @@
         @closed="saveValue"
         :mode="mode"
         :placeholder="placeholder"
-        :customIcon="icon"
+        :customIcon="reminderIcon"
         :customIconTitle="hasReminder ? reminderTitle : null"
+        :noIcons="!hasReminder"
         :range="isRange"
         valueType="stringWithoutTimezone"
         :clearable="true"/>
@@ -93,16 +94,9 @@ export default {
         return this.i18n.t('repositories.table.date_time.add_time')
       }
     },
-    icon() {
-      if (this.hasReminder) {
-        return `sn-icon sn-icon-alert-warning ${this.reminderClass}`;
-      }
-
-      if (this.valueType.includes('RepositoryTime')) {
-        return 'sn-icon sn-icon-created';
-      } else {
-        return 'sn-icon sn-icon-calendar';
-      }
+    // Only the reminder warning stays as a leading icon; the calendar/clock icons were dropped (SCI-13822).
+    reminderIcon() {
+      return this.hasReminder ? `sn-icon sn-icon-alert-warning ${this.reminderClass}` : null;
     },
     hasReminder() {
       return !this.isRange && !!this.params.value?.value?.reminder;
