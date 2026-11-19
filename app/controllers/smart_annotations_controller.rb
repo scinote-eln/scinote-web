@@ -10,9 +10,14 @@ class SmartAnnotationsController < ApplicationController
 
   def show
     if params[:data]
+      return render json: deleted_resource_data if resource_deleted?
+
+      readable = resource_readable?
       render json: {
-        name: resource_readable? && resource_name,
-        type: resource_tag
+        name: readable && resource_name,
+        type: resource_tag,
+        archived: readable && resource_archived?,
+        deleted: false
       }.merge(file_data)
     else
       redirect_to redirect_path
@@ -67,7 +72,39 @@ class SmartAnnotationsController < ApplicationController
         resource_class.find_by(id: resource_id)
       end
 
-    render_404 if @resource.blank?
+    render_404 if @resource.blank? && !(action_name == 'show' && params[:data])
+  end
+
+  def resource_deleted?
+    @resource.blank? || (@resource.is_a?(RepositoryRow) && @resource.repository.blank?)
+  end
+
+  def deleted_resource_data
+    {
+      name: params[:tag][1..].split('~')[0].presence,
+      type: deleted_resource_tag,
+      archived: false,
+      deleted: true
+    }
+  end
+
+  def deleted_resource_tag
+    case @sa_tag
+    when 'rep_item', 'rep'
+      'Inv'
+    when 'file'
+      :Fl
+    else
+      @sa_tag
+    end
+  end
+
+  def resource_archived?
+    if @resource.is_a?(Asset)
+      @resource.archived? || @resource.my_module&.archived_branch? || false
+    else
+      @resource.archived_branch?
+    end
   end
 
   def resource_name
