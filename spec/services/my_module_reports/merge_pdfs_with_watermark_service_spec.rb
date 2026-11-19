@@ -347,14 +347,15 @@ RSpec.describe MyModuleReports::MergePdfsWithWatermarkService do
 
       it 'shows the file name as the reference footer and no group footer' do
         service.generate!
-        expect(reference_footers).to eq ["#{file_tag}a.pdf", "#{file_tag}a.pdf"]
+        expect(reference_footers).to eq ["#{file_tag}a.pdf_FL#{asset_a.id}", "#{file_tag}a.pdf_FL#{asset_a.id}"]
+      
         expect(group_footers).to eq ['', '']
       end
 
       it 'prefers the file title' do
         asset_a.update_columns(file_title: 'Gel image')
         service.generate!
-        expect(reference_footers).to eq ["#{file_tag}Gel image", "#{file_tag}Gel image"]
+        expect(reference_footers).to eq ["#{file_tag}Gel image_FL#{asset_a.id}", "#{file_tag}Gel image_FL#{asset_a.id}"]
       end
 
       context 'with page numbers' do
@@ -362,7 +363,7 @@ RSpec.describe MyModuleReports::MergePdfsWithWatermarkService do
 
         it 'appends the page number of the file' do
           service.generate!
-          expect(reference_footers).to eq ["#{file_tag}a.pdf_1", "#{file_tag}a.pdf_2"]
+          expect(reference_footers).to eq ["#{file_tag}a.pdf_FL#{asset_a.id}_p1", "#{file_tag}a.pdf_FL#{asset_a.id}_p2"]
         end
       end
     end
