@@ -26,7 +26,7 @@
               class="border-0 bg-transparent focus:!outline-none focus:ring-0 focus:!border-0 w-full min-w-0 text-base"
               autocomplete="off"
               @focus="searchFocused = true"
-              @blur="searchFocused = false; onSearchBlur()"
+              @blur="searchFocused = false; onSearchBlur($event)"
               data-e2e="e2e-IF-smartAnnotations-search"
               @input="onSearchInput" @keydown="onSearchKeydown" />
       </div>
