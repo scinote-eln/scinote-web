@@ -18,10 +18,9 @@ class SmartAnnotation
         parent_id ? serialize_experiments(experiments_of(find_project(parent_id)))
                   : serialize_projects(projects)
       when 'sa-experiments'
-        parent_id ? serialize_my_modules(my_modules_of(find_experiment(parent_id)))
-                  : serialize_experiments(experiments)
+        parent_id ? serialize_my_modules(my_modules_of(find_experiment(parent_id)), assignable_my_module_id) : serialize_experiments(experiments)
       when 'sa-tasks'
-        serialize_my_modules(my_modules)
+        serialize_my_modules(my_modules, assignable_my_module_id)
       when 'sa-repositories'
         parent_id ? serialize_repository_rows(repository_rows_of(find_repository(parent_id)),
                                                assignable_my_module_id, assignable_protocol_id)
@@ -39,7 +38,7 @@ class SmartAnnotation
     items = (
       serialize_projects(projects) +
       serialize_experiments(experiments) +
-      serialize_my_modules(my_modules) +
+      serialize_my_modules(my_modules, assignable_my_module_id) +
       serialize_repositories(repositories) +
       serialize_repository_rows(repository_rows, assignable_my_module_id, assignable_protocol_id) +
       serialize_files(files_of(find_my_module(assignable_my_module_id)))
@@ -188,17 +187,14 @@ class SmartAnnotation
     scope.map { |r| base_item(r, 'exp', r.my_modules.any?) }
   end
 
-  def serialize_my_modules(scope)
-    module_ids = scope.reselect(:id)
+  def serialize_my_modules(scope, assignable_my_module_id = nil)
+    target_has_assets = if assignable_my_module_id
+                          assets_in_readable_steps(assignable_my_module_id).active.exists? || assets_in_readable_results(assignable_my_module_id).active.exists?
+                        else
+                          false
+                        end
 
-    step_module_ids = assets_in_readable_steps(module_ids).merge(Asset.active).reselect('protocols.my_module_id')
-    result_module_ids = assets_in_readable_results(module_ids).merge(Asset.active).reselect('results.my_module_id')
-
-    scope.select(
-      'my_modules.*',
-      "(my_modules.id IN (#{step_module_ids.to_sql}) OR " \
-      "my_modules.id IN (#{result_module_ids.to_sql})) AS has_active_assets"
-    ).map { |r| base_item(r, 'tsk', r.has_active_assets) }
+    scope.map { |r| base_item(r, 'tsk', target_has_assets && r.id == assignable_my_module_id) }
   end
 
   def serialize_repositories(scope)
