@@ -26,25 +26,42 @@ describe SmartAnnotationsController, type: :controller do
       expect(response).to have_http_status(:not_found)
     end
 
-    it 'returns 404 when the record does not exist' do
-      get :show, params: { tag: "#~prj~#{(project.id + 100_000).base62_encode}", data: true }, format: :json
+    it 'returns 404 when the record does not exist and data is not requested' do
+      get :show, params: { tag: "#~prj~#{(project.id + 100_000).base62_encode}" }, format: :json
       expect(response).to have_http_status(:not_found)
     end
 
     context 'with data' do
       it 'returns name and type of a project' do
         get :show, params: { tag: tag_for('prj', project), data: true }, format: :json
-        expect(json).to eq('name' => project.name, 'type' => 'prj')
+        expect(json).to eq('name' => project.name, 'type' => 'prj', 'archived' => false, 'deleted' => false)
       end
 
       it 'returns name and type of an experiment' do
         get :show, params: { tag: tag_for('exp', experiment), data: true }, format: :json
-        expect(json).to eq('name' => experiment.name, 'type' => 'exp')
+        expect(json).to eq('name' => experiment.name, 'type' => 'exp', 'archived' => false, 'deleted' => false)
       end
 
       it 'returns name and type of a task' do
         get :show, params: { tag: tag_for('tsk', my_module), data: true }, format: :json
-        expect(json).to eq('name' => my_module.name, 'type' => 'tsk')
+        expect(json).to eq('name' => my_module.name, 'type' => 'tsk', 'archived' => false, 'deleted' => false)
+      end
+
+      it 'marks a deleted record as deleted and keeps the tagged name' do
+        get :show, params: { tag: "#Old project~prj~#{(project.id + 100_000).base62_encode}", data: true }, format: :json
+        expect(json).to eq('name' => 'Old project', 'type' => 'prj', 'archived' => false, 'deleted' => true)
+      end
+
+      it 'marks an archived project as archived' do
+        project.update_column(:archived, true)
+        get :show, params: { tag: tag_for('prj', project), data: true }, format: :json
+        expect(json).to include('archived' => true, 'deleted' => false)
+      end
+
+      it 'marks a task as archived when its experiment is archived' do
+        experiment.update_column(:archived, true)
+        get :show, params: { tag: tag_for('tsk', my_module), data: true }, format: :json
+        expect(json['archived']).to be true
       end
 
       it 'returns false name for an unreadable project' do
@@ -59,7 +76,7 @@ describe SmartAnnotationsController, type: :controller do
 
         it 'returns name and acronym of a three-word repository' do
           get :show, params: { tag: tag_for('rep_item', row), data: true }, format: :json
-          expect(json).to eq('name' => row.name, 'type' => 'Bss')
+          expect(json).to eq('name' => row.name, 'type' => 'Bss', 'archived' => false, 'deleted' => false)
         end
 
         it 'builds the acronym from one word' do
@@ -72,6 +89,17 @@ describe SmartAnnotationsController, type: :controller do
           repository.update!(name: 'Big Store')
           get :show, params: { tag: tag_for('rep_item', row), data: true }, format: :json
           expect(json['type']).to eq 'Bis'
+        end
+
+        it 'marks an archived repository row as archived' do
+          row.update_columns(archived: true)
+          get :show, params: { tag: tag_for('rep_item', row), data: true }, format: :json
+          expect(json).to include('archived' => true, 'deleted' => false)
+        end
+
+        it 'marks a deleted repository row as deleted' do
+          get :show, params: { tag: "#Sample 1~rep_item~#{(row.id + 100_000).base62_encode}", data: true }, format: :json
+          expect(json).to eq('name' => 'Sample 1', 'type' => 'Inv', 'archived' => false, 'deleted' => true)
         end
 
         it 'returns false name for an unreadable repository' do

@@ -38,7 +38,7 @@ const renderUserMention = (tag) => {
 
 window.renderSmartAnnotations = (text) => (
   text.replace(SA_REGEX, (match, userName, _userId, _label, type) => {
-    const tag = encodeURIComponent(match.slice(1, -1).replaceAll(' ', '_'));
+    const tag = encodeURIComponent(match.slice(1, -1));
 
     if (userName) {
       return renderUserMention(tag);
@@ -64,6 +64,21 @@ async function fetchSmartAnnotationData(element) {
 
   if (element.querySelector('.sa-type')) {
     element.querySelector('.sa-type').innerHTML = escapeHtml(data.type);
+  }
+
+  if (data.archived || data.deleted) {
+    const label = document.createElement('span');
+    label.className = 'sa-status';
+    label.textContent = ` ${I18n.t(data.deleted ? 'atwho.res.deleted' : 'atwho.res.archived')}`;
+    element.appendChild(label);
+
+    if (data.deleted || !element.classList.contains('record-info-link')) {
+      const span = document.createElement('span');
+      span.className = 'sa-unlinked';
+      span.append(...element.childNodes);
+      element.replaceWith(span);
+      return;
+    }
   }
 
   if (data.preview_url) {
