@@ -149,7 +149,7 @@ describe ActivitiesService do
     it 'adds children of the given subjects' do
       experiment
       result = described_class.load_subjects_children({ 'Project' => [project.id] }, user, [team.id])
-      expect(result[:Experiment]).to eq [experiment.id]
+      expect(result['Experiment']).to eq [experiment.id]
     end
 
     it 'adds repository rows for inventories limited to readable ones' do
@@ -157,23 +157,33 @@ describe ActivitiesService do
       create_user_assignment(repository, owner_role, user)
       row = create :repository_row, repository: repository, created_by: user, last_modified_by: user
       result = described_class.load_subjects_children({ 'RepositoryBase' => [repository.id] }, user, [team.id])
-      expect(result[:RepositoryRow]).to eq [row.id]
+      expect(result['RepositoryRow']).to eq [row.id]
     end
 
     it 'adds results of a module and maps Result to ResultBase' do
       result_record = create :result, my_module: my_module, user: user
       result = described_class.load_subjects_children({ 'MyModule' => [my_module.id] }, user, [team.id])
-      expect(result[:Result]).to eq [result_record.id]
-      expect(result[:Protocol]).to be_present
+      expect(result['ResultBase']).to eq [result_record.id]
+      expect(result).not_to have_key('Result')
+      expect(result['Protocol']).to be_present
       mapped = described_class.load_subjects_children({ 'Result' => [result_record.id] }, user, [team.id])
       expect(mapped.keys).to include('ResultBase')
     end
 
+    it 'expands grandchildren of the given subjects' do
+      result_record = create :result, my_module: my_module, user: user
+      result_asset = create(:result_asset, result: result_record).asset
+      step = create :step, protocol: my_module.protocols.first, user: user
+      step_asset = create(:step_asset, step: step).asset
+      result = described_class.load_subjects_children({ 'MyModule' => [my_module.id] }, user, [team.id])
+      expect(result['Step']).to eq [step.id]
+      expect(result['Asset']).to contain_exactly(result_asset.id, step_asset.id)
+    end
+
     it 'does not override children that are already given' do
-      pending 'bug: the already-given check uses a symbol key while callers pass string keys, so children are overridden'
       result = described_class.load_subjects_children({ 'Project' => [project.id], 'Experiment' => [-1] },
                                                       user, [team.id])
-      expect(result).not_to have_key(:Experiment)
+      expect(result['Experiment']).to eq [-1]
     end
 
     it 'returns the subjects unchanged when there are no known children' do
@@ -189,6 +199,36 @@ describe ActivitiesService do
       result = described_class.my_module_activities(my_module)
       expect(result).to include(mod_activity)
       expect(result).not_to include(other_activity)
+    end
+
+    it 'includes activities of the module results' do
+      result_record = create :result, my_module: my_module, user: user
+      result_activity = activity(subject: result_record, project: project, my_module: my_module,
+                                 type_of: :add_result)
+      expect(result_activity.subject_type).to eq 'ResultBase'
+      expect(described_class.my_module_activities(my_module)).to include(result_activity)
+    end
+
+    it 'includes activities of files attached to module results' do
+      result_record = create :result, my_module: my_module, user: user
+      asset = create(:result_asset, result: result_record).asset
+      asset_activity = activity(subject: asset, project: project, type_of: :result_file_added)
+      expect(described_class.my_module_activities(my_module)).to include(asset_activity)
+    end
+
+    it 'includes activities of files attached to module protocol steps' do
+      step = create :step, protocol: my_module.protocols.first, user: user
+      asset = create(:step_asset, step: step).asset
+      asset_activity = activity(subject: asset, project: project, type_of: :task_step_file_added)
+      expect(described_class.my_module_activities(my_module)).to include(asset_activity)
+    end
+
+    it 'does not include activities of files attached to other modules' do
+      other_module = create :my_module, experiment: experiment, created_by: user
+      other_result = create :result, my_module: other_module, user: user
+      asset = create(:result_asset, result: other_result).asset
+      asset_activity = activity(subject: asset, project: project, type_of: :result_file_added)
+      expect(described_class.my_module_activities(my_module)).not_to include(asset_activity)
     end
   end
 end
