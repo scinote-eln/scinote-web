@@ -13,7 +13,7 @@
             {{ params.data.stock.value.stock_formatted }}
           </span>
         </div>
-        <span v-else class="flex items-center gap-1">
+        <span v-else class="flex items-center gap-1 text-sn-grey">
           {{ i18n.t('libraries.manange_modal_column.stock_type.add_stock') }}
         </span>
       </span>

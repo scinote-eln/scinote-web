@@ -4,7 +4,7 @@
       ref="input"
       v-model="newValue"
       type="text"
-      :placeholder="(isFocused ? '' : i18n.t('repositories.table.number.enter_number'))"
+      :placeholder="(isFocused ? '' : i18n.t('repositories.table.number.add_number'))"
       @keydown.enter="saveValue"
       @keydown.esc="cancelEdit"
       @keydown="handleKeydown"
