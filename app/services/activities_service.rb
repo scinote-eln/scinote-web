@@ -74,18 +74,22 @@ class ActivitiesService
   end
 
   def self.load_subjects_children(subjects = {}, user = nil, teams = nil)
+    # Keys computed here are merged, since one child type can have several parents
+    # (e.g. Asset is a child of both Result and Step).
+    given_subjects = subjects.keys.map(&:to_s)
+
     Extends::ACTIVITY_SUBJECT_CHILDREN.each do |subject_name, children|
       subject_name = subject_name.to_s.camelize
       next unless children && subjects[subject_name]
 
       children.each do |child|
         parent_model = subject_name.constantize
-        child_model = parent_model.reflect_on_association(child).class_name.to_sym
-        next if subjects[child_model]
+        child_model = parent_model.reflect_on_association(child).class_name
+        next if given_subjects.include?(child_model)
 
         parent_model = parent_model.with_discarded if subject_name == 'Result'
 
-        subjects[child_model] =
+        child_ids =
           case child
           when :results
             parent_model.where(id: subjects[subject_name])
@@ -100,6 +104,7 @@ class ActivitiesService
                         .joins(child)
                         .pluck("#{child.to_s.pluralize}.id")
           end
+        subjects[child_model] = (subjects[child_model] || []) + child_ids
       end
     end
 
