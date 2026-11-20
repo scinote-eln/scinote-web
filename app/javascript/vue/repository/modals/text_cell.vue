@@ -16,7 +16,7 @@
           </h4>
         </div>
         <div class="modal-body">
-          <div v-if="row.permissions.manage" class="sci-input-container-v2 !h-40">
+          <div v-if="editMode" class="sci-input-container-v2 !h-40">
             <textarea
               v-model="textValue"
               ref="input"
@@ -30,13 +30,28 @@
         </div>
         <div class="modal-footer">
           <button
+            v-if="editMode"
+            type="button"
+            class="btn btn-secondary"
+            @click="cancelEdit"
+            data-e2e="e2e-BT-invItems-addTextModal-cancel"
+          >{{ i18n.t('general.cancel') }}</button>
+          <button
+            v-else
             type="button"
             class="btn btn-secondary"
             data-dismiss="modal"
             data-e2e="e2e-BT-invItems-addTextModal-cancel"
           >{{ i18n.t('general.close') }}</button>
           <button
-            v-if="row.permissions.manage"
+            v-if="canManage && !editMode"
+            type="button"
+            class="btn btn-primary"
+            @click="startEdit"
+            data-e2e="e2e-BT-invItems-addTextModal-edit"
+          >{{ i18n.t('general.edit') }}</button>
+          <button
+            v-if="editMode"
             type="button"
             class="btn btn-primary"
             @click="saveCell"
@@ -59,12 +74,26 @@ export default {
     row: Object
   },
   data: () => ({
-    textValue: ''
+    textValue: '',
+    originalValue: '',
+    editMode: false
   }),
+  computed: {
+    canManage() {
+      return this.row.permissions?.manage || false;
+    }
+  },
+  created() {
+    this.originalValue = this.row[this.colDef.field]?.value?.edit || '';
+    this.textValue = this.originalValue;
+    this.editMode = this.canManage && this.originalValue === '';
+  },
   mounted() {
-    this.textValue = this.row[this.colDef.field]?.value?.edit || '';
-
-    this.$nextTick(() => {
+    this.$nextTick(this.initContent);
+  },
+  mixins: [modalMixin],
+  methods: {
+    initContent() {
       if (this.$refs.textContainer) {
         window.renderElementSmartAnnotations(this.$refs.textContainer, 'span');
       }
@@ -72,10 +101,21 @@ export default {
         SmartAnnotation.init($(this.$refs.input), false);
         this.$refs.input.focus();
       }
-    });
-  },
-  mixins: [modalMixin],
-  methods: {
+    },
+    startEdit() {
+      this.editMode = true;
+      this.$nextTick(this.initContent);
+    },
+    cancelEdit() {
+      if (this.originalValue === '') {
+        this.close();
+        return;
+      }
+
+      this.textValue = this.originalValue;
+      this.editMode = false;
+      this.$nextTick(this.initContent);
+    },
     saveCell() {
       this.$emit(
         'updateCell',

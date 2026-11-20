@@ -17,12 +17,12 @@
         </div>
       </div>
       <div v-else-if="uploading">
-        <div class="text-sn-grey-500">
+        <div class="text-sn-grey">
           {{ i18n.t('repositories.table.assets.uploading') }}
         </div>
       </div>
       <div v-else>
-        <div class="text-sn-grey-500 cursor-pointer" @click="addFile">
+        <div class="text-sn-grey cursor-pointer" @click="addFile">
           {{ i18n.t('repositories.table.assets.add_file') }}
         </div>
         <input type="file" ref="fileSelector" class="hidden" @change="uploadFile" />
