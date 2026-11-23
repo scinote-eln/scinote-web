@@ -8,7 +8,10 @@
 <div class="content-pane flexible team-settings-pane with-grey-background">
   <%= render partial: 'header' %>
   <div id="team_preferences">
-    <team-preferences team-id="<%= params[:id] %>" mode="data_integrity" />
+    <team-preferences team-id="<%= params[:id] %>" mode="data_integrity"></team-preferences>
+    <% if RepositoryBase.inventory_integrity_enabled? %>
+      <inventory-settings team-id="<%= params[:id] %>"></inventory-settings>
+    <% end %>
   </div>
 </div>
 

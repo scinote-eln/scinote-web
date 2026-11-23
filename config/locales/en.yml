@@ -3985,6 +3985,12 @@ en:
                   label: "Allow deleting Protocol steps from Archive"
                   enable_success_message: "Protocol steps deleting is enabled."
                   disable_success_message: "Protocol steps deleting is disabled."
+        inventory_settings:
+          title: "Inventory settings"
+          description: "Set the default column setup for inventories in this workspace. You only see inventories where you have permission to change the default view."
+          select_placeholder: "Select inventory"
+          no_inventories: "No inventories available"
+          go_to_inventory: "Go to inventory"
 
 
         show:

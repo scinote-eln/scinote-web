@@ -13,12 +13,10 @@ class Repository < RepositoryBase
   include PrefixedIdModel
 
   belongs_to :archived_by,
-             foreign_key: :archived_by_id,
              class_name: 'User',
              inverse_of: :archived_repositories,
              optional: true
   belongs_to :restored_by,
-             foreign_key: :restored_by_id,
              class_name: 'User',
              inverse_of: :restored_repositories,
              optional: true

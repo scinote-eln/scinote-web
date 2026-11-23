@@ -295,7 +295,14 @@ export default {
       this.repositoryVersion.attributes.enforce_table_state = enforceTableState;
       this.repositoryVersion.attributes.default_table_state = defaultTableState;
     },
+    openManageColumnsModal() {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('open_manage_columns');
+      window.history.replaceState(window.history.state, '', url);
+      document.getElementById('manage-columns')?.click();
+    },
     onTableStateSaved(tableState) {
+      this.openManageColumnsModal();
       if (!this.enforceTableState || !this.canEnforceTableState) return;
 
       axios.put(update_table_state_repository_path(this.repositoryId), {
@@ -309,6 +316,7 @@ export default {
     onTableReloaded(rows) {
       this.reloadingTable = false;
       this.currentPageRows = rows;
+      this.openManageColumnsModal();
     },
     importItems() {
       this.$refs.importModal.open();
