@@ -122,7 +122,7 @@ module MarvinJsActions
             owner: current_user,
             subject: result,
             team: parent.team,
-            project: parent.instance_of?(Result) ? parent.project : nil,
+            project: result.instance_of?(Result) ? parent.project : nil,
             message_items: message_items)
   end
 
