@@ -45,6 +45,11 @@ class Reports::Docx
 
   private
 
+  # Needed for permission checks
+  def current_user
+    @user
+  end
+
   def get_template_value(name)
     @report.report_template_values.find_by(name: name)&.value
   end
