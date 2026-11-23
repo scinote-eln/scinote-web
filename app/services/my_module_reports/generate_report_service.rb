@@ -248,7 +248,7 @@ module MyModuleReports
     end
 
     def add_smart_annotations(text)
-      smart_annotation_text(text, user: @user, team: @team, is_shared_object: false, add_prefix_type: true)
+      text.is_a?(Numeric) ? text.to_s : smart_annotation_text(text, user: @user, team: @team, is_shared_object: false, add_prefix_type: true)
     end
   end
 end
