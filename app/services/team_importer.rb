@@ -629,10 +629,11 @@ class TeamImporter
     experiment.skip_user_assignments = true
     experiment.save!
     @experiment_mappings[orig_experiment_id] = experiment.id
-    @user_mappings[experiment.created_by_id] = experiment.created_by_id
 
-    create_user_assignments(experiment_json['user_assignments'], experiment)
-    create_team_assignments(experiment_json['team_assignments'], experiment)
+    unless @is_template
+      create_user_assignments(experiment_json['user_assignments'], experiment)
+      create_team_assignments(experiment_json['team_assignments'], experiment)
+    end
 
     experiment_json['my_module_groups'].each do |my_module_group_json|
       my_module_group = MyModuleGroup.new(my_module_group_json)
@@ -678,10 +679,9 @@ class TeamImporter
       @my_module_mappings[orig_my_module_id] = my_module.id
       @my_module_counter += 1
 
-      create_user_assignments(my_module_json['user_assignments'], my_module)
-      create_team_assignments(my_module_json['team_assignments'], my_module)
-
       unless @is_template
+        create_user_assignments(my_module_json['user_assignments'], my_module)
+        create_team_assignments(my_module_json['team_assignments'], my_module)
         my_module_json['taggings'].each do |tagging_json|
           tagging = Tagging.new(tagging_json)
           tagging.id = nil
