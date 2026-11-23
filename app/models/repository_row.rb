@@ -114,9 +114,11 @@ class RepositoryRow < ApplicationRecord
   validates :name,
             presence: true,
             length: { maximum: Constants::NAME_MAX_LENGTH }
+  validate :name_unique_in_repository, if: -> { new_record? || will_save_change_to_name? }
   validates :created_by, presence: true
 
-  attr_accessor :import_status, :import_message, :snapshot_at, :snapshot_by_id, :snapshot_by_name
+  attr_accessor :import_status, :import_message, :import_cell_errors, :import_changed_columns,
+                :import_mandatory_missing, :snapshot_at, :snapshot_by_id, :snapshot_by_name
 
   scope :active, -> { where(archived: false) }
   scope :archived, -> { where(archived: true) }
@@ -271,5 +273,17 @@ class RepositoryRow < ApplicationRecord
 
   def output?
     my_module_id.present?
+  end
+
+  private
+
+  def name_unique_in_repository
+    return unless repository.is_a?(Repository) && repository.enforce_unique_item_names?
+
+    value = name.to_s.strip
+    duplicates = repository.repository_rows.where.not(id: id).where('LOWER(repository_rows.name) = LOWER(?)', value)
+    duplicates = duplicates.where(name: value) if repository.unique_item_names_case_sensitive?
+
+    errors.add(:name, :not_unique) if duplicates.exists?
   end
 end

@@ -23,6 +23,8 @@
         :size="'sm'"
         class="max-w-96"
         :searchable="true"
+        :optionRenderer="renderOption"
+        :labelRenderer="renderOption"
         :class="{
           'outline-sn-alert-brittlebush outline-1 outline rounded': computeMatchNotFound
         }"
@@ -62,6 +64,7 @@
 
 <script>
 import SelectDropdown from '../../../shared/select_dropdown.vue';
+import escapeHtml from '../../../shared/escape_html.js';
 
 export default {
   name: 'SecondStepTableRow',
@@ -150,6 +153,12 @@ export default {
     }
   },
   methods: {
+    renderOption(option) {
+      if (!option[2]?.mandatory) return escapeHtml(String(option[1]));
+
+      const { name, typeName } = option[2];
+      return `${escapeHtml(name)}<span class="text-sn-alert-passion">*</span> (${escapeHtml(typeName)})`;
+    },
     isSystemColumn(column) {
       return this.systemColumns.includes(column);
     },

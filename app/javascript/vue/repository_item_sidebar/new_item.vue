@@ -43,7 +43,12 @@
                     :repositoryId="repositoryId"
                     :itemName="name"
                     :canManageStock="canManageStock"
-                    @change="cells[column.id] = $event"/>
+                    @change="onCellChange(column.id, $event)"/>
+                  <div v-if="cellErrors[column.id]"
+                       class="-mt-3 text-xs text-sn-delete-red"
+                       data-e2e="e2e-TX-itemCard-cellUniqueError">
+                    {{ cellErrors[column.id] }}
+                  </div>
                 </template>
               </div>
               <div v-else class="text-sn-dark-grey text-sm leading-5">
@@ -153,6 +158,8 @@ export default {
       canManageStock: false,
       name: '',
       nameTouched: false,
+      itemNameError: null,
+      cellErrors: {},
       cells: {},
       createAnother: false,
       creating: false,
@@ -171,7 +178,7 @@ export default {
       if (name.length > GLOBAL_CONSTANTS.NAME_MAX_LENGTH) {
         return this.i18n.t('inline_edit.errors.over_limit', { attribute, limit: GLOBAL_CONSTANTS.NAME_MAX_LENGTH });
       }
-      return null;
+      return this.itemNameError;
     },
     sections() {
       const mandatory = this.columns.filter((column) => column.mandatory);
@@ -191,7 +198,13 @@ export default {
     },
     canCreate() {
       return !this.loading && !this.creating && this.name.trim() !== '' && !this.nameError
+        && Object.keys(this.cellErrors).length === 0
         && this.columns.every((column) => !column.mandatory || column.id in this.filledCells);
+    }
+  },
+  watch: {
+    name() {
+      this.itemNameError = null;
     }
   },
   created() {
@@ -226,7 +239,19 @@ export default {
     },
     async createItem() {
       this.creating = true;
-      const row = await this.postItem().catch(() => {
+      const row = await this.postItem().catch((error) => {
+        const nameError = error.response?.data?.name?.[0];
+        const uniqueCells = error.response?.data?.unique_cells;
+        if (nameError || uniqueCells) {
+          if (nameError) this.itemNameError = nameError;
+          if (uniqueCells) {
+            this.cellErrors = Object.fromEntries(
+              Object.entries(uniqueCells).map(([columnId, messages]) => [columnId, messages[0]])
+            );
+          }
+          return;
+        }
+
         HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
       });
       this.creating = false;
@@ -252,7 +277,15 @@ export default {
       });
       return response.data.data;
     },
+    onCellChange(columnId, value) {
+      this.cells[columnId] = value;
+      if (this.cellErrors[columnId]) {
+        const { [columnId]: _removed, ...rest } = this.cellErrors;
+        this.cellErrors = rest;
+      }
+    },
     reset() {
+      this.cellErrors = {};
       this.name = '';
       this.nameTouched = false;
       this.cells = {};

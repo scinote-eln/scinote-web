@@ -192,6 +192,7 @@ export default {
                 columnItems: column.attributes.column_items,
                 metadata: column.attributes.metadata,
                 mandatory: column.attributes.mandatory,
+                enforceUnique: !!column.attributes.metadata?.enforce_unique,
                 isMandatory: () => this.mandatoryColumns?.[field] ?? column.attributes.mandatory
               },
               headerComponentParams: {

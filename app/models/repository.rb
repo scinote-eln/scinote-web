@@ -136,7 +136,8 @@ class Repository < RepositoryBase
     begin
       Repository.transaction do
         # Clone the repository object
-        new_repo = Repository.create!(name: new_name, team: team, created_by: created_by)
+        new_repo = Repository.create!(name: new_name, team: team, created_by: created_by,
+                                      enforce_unique_item_names: enforce_unique_item_names)
 
         # Clone columns (only if new_repo was saved)
         repository_columns.find_each do |col|

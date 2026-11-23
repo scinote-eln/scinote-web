@@ -395,4 +395,24 @@ describe RepositoryCellsController, type: :controller do
       end
     end
   end
+
+  describe 'POST update with unique entries' do
+    let(:other_row) { create :repository_row, repository: repository, created_by: user, last_modified_by: user }
+    let(:action) do
+      post :update, params: { repository_id: repository.id, repository_row_id: other_row.id,
+                              repository_column_id: repository_column.id, value: 'LOT 42 ' }, format: :json
+    end
+
+    before do
+      repository_column.update!(enforce_unique: true, unique_case_sensitive: false)
+      RepositoryCell.create_with_value!(repository_row, repository_column, 'Lot 42', user)
+    end
+
+    it 'rejects a duplicate value' do
+      expect { action }.not_to(change { RepositoryCell.count })
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(response.parsed_body['not_unique']).to be true
+      expect(response.parsed_body['errors']).to eq(['An item with this value already exists'])
+    end
+  end
 end

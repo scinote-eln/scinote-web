@@ -1018,6 +1018,7 @@ Rails.application.routes.draw do
         post 'import_records'
         post :export_repository_stock_items
         put :update_table_state
+        put :update_unique_item_names
       end
       namespace :repository_columns do
         resources :text_columns, only: %i(create update)

@@ -63,6 +63,10 @@
                 <div v-if="columnType(element)" class="text-sn-grey shrink-0" :data-e2e="'e2e-TX-manageColumnsModal-'+element.field+'-columnType'">
                   {{ columnType(element) }}
                 </div>
+                <i v-if="element.field === 'name' && canEditNameColumn"
+                   class="sn-icon sn-icon-edit cursor-pointer tw-hidden group-hover:block"
+                   :data-e2e="'e2e-BT-manageColumnsModal-'+element.field+'-edit'"
+                   @click="$emit('edit', element)"></i>
                 <template v-if="canManageColumns && isManageable(element)">
                   <i class="sn-icon sn-icon-edit cursor-pointer tw-hidden group-hover:block"
                      :data-e2e="'e2e-BT-manageColumnsModal-'+element.field+'-edit'"
@@ -115,6 +119,7 @@ export default {
     columnDefs: { type: Array, required: true },
     tableState: { type: Object },
     canManageColumns: { type: Boolean, default: false },
+    canEditNameColumn: { type: Boolean, default: false },
     canEnforceTableState: { type: Boolean, default: false },
     enforceTableState: { type: Boolean, default: false },
     savingEnforceTableState: { type: Boolean, default: false },

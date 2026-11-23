@@ -15,9 +15,16 @@
         v-model:dataType="dataType"
         :nameError="nameError"
         :disabledType="!!column"
+        :disabledName="isNameColumn"
         :options="typeOptions"
       />
-      <hr v-if="typeComponent" />
+      <NameColumnType
+        v-if="isNameColumn"
+        ref="nameFields"
+        :enforceUniqueItemNames="enforceUniqueItemNames"
+        :uniqueItemNamesCaseSensitive="uniqueItemNamesCaseSensitive"
+      />
+      <hr v-if="typeComponent && dataType !== 'RepositoryTextValue'" />
       <component
         :is="typeComponent"
         v-if="typeComponent"
@@ -57,9 +64,12 @@ import {
   repository_repository_columns_stock_columns_path,
   repository_repository_columns_stock_column_path,
   repository_repository_columns_date_time_columns_path,
-  repository_repository_columns_date_time_column_path
+  repository_repository_columns_date_time_column_path,
+  update_unique_item_names_repository_path
 } from '../../../../routes.js';
 import NameTypeFields from './name_type_fields.vue';
+import NameColumnType from './column_types/name.vue';
+import TextColumnType from './column_types/text.vue';
 import NumberColumnType from './column_types/number.vue';
 import ListColumnType from './column_types/list.vue';
 import ChecklistColumnType from './column_types/checklist.vue';
@@ -82,6 +92,7 @@ const ROUTES = {
 };
 
 const TYPE_COMPONENTS = {
+  RepositoryTextValue: TextColumnType,
   RepositoryNumberValue: NumberColumnType,
   RepositoryListValue: ListColumnType,
   RepositoryChecklistValue: ChecklistColumnType,
@@ -100,22 +111,33 @@ const TYPE_KINDS = {
 
 export default {
   name: 'ColumnForm',
-  components: { NameTypeFields },
+  components: { NameTypeFields, NameColumnType },
   props: {
     column: { type: Object, default: null },
     repositoryId: { type: [String, Number], required: true },
-    columnDefs: { type: Array, required: true }
+    columnDefs: { type: Array, required: true },
+    enforceUniqueItemNames: { type: Boolean, default: false },
+    uniqueItemNamesCaseSensitive: { type: Boolean, default: false }
   },
+  emits: ['back', 'saved', 'uniqueItemNamesSaved'],
   data() {
+    const isNameColumn = this.column?.field === 'name';
+    const columnDataType = this.column?.cellRendererParams?.columnDataType;
+
     return {
       name: this.column?.headerName || '',
-      dataType: this.column ? this.column.cellRendererParams.columnDataType.replace('RangeValue', 'Value') : 'RepositoryTextValue',
+      dataType: (!isNameColumn && columnDataType) ? columnDataType.replace('RangeValue', 'Value') : 'RepositoryTextValue',
       nameError: null,
       saving: false
     };
   },
   computed: {
+    isNameColumn() {
+      return this.column?.field === 'name';
+    },
     typeComponent() {
+      if (this.isNameColumn) return null;
+
       return TYPE_COMPONENTS[this.dataType] || null;
     },
     typeKind() {
@@ -143,7 +165,24 @@ export default {
     }
   },
   methods: {
+    saveNameColumn() {
+      this.saving = true;
+      axios.put(update_unique_item_names_repository_path(this.repositoryId), {
+        repository: this.$refs.nameFields.payload()
+      }).then((response) => {
+        this.saving = false;
+        this.$emit('uniqueItemNamesSaved', response.data);
+      }).catch(() => {
+        this.saving = false;
+        HelperModule.flashAlertMsg(this.i18n.t('general.error'), 'danger');
+      });
+    },
     save() {
+      if (this.isNameColumn) {
+        this.saveNameColumn();
+        return;
+      }
+
       this.nameError = null;
 
       if (!this.name.trim()) {

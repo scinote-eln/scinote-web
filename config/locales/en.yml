@@ -236,6 +236,14 @@ en:
         repository_row_connection:
           self_connection: 'A repository_row cannot have a connection with itself'
           reciprocal_connection: 'Reciprocal connections are not allowed'
+        repository_row:
+          attributes:
+            name:
+              not_unique: 'An item with this name already exists'
+        repository_text_value:
+          attributes:
+            data:
+              not_unique: 'An item with this value already exists'
         repository_cell:
           incorrect_format: 'Incorrect data format'
         webhook:
@@ -2573,6 +2581,7 @@ en:
         success_flash_html: "Inventory <strong>%{name}</strong> successfully created."
         repository_template_label: "Select inventory template"
         only_system_defined_columns: 'Only system defined columns.'
+        enforce_unique_item_names: "Enforce unique item names"
       modal_confirm_sharing:
         title: "Inventory sharing changes"
         description_1: "You will no longer share this inventory with some of the workspaces. All unshared inventory items assigned to tasks will be automatically removed and this action is irreversible. Any item relationship links (if they exist) will also be deleted."
@@ -2871,6 +2880,7 @@ en:
         step3:
           title: 'Import preview'
           subtitle: 'This preview shows changes to the %{inventory} inventory resulting from this import. Values that will be updated are marked in green. Items with errors in red will not be imported. Status of import provides further details, and the item import can still be canceled at this stage.'
+          all_items: 'All'
           updated_items: 'Updated'
           new_items: 'New'
           unchanged_items: 'Unchanged'
@@ -2890,6 +2900,9 @@ en:
             archived: 'archived'
             invalid: 'invalid item'
             duplicated: 'item ID has duplicates in the imported file'
+            mandatory_missing: 'Mandatory columns missing'
+          mandatory_column: '*Mandatory column'
+          mandatory_columns_error: 'Some of your items have empty mandatory columns'
         step4:
           title: 'Success report'
           subtitle: '%{inventory} was successfully updated.'
@@ -3010,6 +3023,13 @@ en:
       unmark: "Unmark as mandatory"
       missing_value: "%{column} is mandatory"
       field_error: "Mandatory field"
+    unique_item_names:
+      enforce_label: "Enforce unique item names"
+      name_not_unique: "An item with this name already exists"
+    unique_entries:
+      title: "Enforce unique entries"
+      case_sensitive: "Case sensitive unique entries (Text ≠ text)"
+      case_insensitive: "Case insensitive unique entries (Text = text)"
     enforce_table_state:
       title: "Enforce your column layout"
       description: "Everyone in this inventory sees your column visibility, order, and pinning. Others can’t change them, and your future updates apply to them too."

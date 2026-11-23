@@ -38,7 +38,10 @@
               <label class="sci-label" :data-e2e="`e2e-TX-${e2eValue}-itemNameInputLabel`">
                 {{ i18n.t('my_modules.assigned_items.create_modal.inventory_item_name') }}
               </label>
-              <div class="sci-input-container-v2">
+              <div class="sci-input-container-v2"
+                   :class="{ error: itemNameError }"
+                   :data-error="itemNameError"
+                   :data-e2e="`e2e-TX-${e2eValue}-itemNameError`">
                 <input
                   type="text"
                   v-model="inventoryItemName"
@@ -112,15 +115,24 @@ export default {
       selectedRepository: null,
       inventoryItemName: '',
       outputMarked: false,
+      itemNameError: null,
       submitting: false
     };
   },
   computed: {
     validObject() {
-      return this.selectedRepository && this.inventoryItemName;
+      return this.selectedRepository && this.inventoryItemName && !this.itemNameError;
     },
     repositoriesUrl() {
       return list_repositories_path({ appendable: true });
+    }
+  },
+  watch: {
+    inventoryItemName() {
+      this.itemNameError = null;
+    },
+    selectedRepository() {
+      this.itemNameError = null;
     }
   },
   created() {
@@ -145,8 +157,9 @@ export default {
         );
         this.submitting = false;
         this.close();
-      }).catch(() => {
+      }).catch((error) => {
         this.submitting = false;
+        this.itemNameError = error.response?.data?.name?.[0] || null;
       });
     }
   }
