@@ -1,6 +1,6 @@
 <%# Sections come from QaTools::DesignElementsController::SECTIONS. Add new components there. %>
 <div class="flex items-start gap-8">
-  <nav class="sticky top-0 shrink-0 w-48 p-4 rounded bg-sn-super-light-grey overflow-y-auto max-h-[calc(100vh-var(--navbar-height))]" aria-label="Design elements">
+  <nav class="sticky top-0 shrink-0 w-48 h-screen p-4 rounded bg-sn-super-light-grey overflow-y-auto" aria-label="Design elements">
     <% @sections.each do |group| %>
       <div class="mb-4">
         <div class="text-xs font-semibold uppercase text-sn-grey mb-1"><%= group[:family] %></div>

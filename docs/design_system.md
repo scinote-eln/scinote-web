@@ -2,7 +2,7 @@
 
 The design elements page is SciNote's catalogue of built UI components. It runs at `/qa_tools/design_elements` in development, or whenever `ENABLE_QA_TOOLS=true`. If a component is on the page, use it. If it isn't, add it here before using it anywhere else.
 
-Every section has an anchor, so a single component can be linked, e.g. `/qa_tools/design_elements#toast`. The table of contents at the top of the page lists them all.
+Every section has an anchor, so a single component can be linked, e.g. `/qa_tools/design_elements#toast`. The sidebar on the left lists them all and stays visible while you scroll.
 
 ## Rules
 
