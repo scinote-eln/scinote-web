@@ -1,7 +1,7 @@
 export default {
   data() {
     return {
-      touched: false
+      touched: !!this.params?.markTouched
     };
   },
   computed: {

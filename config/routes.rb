@@ -968,6 +968,7 @@ Rails.application.routes.draw do
       resources :repository_table_filters, only: %i(index show create update destroy)
       resources :repository_rows, only: %i(new create show update) do
         member do
+          post :duplicate
           get :relationships
           get :assigned_task_list
           get :active_reminder_repository_cells
