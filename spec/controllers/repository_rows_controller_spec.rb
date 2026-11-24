@@ -164,13 +164,148 @@ describe RepositoryRowsController, type: :controller do
 
       expect(response).to have_http_status(:not_found)
     end
+
+    context 'when duplicating an item' do
+      let(:action) do
+        get :new, params: { repository_id: repository.id, row_to_duplicate_id: repository_row.id }, format: :json
+      end
+
+      before do
+        repository_row.update!(name: 'Original')
+        RepositoryCell.create_with_value!(repository_row, text_column, 'Lot 42', user)
+      end
+
+      it 'returns the values that prefill the item card' do
+        action
+
+        row_to_duplicate = response.parsed_body['row_to_duplicate']
+        expect(row_to_duplicate['name']).to eq('Original (1)')
+        expect(row_to_duplicate['cells'][text_column.id.to_s]['value']['edit']).to eq('Lot 42')
+        expect(row_to_duplicate['errors']).to eq({})
+      end
+
+      it 'returns the failed unique validations' do
+        text_column.update!(enforce_unique: true)
+        repository.update!(enforce_unique_item_names: true)
+        create :repository_row, name: 'Original (1)', repository: repository, created_by: user
+
+        action
+
+        errors = response.parsed_body['row_to_duplicate']['errors']
+        expect(errors['name']).to eq(['An item with this name already exists'])
+        expect(errors['unique_cells']).to eq(text_column.id.to_s => ['An item with this value already exists'])
+      end
+
+      it 'renders 404 for an item of another repository' do
+        get :new, params: { repository_id: repository.id, row_to_duplicate_id: repository_row_two.id }, format: :json
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
   end
 
   describe 'POST #copy_records' do
+    let!(:other_row) { create :repository_row, repository: repository, created_by: user, last_modified_by: user }
+    let(:action) do
+      post :copy_records, params: { repository_id: repository.id, selected_rows: [repository_row.id, other_row.id] }
+    end
+
     it 'returns a success response' do
       post :copy_records, params: { repository_id: repository.id,
                                     selected_rows: [repository_row.id] }
       expect(response).to have_http_status(:success)
+    end
+
+    it 'refuses items with an empty mandatory column' do
+      create :repository_column, :text_type, repository: repository, mandatory: true
+
+      expect { action }.not_to(change { RepositoryRow.count })
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(response.parsed_body['flash']).to include('at least one mandatory column is empty')
+    end
+
+    it 'refuses items whose duplicates would break unique values' do
+      unique_column = create :repository_column, :text_type, repository: repository, enforce_unique: true
+      RepositoryCell.create_with_value!(other_row, unique_column, 'Lot 42', user)
+
+      expect { action }.not_to(change { RepositoryRow.count })
+      expect(response.parsed_body['flash']).to include('at least one column requires unique values')
+    end
+  end
+
+  describe 'POST #actions_toolbar' do
+    let(:other_row) { create :repository_row, repository: repository, created_by: user, last_modified_by: user }
+    let(:duplicate_action) do
+      post :actions_toolbar, params: { repository_id: repository.id, items: items.map { |id| { id: id } }.to_json },
+                             format: :json
+      response.parsed_body['actions'].find { |action| action['name'] == 'duplicate' }
+    end
+
+    before { create :repository_column, :text_type, repository: repository, mandatory: true }
+
+    context 'with multiple items' do
+      let(:items) { [repository_row.id, other_row.id] }
+
+      it 'disables duplicating with a tooltip when validations fail' do
+        expect(duplicate_action['disabled']).to be true
+        expect(duplicate_action['tooltip']).to include('at least one mandatory column is empty')
+      end
+    end
+
+    context 'with a single item' do
+      let(:items) { [repository_row.id] }
+
+      it 'keeps duplicating enabled regardless of failed validations' do
+        expect(duplicate_action).to be_present
+        expect(duplicate_action['disabled']).to be_nil
+      end
+    end
+  end
+
+  describe 'POST #duplicate' do
+    let!(:text_column) { create :repository_column, :text_type, repository: repository }
+    let(:params) { { repository_id: repository.id, id: repository_row.id, repository_row: { name: 'Copy' } } }
+    let(:action) { post :duplicate, params: params, format: :json }
+
+    before { RepositoryCell.create_with_value!(repository_row, text_column, 'Lot 42', user) }
+
+    it 'creates the item with the values of the original' do
+      action
+
+      expect(response).to have_http_status(:success)
+      copy = repository.repository_rows.find_by!(name: 'Copy')
+      expect(copy.repository_cells.first.value.data).to eq('Lot 42')
+    end
+
+    it 'logs the duplicate activity' do
+      expect(Activities::CreateActivityService)
+        .to(receive(:call).with(hash_including(activity_type: :copy_inventory_item)))
+
+      action
+    end
+
+    it 'returns the failed unique validations' do
+      text_column.update!(enforce_unique: true)
+
+      expect { action }.not_to(change { RepositoryRow.count })
+      expect(response).to have_http_status(:bad_request)
+      expect(response.parsed_body['unique_cells']).to eq(text_column.id.to_s => ['An item with this value already exists'])
+    end
+
+    it 'renders 404 for an item of another repository' do
+      params[:id] = repository_row_two.id
+
+      action
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it 'renders 403 when the user cannot create items' do
+      repository.user_assignments.update(user_role: viewer_role)
+
+      action
+
+      expect(response).to have_http_status(:forbidden)
     end
   end
 

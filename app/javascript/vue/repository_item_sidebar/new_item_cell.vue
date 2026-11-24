@@ -33,12 +33,16 @@ export default {
     column: { type: Object, required: true },
     repositoryId: { type: [Number, String], required: true },
     itemName: { type: String, default: '' },
-    canManageStock: { type: Boolean, default: false }
+    canManageStock: { type: Boolean, default: false },
+    initialCell: { type: Object, default: null },
+    initialStock: { type: Object, default: null },
+    showErrors: { type: Boolean, default: false }
   },
   emits: ['change'],
   data() {
     return {
-      value: null,
+      value: this.initialStock,
+      changed: false,
       textModalOpen: false,
       stockModalOpen: false
     };
@@ -53,6 +57,7 @@ export default {
       return this.dataType in CellRenderer.components;
     },
     cellValue() {
+      if (!this.changed && this.initialCell) return this.initialCell;
       if (!this.value) return null;
 
       switch (this.dataType) {
@@ -70,7 +75,7 @@ export default {
       const unit = this.column.column_items.find((item) => item.id === this.value.unit_item_id);
       const amount = this.value.amount.toFixed(this.column.metadata.decimals);
 
-      return { value: { stock_formatted: `${amount} ${unit.label}` } };
+      return { value: { stock_formatted: `${amount} ${unit?.label || ''}`.trim() } };
     },
     stockData() {
       const stock = this.value || {};
@@ -114,6 +119,7 @@ export default {
         columnItems: this.column.column_items,
         metadata: this.column.metadata,
         inSidebar: true,
+        markTouched: this.showErrors,
         dtComponent: { $emit: this.handleRendererEvent }
       };
     }
@@ -140,6 +146,7 @@ export default {
     },
     update(value) {
       this.value = value;
+      this.changed = true;
       this.textModalOpen = false;
       this.stockModalOpen = false;
 

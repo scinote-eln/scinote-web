@@ -365,14 +365,19 @@ export default {
       this.assignToTasksModalRows = rows.map((row) => ( row.id ));
     },
     duplicateRows(_e, rows) {
+      if (rows.length === 1) {
+        window.repositoryItemSidebarComponent.openNewItemCard(this.repositoryId, this.addCreatedRow, rows[0].id);
+        return;
+      }
+
       const rowIds = rows.map((row) => row.id);
       axios.post(repository_copy_records_path(this.repositoryId), {
         selected_rows: rowIds
       }).then((response) => {
         this.reloadingTable = true;
         HelperModule.flashAlertMsg(response.data.flash, 'success');
-      }).catch(() => {
-        HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
+      }).catch((error) => {
+        HelperModule.flashAlertMsg(error.response?.data?.flash || I18n.t('general.error'), 'danger');
       });
     },
     printLabel(_e, rows) {

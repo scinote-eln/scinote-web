@@ -45,7 +45,7 @@ module RepositoryActions
     def new_row_attributes(name, user_id)
       timestamp = DateTime.now
       { id: nil,
-        name: "#{name} (1)",
+        name: RepositoryRows::DuplicateValidationService.duplicate_name(name),
         created_by_id: user_id,
         created_at: timestamp,
         updated_at: timestamp,

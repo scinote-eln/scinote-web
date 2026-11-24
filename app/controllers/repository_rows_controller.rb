@@ -6,6 +6,7 @@ class RepositoryRowsController < ApplicationController
   include StorageLocationsHelper
   include EquipmentBookingHelper
   include RepositoryColumnsHelper
+  include RepositoryDatatableHelper
 
   before_action :load_repository, except: %i(show print rows_to_print print_zpl validate_label_template_columns)
   before_action :load_repository_or_snapshot, only: %i(show print rows_to_print print_zpl
@@ -15,10 +16,10 @@ class RepositoryRowsController < ApplicationController
                                                storage_locations assigned_modules)
   before_action :load_repository_rows, only: %i(print rows_to_print print_zpl validate_label_template_columns)
 
-  before_action :check_read_permissions, except: %i(create update delete_records
+  before_action :check_read_permissions, except: %i(create duplicate update delete_records
                                                     copy_records archive_records restore_records)
-  before_action :check_snapshotting_status, only: %i(create update delete_records copy_records)
-  before_action :check_create_permissions, only: %i(new create)
+  before_action :check_snapshotting_status, only: %i(create duplicate update delete_records copy_records)
+  before_action :check_create_permissions, only: %i(new create duplicate)
   before_action :check_delete_permissions, only: :delete_records
   before_action :check_manage_permissions, only: %i(update archive_records restore_records copy_records)
 
@@ -106,10 +107,19 @@ class RepositoryRowsController < ApplicationController
   end
 
   def new
-    render json: {
+    json = {
       column_defs: new_item_column_defs,
       can_manage_stock: can_manage_repository_stock?(@repository)
     }
+
+    if params[:row_to_duplicate_id].present?
+      row_to_duplicate = @repository.repository_rows.active.find_by(id: params[:row_to_duplicate_id])
+      return render_404 unless row_to_duplicate
+
+      json[:row_to_duplicate] = new_duplicated_row_json(row_to_duplicate)
+    end
+
+    render json: json
   end
 
   def assigned_counters
@@ -170,6 +180,40 @@ class RepositoryRowsController < ApplicationController
     else
       render json: service.errors, status: :bad_request
     end
+  end
+
+  def duplicate
+    row_to_duplicate = @repository.repository_rows.active.find_by(id: params[:id])
+    return render_404 unless row_to_duplicate
+
+    stock_payload = stock_cell_payload
+    return render_403 if stock_payload && !can_manage_repository_stock?(@repository)
+
+    service = RepositoryRows::DuplicateRepositoryRowService
+              .call(repository: @repository, source_row: row_to_duplicate, user: current_user, params: duplicate_params)
+    return render json: service.errors, status: :bad_request unless service.succeed?
+
+    repository_row = service.repository_row
+
+    Activities::CreateActivityService
+      .call(activity_type: :copy_inventory_item,
+            owner: current_user,
+            subject: @repository,
+            team: @repository.team,
+            message_items: { repository_row_new: repository_row.id, repository_row_original: row_to_duplicate.id })
+    log_stock_activity(repository_row, stock_payload) if stock_payload
+    repository_row.repository_cells.where(value_type: 'RepositoryTextValue').each do |repository_cell|
+      record_annotation_notification(repository_row, repository_cell)
+    end
+
+    render json: repository_row,
+           serializer: Lists::RepositoryRowSerializer,
+           user: current_user,
+           can_read_repository: can_read_repository?(@repository),
+           with_reminders: Repository.reminders_enabled?,
+           with_stock_management: @repository.has_stock_management?,
+           can_manage_stock: can_manage_repository_stock?(@repository),
+           can_manage_repository_rows: can_manage_repository_rows?(@repository)
   end
 
   def validate_label_template_columns
@@ -319,6 +363,13 @@ class RepositoryRowsController < ApplicationController
   end
 
   def copy_records
+    rows = @repository.repository_rows.active.where(id: selected_rows_in_repo_params)
+    duplicate_error = RepositoryRows::DuplicateValidationService.new(@repository, rows).error
+    if duplicate_error
+      return render json: { flash: t("repositories.copy_records_disabled.#{duplicate_error}") },
+                    status: :unprocessable_content
+    end
+
     duplicate_service = RepositoryActions::DuplicateRows.new(
       current_user, @repository, selected_rows_in_repo_params
     )
@@ -613,12 +664,41 @@ class RepositoryRowsController < ApplicationController
     params.permit(:my_module_id, :is_output, repository_row: :name, repository_cells: {}).to_h
   end
 
+  def duplicate_params
+    params.permit(repository_row: :name, repository_cells: {}).to_h
+  end
+
   def new_item_column_defs
     repository_columns_ordered_by_state(RepositoryRow.new(repository: @repository)).map do |column|
       column_def = RepositoryColumnSerializer.new(column).as_json.merge(id: column.id)
       column_def[:column_items] = stock_unit_items(column) if column.data_type == 'RepositoryStockValue'
       column_def
     end
+  end
+
+  def new_duplicated_row_json(row_to_duplicate)
+    validation = RepositoryRows::DuplicateValidationService.new(@repository, [row_to_duplicate])
+    stock_value = row_to_duplicate.repository_stock_value if can_manage_repository_stock?(@repository)
+    cells = row_to_duplicate.repository_cells.includes(:repository_column).reject do |cell|
+      RepositoryRows::DuplicateRepositoryRowService::NOT_COPIED_VALUE_TYPES.include?(cell.value_type)
+    end
+
+    {
+      name: RepositoryRows::DuplicateValidationService.duplicate_name(row_to_duplicate.name),
+      cells: cells.to_h do |cell|
+        [cell.repository_column_id, serialize_repository_cell_value(cell, @repository.team, @repository)]
+      end,
+      stock: stock_value && {
+        column_id: @repository.repository_stock_column.id,
+        cell: serialize_repository_cell_value(row_to_duplicate.repository_stock_cell, @repository.team, @repository),
+        draft: {
+          amount: stock_value.amount.to_f,
+          unit_item_id: stock_value.repository_stock_unit_item_id,
+          low_stock_threshold: stock_value.low_stock_threshold&.to_f
+        }
+      },
+      errors: validation.unique_errors
+    }
   end
 
   def stock_unit_items(column)

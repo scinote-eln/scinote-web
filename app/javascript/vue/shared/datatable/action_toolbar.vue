@@ -8,8 +8,21 @@
         {{ i18n.t('action_toolbar.no_actions') }}
       </div>
       <template v-for="action in actions" :key="action.name" >
-        <div v-if="action.type !== 'group'" class="sn-action-toolbar__action shrink-0" :class="{ 'disable-click': disabledActions[action.name] }">
-          <a :class="`rounded flex gap-2 items-center py-1.5 px-1.5 xl:px-2.5 hover:text-sn-white hover:bg-sn-blue
+        <div v-if="action.type !== 'group'" class="sn-action-toolbar__action shrink-0"
+          :class="{ 'disable-click': disabledActions[action.name] }"
+          :data-sn-tooltip="action.disabled ? action.tooltip : null">
+          <a v-if="action.disabled"
+            :class="`rounded flex gap-2 items-center py-1.5 px-1.5 xl:px-2.5 bg-sn-white text-sn-grey cursor-not-allowed
+                    hover:no-underline focus:no-underline hover:text-sn-grey ${action.button_class || ''}`"
+            href="#"
+            aria-disabled="true"
+            :id="action.button_id"
+            :data-e2e="`e2e-BT-actionToolbar-${action.name}`"
+            @click.prevent>
+            <i :class="action.icon"></i>
+            <span class="tw-hidden xl:inline-block">{{ action.label }}</span>
+          </a>
+          <a v-else :class="`rounded flex gap-2 items-center py-1.5 px-1.5 xl:px-2.5 hover:text-sn-white hover:bg-sn-blue
                     bg-sn-white color-sn-blue hover:no-underline focus:no-underline ${action.button_class}`"
             :href="(['link', 'remote-modal']).includes(action.type) ? action.path : '#'"
 
@@ -54,6 +67,7 @@
 <script>
 import axios from '../../../packs/custom_axios.js';
 import GeneralDropdown from '../general_dropdown.vue';
+import tooltipMixin from '../../mixins/tooltipMixin.js';
 
 export default {
   name: 'ActionToolbar',
@@ -65,6 +79,7 @@ export default {
   components: {
     GeneralDropdown
   },
+  mixins: [tooltipMixin],
   data() {
     return {
       actions: [],
