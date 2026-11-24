@@ -1,0 +1,49 @@
+<% scope = 'qa_tools.design_elements.pill_tab_group' %>
+<% basic_tabs = %w(projects experiments tasks).map { |id| { id: id, label: t("#{scope}.#{id}") } } %>
+<% icon_tabs = [
+  { id: 'projects', label: t("#{scope}.projects"), icon: 'projects' },
+  { id: 'experiments', label: t("#{scope}.experiments"), icon: 'experiment' },
+  { id: 'tasks', label: t("#{scope}.tasks"), icon: 'task' }
+] %>
+<% disabled_tabs = basic_tabs.map { |tab| tab[:id] == 'experiments' ? tab.merge(disabled: true) : tab } %>
+<% static_states = [
+  { state: '', selected: false, label: t("#{scope}.projects") },
+  { state: 'hover', selected: false, label: t("#{scope}.projects") },
+  { state: 'focus', selected: false, label: t("#{scope}.projects") },
+  { state: 'disabled', selected: false, label: t("#{scope}.experiments") },
+  { state: '', selected: true, label: t("#{scope}.tasks") },
+  { state: 'focus', selected: true, label: t("#{scope}.tasks") }
+] %>
+
+<div class="mb-8">
+  <h1>Pill tab group</h1>
+  <div id="pill-tab-group-demo" class="flex flex-col gap-6">
+    <% %w(md sm).each do |size| %>
+      <div class="flex flex-col gap-3">
+        <h3 class="m-0"><%= size %></h3>
+
+        <div class="text-xs text-sn-grey-700"><%= t("#{scope}.basic") %></div>
+        <pill-tab-group v-model="selected.<%= size %>" size="<%= size %>" aria-label="<%= t("#{scope}.aria_label") %>" :tabs="<%= basic_tabs.to_json %>"></pill-tab-group>
+
+        <div class="text-xs text-sn-grey-700"><%= t("#{scope}.with_icons") %></div>
+        <pill-tab-group v-model="selected.<%= size %>Icons" size="<%= size %>" aria-label="<%= t("#{scope}.aria_label") %>" :tabs="<%= icon_tabs.to_json %>"></pill-tab-group>
+
+        <div class="text-xs text-sn-grey-700"><%= t("#{scope}.with_disabled_tab") %></div>
+        <pill-tab-group v-model="selected.<%= size %>Disabled" size="<%= size %>" aria-label="<%= t("#{scope}.aria_label") %>" :tabs="<%= disabled_tabs.to_json %>"></pill-tab-group>
+
+        <div class="text-xs text-sn-grey-700"><%= t("#{scope}.states") %></div>
+        <div class="sci-pill-tab-group flex-wrap gap-2 <%= 'sci-pill-tab-group-sm' if size == 'sm' %>" aria-hidden="true">
+          <% static_states.each do |item| %>
+            <div class="sci-pill-tab-item <%= item[:state] %> <%= 'active' if item[:selected] %>">
+              <span class="sci-pill-tab-item-label" data-label="<%= item[:label] %>">
+                <span class="sci-pill-tab-item-text"><%= item[:label] %></span>
+              </span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%= javascript_include_tag 'vue_design_system_pill_tab_group' %>

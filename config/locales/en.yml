@@ -5631,6 +5631,19 @@ en:
     all_teams_tooltip: "This will disable individual workspace settings"
     success_message: "Selected sharing options for the %{object_name} have been saved."
     save_before_individual_assign: "Please save changes before assigning individual teams."
+
+  qa_tools:
+    design_elements:
+      pill_tab_group:
+        projects: "Projects"
+        experiments: "Experiments"
+        tasks: "Tasks"
+        aria_label: "Object type"
+        basic: "Basic"
+        with_icons: "With icons"
+        with_disabled_tab: "With a disabled tab (Experiments)"
+        states: "States: default, hover, focus, disabled (unselected), then default, focus (selected)"
+
   errors:
     general: "Something went wrong."
     general_text_too_long: 'Text is too long'

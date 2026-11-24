@@ -53,6 +53,7 @@ const entryList = {
   vue_my_modules_list: './app/javascript/packs/vue/my_modules_list.js',
   vue_design_system_select: './app/javascript/packs/vue/design_system/select.js',
   vue_design_system_breadcrumbs: './app/javascript/packs/vue/design_system/breadcrumbs.js',
+  vue_design_system_pill_tab_group: './app/javascript/packs/vue/design_system/pill_tab_group.js',
   vue_protocols_list: './app/javascript/packs/vue/protocols_list.js',
   vue_repositories_table: './app/javascript/packs/vue/repositories_table.js',
   vue_reports_table: './app/javascript/packs/vue/reports_table.js',
