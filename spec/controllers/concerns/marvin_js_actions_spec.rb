@@ -35,7 +35,7 @@ describe MarvinJsActions do
     asset.file.attach(io: File.open(image_path), filename: 'sketch.jpg', content_type: 'image/jpeg',
                       metadata: metadata)
     StepAsset.create!(step: parent, asset: asset) if parent.is_a?(Step)
-    ResultAsset.create!(result: parent, asset: asset) if parent.is_a?(Result)
+    ResultAsset.create!(result: parent, asset: asset) if parent.is_a?(ResultBase)
     asset.reload
   end
 
@@ -143,7 +143,7 @@ describe MarvinJsActions do
         owner: user,
         subject: result,
         team: team,
-        project: nil,
+        project: project,
         message_items: {
           result: result.id,
           'asset_name' => { id: asset.id, value_for: 'file_name' },
@@ -158,6 +158,21 @@ describe MarvinJsActions do
       expect(Activities::CreateActivityService).to have_received(:call).with(
         hash_including(activity_type: :edit_chemical_structure_on_result,
                        message_items: hash_including(action: I18n.t('activities.file_editing.started')))
+      )
+    end
+
+    it 'logs a result template activity without a project' do
+      protocol = create :protocol, :in_repository_draft, team: team, added_by: user
+      result_template = create :result_template, protocol: protocol, user: user
+      template_asset = build_asset(parent: result_template)
+      host.create_create_marvinjs_activity(template_asset, user)
+
+      expect(Activities::CreateActivityService).to have_received(:call).with(
+        hash_including(activity_type: :create_chemical_structure_on_result_template,
+                       subject: result_template,
+                       team: team,
+                       project: nil,
+                       message_items: hash_including(result_template: result_template.id, protocol: protocol.id))
       )
     end
   end
