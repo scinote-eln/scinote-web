@@ -1,59 +1,23 @@
-<%
-  icons_list = []
-  icons_file = File.join(Rails.root, 'vendor', 'assets', 'stylesheets', 'sn-icon-font.css')
-  File.open(icons_file, 'r') do |f|
-    f.each_line do |line|
-      if line.match(/sn-icon-([a-z0-9-]+):before/)
-        icons_list << $1
-      end
-    end
-  end
+<%# Sections come from QaTools::DesignElementsController::SECTIONS. Add new components there. %>
+<nav class="mb-8 p-4 bg-sn-super-light-grey rounded" aria-label="Design elements">
+  <div class="flex flex-wrap gap-x-10 gap-y-4">
+    <% @sections.each do |group| %>
+      <div>
+        <div class="text-xs font-semibold uppercase text-sn-grey mb-1"><%= group[:family] %></div>
+        <ul class="list-none p-0 m-0">
+          <% group[:items].each do |section| %>
+            <li><a href="#<%= section[:id] %>"><%= section[:name] %></a></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+</nav>
 
-  colors_list = []
-  tailwind_file = File.join(Rails.root, 'config', 'tailwind.config.js')
-  File.open(tailwind_file, 'r') do |f|
-    f.each_line do |line|
-      if line.match(/['"]?(sn-[a-z0-9-]+)['"]?\s*:\s*['"]?([#a-zA-Z0-9]+)['"]?/)
-        colors_list << { name: $1, value: $2 } if $2.include?('#')
-      end
-    end
-  end
-%>
-
-<%= render partial: 'charts' %>
-
-<%= render partial: 'table' %>
-
-<%= render partial: 'colors', locals: {colors_list: colors_list} %>
-
-<%= render partial: 'tags' %>
-
-<%= render partial: 'toast' %>
-
-<%= render partial: 'checkbox' %>
-
-<%= render partial: 'radio' %>
-
-<%= render partial: 'toggle' %>
-
-<%= render partial: 'breadcrumbs' %>
-
-<%= render partial: 'button', locals: {icons_list: icons_list} %>
-
-<%= render partial: 'inputs', locals: {icons_list: icons_list} %>
-
-<%= render partial: 'input_title'%>
-
-<%= render partial: 'select' %>
-
-<%= render partial: 'datepicker' %>
-
-<%= render partial: 'tabs' %>
-
-<%= render partial: 'modals' %>
-
-<%= render partial: 'table' %>
-
-<%= render partial: 'icons', locals: {icons_list: icons_list} %>
-
-<%= render partial: 'misc' %>
+<% @sections.each do |group| %>
+  <% group[:items].each do |section| %>
+    <section id="<%= section[:id] %>" class="scroll-mt-4">
+      <%= render partial: section[:partial], locals: { icons_list: @icons_list, colors_list: @colors_list } %>
+    </section>
+  <% end %>
+<% end %>
