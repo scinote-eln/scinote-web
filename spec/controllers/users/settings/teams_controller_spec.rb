@@ -21,6 +21,10 @@ describe Users::Settings::TeamsController, type: :controller do
     create :user_role, name: 'Inventory reader', created_by: user, last_modified_by: user,
                        permissions: [RepositoryPermissions::READ]
   end
+  let(:manage_role) do
+    create :user_role, name: 'Inventory manager', created_by: user, last_modified_by: user,
+                       permissions: [RepositoryPermissions::READ, RepositoryPermissions::MANAGE]
+  end
 
   # The inventory is created by another user, so the only assignment the user has is the one given here.
   def inventory_assigned_to_user(role, *traits, name:, inventory_team: team)
@@ -42,13 +46,16 @@ describe Users::Settings::TeamsController, type: :controller do
 
     context 'when the user manages the team' do
       it 'renders the manageable inventories as [id, name] pairs sorted by name case-insensitively' do
-        charlie = inventory_assigned_to_user(columns_role, name: 'Charlie stock')
-        alpha = inventory_assigned_to_user(enforce_role, name: 'alpha stock')
-        beta = create :repository, name: 'Beta stock', team: other_team, created_by: inventory_creator
-        create_team_assignment(beta, columns_role, team, inventory_creator)
+        charlie = inventory_assigned_to_user(manage_role, name: 'Charlie stock')
+        alpha = inventory_assigned_to_user(manage_role, name: 'alpha stock')
+        beta = inventory_assigned_to_user(manage_role, name: 'Beta stock')
+        inventory_assigned_to_user(columns_role, name: 'Columns-only stock')
+        inventory_assigned_to_user(enforce_role, name: 'Enforce-only stock')
         inventory_assigned_to_user(read_only_role, name: 'Read-only stock')
-        inventory_assigned_to_user(columns_role, :archived, name: 'Archived stock')
-        inventory_assigned_to_user(columns_role, name: 'Foreign stock', inventory_team: other_team)
+        inventory_assigned_to_user(manage_role, :archived, name: 'Archived stock')
+        inventory_assigned_to_user(manage_role, name: 'Foreign stock', inventory_team: other_team)
+        shared = create :repository, name: 'Shared stock', team: other_team, created_by: inventory_creator
+        create_team_assignment(shared, manage_role, team, inventory_creator)
 
         action
 
@@ -67,8 +74,8 @@ describe Users::Settings::TeamsController, type: :controller do
 
       it 'lists the inventories of the requested team, not of the current team' do
         second_team = create :team, created_by: user
-        inventory_assigned_to_user(columns_role, name: 'Current team stock', inventory_team: second_team)
-        requested = inventory_assigned_to_user(enforce_role, name: 'Requested team stock')
+        inventory_assigned_to_user(manage_role, name: 'Current team stock', inventory_team: second_team)
+        requested = inventory_assigned_to_user(manage_role, name: 'Requested team stock')
         user.update!(current_team_id: second_team.id)
 
         action
