@@ -74,8 +74,13 @@ module Api
         raise TypeError unless params.require(:data).require(:type) == 'inventory_columns'
 
         params.require(:data).require(:attributes)
+
+        attributes = %i(name data_type)
+        attributes << :mandatory if RepositoryBase.inventory_integrity_enabled?
+        attributes << { metadata: {} }
+
         new_params = params
-                     .permit(data: { attributes: [:name, :data_type, metadata: {}] })[:data]
+                     .permit(data: { attributes: attributes })[:data]
                      .merge(created_by: @current_user)
         if new_params[:attributes][:data_type].present?
           new_params[:attributes][:data_type] =

@@ -115,6 +115,13 @@ describe RepositoryRow, type: :model do
 
         expect(new_row).to be_valid
       end
+
+      it 'does not apply when inventory integrity is disabled' do
+        allow(RepositoryBase).to receive(:inventory_integrity_enabled?).and_return(false)
+        new_row.name = 'Sample A'
+
+        expect(new_row).to be_valid
+      end
     end
   end
 

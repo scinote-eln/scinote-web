@@ -362,4 +362,168 @@ RSpec.describe 'Api::V1::InventoryItemsController', type: :request do
       expect(hash_body['data']['attributes']['name']).to match(updated_inventory_item['attributes']['name'])
     end
   end
+
+  describe 'POST inventory_item, #create with mandatory columns' do
+    let(:headers) do
+      { 'Authorization' => "Bearer #{generate_token(@user.id)}", 'Content-Type' => 'application/json' }
+    end
+    let!(:inventory) { create(:repository, created_by: @user, team: @team1) }
+    let!(:mandatory_column) do
+      create(:repository_column, repository: inventory, created_by: @user,
+                                 data_type: :RepositoryTextValue, mandatory: true)
+    end
+    let!(:optional_column) do
+      create(:repository_column, repository: inventory, created_by: @user, data_type: :RepositoryTextValue)
+    end
+
+    def create_item(cells)
+      body = { data: { type: 'inventory_items', attributes: { name: 'API item' } } }
+      if cells.any?
+        body[:included] = cells.map do |column, value|
+          { type: 'inventory_cells', attributes: { column_id: column.id, value: value } }
+        end
+      end
+      post api_v1_team_inventory_items_path(team_id: @team1.id, inventory_id: inventory.id),
+           params: body.to_json, headers: headers
+    end
+
+    def mandatory_detail(column)
+      I18n.t('api.core.errors.inventory_column_mandatory.detail', column_name: column.name, id: column.id)
+    end
+
+    def inventory_item_count
+      RepositoryRow.where(repository: inventory).count
+    end
+
+    it 'rejects an item without cells and names the missing mandatory column' do
+      expect { create_item({}) }.not_to(change { inventory_item_count })
+
+      expect(response).to have_http_status(400)
+      expect(json['errors'].size).to eq 1
+      expect(json['errors'][0]).to include(
+        'status' => 400,
+        'title' => I18n.t('api.core.errors.inventory_column_mandatory.title'),
+        'detail' => mandatory_detail(mandatory_column)
+      )
+    end
+
+    it 'rejects an item whose cells skip mandatory columns, with one error per missing column' do
+      second_mandatory_column = create(:repository_column, repository: inventory, created_by: @user,
+                                                           data_type: :RepositoryTextValue, mandatory: true)
+
+      expect { create_item(optional_column => 'optional value') }.not_to(change { inventory_item_count })
+
+      expect(response).to have_http_status(400)
+      expect(json['errors'].pluck('detail')).to contain_exactly(
+        mandatory_detail(mandatory_column), mandatory_detail(second_mandatory_column)
+      )
+    end
+
+    it 'creates the item when every mandatory column has a value' do
+      expect { create_item(mandatory_column => 'required value') }.to change { inventory_item_count }.by(1)
+
+      expect(response).to have_http_status(201)
+      item = RepositoryRow.find(json['data']['id'])
+      expect(item.repository_cells.find_by(repository_column: mandatory_column).value.data).to eq 'required value'
+    end
+
+    it 'creates an item without cells when the inventory has no mandatory columns' do
+      mandatory_column.update!(mandatory: false)
+
+      expect { create_item({}) }.to change { inventory_item_count }.by(1)
+      expect(response).to have_http_status(201)
+    end
+
+    it 'skips the mandatory check when inventory integrity is disabled' do
+      allow(RepositoryBase).to receive(:inventory_integrity_enabled?).and_return(false)
+
+      expect { create_item({}) }.to change { inventory_item_count }.by(1)
+      expect(response).to have_http_status(201)
+    end
+  end
+
+  describe 'inventory item uniqueness' do
+    let(:headers) do
+      { 'Authorization' => "Bearer #{generate_token(@user.id)}", 'Content-Type' => 'application/json' }
+    end
+    let!(:inventory) { create(:repository, created_by: @user, team: @team1, enforce_unique_item_names: true) }
+    let!(:unique_column) do
+      create(:repository_column, repository: inventory, created_by: @user, data_type: :RepositoryTextValue,
+                                 enforce_unique: true, unique_case_sensitive: true)
+    end
+    let!(:existing_item) { create(:repository_row, repository: inventory, created_by: @user, name: 'Sample A') }
+    let!(:existing_value) do
+      create(:repository_text_value, data: 'LOT-1', created_by: @user,
+                                     repository_cell_attributes: { repository_row: existing_item,
+                                                                   repository_column: unique_column })
+    end
+
+    def inventory_item_count
+      RepositoryRow.where(repository: inventory).count
+    end
+
+    def post_item(body)
+      post api_v1_team_inventory_items_path(team_id: @team1.id, inventory_id: inventory.id),
+           params: body.to_json, headers: headers
+    end
+
+    it 'rejects a new item with a duplicate value in a unique Text column' do
+      body = { data: { type: 'inventory_items', attributes: { name: 'Sample B' } },
+               included: [{ type: 'inventory_cells', attributes: { column_id: unique_column.id, value: 'LOT-1' } }] }
+
+      expect { post_item(body) }.not_to(change { inventory_item_count })
+
+      expect(response).to have_http_status(400)
+      expect(json['errors'][0]['title']).to eq I18n.t('api.core.errors.validation.title')
+      expect(json['errors'][0]['detail'])
+        .to include(I18n.t('activerecord.errors.models.repository_text_value.attributes.data.not_unique'))
+    end
+
+    it 'accepts a duplicate name and value when inventory integrity is disabled' do
+      allow(RepositoryBase).to receive(:inventory_integrity_enabled?).and_return(false)
+      body = { data: { type: 'inventory_items', attributes: { name: 'Sample A' } },
+               included: [{ type: 'inventory_cells', attributes: { column_id: unique_column.id, value: 'LOT-1' } }] }
+
+      expect { post_item(body) }.to change { inventory_item_count }.by(1)
+      expect(response).to have_http_status(201)
+    end
+
+    it 'rejects a new item with a duplicate name' do
+      body = { data: { type: 'inventory_items', attributes: { name: 'Sample A' } } }
+
+      expect { post_item(body) }.not_to(change { inventory_item_count })
+
+      expect(response).to have_http_status(400)
+      expect(json['errors'][0]['detail'])
+        .to include(I18n.t('activerecord.errors.models.repository_row.attributes.name.not_unique'))
+    end
+
+    it 'rejects updating a cell to a duplicate value and keeps the old value' do
+      other_item = create(:repository_row, repository: inventory, created_by: @user, name: 'Sample B')
+      other_value = create(:repository_text_value, data: 'LOT-2', created_by: @user,
+                                                   repository_cell_attributes: { repository_row: other_item,
+                                                                                 repository_column: unique_column })
+      body = { data: { id: other_item.id, type: 'inventory_items', attributes: { name: other_item.name } },
+               included: [{ id: other_value.repository_cell.id, type: 'inventory_cells',
+                            attributes: { value: 'LOT-1' } }] }
+
+      patch api_v1_team_inventory_item_path(team_id: @team1.id, inventory_id: inventory.id, id: other_item.id),
+            params: body.to_json, headers: headers
+
+      expect(response).to have_http_status(400)
+      expect(json['errors'][0]['detail'])
+        .to include(I18n.t('activerecord.errors.models.repository_text_value.attributes.data.not_unique'))
+      expect(other_value.reload.data).to eq 'LOT-2'
+    end
+
+    it 'returns 204 without a body when the update changes nothing' do
+      body = { data: { id: existing_item.id, type: 'inventory_items', attributes: { name: existing_item.name } } }
+
+      patch api_v1_team_inventory_item_path(team_id: @team1.id, inventory_id: inventory.id, id: existing_item.id),
+            params: body.to_json, headers: headers
+
+      expect(response).to have_http_status(204)
+      expect(response.body).to be_empty
+    end
+  end
 end

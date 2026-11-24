@@ -541,4 +541,147 @@ RSpec.describe 'Api::V1::InventoryColumnsController', type: :request do
       expect(hash_body['errors'][0]).to include('status': 404)
     end
   end
+
+  describe 'mandatory and uniqueness column settings' do
+    let(:headers) do
+      { 'Authorization' => "Bearer #{generate_token(@user.id)}", 'Content-Type' => 'application/json' }
+    end
+    let!(:inventory) { create(:repository, created_by: @user, team: @team1) }
+    let(:stock_mandatory_error) do
+      I18n.t('activerecord.errors.models.repository_column.attributes.mandatory.not_allowed_for_stock')
+    end
+
+    def create_inventory_column(data_type, **attributes)
+      create(:repository_column, repository: inventory, created_by: @user, data_type: data_type, **attributes)
+    end
+
+    def show_column_attributes(column)
+      get api_v1_team_inventory_column_path(team_id: @team1.id, inventory_id: inventory.id, id: column.id),
+          headers: headers
+      json['data']['attributes']
+    end
+
+    def post_column(attributes)
+      post api_v1_team_inventory_columns_path(team_id: @team1.id, inventory_id: inventory.id),
+           params: { data: { type: 'inventory_columns', attributes: attributes } }.to_json, headers: headers
+    end
+
+    def patch_column(column, attributes)
+      patch api_v1_team_inventory_column_path(team_id: @team1.id, inventory_id: inventory.id, id: column.id),
+            params: { data: { id: column.id, type: 'inventory_columns', attributes: attributes } }.to_json,
+            headers: headers
+    end
+
+    describe 'GET inventory_column, #show' do
+      it 'shows the mandatory flag' do
+        column = create_inventory_column(:RepositoryTextValue, mandatory: true)
+
+        expect(show_column_attributes(column)['mandatory']).to be true
+      end
+
+      it 'shows the stored uniqueness settings of a Text column' do
+        column = create_inventory_column(:RepositoryTextValue, enforce_unique: true, unique_case_sensitive: false)
+
+        expect(show_column_attributes(column)['metadata'])
+          .to eq('enforce_unique' => true, 'unique_case_sensitive' => false)
+      end
+
+      it 'keeps the metadata of other column types unchanged' do
+        column = create_inventory_column(:RepositoryNumberValue, metadata: { 'decimals' => 2 })
+
+        expect(show_column_attributes(column)['metadata']).to eq('decimals' => 2)
+      end
+
+      context 'when inventory integrity is disabled' do
+        before { allow(RepositoryBase).to receive(:inventory_integrity_enabled?).and_return(false) }
+
+        it 'hides the mandatory flag' do
+          column = create_inventory_column(:RepositoryTextValue, mandatory: true)
+
+          expect(show_column_attributes(column)).not_to have_key('mandatory')
+        end
+
+        it 'hides the metadata of a Text column' do
+          column = create_inventory_column(:RepositoryTextValue, enforce_unique: true, unique_case_sensitive: true)
+
+          attributes = show_column_attributes(column)
+
+          expect(attributes).to have_key('metadata')
+          expect(attributes['metadata']).to be_nil
+        end
+
+        it 'keeps the metadata of other column types unchanged' do
+          column = create_inventory_column(:RepositoryNumberValue, metadata: { 'decimals' => 2 })
+
+          expect(show_column_attributes(column)['metadata']).to eq('decimals' => 2)
+        end
+      end
+    end
+
+    describe 'POST inventory_column, #create' do
+      it 'creates a mandatory column' do
+        post_column(name: 'Batch', data_type: 'text', mandatory: true)
+
+        expect(response).to have_http_status(201)
+        expect(json['data']['attributes']['mandatory']).to be true
+        expect(RepositoryColumn.find(json['data']['id'])).to be_mandatory
+      end
+
+      it 'rejects a mandatory Stock column' do
+        expect { post_column(name: 'Stock', data_type: 'stock', mandatory: true, metadata: { decimals: 2 }) }
+          .not_to(change { inventory.repository_columns.count })
+
+        expect(response).to have_http_status(400)
+        expect(json['errors'][0]['detail']).to include(stock_mandatory_error)
+      end
+    end
+
+    describe 'PATCH inventory_column, #update' do
+      let!(:text_column) { create_inventory_column(:RepositoryTextValue) }
+
+      it 'marks a column as mandatory' do
+        patch_column(text_column, mandatory: true)
+
+        expect(response).to have_http_status(200)
+        expect(json['data']['attributes']['mandatory']).to be true
+        expect(text_column.reload).to be_mandatory
+      end
+
+      it 'rejects marking a Stock column as mandatory' do
+        stock_column = create_inventory_column(:RepositoryStockValue)
+
+        patch_column(stock_column, mandatory: true)
+
+        expect(response).to have_http_status(400)
+        expect(json['errors'][0]['detail']).to include(stock_mandatory_error)
+        expect(stock_column.reload).not_to be_mandatory
+      end
+
+      it 'writes Text column uniqueness through metadata' do
+        patch_column(text_column, metadata: { enforce_unique: true, unique_case_sensitive: false })
+
+        expect(response).to have_http_status(200)
+        expect(json['data']['attributes']['metadata']).to eq('enforce_unique' => true, 'unique_case_sensitive' => false)
+        text_column.reload
+        expect(text_column.enforce_unique?).to be true
+        expect(text_column.unique_case_sensitive?).to be false
+      end
+
+      it 'returns 204 without a body when nothing changes' do
+        patch_column(text_column, name: text_column.name)
+
+        expect(response).to have_http_status(204)
+        expect(response.body).to be_empty
+      end
+
+      it 'ignores mandatory when inventory integrity is disabled' do
+        allow(RepositoryBase).to receive(:inventory_integrity_enabled?).and_return(false)
+
+        patch_column(text_column, mandatory: true)
+
+        expect(response).to have_http_status(204)
+        expect(text_column.reload).not_to be_mandatory
+      end
+    end
+  end
 end

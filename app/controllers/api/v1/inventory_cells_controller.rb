@@ -9,6 +9,7 @@ module Api
       before_action :load_inventory_item
       before_action :load_inventory_cell, only: %i(show update destroy)
       before_action :check_manage_permissions, only: %i(create update destroy)
+      before_action :check_mandatory_column, only: :destroy
 
       def index
         cells =
@@ -66,6 +67,19 @@ module Api
 
       def check_manage_permissions
         raise PermissionError.new(RepositoryRow, :manage) unless can_manage_repository_rows?(@inventory)
+      end
+
+      def check_mandatory_column
+        column = @inventory_cell.repository_column
+        return unless RepositoryBase.inventory_integrity_enabled? && column.mandatory?
+
+        render_error(
+          I18n.t('api.core.errors.inventory_column_mandatory.title'),
+          I18n.t('api.core.errors.inventory_column_mandatory.detail',
+                 column_name: column.name,
+                 id: column.id),
+          :bad_request
+        )
       end
 
       def inventory_cell_params

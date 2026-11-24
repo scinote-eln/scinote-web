@@ -278,6 +278,7 @@ class RepositoryRow < ApplicationRecord
   private
 
   def name_unique_in_repository
+    return unless RepositoryBase.inventory_integrity_enabled?
     return unless repository.is_a?(Repository) && repository.enforce_unique_item_names?
 
     value = name.to_s.strip

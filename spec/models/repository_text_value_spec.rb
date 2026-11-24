@@ -94,6 +94,12 @@ describe RepositoryTextValue, type: :model do
         expect(build_value('Lot 42')).to be_valid
       end
 
+      it 'does not apply when inventory integrity is disabled' do
+        allow(RepositoryBase).to receive(:inventory_integrity_enabled?).and_return(false)
+
+        expect(build_value('Lot 42')).to be_valid
+      end
+
       it 'does not block saving an existing value that did not change' do
         column.update!(enforce_unique: false)
         duplicate_cell = RepositoryCell.create_with_value!(other_row, column, 'Lot 42', user)

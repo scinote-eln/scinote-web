@@ -306,4 +306,86 @@ RSpec.describe 'Api::V1::InventoriesController', type: :request do
       expect(Repository.where(id: deleted_id)).to exist
     end
   end
+
+  describe 'item name uniqueness settings' do
+    let(:headers) do
+      { 'Authorization' => "Bearer #{generate_token(@user.id)}", 'Content-Type' => 'application/json' }
+    end
+    let!(:inventory) do
+      create(:repository, created_by: @user, team: @team1,
+                          enforce_unique_item_names: true, unique_item_names_case_sensitive: false)
+    end
+
+    def show_inventory_attributes
+      get api_v1_team_inventory_path(team_id: @team1.id, id: inventory.id), headers: headers
+      json['data']['attributes']
+    end
+
+    def patch_inventory(attributes)
+      patch api_v1_team_inventory_path(team_id: @team1.id, id: inventory.id),
+            params: { data: { id: inventory.id, type: 'inventories', attributes: attributes } }.to_json,
+            headers: headers
+    end
+
+    it 'shows the item name uniqueness settings' do
+      expect(show_inventory_attributes)
+        .to include('enforce_unique_item_names' => true, 'unique_item_names_case_sensitive' => false)
+    end
+
+    it 'updates the item name uniqueness settings' do
+      patch_inventory(enforce_unique_item_names: false, unique_item_names_case_sensitive: true)
+
+      expect(response).to have_http_status(200)
+      expect(json['data']['attributes'])
+        .to include('enforce_unique_item_names' => false, 'unique_item_names_case_sensitive' => true)
+      expect(inventory.reload)
+        .to have_attributes(enforce_unique_item_names: false, unique_item_names_case_sensitive: true)
+    end
+
+    it 'creates an inventory with item name uniqueness enabled' do
+      post api_v1_team_inventories_path(team_id: @team1.id),
+           params: { data: { type: 'inventories',
+                             attributes: { name: 'Unique names inventory', enforce_unique_item_names: true } } }.to_json,
+           headers: headers
+
+      expect(response).to have_http_status(201)
+      expect(Repository.find(json['data']['id']).enforce_unique_item_names).to be true
+    end
+
+    it 'returns 204 without a body when the update changes nothing' do
+      patch_inventory(name: inventory.name)
+
+      expect(response).to have_http_status(204)
+      expect(response.body).to be_empty
+    end
+
+    context 'when inventory integrity is disabled' do
+      before { allow(RepositoryBase).to receive(:inventory_integrity_enabled?).and_return(false) }
+
+      it 'hides the item name uniqueness settings' do
+        attributes = show_inventory_attributes
+
+        expect(attributes).not_to have_key('enforce_unique_item_names')
+        expect(attributes).not_to have_key('unique_item_names_case_sensitive')
+      end
+
+      it 'ignores item name uniqueness settings in an update' do
+        patch_inventory(enforce_unique_item_names: false, unique_item_names_case_sensitive: true)
+
+        expect(response).to have_http_status(204)
+        expect(inventory.reload)
+          .to have_attributes(enforce_unique_item_names: true, unique_item_names_case_sensitive: false)
+      end
+
+      it 'ignores item name uniqueness settings on create' do
+        post api_v1_team_inventories_path(team_id: @team1.id),
+             params: { data: { type: 'inventories',
+                               attributes: { name: 'Flag off inventory', enforce_unique_item_names: true } } }.to_json,
+             headers: headers
+
+        expect(response).to have_http_status(201)
+        expect(Repository.find(json['data']['id']).enforce_unique_item_names).to be false
+      end
+    end
+  end
 end
