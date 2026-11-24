@@ -1,23 +1,25 @@
 <%# Sections come from QaTools::DesignElementsController::SECTIONS. Add new components there. %>
-<nav class="mb-8 p-4 bg-sn-super-light-grey rounded" aria-label="Design elements">
-  <div class="flex flex-wrap gap-x-10 gap-y-4">
+<div class="flex items-start gap-8">
+  <nav class="sticky top-0 shrink-0 w-48 p-4 rounded bg-sn-super-light-grey overflow-y-auto max-h-[calc(100vh-var(--navbar-height))]" aria-label="Design elements">
     <% @sections.each do |group| %>
-      <div>
+      <div class="mb-4">
         <div class="text-xs font-semibold uppercase text-sn-grey mb-1"><%= group[:family] %></div>
         <ul class="list-none p-0 m-0">
           <% group[:items].each do |section| %>
-            <li><a href="#<%= section[:id] %>"><%= section[:name] %></a></li>
+            <li><a href="#<%= section[:id] %>" class="block py-0.5 text-sn-black hover:text-sn-blue"><%= section[:name] %></a></li>
           <% end %>
         </ul>
       </div>
     <% end %>
-  </div>
-</nav>
+  </nav>
 
-<% @sections.each do |group| %>
-  <% group[:items].each do |section| %>
-    <section id="<%= section[:id] %>" class="scroll-mt-4">
-      <%= render partial: section[:partial], locals: { icons_list: @icons_list, colors_list: @colors_list } %>
-    </section>
-  <% end %>
-<% end %>
+  <div class="flex-1 min-w-0">
+    <% @sections.each do |group| %>
+      <% group[:items].each do |section| %>
+        <section id="<%= section[:id] %>" class="scroll-mt-4">
+          <%= render partial: section[:partial], locals: { icons_list: @icons_list, colors_list: @colors_list } %>
+        </section>
+      <% end %>
+    <% end %>
+  </div>
+</div>
