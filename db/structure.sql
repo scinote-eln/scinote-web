@@ -1937,7 +1937,8 @@ CREATE TABLE public.repositories (
     enforce_table_state boolean DEFAULT false NOT NULL,
     default_table_state jsonb,
     enforce_unique_item_names boolean DEFAULT false NOT NULL,
-    unique_item_names_case_sensitive boolean DEFAULT false NOT NULL
+    unique_item_names_case_sensitive boolean DEFAULT false NOT NULL,
+    duplicated_items_count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -2436,7 +2437,8 @@ CREATE TABLE public.repository_rows (
     external_id character varying,
     parent_connections_count integer,
     child_connections_count integer,
-    my_module_id bigint
+    my_module_id bigint,
+    duplicated boolean DEFAULT false NOT NULL
 );
 
 
@@ -7786,6 +7788,13 @@ CREATE INDEX index_repository_rows_on_repository_id_and_lower_name ON public.rep
 
 
 --
+-- Name: index_repository_rows_on_repository_id_duplicated; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repository_rows_on_repository_id_duplicated ON public.repository_rows USING btree (repository_id) WHERE duplicated;
+
+
+--
 -- Name: index_repository_rows_on_repository_row_code; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11029,6 +11038,7 @@ ALTER TABLE ONLY public.projects
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261125100000'),
 ('20261118110000'),
 ('20261118100000'),
 ('20261117100000'),

@@ -17,6 +17,9 @@ class RepositoryTextValue < ApplicationRecord
   validates :repository_cell, presence: true
   validates :data, presence: true, length: { maximum: Constants::TEXT_MAX_LENGTH }
   validate :data_unique_in_column, if: -> { new_record? || will_save_change_to_data? }
+  before_update :remember_duplicates, if: :will_save_change_to_data?
+  before_destroy :remember_duplicates, prepend: true
+  after_commit :refresh_duplicate_flag, on: %i(update destroy)
 
   SORTABLE_COLUMN_NAME = 'repository_text_values.data'
 
@@ -76,6 +79,19 @@ class RepositoryTextValue < ApplicationRecord
   end
 
   private
+
+  def remember_duplicates
+    @cell_column = repository_cell&.repository_column
+    @cell_row = repository_cell&.repository_row
+    @former_duplicate_ids = @cell_column&.enforce_unique? && @cell_row ? @cell_row.current_duplicate_ids : []
+  end
+
+  def refresh_duplicate_flag
+    return unless destroyed? || saved_change_to_data?
+    return unless @cell_column&.enforce_unique? && @cell_row&.duplicated?
+
+    RepositoryRow.find_by(id: @cell_row.id)&.refresh_duplicate_flag!(@former_duplicate_ids.to_a)
+  end
 
   def data_unique_in_column
     return unless RepositoryBase.inventory_integrity_enabled?

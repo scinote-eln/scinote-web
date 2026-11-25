@@ -94,6 +94,11 @@ export default {
       savedFilters: []
     }
   },
+  watch: {
+    'params.resetKey'() {
+      this.activeFilter = null;
+    }
+  },
   methods: {
     openFiltersModal() {
       this.openModal = true;

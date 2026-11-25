@@ -3034,6 +3034,11 @@ en:
       title: "Enforce unique entries"
       case_sensitive: "Case sensitive unique entries (Text ≠ text)"
       case_insensitive: "Case insensitive unique entries (Text = text)"
+    duplicates_banner:
+      message_html:
+        one: "<b>1 item</b> has duplicated values."
+        other: "<b>%{count} items</b> have duplicated values."
+      show_duplicates: "Show duplicates"
     enforce_table_state:
       title: "Enforce your column layout"
       description: "Everyone in this inventory sees your column visibility, order, and pinning. Others can’t change them, and your future updates apply to them too."

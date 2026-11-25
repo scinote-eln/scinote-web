@@ -44,6 +44,7 @@
           <%= t('repositories.show.archived_inventory_items', repository_name: @repository.name) %>
         <% end %>
       </div>
+      <div id="repositoryDuplicatesBanner" class="ml-auto pl-4"></div>
     </div>
   </div>
 
@@ -67,6 +68,7 @@
         :repository-id="<%= @repository.id %>"
         :can-manage-repository="<%= can_manage_repository?(@repository) %>"
         :can-manage-filters="<%= can_manage_repository_filters?(@repository)%>"
+        :duplicated-items-count="<%= RepositoryBase.inventory_integrity_enabled? && can_manage_repository_rows?(@repository) ? @repository.duplicated_items_count : 0 %>"
         :can-enforce-table-state="<%= can_manage_repository_enforce_state?(@repository) %>"
         :archived="<%= @repository.archived? %>"
         create-url="<%= repository_repository_rows_path(@repository) if can_create_repository_rows?(@repository) %>"
