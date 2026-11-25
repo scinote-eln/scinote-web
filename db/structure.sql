@@ -237,6 +237,7 @@ CREATE TABLE public.analytical_reports (
     reference_type character varying,
     reference_id bigint,
     report_template_id bigint,
+    params jsonb DEFAULT '{}'::jsonb NOT NULL,
     created_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -358,6 +359,7 @@ CREATE TABLE public.assets (
     version integer DEFAULT 1,
     file_processing boolean,
     team_id integer,
+    previews_generated boolean DEFAULT false NOT NULL,
     view_mode integer DEFAULT 0 NOT NULL,
     pdf_preview_processing boolean DEFAULT false,
     archived boolean DEFAULT false NOT NULL,
@@ -365,8 +367,7 @@ CREATE TABLE public.assets (
     restored_on timestamp(6) without time zone,
     archived_by_id bigint,
     restored_by_id bigint,
-    locked boolean DEFAULT false NOT NULL,
-    file_title character varying
+    locked boolean DEFAULT false NOT NULL
 );
 
 
@@ -1070,6 +1071,40 @@ ALTER SEQUENCE public.label_templates_id_seq OWNED BY public.label_templates.id;
 
 
 --
+-- Name: logs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.logs (
+    id bigint NOT NULL,
+    action_type integer NOT NULL,
+    user_name character varying,
+    details jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: logs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.logs_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.logs_id_seq OWNED BY public.logs.id;
+
+
+--
 -- Name: my_module_groups; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1308,6 +1343,38 @@ ALTER SEQUENCE public.my_module_statuses_id_seq OWNED BY public.my_module_status
 
 
 --
+-- Name: my_module_tags_archived; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.my_module_tags_archived (
+    id bigint CONSTRAINT my_module_tags_id_not_null NOT NULL,
+    my_module_id integer,
+    tag_id integer,
+    created_by_id bigint
+);
+
+
+--
+-- Name: my_module_tags_archived_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.my_module_tags_archived_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: my_module_tags_archived_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.my_module_tags_archived_id_seq OWNED BY public.my_module_tags_archived.id;
+
+
+--
 -- Name: my_modules; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1332,6 +1399,8 @@ CREATE TABLE public.my_modules (
     experiment_id bigint DEFAULT 0 NOT NULL,
     state smallint DEFAULT 0,
     completed_on timestamp without time zone,
+    electronic_signature_status integer DEFAULT 1,
+    electronic_signature_status_locked_at timestamp without time zone,
     started_on timestamp without time zone,
     my_module_status_id bigint,
     status_changing boolean DEFAULT false,
@@ -1340,7 +1409,8 @@ CREATE TABLE public.my_modules (
     provisioning_status integer,
     due_date_notification_sent boolean DEFAULT false,
     metadata jsonb,
-    read_only_description text
+    read_only_description text,
+    electronic_signatures_mode integer DEFAULT 0 NOT NULL
 );
 
 
@@ -1507,6 +1577,43 @@ CREATE SEQUENCE public.oauth_applications_id_seq
 --
 
 ALTER SEQUENCE public.oauth_applications_id_seq OWNED BY public.oauth_applications.id;
+
+
+--
+-- Name: parsed_protocols; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.parsed_protocols (
+    id bigint NOT NULL,
+    status integer,
+    protocol_id bigint,
+    created_by_id bigint NOT NULL,
+    team_id bigint NOT NULL,
+    prompt text,
+    parsed_data json,
+    last_error text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: parsed_protocols_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.parsed_protocols_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: parsed_protocols_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.parsed_protocols_id_seq OWNED BY public.parsed_protocols.id;
 
 
 --
@@ -1931,6 +2038,7 @@ CREATE TABLE public.repositories (
     restored_on timestamp without time zone,
     archived_by_id bigint,
     restored_by_id bigint,
+    locked boolean DEFAULT false NOT NULL,
     external_id character varying,
     repository_rows_count integer DEFAULT 0 NOT NULL,
     repository_template_id bigint,
@@ -2962,6 +3070,222 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: scinote_common_labviva_orders_lists; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.scinote_common_labviva_orders_lists (
+    id bigint NOT NULL,
+    order_id character varying,
+    user_id integer,
+    "order" jsonb
+);
+
+
+--
+-- Name: scinote_common_labviva_orders_lists_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.scinote_common_labviva_orders_lists_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: scinote_common_labviva_orders_lists_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.scinote_common_labviva_orders_lists_id_seq OWNED BY public.scinote_common_labviva_orders_lists.id;
+
+
+--
+-- Name: scinote_common_repository_labviva_values; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.scinote_common_repository_labviva_values (
+    id bigint NOT NULL,
+    data character varying,
+    lvid character varying,
+    sku character varying,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    created_by_id integer NOT NULL,
+    last_modified_by_id integer CONSTRAINT scinote_common_repository_labviva__last_modified_by_id_not_null NOT NULL
+);
+
+
+--
+-- Name: scinote_common_repository_labviva_values_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.scinote_common_repository_labviva_values_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: scinote_common_repository_labviva_values_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.scinote_common_repository_labviva_values_id_seq OWNED BY public.scinote_common_repository_labviva_values.id;
+
+
+--
+-- Name: scinote_enterprise_electronic_signature_dependent_requests; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.scinote_enterprise_electronic_signature_dependent_requests (
+    id bigint CONSTRAINT scinote_enterprise_electronic_signature_dependent_r_id_not_null NOT NULL,
+    electronic_signature_request_id bigint CONSTRAINT scinote_enterprise_electron_electronic_signature_reque_not_null NOT NULL,
+    electronic_signature_request_dependency_id bigint CONSTRAINT scinote_enterprise_electro_electronic_signature_reque_not_null1 NOT NULL,
+    created_at timestamp(6) without time zone CONSTRAINT scinote_enterprise_electronic_signature_dep_created_at_not_null NOT NULL,
+    updated_at timestamp(6) without time zone CONSTRAINT scinote_enterprise_electronic_signature_dep_updated_at_not_null NOT NULL
+);
+
+
+--
+-- Name: scinote_enterprise_electronic_signature_dependent_reques_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.scinote_enterprise_electronic_signature_dependent_reques_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: scinote_enterprise_electronic_signature_dependent_reques_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.scinote_enterprise_electronic_signature_dependent_reques_id_seq OWNED BY public.scinote_enterprise_electronic_signature_dependent_requests.id;
+
+
+--
+-- Name: scinote_enterprise_electronic_signature_requests; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.scinote_enterprise_electronic_signature_requests (
+    id bigint NOT NULL,
+    type character varying,
+    "group" integer,
+    reminder_count integer DEFAULT 0 CONSTRAINT scinote_enterprise_electronic_signature_reminder_count_not_null NOT NULL,
+    user_id bigint,
+    signable_type character varying,
+    signable_id bigint,
+    fulfilled_by_id bigint,
+    created_by_id bigint,
+    created_at timestamp(6) without time zone CONSTRAINT scinote_enterprise_electronic_signature_req_created_at_not_null NOT NULL,
+    updated_at timestamp(6) without time zone CONSTRAINT scinote_enterprise_electronic_signature_req_updated_at_not_null NOT NULL,
+    fulfillable boolean DEFAULT true,
+    user_role_id bigint,
+    signature_type_id integer
+);
+
+
+--
+-- Name: scinote_enterprise_electronic_signature_requests_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.scinote_enterprise_electronic_signature_requests_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: scinote_enterprise_electronic_signature_requests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.scinote_enterprise_electronic_signature_requests_id_seq OWNED BY public.scinote_enterprise_electronic_signature_requests.id;
+
+
+--
+-- Name: scinote_enterprise_electronic_signature_types; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.scinote_enterprise_electronic_signature_types (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    team_id bigint,
+    created_at timestamp(6) without time zone CONSTRAINT scinote_enterprise_electronic_signature_typ_created_at_not_null NOT NULL,
+    updated_at timestamp(6) without time zone CONSTRAINT scinote_enterprise_electronic_signature_typ_updated_at_not_null NOT NULL
+);
+
+
+--
+-- Name: scinote_enterprise_electronic_signature_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.scinote_enterprise_electronic_signature_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: scinote_enterprise_electronic_signature_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.scinote_enterprise_electronic_signature_types_id_seq OWNED BY public.scinote_enterprise_electronic_signature_types.id;
+
+
+--
+-- Name: scinote_enterprise_electronic_signatures; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.scinote_enterprise_electronic_signatures (
+    id bigint NOT NULL,
+    user_id integer,
+    user_full_name character varying CONSTRAINT scinote_enterprise_electronic_signature_user_full_name_not_null NOT NULL,
+    user_role character varying NOT NULL,
+    user_email character varying NOT NULL,
+    comment text,
+    action integer,
+    type_of_signature integer,
+    reference_object_id integer,
+    reference_object_name integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    revoked boolean DEFAULT false,
+    my_module_status_id bigint,
+    signable_type character varying,
+    signable_id bigint,
+    revoked_by_id bigint
+);
+
+
+--
+-- Name: scinote_enterprise_electronic_signatures_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.scinote_enterprise_electronic_signatures_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: scinote_enterprise_electronic_signatures_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.scinote_enterprise_electronic_signatures_id_seq OWNED BY public.scinote_enterprise_electronic_signatures.id;
+
+
+--
 -- Name: sessions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3547,6 +3871,7 @@ CREATE TABLE public.teams (
     last_modified_by_id bigint,
     description character varying,
     space_taken bigint DEFAULT 1048576 NOT NULL,
+    hub_spot_deal_id bigint,
     settings jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
@@ -3982,7 +4307,11 @@ CREATE TABLE public.users (
     invitations_count integer DEFAULT 0,
     current_team_id bigint,
     authentication_token character varying(30),
+    organization_role smallint DEFAULT 0,
+    password_changed_at timestamp without time zone,
     settings jsonb DEFAULT '{}'::jsonb NOT NULL,
+    hub_spot_contact_id bigint,
+    subscription_status integer DEFAULT 0,
     variables jsonb DEFAULT '{}'::jsonb NOT NULL,
     two_factor_auth_enabled boolean DEFAULT false NOT NULL,
     otp_secret character varying,
@@ -3992,6 +4321,7 @@ CREATE TABLE public.users (
     unlock_token character varying,
     api_key character varying,
     api_key_expires_at timestamp without time zone,
+    last_seen_at timestamp without time zone,
     api_key_created_at timestamp without time zone
 );
 
@@ -4014,6 +4344,47 @@ CREATE SEQUENCE public.users_id_seq
 --
 
 ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- Name: versions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.versions (
+    id bigint NOT NULL,
+    item_type character varying,
+    "{null: false}" character varying,
+    item_id integer NOT NULL,
+    event character varying NOT NULL,
+    whodunnit character varying,
+    object text,
+    object_changes text,
+    team_id integer,
+    created_at timestamp without time zone,
+    item_subtype character varying,
+    parent_type character varying,
+    parent_id bigint
+);
+
+
+--
+-- Name: versions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.versions_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: versions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.versions_id_seq OWNED BY public.versions.id;
 
 
 --
@@ -4403,6 +4774,13 @@ ALTER TABLE ONLY public.label_templates ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
+-- Name: logs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.logs ALTER COLUMN id SET DEFAULT nextval('public.logs_id_seq'::regclass);
+
+
+--
 -- Name: my_module_groups id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4452,6 +4830,13 @@ ALTER TABLE ONLY public.my_module_statuses ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: my_module_tags_archived id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_tags_archived ALTER COLUMN id SET DEFAULT nextval('public.my_module_tags_archived_id_seq'::regclass);
+
+
+--
 -- Name: my_modules id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4484,6 +4869,13 @@ ALTER TABLE ONLY public.oauth_access_tokens ALTER COLUMN id SET DEFAULT nextval(
 --
 
 ALTER TABLE ONLY public.oauth_applications ALTER COLUMN id SET DEFAULT nextval('public.oauth_applications_id_seq'::regclass);
+
+
+--
+-- Name: parsed_protocols id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.parsed_protocols ALTER COLUMN id SET DEFAULT nextval('public.parsed_protocols_id_seq'::regclass);
 
 
 --
@@ -4760,6 +5152,48 @@ ALTER TABLE ONLY public.results ALTER COLUMN id SET DEFAULT nextval('public.resu
 
 
 --
+-- Name: scinote_common_labviva_orders_lists id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scinote_common_labviva_orders_lists ALTER COLUMN id SET DEFAULT nextval('public.scinote_common_labviva_orders_lists_id_seq'::regclass);
+
+
+--
+-- Name: scinote_common_repository_labviva_values id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scinote_common_repository_labviva_values ALTER COLUMN id SET DEFAULT nextval('public.scinote_common_repository_labviva_values_id_seq'::regclass);
+
+
+--
+-- Name: scinote_enterprise_electronic_signature_dependent_requests id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scinote_enterprise_electronic_signature_dependent_requests ALTER COLUMN id SET DEFAULT nextval('public.scinote_enterprise_electronic_signature_dependent_reques_id_seq'::regclass);
+
+
+--
+-- Name: scinote_enterprise_electronic_signature_requests id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scinote_enterprise_electronic_signature_requests ALTER COLUMN id SET DEFAULT nextval('public.scinote_enterprise_electronic_signature_requests_id_seq'::regclass);
+
+
+--
+-- Name: scinote_enterprise_electronic_signature_types id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scinote_enterprise_electronic_signature_types ALTER COLUMN id SET DEFAULT nextval('public.scinote_enterprise_electronic_signature_types_id_seq'::regclass);
+
+
+--
+-- Name: scinote_enterprise_electronic_signatures id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scinote_enterprise_electronic_signatures ALTER COLUMN id SET DEFAULT nextval('public.scinote_enterprise_electronic_signatures_id_seq'::regclass);
+
+
+--
 -- Name: sessions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4960,6 +5394,13 @@ ALTER TABLE ONLY public.user_settings ALTER COLUMN id SET DEFAULT nextval('publi
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Name: versions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.versions ALTER COLUMN id SET DEFAULT nextval('public.versions_id_seq'::regclass);
 
 
 --
@@ -5221,6 +5662,14 @@ ALTER TABLE ONLY public.label_templates
 
 
 --
+-- Name: logs logs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.logs
+    ADD CONSTRAINT logs_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: my_module_groups my_module_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5277,6 +5726,14 @@ ALTER TABLE ONLY public.my_module_statuses
 
 
 --
+-- Name: my_module_tags_archived my_module_tags_archived_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_tags_archived
+    ADD CONSTRAINT my_module_tags_archived_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: my_modules my_modules_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5314,6 +5771,14 @@ ALTER TABLE ONLY public.oauth_access_tokens
 
 ALTER TABLE ONLY public.oauth_applications
     ADD CONSTRAINT oauth_applications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: parsed_protocols parsed_protocols_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.parsed_protocols
+    ADD CONSTRAINT parsed_protocols_pkey PRIMARY KEY (id);
 
 
 --
@@ -5637,6 +6102,54 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
+-- Name: scinote_common_labviva_orders_lists scinote_common_labviva_orders_lists_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scinote_common_labviva_orders_lists
+    ADD CONSTRAINT scinote_common_labviva_orders_lists_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: scinote_common_repository_labviva_values scinote_common_repository_labviva_values_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scinote_common_repository_labviva_values
+    ADD CONSTRAINT scinote_common_repository_labviva_values_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: scinote_enterprise_electronic_signature_dependent_requests scinote_enterprise_electronic_signature_dependent_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scinote_enterprise_electronic_signature_dependent_requests
+    ADD CONSTRAINT scinote_enterprise_electronic_signature_dependent_requests_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: scinote_enterprise_electronic_signature_requests scinote_enterprise_electronic_signature_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scinote_enterprise_electronic_signature_requests
+    ADD CONSTRAINT scinote_enterprise_electronic_signature_requests_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: scinote_enterprise_electronic_signature_types scinote_enterprise_electronic_signature_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scinote_enterprise_electronic_signature_types
+    ADD CONSTRAINT scinote_enterprise_electronic_signature_types_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: scinote_enterprise_electronic_signatures scinote_enterprise_electronic_signatures_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scinote_enterprise_electronic_signatures
+    ADD CONSTRAINT scinote_enterprise_electronic_signatures_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: sessions sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5869,6 +6382,14 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: versions versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.versions
+    ADD CONSTRAINT versions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: view_states view_states_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5928,6 +6449,34 @@ CREATE INDEX delayed_jobs_priority ON public.delayed_jobs USING btree (priority,
 --
 
 CREATE INDEX delayed_jobs_queue ON public.delayed_jobs USING btree (queue);
+
+
+--
+-- Name: electronic_signature_requests_on_fulfilled_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX electronic_signature_requests_on_fulfilled_by_id ON public.scinote_enterprise_electronic_signature_requests USING btree (fulfilled_by_id);
+
+
+--
+-- Name: electronic_signature_requests_on_signable_type_and_signable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX electronic_signature_requests_on_signable_type_and_signable_id ON public.scinote_enterprise_electronic_signature_requests USING btree (signable_type, signable_id);
+
+
+--
+-- Name: electronic_signature_requests_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX electronic_signature_requests_on_user_id ON public.scinote_enterprise_electronic_signature_requests USING btree (user_id);
+
+
+--
+-- Name: electronic_signatures_signable_fkey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX electronic_signatures_signable_fkey ON public.scinote_enterprise_electronic_signatures USING btree (signable_type, signable_id);
 
 
 --
@@ -6351,6 +6900,20 @@ CREATE INDEX index_connections_on_output_id ON public.connections USING btree (o
 
 
 --
+-- Name: index_electronic_signature_requests_on_user_role_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_electronic_signature_requests_on_user_role_id ON public.scinote_enterprise_electronic_signature_requests USING btree (user_role_id);
+
+
+--
+-- Name: index_electronic_signatures_on_my_module_status_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_electronic_signatures_on_my_module_status_id ON public.scinote_enterprise_electronic_signatures USING btree (my_module_status_id);
+
+
+--
 -- Name: index_experiments_on_archived; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6673,6 +7236,13 @@ CREATE INDEX index_label_templates_on_team_id ON public.label_templates USING bt
 
 
 --
+-- Name: index_logs_on_created_at_and_action_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_logs_on_created_at_and_action_type ON public.logs USING btree (created_at, action_type);
+
+
+--
 -- Name: index_my_module_groups_on_created_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6747,6 +7317,27 @@ CREATE INDEX index_my_module_statuses_on_my_module_status_flow_id ON public.my_m
 --
 
 CREATE UNIQUE INDEX index_my_module_statuses_on_previous_status_id ON public.my_module_statuses USING btree (previous_status_id);
+
+
+--
+-- Name: index_my_module_tags_archived_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_module_tags_archived_on_created_by_id ON public.my_module_tags_archived USING btree (created_by_id);
+
+
+--
+-- Name: index_my_module_tags_archived_on_my_module_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_module_tags_archived_on_my_module_id ON public.my_module_tags_archived USING btree (my_module_id);
+
+
+--
+-- Name: index_my_module_tags_archived_on_tag_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_my_module_tags_archived_on_tag_id ON public.my_module_tags_archived USING btree (tag_id);
 
 
 --
@@ -6929,6 +7520,27 @@ CREATE INDEX index_on_repository_stock_unit_item_id ON public.my_module_reposito
 --
 
 CREATE INDEX index_on_repository_table_filter_id ON public.repository_table_filter_elements USING btree (repository_table_filter_id);
+
+
+--
+-- Name: index_parsed_protocols_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_parsed_protocols_on_created_by_id ON public.parsed_protocols USING btree (created_by_id);
+
+
+--
+-- Name: index_parsed_protocols_on_protocol_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_parsed_protocols_on_protocol_id ON public.parsed_protocols USING btree (protocol_id);
+
+
+--
+-- Name: index_parsed_protocols_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_parsed_protocols_on_team_id ON public.parsed_protocols USING btree (team_id);
 
 
 --
@@ -8108,6 +8720,27 @@ CREATE INDEX index_results_on_user_id ON public.results USING btree (user_id);
 
 
 --
+-- Name: index_scinote_enterprise_electronic_signature_types_on_team_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_scinote_enterprise_electronic_signature_types_on_team_id ON public.scinote_enterprise_electronic_signature_types USING btree (team_id);
+
+
+--
+-- Name: index_scinote_enterprise_electronic_signatures_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_scinote_enterprise_electronic_signatures_on_created_at ON public.scinote_enterprise_electronic_signatures USING btree (created_at);
+
+
+--
+-- Name: index_scinote_enterprise_electronic_signatures_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_scinote_enterprise_electronic_signatures_on_user_id ON public.scinote_enterprise_electronic_signatures USING btree (user_id);
+
+
+--
 -- Name: index_sessions_on_session_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -8899,6 +9532,13 @@ CREATE INDEX index_users_on_invited_by_id ON public.users USING btree (invited_b
 
 
 --
+-- Name: index_users_on_password_changed_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_password_changed_at ON public.users USING btree (password_changed_at);
+
+
+--
 -- Name: index_users_on_reset_password_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -8910,6 +9550,55 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING bt
 --
 
 CREATE UNIQUE INDEX index_users_on_unlock_token ON public.users USING btree (unlock_token);
+
+
+--
+-- Name: index_versions_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_versions_on_created_at ON public.versions USING btree (created_at);
+
+
+--
+-- Name: index_versions_on_event; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_versions_on_event ON public.versions USING btree (event);
+
+
+--
+-- Name: index_versions_on_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_versions_on_item_id ON public.versions USING btree (item_id);
+
+
+--
+-- Name: index_versions_on_item_subtype; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_versions_on_item_subtype ON public.versions USING btree (item_subtype);
+
+
+--
+-- Name: index_versions_on_item_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_versions_on_item_type ON public.versions USING btree (item_type);
+
+
+--
+-- Name: index_versions_on_parent; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_versions_on_parent ON public.versions USING btree (parent_type, parent_id);
+
+
+--
+-- Name: index_versions_on_team_id_and_created_at_and_item_subtype; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_versions_on_team_id_and_created_at_and_item_subtype ON public.versions USING btree (team_id, created_at, item_subtype);
 
 
 --
@@ -8955,6 +9644,20 @@ CREATE INDEX index_zip_exports_on_user_id ON public.zip_exports USING btree (use
 
 
 --
+-- Name: signature_dependent_requests_on_request_dependency_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX signature_dependent_requests_on_request_dependency_id ON public.scinote_enterprise_electronic_signature_dependent_requests USING btree (electronic_signature_request_dependency_id);
+
+
+--
+-- Name: signature_dependent_requests_on_signature_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX signature_dependent_requests_on_signature_request_id ON public.scinote_enterprise_electronic_signature_dependent_requests USING btree (electronic_signature_request_id);
+
+
+--
 -- Name: unique_index_repositories_on_external_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -8988,6 +9691,14 @@ CREATE UNIQUE INDEX unique_index_repository_rows_on_external_id ON public.reposi
 
 ALTER TABLE ONLY public.comments
     ADD CONSTRAINT fk_rails_03de2dc08c FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: parsed_protocols fk_rails_047352277e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.parsed_protocols
+    ADD CONSTRAINT fk_rails_047352277e FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --
@@ -9148,6 +9859,14 @@ ALTER TABLE ONLY public.step_texts
 
 ALTER TABLE ONLY public.storage_location_repository_rows
     ADD CONSTRAINT fk_rails_16003dde06 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: scinote_common_repository_labviva_values fk_rails_1775361efd; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scinote_common_repository_labviva_values
+    ADD CONSTRAINT fk_rails_1775361efd FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --
@@ -9863,6 +10582,30 @@ ALTER TABLE ONLY public.repository_rows
 
 
 --
+-- Name: scinote_common_repository_labviva_values fk_rails_71b305ad02; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scinote_common_repository_labviva_values
+    ADD CONSTRAINT fk_rails_71b305ad02 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: scinote_enterprise_electronic_signatures fk_rails_730129f233; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scinote_enterprise_electronic_signatures
+    ADD CONSTRAINT fk_rails_730129f233 FOREIGN KEY (revoked_by_id) REFERENCES public.scinote_enterprise_electronic_signatures(id);
+
+
+--
+-- Name: scinote_enterprise_electronic_signature_requests fk_rails_7314b4aa7a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scinote_enterprise_electronic_signature_requests
+    ADD CONSTRAINT fk_rails_7314b4aa7a FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: oauth_access_tokens fk_rails_732cb83ab7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9887,11 +10630,27 @@ ALTER TABLE ONLY public.protocols
 
 
 --
+-- Name: parsed_protocols fk_rails_73eb6f94da; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.parsed_protocols
+    ADD CONSTRAINT fk_rails_73eb6f94da FOREIGN KEY (protocol_id) REFERENCES public.protocols(id) ON DELETE SET NULL;
+
+
+--
 -- Name: repository_status_items fk_rails_74e5e4cacc; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.repository_status_items
     ADD CONSTRAINT fk_rails_74e5e4cacc FOREIGN KEY (repository_column_id) REFERENCES public.repository_columns(id);
+
+
+--
+-- Name: scinote_enterprise_electronic_signature_requests fk_rails_768c59e28c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scinote_enterprise_electronic_signature_requests
+    ADD CONSTRAINT fk_rails_768c59e28c FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -10167,6 +10926,14 @@ ALTER TABLE ONLY public.user_roles
 
 
 --
+-- Name: scinote_enterprise_electronic_signature_dependent_requests fk_rails_989e81bd5d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scinote_enterprise_electronic_signature_dependent_requests
+    ADD CONSTRAINT fk_rails_989e81bd5d FOREIGN KEY (electronic_signature_request_id) REFERENCES public.scinote_enterprise_electronic_signature_requests(id);
+
+
+--
 -- Name: repository_checklist_values fk_rails_98a7704432; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10236,6 +11003,14 @@ ALTER TABLE ONLY public.projects
 
 ALTER TABLE ONLY public.results
     ADD CONSTRAINT fk_rails_9be849c454 FOREIGN KEY (archived_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: scinote_enterprise_electronic_signature_requests fk_rails_9c241c9fa2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scinote_enterprise_electronic_signature_requests
+    ADD CONSTRAINT fk_rails_9c241c9fa2 FOREIGN KEY (fulfilled_by_id) REFERENCES public.scinote_enterprise_electronic_signatures(id);
 
 
 --
@@ -10559,6 +11334,14 @@ ALTER TABLE ONLY public.repository_list_values
 
 
 --
+-- Name: parsed_protocols fk_rails_c6bdcdbba5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.parsed_protocols
+    ADD CONSTRAINT fk_rails_c6bdcdbba5 FOREIGN KEY (team_id) REFERENCES public.teams(id);
+
+
+--
 -- Name: reports fk_rails_c7699d537d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10599,6 +11382,14 @@ ALTER TABLE ONLY public.checklists
 
 
 --
+-- Name: scinote_enterprise_electronic_signature_dependent_requests fk_rails_c8bae98cfd; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.scinote_enterprise_electronic_signature_dependent_requests
+    ADD CONSTRAINT fk_rails_c8bae98cfd FOREIGN KEY (electronic_signature_request_dependency_id) REFERENCES public.scinote_enterprise_electronic_signature_requests(id);
+
+
+--
 -- Name: user_roles fk_rails_c958cec38d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10628,6 +11419,14 @@ ALTER TABLE ONLY public.protocol_repository_rows
 
 ALTER TABLE ONLY public.form_fields
     ADD CONSTRAINT fk_rails_c9f3ed2f58 FOREIGN KEY (last_modified_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: my_module_tags_archived fk_rails_cb98be233f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.my_module_tags_archived
+    ADD CONSTRAINT fk_rails_cb98be233f FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --
@@ -11034,11 +11833,14 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261117100000'),
 ('20261109100100'),
 ('20261109100000'),
-('20261016090734'),
 ('20261007123511'),
+('20260911123111'),
+('20260910143111'),
 ('20260907114439'),
 ('20260828093032'),
+('20260810131210'),
 ('20260729082431'),
+('20260720121256'),
 ('20260716090000'),
 ('20260715121739'),
 ('20260714101739'),
@@ -11046,7 +11848,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260707140106'),
 ('20260616085134'),
 ('20260615135346'),
+('20260605100000'),
 ('20260528135903'),
+('20260528000000'),
 ('20260526000000'),
 ('20260515130015'),
 ('20260514114311'),
@@ -11055,8 +11859,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260319112642'),
 ('20260312130217'),
 ('20260302132406'),
+('20260223000000'),
+('20260212132723'),
 ('20260212112723'),
 ('20260211112723'),
+('20260205090233'),
 ('20260129122723'),
 ('20260119142940'),
 ('20260113114232'),
@@ -11064,20 +11871,29 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20251217180316'),
 ('20251208124138'),
 ('20251127085544'),
+('20251121152755'),
 ('20251030135441'),
 ('20250929104755'),
+('20250918144424'),
 ('20250915171235'),
 ('20250905142711'),
 ('20250904142232'),
 ('20250827145326'),
+('20250822083616'),
 ('20250820122515'),
+('20250819123305'),
 ('20250819102545'),
+('20250819094515'),
 ('20250818111931'),
+('20250801104012'),
 ('20250718132304'),
 ('20250717131344'),
+('20250717122415'),
 ('20250709082818'),
 ('20250707080048'),
+('20250707080047'),
 ('20250707080046'),
+('20250707080045'),
 ('20250609095009'),
 ('20250606082935'),
 ('20250605061957'),
@@ -11116,9 +11932,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240725135302'),
 ('20240718073215'),
 ('20240705122903'),
+('20240701091147'),
 ('20240626113515'),
 ('20240603101357'),
 ('20240503131630'),
+('20240320132101'),
 ('20240118094253'),
 ('20240115140943'),
 ('20240115114821'),
@@ -11137,10 +11955,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230922085412'),
 ('20230904080206'),
 ('20230818072619'),
+('20230817134609'),
 ('20230817074851'),
 ('20230811115859'),
 ('20230728104825'),
 ('20230727071343'),
+('20230727061343'),
 ('20230725120831'),
 ('20230724094959'),
 ('20230710204648'),
@@ -11162,6 +11982,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221028085051'),
 ('20221007113010'),
 ('20220914124900'),
+('20220829173117'),
 ('20220818094636'),
 ('20220803122405'),
 ('20220726133419'),
@@ -11180,19 +12001,23 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220321122111'),
 ('20220310105144'),
 ('20220307120010'),
+('20220302102699'),
 ('20220224153705'),
 ('20220217104635'),
 ('20220203122802'),
 ('20220110151006'),
 ('20220110151005'),
+('20211129123144'),
 ('20211123103711'),
 ('20211103115450'),
 ('20210906132120'),
 ('20210812095254'),
 ('20210811103123'),
+('20210809124916'),
 ('20210720112050'),
 ('20210716124649'),
 ('20210715125349'),
+('20210712122629'),
 ('20210622101238'),
 ('20210616071836'),
 ('20210603152345'),
@@ -11204,6 +12029,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210312185911'),
 ('20210222123823'),
 ('20210222123822'),
+('20210218120521'),
 ('20210217114042'),
 ('20210202214508'),
 ('20210128105458'),
@@ -11211,11 +12037,26 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201215161050'),
 ('20201209165626'),
 ('20201126203713'),
+('20201110132341'),
+('20201106140015'),
+('20201105150530'),
+('20201105114304'),
+('20201104104832'),
 ('20201028103608'),
 ('20201027133634'),
+('20201020133000'),
+('20201019113523'),
+('20201013134208'),
+('20201012095633'),
+('20201007200832'),
+('20200922143111'),
 ('20200909121441'),
+('20200904129429'),
 ('20200902093234'),
+('20200827145256'),
 ('20200826143431'),
+('20200817142528'),
+('20200813144054'),
 ('20200714082503'),
 ('20200713142353'),
 ('20200709142830'),
@@ -11223,11 +12064,16 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200622140843'),
 ('20200604210943'),
 ('20200603125407'),
+('20200601143528'),
 ('20200331183640'),
 ('20200326114643'),
 ('20200204100934'),
+('20200129123554'),
+('20200119181940'),
+('20200119043134'),
 ('20200113143828'),
 ('20191218072619'),
+('20191210163154'),
 ('20191210103004'),
 ('20191206105058'),
 ('20191205133522'),
@@ -11243,11 +12089,15 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190830141257'),
 ('20190812072649'),
 ('20190812065432'),
+('20190801113839'),
 ('20190726102200'),
+('20190725402200'),
+('20190722135200'),
 ('20190715150326'),
 ('20190711125513'),
 ('20190613134100'),
 ('20190613094834'),
+('20190604130510'),
 ('20190520135317'),
 ('20190424113216'),
 ('20190410110605'),
@@ -11258,6 +12108,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190213064847'),
 ('20190125123107'),
 ('20190125122852'),
+('20190121150837'),
+('20190121134946'),
+('20190121131550'),
 ('20190117155006'),
 ('20190116101127'),
 ('20181212162649'),
@@ -11267,10 +12120,13 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180813120338'),
 ('20180806115201'),
 ('20180524091143'),
+('20180504141451'),
 ('20180416114040'),
 ('20180308094354'),
 ('20180207095200'),
+('20180124160123'),
 ('20180109102914'),
+('20171128151557'),
 ('20171005135350'),
 ('20171003082333'),
 ('20170809131000'),
@@ -11282,12 +12138,18 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170418153541'),
 ('20170407104322'),
 ('20170407082423'),
+('20170330095838'),
 ('20170330092353'),
 ('20170322095856'),
 ('20170321131116'),
 ('20170306121855'),
+('20170301083231'),
 ('20170217141402'),
+('20170214094527'),
+('20170210151810'),
+('20170207121121'),
 ('20170207100731'),
+('20170127130948'),
 ('20170116143350'),
 ('20170105162500'),
 ('20161208145354'),

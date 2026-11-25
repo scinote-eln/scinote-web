@@ -1,0 +1,1 @@
+import '../../../../addons/common/app/javascript/packs/tiny_mce_pro.js';

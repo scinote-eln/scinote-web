@@ -139,6 +139,18 @@
 @import "office";
 
 // Addons
+// Addon: common - Start
+@import "Common/app/assets/stylesheets/scinote/common/application.scss";
+// Addon: common - End
+// Addon: organization_management - Start
+@import "organization_management/app/assets/stylesheets/scinote/enterprise/organization_management/application.scss";
+// Addon: organization_management - End
+// Addon: electronic_signatures - Start
+@import "electronic_signatures/app/assets/stylesheets/scinote/enterprise/electronic_signatures/application.scss";
+// Addon: electronic_signatures - End
+// Addon: audit_trails - Start
+@import "audit_trails/app/assets/stylesheets/scinote/enterprise/audit_trails/application.scss";
+// Addon: audit_trails - End
 
 body {
   font-family: "SN Inter", "Open Sans", Arial, Helvetica, sans-serif;

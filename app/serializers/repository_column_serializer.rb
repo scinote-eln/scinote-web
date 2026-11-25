@@ -6,6 +6,12 @@ class RepositoryColumnSerializer < ActiveModel::Serializer
 
   attributes :message, :name, :data_type, :metadata, :column_items, :mandatory
 
+  def mandatory
+    return false if object.repository.is_a?(RepositorySnapshot) && !RepositoryBase.inventory_integrity_enabled?
+
+    object.mandatory
+  end
+
   def column_items
     if object.data_type == 'RepositoryListValue'
       object.repository_list_items.map do |item|

@@ -139,3 +139,16 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i(mingw mswin x64_mingw jruby)
+
+# Addon: common - Start
+gem 'scinote_common', path: 'addons/Common'
+# Addon: common - End
+# Addon: organization_management - Start
+gem 'scinote_enterprise_organization_management', path: 'addons/organization_management'
+# Addon: organization_management - End
+# Addon: electronic_signatures - Start
+gem 'scinote_enterprise_electronic_signatures', path: 'addons/electronic_signatures'
+# Addon: electronic_signatures - End
+# Addon: audit_trails - Start
+gem 'scinote_enterprise_audit_trails', path: 'addons/audit_trails'
+# Addon: audit_trails - End

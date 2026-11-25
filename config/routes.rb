@@ -12,6 +12,18 @@ Rails.application.routes.draw do
   post 'access_tokens/revoke', to: 'doorkeeper/access_tokens#revoke'
 
   # Addons
+# Addon: common - Start
+mount Scinote::Common::Engine => '/'
+# Addon: common - End
+# Addon: organization_management - Start
+mount Scinote::Enterprise::OrganizationManagement::Engine => '/'
+# Addon: organization_management - End
+# Addon: electronic_signatures - Start
+mount Scinote::Enterprise::ElectronicSignatures::Engine => '/'
+# Addon: electronic_signatures - End
+# Addon: audit_trails - Start
+mount Scinote::Enterprise::AuditTrails::Engine => '/'
+# Addon: audit_trails - End
 
   constraints UserSubdomain do
     devise_for :users, controllers: { registrations: 'users/registrations',
