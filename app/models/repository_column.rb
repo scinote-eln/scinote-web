@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class RepositoryColumn < ApplicationRecord
+  UNIQUENESS_METADATA_KEYS = %w(enforce_unique unique_case_sensitive).freeze
+
   belongs_to :repository, class_name: 'RepositoryBase'
   belongs_to :repository_snapshot, foreign_key: :repository_id, optional: true
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
@@ -41,6 +43,8 @@ class RepositoryColumn < ApplicationRecord
   after_update :clear_hidden_repository_cell_reminders
 
   before_destroy :nulify_stock_consumption
+  after_commit :schedule_duplicates_scan, on: :update, if: :uniqueness_settings_changed?
+  after_commit :rescan_duplicates, on: :destroy, if: -> { enforce_unique? && repository&.duplicated_items_count.to_i.positive? }
 
   scope :list_type, -> { where(data_type: 'RepositoryListValue') }
   scope :asset_type, -> { where(data_type: 'RepositoryAssetValue') }
@@ -117,6 +121,18 @@ class RepositoryColumn < ApplicationRecord
   end
 
   private
+
+  def uniqueness_settings_changed?
+    return false unless repository_text_value? && saved_change_to_metadata?
+
+    before, after = saved_change_to_metadata.map { |metadata| metadata.to_h.stringify_keys.slice(*UNIQUENESS_METADATA_KEYS) }
+    before != after
+  end
+
+  def schedule_duplicates_scan
+    RepositoryDuplicatesScanJob.schedule(repository_id)
+  end
+  alias rescan_duplicates schedule_duplicates_scan
 
   def mandatory_not_allowed_for_stock
     errors.add(:mandatory, :not_allowed_for_stock) if repository_stock_value?

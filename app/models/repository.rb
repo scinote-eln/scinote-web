@@ -32,6 +32,7 @@ class Repository < RepositoryBase
   before_destroy :refresh_report_references_on_destroy, prepend: true
   after_save :unassign_unshared_items, if: :saved_change_to_permission_level
   after_save :unlink_unshared_items, if: -> { saved_change_to_permission_level? && !globally_shared? }
+  after_commit :schedule_duplicates_scan, on: :update, if: :unique_item_names_settings_changed?
 
   validates :name,
             presence: true,
@@ -202,6 +203,14 @@ class Repository < RepositoryBase
   end
 
   private
+
+  def unique_item_names_settings_changed?
+    saved_change_to_enforce_unique_item_names? || saved_change_to_unique_item_names_case_sensitive?
+  end
+
+  def schedule_duplicates_scan
+    RepositoryDuplicatesScanJob.schedule(id)
+  end
 
   def sync_name_with_snapshots
     repository_snapshots.update(name: name)

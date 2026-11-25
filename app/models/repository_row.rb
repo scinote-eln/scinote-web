@@ -115,6 +115,9 @@ class RepositoryRow < ApplicationRecord
             presence: true,
             length: { maximum: Constants::NAME_MAX_LENGTH }
   validate :name_unique_in_repository, if: -> { new_record? || will_save_change_to_name? }
+  before_update :remember_duplicates, if: -> { duplicated? && (will_save_change_to_name? || will_save_change_to_archived?) }
+  before_destroy :remember_duplicates, prepend: true, if: :duplicated?
+  after_commit :refresh_duplicate_flags, on: %i(update destroy), if: :duplicated?
   validates :created_by, presence: true
 
   attr_accessor :import_status, :import_message, :import_cell_errors, :import_changed_columns,
@@ -275,7 +278,45 @@ class RepositoryRow < ApplicationRecord
     my_module_id.present?
   end
 
+  def refresh_duplicate_flag!(former_duplicate_ids = [])
+    return unless duplicates_tracked?
+
+    service = RepositoryRows::DuplicatesScanService.new(repository)
+    if destroyed? || row_archived?
+      update_column(:duplicated, false) unless destroyed?
+    elsif service.duplicates_of(self).empty?
+      update_column(:duplicated, false)
+    end
+
+    RepositoryRow.where(id: former_duplicate_ids, duplicated: true).find_each do |row|
+      row.update_column(:duplicated, false) if service.duplicates_of(row).empty?
+    end
+    repository.update_column(:duplicated_items_count, repository.repository_rows.where(duplicated: true).count)
+  end
+
+  def current_duplicate_ids
+    return [] unless duplicated? && duplicates_tracked?
+
+    stored_row = RepositoryRow.find_by(id: id)
+    stored_row ? RepositoryRows::DuplicatesScanService.new(repository).duplicates_of(stored_row) : []
+  end
+
   private
+
+  def duplicates_tracked?
+    RepositoryBase.inventory_integrity_enabled? && repository.is_a?(Repository)
+  end
+
+  def remember_duplicates
+    @former_duplicate_ids = current_duplicate_ids
+  end
+
+  def refresh_duplicate_flags
+    return if repository_id.blank?
+    return unless destroyed? || saved_change_to_name? || saved_change_to_archived?
+
+    refresh_duplicate_flag!(@former_duplicate_ids.to_a)
+  end
 
   def name_unique_in_repository
     return unless RepositoryBase.inventory_integrity_enabled?

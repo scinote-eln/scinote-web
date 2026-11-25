@@ -93,6 +93,7 @@ module Lists
         @records = @records.active if view_mode == 'active'
       end
       @records = @records.where(external_id: @params[:external_ids]) if @params[:external_ids]
+      filter_duplicates if @params[:show_duplicates].to_s == 'true'
 
       # filter only rows with reminders if filter param is present
       @records = @records.with_active_reminders(@repository, @user) if @params[:only_reminders]
@@ -126,6 +127,12 @@ module Lists
           end
         end
       end
+    end
+
+    def filter_duplicates
+      return unless @repository.is_a?(Repository) && RepositoryBase.inventory_integrity_enabled?
+
+      @records = @records.where(duplicated: true)
     end
 
     def add_predefined_column_filter_condition(filter_element_params)

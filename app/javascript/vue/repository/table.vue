@@ -10,11 +10,7 @@
       :toolbarActions="toolbarActions"
       :actionsUrl="toolbarActionsUrl"
       loadMethod="post"
-      :postParams="{
-        advanced_search: {
-          filter_elements: activeFilter
-        }
-      }"
+      :postParams="tablePostParams"
       :enableBarcodeSearch="true"
       :fetchColumnsOnReload="true"
       :activePageUrl="activePageUrl"
@@ -53,6 +49,13 @@
     <div v-else class="flex items-center justify-center w-full h-96 text-sn-grey-500">
       {{ i18n.t('repositories.show.laoding_table_configuration') }}
     </div>
+    <teleport v-if="showDuplicatesBanner" to="#repositoryDuplicatesBanner">
+      <DuplicatesBanner
+        :count="duplicatedItemsCount"
+        :modelValue="showDuplicates"
+        :repositoryId="repositoryId"
+        @update:modelValue="toggleShowDuplicates" />
+    </teleport>
     <teleport to="body">
       <ImportRepositoryModal
         ref="importModal"
@@ -113,6 +116,7 @@ import ExportConsumptionModal from './modals/export_stock_consumption_modal.vue'
 import PrintModal from './modals/print_modal.vue';
 import CreateEventModal from '../equipment_bookings/manage_modal.vue';
 import RepositoryFilters from './filters.vue'
+import DuplicatesBanner from './duplicates_banner.vue';
 import ManageColumnsModal from './modals/manage_columns.vue';
 import { FULL_TABLE_STATE_PERMISSIONS } from '../shared/datatable/table_state.js';
 
@@ -142,6 +146,7 @@ export default {
     canManageRepository: { type: Boolean, default: false },
     canManageFilters: { type: Boolean, default: false },
     canEnforceTableState: { type: Boolean, default: false },
+    duplicatedItemsCount: { type: Number, default: 0 },
     archived: { type: Boolean }
   },
   components: {
@@ -154,7 +159,8 @@ export default {
     ExportItemsModal,
     ExportConsumptionModal,
     PrintModal,
-    CreateEventModal
+    CreateEventModal,
+    DuplicatesBanner
   },
   mixins: [ColumnsMixin],
   data: () => ({
@@ -171,16 +177,34 @@ export default {
     printLabelRows: null,
     createEventModalRow: null,
     currentPageRows: [],
-    activeFilter: []
+    activeFilter: [],
+    filtersResetKey: 0,
+    showDuplicates: false
   }),
   created() {
     window.repositoryTable = this;
+    this.showDuplicates = this.showDuplicatesBanner && this.readShowDuplicates();
+    if (this.duplicatedItemsCount === 0) this.storeShowDuplicates(false);
     this.loadRepository();
   },
   beforeUnmount() {
     delete window.repositoryTable;
   },
   computed: {
+    showDuplicatesBanner() {
+      return this.duplicatedItemsCount > 0 && !this.archived && this.currentViewMode !== 'archived';
+    },
+    showDuplicatesStorageKey() {
+      return `inventory_show_duplicates_${this.repositoryId}`;
+    },
+    tablePostParams() {
+      return {
+        advanced_search: {
+          filter_elements: this.activeFilter
+        },
+        show_duplicates: this.showDuplicatesBanner && this.showDuplicates
+      };
+    },
     enforceTableState() {
       return !!this.repositoryVersion?.attributes?.enforce_table_state;
     },
@@ -253,7 +277,8 @@ export default {
         params: {
           componentRenderer: RepositoryFilters,
           repositoryId: this.repositoryId,
-          canManageFilters: this.canManageFilters
+          canManageFilters: this.canManageFilters,
+          resetKey: this.filtersResetKey
         }
       });
 
@@ -512,6 +537,35 @@ export default {
       this.mandatoryColumns = {};
       this.repositoryColumnsDef = []
       this.loadRepositoryColumns();
+    },
+    toggleShowDuplicates(value) {
+      if (value) {
+        this.activeFilter = [];
+        this.filtersResetKey += 1;
+        if (this.$refs.repositoryTable) this.$refs.repositoryTable.searchValue = '';
+      }
+      this.showDuplicates = value;
+      this.storeShowDuplicates(value);
+      this.reloadingTable = true;
+    },
+    readShowDuplicates() {
+      try {
+        return window.localStorage.getItem(this.showDuplicatesStorageKey) === 'true';
+      } catch {
+        return false;
+      }
+    },
+    storeShowDuplicates(value) {
+      try {
+        if (value) {
+          window.localStorage.setItem(this.showDuplicatesStorageKey, 'true');
+        } else {
+          window.localStorage.removeItem(this.showDuplicatesStorageKey);
+        }
+        return true;
+      } catch {
+        return false;
+      }
     },
     applyFilters(filters) {
       this.activeFilter = filters.data

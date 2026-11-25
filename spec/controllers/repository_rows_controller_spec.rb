@@ -79,6 +79,28 @@ describe RepositoryRowsController, type: :controller do
       expect(ids).not_to include(active_repository_row.id)
     end
 
+    context 'when showing duplicates' do
+      let!(:duplicate_row) do
+        create :repository_row, repository: repository, created_by: user, last_modified_by: user, duplicated: true
+      end
+
+      it 'returns only items flagged as duplicated' do
+        get :index_ag, params: { repository_id: repository.id, per_page: 20, page: 1, show_duplicates: true },
+                       format: :json
+        ids = response.parsed_body['data'].map { |row| row['id'].to_i }
+
+        expect(ids).to eq([duplicate_row.id])
+      end
+
+      it 'returns all items when the filter is off' do
+        get :index_ag, params: { repository_id: repository.id, per_page: 20, page: 1, show_duplicates: false },
+                       format: :json
+        ids = response.parsed_body['data'].map { |row| row['id'].to_i }
+
+        expect(ids).to include(duplicate_row.id, active_repository_row.id)
+      end
+    end
+
     context 'when reminders are enabled' do
       # Repository.reminders_enabled? delegates to stock management
       before { allow(RepositoryBase).to receive(:stock_management_enabled?).and_return(true) }

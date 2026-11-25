@@ -50,7 +50,8 @@ module RepositoryActions
         created_at: timestamp,
         updated_at: timestamp,
         parent_connections_count: 0,
-        child_connections_count: 0 }
+        child_connections_count: 0,
+        duplicated: false }
     end
   end
 end
