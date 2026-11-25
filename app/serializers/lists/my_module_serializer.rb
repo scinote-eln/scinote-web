@@ -144,7 +144,7 @@ module Lists
     end
 
     def results
-      (archived ? object.results : object.results.active).length
+      object.results.active.length
     end
 
     def status

@@ -279,6 +279,21 @@ describe User, type: :model do
     end
   end
 
+  describe '#avatar_color' do
+    it 'picks a palette color based on user id' do
+      user = build :user, id: 17
+      expect(user.avatar_color).to eq Constants::USER_AVATAR_COLORS[17 % Constants::USER_AVATAR_COLORS.size]
+    end
+
+    it 'returns the same color for the same user' do
+      expect(build(:user, id: 5).avatar_color).to eq build(:user, id: 5).avatar_color
+    end
+
+    it 'gives consecutive users different colors' do
+      expect(build(:user, id: 1).avatar_color).not_to eq build(:user, id: 2).avatar_color
+    end
+  end
+
   describe 'Email downcase' do
     it 'downcases email before validating and saving user' do
       user = User.new(email: 'Test@Email.com')

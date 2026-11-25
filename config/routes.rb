@@ -698,7 +698,7 @@ Rails.application.routes.draw do
           post :unlock
         end
       end
-      resources :texts, controller: 'step_elements/texts', only: %i(create destroy update) do
+      resources :texts, controller: 'step_elements/texts', only: %i(show create destroy update) do
         member do
           get :move_targets
           post :move
@@ -888,7 +888,7 @@ Rails.application.routes.draw do
           post :unlock
         end
       end
-      resources :texts, controller: 'result_elements/texts', only: %i(create destroy update) do
+      resources :texts, controller: 'result_elements/texts', only: %i(show create destroy update) do
         member do
           get :move_targets
           post :move
@@ -1306,6 +1306,12 @@ Rails.application.routes.draw do
 
   resources :calendar_events, only: %i(index show create update destroy) do
     resources :calendar_event_participants, only: %i(index create destroy)
+  end
+
+  resources :editing_flags, controller: 'editing_flag', only: %i(index create destroy) do
+    member do
+      patch :refresh
+    end
   end
 
   # Shareable links

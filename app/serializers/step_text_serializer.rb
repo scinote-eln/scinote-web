@@ -7,7 +7,8 @@ class StepTextSerializer < ActiveModel::Serializer
   include ActionView::Helpers::TextHelper
 
   attributes :id, :text, :urls, :text_view, :updated_at, :icon, :name, :placeholder, :parent_type, :archived, :archived_by, :archived_on, :locked,
-             :position, :step_orderable_element_id, :type
+             :position, :step_orderable_element_id, :type, :text_digest,
+             :last_modified_by, :last_modified_on
 
   def updated_at
     object.updated_at.to_i
@@ -19,6 +20,14 @@ class StepTextSerializer < ActiveModel::Serializer
 
   def archived_by
     object.archived_by&.full_name
+  end
+
+  def last_modified_by
+    object.last_modified_by&.full_name
+  end
+
+  def last_modified_on
+    I18n.l(object.updated_at, format: :full) if object.updated_at.present?
   end
 
   def archived_on
@@ -70,11 +79,11 @@ class StepTextSerializer < ActiveModel::Serializer
 
     if can_manage_step_text?(user, object)
       url_list.merge!({
-                        duplicate_url: duplicate_step_text_path(step, object),
-                        update_url: step_text_path(step, object),
-                        move_url: move_step_text_path(step, object),
-                        move_targets_url: move_targets_step_text_path(step, object)
-                      })
+        duplicate_url: duplicate_step_text_path(step, object),
+        update_url: step_text_path(step, object),
+        move_url: move_step_text_path(step, object),
+        move_targets_url: move_targets_step_text_path(step, object)
+      })
     end
 
     url_list[:archive_url] = archive_step_text_path(step, object) if can_archive_step_text?(user, object)
@@ -82,6 +91,7 @@ class StepTextSerializer < ActiveModel::Serializer
     url_list[:delete_url] = step_text_path(step, object) if can_delete_step_text?(user, object)
     url_list[:lock_url] = lock_step_text_path(step, object) if can_lock_step_text?(user, object)
     url_list[:unlock_url] = unlock_step_text_path(step, object) if can_unlock_step_text?(user, object)
+    url_list[:show_url] = step_text_path(step, object) if can_read_protocol_in_module?(user, step.protocol) || can_read_protocol_in_repository?(user, step.protocol)
 
     url_list
   end

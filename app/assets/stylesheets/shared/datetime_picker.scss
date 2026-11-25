@@ -208,6 +208,30 @@
     }
   }
 
+  &.table-cell-input {
+    .dp--input {
+      border-left-width: 0;
+      padding-inline-start: 0;
+
+      &::placeholder {
+        color: var(--sn-grey);
+        opacity: 1;
+      }
+
+      &.dp--input-icon-pad {
+        padding-inline-start: 1.75rem;
+      }
+    }
+
+    .dp--input-icon {
+      left: 0;
+
+      i {
+        margin-left: 0;
+      }
+    }
+  }
+
   &.error {
     .dp--input {
       border-color: var(--sn-delete-red);
