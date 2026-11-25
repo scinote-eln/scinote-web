@@ -35,6 +35,7 @@ class RepositoryColumn < ApplicationRecord
             length: { maximum: Constants::NAME_MAX_LENGTH },
             uniqueness: { scope: :repository_id, case_sensitive: true }
   validates :name, :data_type, :repository, :created_by, presence: true
+  validate :mandatory_not_allowed_for_stock, if: -> { mandatory? && will_save_change_to_mandatory? }
 
 
   after_update :clear_hidden_repository_cell_reminders
@@ -116,6 +117,10 @@ class RepositoryColumn < ApplicationRecord
   end
 
   private
+
+  def mandatory_not_allowed_for_stock
+    errors.add(:mandatory, :not_allowed_for_stock) if repository_stock_value?
+  end
 
   def repository_list_value_deep_dup(new_column)
     repository_list_items.each do |item|

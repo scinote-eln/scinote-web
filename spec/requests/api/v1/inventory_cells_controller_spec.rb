@@ -1210,4 +1210,129 @@ RSpec.describe 'Api::V1::InventoryCellsController', type: :request do
       expect(response).to have_http_status(404)
     end
   end
+
+  describe 'DELETE inventory_cells, #destroy, mandatory column' do
+    let!(:item) { create(:repository_row, repository: @valid_inventory, created_by: @user) }
+    let!(:mandatory_column) do
+      create(:repository_column, repository: @valid_inventory, created_by: @user,
+                                 data_type: :RepositoryTextValue, mandatory: true)
+    end
+    let!(:mandatory_cell) do
+      create(:repository_text_value, data: 'required', created_by: @user,
+                                     repository_cell_attributes: { repository_row: item,
+                                                                   repository_column: mandatory_column })
+        .repository_cell
+    end
+
+    def delete_mandatory_cell
+      delete api_v1_team_inventory_item_cell_path(
+        team_id: @team.id, inventory_id: @valid_inventory.id, item_id: item.id, id: mandatory_cell.id
+      ), headers: @valid_headers
+    end
+
+    it 'rejects deleting a cell of a mandatory column and keeps the cell' do
+      delete_mandatory_cell
+
+      expect(response).to have_http_status(400)
+      expect(json['errors'][0]).to include(
+        'title' => I18n.t('api.core.errors.inventory_column_mandatory.title'),
+        'detail' => I18n.t('api.core.errors.inventory_column_mandatory.detail',
+                           column_name: mandatory_column.name, id: mandatory_column.id)
+      )
+      expect(RepositoryCell.where(id: mandatory_cell.id)).to exist
+    end
+
+    it 'deletes a cell of a mandatory column when inventory integrity is disabled' do
+      allow(RepositoryBase).to receive(:inventory_integrity_enabled?).and_return(false)
+
+      delete_mandatory_cell
+
+      expect(response).to have_http_status(200)
+      expect(RepositoryCell.where(id: mandatory_cell.id)).not_to exist
+    end
+  end
+
+  describe 'inventory cells in a unique Text column' do
+    let!(:item) { create(:repository_row, repository: @valid_inventory, created_by: @user) }
+    let!(:unique_column) do
+      create(:repository_column, repository: @valid_inventory, created_by: @user, data_type: :RepositoryTextValue,
+                                 enforce_unique: true, unique_case_sensitive: true)
+    end
+    let!(:existing_value) do
+      create(:repository_text_value, data: 'LOT-1', created_by: @user,
+                                     repository_cell_attributes: { repository_row: @valid_item,
+                                                                   repository_column: unique_column })
+    end
+    let(:unique_error) do
+      { 'title' => I18n.t('api.core.errors.validation.title'),
+        'detail' => a_string_including(
+          I18n.t('activerecord.errors.models.repository_text_value.attributes.data.not_unique')
+        ) }
+    end
+
+    def create_cell(value)
+      body = { data: { type: 'inventory_cells', attributes: { column_id: unique_column.id, value: value } } }
+      post api_v1_team_inventory_item_cells_path(team_id: @team.id, inventory_id: @valid_inventory.id, item_id: item.id),
+           params: body.to_json, headers: @valid_headers
+    end
+
+    def update_cell(row, cell, value)
+      body = { data: { id: cell.id, type: 'inventory_cells', attributes: { column_id: unique_column.id, value: value } } }
+      patch api_v1_team_inventory_item_cell_path(
+        team_id: @team.id, inventory_id: @valid_inventory.id, item_id: row.id, id: cell.id
+      ), params: body.to_json, headers: @valid_headers
+    end
+
+    def unique_cell_count
+      RepositoryCell.where(repository_column: unique_column).count
+    end
+
+    it 'rejects creating a cell with a duplicate value' do
+      expect { create_cell('LOT-1') }.not_to(change { unique_cell_count })
+
+      expect(response).to have_http_status(400)
+      expect(json['errors'][0]).to include(unique_error)
+    end
+
+    it 'accepts a duplicate value when inventory integrity is disabled' do
+      allow(RepositoryBase).to receive(:inventory_integrity_enabled?).and_return(false)
+
+      expect { create_cell('LOT-1') }.to change { unique_cell_count }.by(1)
+      expect(response).to have_http_status(201)
+    end
+
+    it 'allows a value that differs only in case when the column is case sensitive' do
+      expect { create_cell('lot-1') }.to change { unique_cell_count }.by(1)
+
+      expect(response).to have_http_status(201)
+    end
+
+    it 'rejects a value that differs only in case when the column is case insensitive' do
+      unique_column.update!(unique_case_sensitive: false)
+
+      expect { create_cell('lot-1') }.not_to(change { unique_cell_count })
+
+      expect(response).to have_http_status(400)
+      expect(json['errors'][0]).to include(unique_error)
+    end
+
+    it 'rejects updating a cell to a duplicate value and keeps the old value' do
+      own_value = create(:repository_text_value, data: 'LOT-2', created_by: @user,
+                                                 repository_cell_attributes: { repository_row: item,
+                                                                               repository_column: unique_column })
+
+      update_cell(item, own_value.repository_cell, 'LOT-1')
+
+      expect(response).to have_http_status(400)
+      expect(json['errors'][0]).to include(unique_error)
+      expect(own_value.reload.data).to eq 'LOT-2'
+    end
+
+    it 'returns 204 without a body when the value does not change' do
+      update_cell(@valid_item, existing_value.repository_cell, 'LOT-1')
+
+      expect(response).to have_http_status(204)
+      expect(response.body).to be_empty
+    end
+  end
 end

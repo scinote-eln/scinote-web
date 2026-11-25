@@ -73,8 +73,10 @@ module Api
         unless params.require(:data).require(:type) == 'inventories'
           raise TypeError
         end
+        attributes = %i(name archived)
+        attributes += %i(enforce_unique_item_names unique_item_names_case_sensitive) if RepositoryBase.inventory_integrity_enabled?
         params.require(:data).require(:attributes)
-        params.permit(data: { attributes: %i(name archived) })[:data]
+        params.permit(data: { attributes: attributes })[:data]
       end
 
       def update_inventory_params

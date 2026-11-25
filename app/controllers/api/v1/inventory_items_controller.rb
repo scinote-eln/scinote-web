@@ -10,6 +10,7 @@ module Api
       end
       before_action :check_manage_permissions, only: %i(create update)
       before_action :check_delete_permissions, only: :destroy
+      before_action :check_mandatory_columns, only: :create
 
       def index
         items = if params.dig(:filter, :archived).present?
@@ -121,6 +122,29 @@ module Api
         unless can_delete_repository_rows?(@inventory) && @inventory_item.archived?
           raise PermissionError.new(RepositoryRow, :delete)
         end
+      end
+
+      def check_mandatory_columns
+        return unless RepositoryBase.inventory_integrity_enabled?
+
+        mandatory_columns = @inventory.repository_columns.where(mandatory: true)
+
+        if inventory_cells_params.present?
+          column_ids = inventory_cells_params.map { |cell| cell.dig(:attributes, :column_id) }
+          missing_columns = mandatory_columns.where.not(id: column_ids)
+        else
+          missing_columns = mandatory_columns
+        end
+        return if missing_columns.empty?
+
+        render json: {
+          errors: missing_columns.map do |column|
+            { id: request.uuid,
+              status: 400,
+              title: I18n.t('api.core.errors.inventory_column_mandatory.title'),
+              detail: I18n.t('api.core.errors.inventory_column_mandatory.detail', column_name: column.name, id: column.id) }
+          end
+        }, status: :bad_request
       end
 
       def inventory_item_params

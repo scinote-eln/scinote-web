@@ -78,6 +78,7 @@ class RepositoryTextValue < ApplicationRecord
   private
 
   def data_unique_in_column
+    return unless RepositoryBase.inventory_integrity_enabled?
     return if data.blank?
 
     column = repository_cell&.repository_column

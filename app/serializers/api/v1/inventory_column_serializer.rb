@@ -5,6 +5,7 @@ module Api
     class InventoryColumnSerializer < ActiveModel::Serializer
       type :inventory_columns
       attributes :name, :data_type, :metadata
+      attribute :mandatory, if: -> { RepositoryBase.inventory_integrity_enabled? }
       has_many :repository_list_items,
                key: :inventory_list_items,
                serializer: InventoryListItemSerializer,
@@ -42,6 +43,10 @@ module Api
 
       def data_type
         Extends::API_REPOSITORY_DATA_TYPE_MAPPINGS[object.data_type]
+      end
+
+      def metadata
+        object.metadata if RepositoryBase.inventory_integrity_enabled? || !object.repository_text_value?
       end
     end
   end
