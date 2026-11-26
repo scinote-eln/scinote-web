@@ -466,7 +466,8 @@ class MyModulesController < ApplicationController
   end
 
   def check_archive_permissions
-    return render_403 if my_module_params[:archived] == 'true' && !can_archive_my_module?(@my_module)
+    archiving = ActiveModel::Type::Boolean.new.cast(my_module_params[:archived])
+    return render_403 if archiving && !can_archive_my_module?(@my_module)
   end
 
   def check_read_permissions

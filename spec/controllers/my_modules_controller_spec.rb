@@ -748,6 +748,36 @@ describe MyModulesController, type: :controller do
       end
     end
 
+    context 'when archiving the task with a non-"true" truthy value' do
+      let(:params) { { id: my_module.id, my_module: { archived: '1' } } }
+
+      it 'archives the task' do
+        action
+        expect(response).to have_http_status(:success)
+        expect(my_module.reload.archived?).to eq(true)
+      end
+    end
+
+    context 'when archiving a task of a team the user is not a member of' do
+      let(:other_user) { create :user }
+      let(:other_team) { create :team, created_by: other_user }
+      let(:other_project) { create :project, team: other_team, created_by: other_user }
+      let(:other_experiment) { create :experiment, project: other_project, created_by: other_user }
+      let(:other_my_module) { create :my_module, experiment: other_experiment, created_by: other_user }
+
+      [1, '1', 't', 'on', 'true'].each do |value|
+        it "returns forbidden and does not archive or rename the task with archived=#{value.inspect}" do
+          put :update, params: { id: other_my_module.id, my_module: { archived: value, name: 'Renamed task' } },
+                       format: :json
+
+          expect(response).to have_http_status(:forbidden)
+          other_my_module.reload
+          expect(other_my_module.archived?).to eq(false)
+          expect(other_my_module.name).not_to eq('Renamed task')
+        end
+      end
+    end
+
     context 'when output is object' do
       let(:params) { { id: my_module.id, output: 'object', my_module: { name: 'Renamed task' } } }
 
