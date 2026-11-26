@@ -339,7 +339,7 @@ describe ProtocolsController, type: :controller do
 
   describe 'POST copy_to_repository' do
     let(:protocol_in_task) do
-      create :protocol, name: 'test protocol', my_module: my_module
+      create :protocol, name: 'test protocol', my_module: my_module, team: team
     end
     let(:params) { { id: protocol_in_task.id, team_id: team.id, protocol: { name: 'test' } } }
     let(:action) { post :copy_to_repository, params: params, format: :json }
@@ -366,7 +366,7 @@ describe ProtocolsController, type: :controller do
 
     context 'when the description is locked' do
       let(:protocol_in_task) do
-        create :protocol, name: 'test protocol', my_module: my_module, description_locked: true
+        create :protocol, name: 'test protocol', my_module: my_module, team: team, description_locked: true
       end
 
       it 'propagates description_locked to the copied protocol' do
@@ -1232,6 +1232,25 @@ describe ProtocolsController, type: :controller do
 
     it 'returns 403 for protocol outside of a task' do
       post :copy_to_repository, params: { id: repository_protocol.id, protocol: { name: 'x' } }, format: :json
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'returns 403 for a non-existent protocol' do
+      post :copy_to_repository, params: { id: -1, protocol: { name: 'x' } }, format: :json
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'returns 403 when user cannot read the task, even with template create permission' do
+      task_protocol
+      UserAssignment.where(user: user, assignable: [my_module, experiment, project]).delete_all
+
+      expect do
+        post :copy_to_repository,
+             params: { id: task_protocol.id, protocol: { name: 'leak', results: 'true', assigned_rows: 'true' } },
+             format: :json
+      end.not_to change(Protocol, :count)
 
       expect(response).to have_http_status(:forbidden)
     end
