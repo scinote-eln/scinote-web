@@ -7,7 +7,7 @@
     :data-asset-id="attachment.id"
   >
     <div class="header justify-between">
-      <div class="file-info">
+      <div class="file-info min-w-0 w-full">
         <a :href="attachment.attributes.urls.blob"
           class="file-preview-link file-name"
           :id="`modal_link${attachment.id}`"
@@ -17,12 +17,18 @@
           :data-preview-url="attachment.attributes.urls.preview"
         >
           <span data-toggle="tooltip"
-               data-placement="bottom"
-               :title="`${ attachment.attributes.file_name }`">
-            {{ attachment.attributes.file_name }}
+                data-placement="bottom"
+                class="flex gap-2 items-center min-w-0 w-full">
+            <span v-if="attachment.attributes.file_title" class="text-sn-black truncate min-w-0"  :title="attachment.attributes.file_title">
+              {{ attachment.attributes.file_title }}
+            </span>
+            <span class="truncate min-w-0"  :title="attachment.attributes.file_name">
+              {{ attachment.attributes.file_name }}
+            </span>
           </span>
         </a>
         <div class="file-metadata">
+          <div class=" text-sn-grey-700">{{ attachment.attributes.code }}</div>
           <span v-if="!attachment.attributes.archived">
             {{ attachment.attributes.updated_at_formatted }}
           </span>

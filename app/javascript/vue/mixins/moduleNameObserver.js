@@ -25,14 +25,17 @@ export default {
         .querySelector('.my_module-name .view-mode, .my_module-name .name-readonly-placeholder');
       if (!targetNode) return;
 
-      this.moduleName = targetNode.textContent;
+      const archivedLabel = document.querySelector('.my-module-title-row')?.dataset.archivedLabel;
+      const readName = () => (archivedLabel ? `${archivedLabel} ${targetNode.textContent}` : targetNode.textContent);
+
+      this.moduleName = readName();
 
       const config = { characterData: true, childList: true, subtree: true };
 
       const callback = (mutationsList) => {
         mutationsList.forEach((mutation) => {
           if (mutation.type === 'childList' || mutation.type === 'characterData') {
-            this.moduleName = targetNode.textContent;
+            this.moduleName = readName();
           }
         });
       };

@@ -22,12 +22,12 @@
         </div>
       </div>
       <div v-else-if="uploading">
-        <div class="text-sn-grey-500">
+        <div class="text-sn-grey">
           {{ i18n.t('repositories.table.assets.uploading') }}
         </div>
       </div>
       <div v-else>
-        <div class="text-sn-grey-500 cursor-pointer"
+        <div class="text-sn-grey cursor-pointer"
              :class="addFileClass"
              data-e2e="e2e-BT-itemCard-assetAddFile"
              @click="addFile">

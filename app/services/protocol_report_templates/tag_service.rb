@@ -42,6 +42,7 @@ module ProtocolReportTemplates
           end
         end
         report.generate(output.path)
+        strip_zip64!(output.path)
 
         blob = ActiveStorage::Blob.create_and_upload!(
           io: File.open(output.path),
@@ -64,6 +65,7 @@ module ProtocolReportTemplates
           replace_form_response(r, src_form_response, dest_form_response)
         end
         report.generate(output.path)
+        strip_zip64!(output.path)
 
         report_template.odt_template_file.attach(io: File.open(output.path), filename: original_blob.filename, content_type: original_blob.content_type)
       end
@@ -73,6 +75,27 @@ module ProtocolReportTemplates
     end
 
     private
+
+    # Rewrites an ODT without ZIP64 extra fields so Microsoft Word accepts it.
+    def strip_zip64!(path)
+      tmp_path = Tempfile.new([path, '.tmp'])
+
+      Zip::OutputStream.open(tmp_path, suppress_extra_fields: :zip64) do |zos|
+        Zip::File.open(path) do |zip|
+          zip.each do |entry|
+            next if entry.directory?
+
+            zos.put_next_entry(entry.name)
+            IO.copy_stream(entry.get_input_stream, zos)
+          end
+        end
+      end
+
+      FileUtils.mv(tmp_path, path)
+    ensure
+      tmp_path.close
+      tmp_path.unlink
+    end
 
     def step_tags
       @protocol.steps.ordered.map do |step|
@@ -128,6 +151,8 @@ module ProtocolReportTemplates
       case element.orderable_type
       when 'StepTable', 'ResultTable'
         element.orderable.table.name
+      when 'FormResponse'
+        element.orderable.form.name
       else
         element.orderable.name
       end

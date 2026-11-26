@@ -100,6 +100,14 @@
         :repositoryRowId="createEventModalRow"
         @event:created="createEventModalRow = null"
         @close="createEventModalRow = null"/>
+      <ConfirmationModal
+        :title="i18n.t('repositories.modal_delete_record.title')"
+        :description="deleteRowsDescription"
+        confirmClass="btn btn-danger"
+        :confirmText="i18n.t('repositories.modal_delete_record.delete')"
+        e2eValue="invInventoryDeleteMD"
+        ref="deleteRowsModal"
+      ></ConfirmationModal>
     </teleport>
   </div>
 </template>
@@ -119,6 +127,7 @@ import RepositoryFilters from './filters.vue'
 import DuplicatesBanner from './duplicates_banner.vue';
 import ManageColumnsModal from './modals/manage_columns.vue';
 import { FULL_TABLE_STATE_PERMISSIONS } from '../shared/datatable/table_state.js';
+import ConfirmationModal from '../shared/confirmation_modal.vue';
 
 import {
   repository_table_index_ag_path,
@@ -139,6 +148,7 @@ export default {
   name: 'RepositoryTable',
   props: {
     repositoryId: Number,
+    repositoryName: String,
     createUrl: String,
     activePageUrl: String,
     archivedPageUrl: String,
@@ -160,7 +170,8 @@ export default {
     ExportConsumptionModal,
     PrintModal,
     CreateEventModal,
-    DuplicatesBanner
+    DuplicatesBanner,
+    ConfirmationModal
   },
   mixins: [ColumnsMixin],
   data: () => ({
@@ -191,6 +202,10 @@ export default {
     delete window.repositoryTable;
   },
   computed: {
+    deleteRowsDescription() {
+      return `<p>${this.i18n.t('repositories.modal_delete_record.notice')}</p>
+              <p>${this.i18n.t('repositories.modal_delete_record.notice_warning_html')}</p>`;
+    },
     showDuplicatesBanner() {
       return this.duplicatedItemsCount > 0 && !this.archived && this.currentViewMode !== 'archived';
     },
@@ -358,6 +373,9 @@ export default {
         .then(() => {
           this.hasActiveReminders = false;
           this.reloadingTable = true;
+        })
+        .catch(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
     },
     startCreate() {
@@ -366,6 +384,10 @@ export default {
     addCreatedRow(row) {
       this.$refs.repositoryTable.updateRowData(row);
       if (row.attributes.active_reminders_count > 0) this.hasActiveReminders = true;
+      HelperModule.flashAlertMsg(
+        this.i18n.t('repositories.create.success_flash', { record: row.attributes.name, repository: this.repositoryName }),
+        'success'
+      );
       this.$nextTick(() => {
         const viewport = this.$refs.repositoryTable.$refs.agGrid?.$el.querySelector('.ag-body-viewport');
         if (viewport) viewport.scrollTop = 0;
@@ -446,7 +468,10 @@ export default {
         HelperModule.flashAlertMsg(I18n.t('general.error'), 'danger');
       });
     },
-    deleteRows(_e, rows) {
+    async deleteRows(_e, rows) {
+      const ok = await this.$refs.deleteRowsModal.show();
+      if (!ok) return;
+
       const rowIds = rows.map((row) => row.id);
       axios.post(repository_delete_records_path(this.repositoryId), {
         selected_rows: rowIds

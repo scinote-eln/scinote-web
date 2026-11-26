@@ -17,8 +17,8 @@ class AssetsController < ApplicationController
   helper_method :wopi_file_edit_button_status
 
   before_action :load_vars, except: :create_wopi_file
-  before_action :check_read_permission, except: %i(edit destroy update_image duplicate create_wopi_file toggle_view_mode archive restore lock unlock)
-  before_action :check_manage_permission, only: %i(edit duplicate update_image rename toggle_view_mode archive)
+  before_action :check_read_permission, except: %i(edit destroy update_image duplicate create_wopi_file toggle_view_mode archive restore lock unlock update_title)
+  before_action :check_manage_permission, only: %i(edit duplicate update_image rename toggle_view_mode archive update_title move)
   before_action :check_restore_permission, only: :restore
   before_action :check_destroy_permission, only: :destroy
   before_action :check_restore_version_permission, only: :restore_version
@@ -33,6 +33,7 @@ class AssetsController < ApplicationController
         can_edit: can_manage_asset?(@asset),
         gallery: params[:gallery],
         preview: params[:preview],
+        page: params[:page],
         # TODO: Currently inherited from step, will be controlled separately in the future
         locked: @asset.step ? @asset.step.locked : false
       },
@@ -92,13 +93,16 @@ class AssetsController < ApplicationController
   end
 
   def move
-    case @assoc
-    when Step
-      target = @assoc.protocol.steps.find_by(id: params[:target_id])
-    when ResultBase
-      target = @assoc.parent.results.active.find_by(id: params[:target_id])
-      return render_404 unless target
-    end
+    target =
+      case @assoc
+      when Step
+        @assoc.protocol.steps.find_by(id: params[:target_id])
+      when ResultBase
+        @assoc.parent.results.active.find_by(id: params[:target_id])
+      end
+
+    return render_404 unless target
+    return render_403 unless move_target_manageable?(target)
 
     ActiveRecord::Base.transaction do
       if @assoc.is_a?(Step)
@@ -227,6 +231,20 @@ class AssetsController < ApplicationController
 
   def create_start_edit_image_activity
     create_edit_image_activity(@asset, current_user, :start_editing)
+  end
+
+  def update_title
+    old_title = @asset.file_title
+    new_title = params.require(:asset).permit(:file_title)[:file_title]
+
+    @asset.file_title = new_title
+    @asset.last_modified_by = current_user
+    if @asset.save
+      log_asset_title_changed_activity(old_title, new_title)
+      render json: @asset, serializer: AssetSerializer, user: current_user
+    else
+      render json: @asset.errors, status: :unprocessable_entity
+    end
   end
 
   def update_image
@@ -476,25 +494,25 @@ class AssetsController < ApplicationController
     when Step
       if @asset.parent.protocol.in_module?
         message_items.merge!({ my_module: @assoc.protocol.my_module.id, step: @asset.parent.id })
-        log_restore_activity(:task_step_restore_asset_version, @assoc.protocol,
-                             @assoc.protocol.team, @assoc.my_module&.project, message_items)
+        log_asset_activity(:task_step_restore_asset_version, @assoc.protocol,
+                           @assoc.protocol.team, @assoc.my_module&.project, message_items)
       else
         message_items.merge!({ protocol: @assoc.protocol.id, step: @asset.parent.id })
-        log_restore_activity(:protocol_step_restore_asset_version, @assoc.protocol,
-                             @assoc.protocol.team, nil, message_items)
+        log_asset_activity(:protocol_step_restore_asset_version, @assoc.protocol,
+                           @assoc.protocol.team, nil, message_items)
       end
     when Result
       message_items.merge!({ result: @assoc.id, my_module: @assoc.my_module.id })
-      log_restore_activity(:task_result_restore_asset_version, @assoc,
-                           @assoc.my_module.team, @assoc.my_module.project, message_items)
+      log_asset_activity(:task_result_restore_asset_version, @assoc,
+                         @assoc.my_module.team, @assoc.my_module.project, message_items)
     when ResultTemplate
       message_items[:result_template] = @assoc.id
       message_items[:protocol] = @assoc.protocol.id
-      log_restore_activity(:result_template_restore_asset_version, @assoc, @assoc.team, nil, message_items)
+      log_asset_activity(:result_template_restore_asset_version, @assoc, @assoc.team, nil, message_items)
     when RepositoryCell
       message_items.merge!({ repository_column: @assoc.repository_column.id, repository: @repository.id })
-      log_restore_activity(:repository_column_restore_asset_version, @repository,
-                           @repository.team, nil, message_items)
+      log_asset_activity(:repository_column_restore_asset_version, @repository,
+                         @repository.team, nil, message_items)
     end
 
     @asset.save!
@@ -556,7 +574,7 @@ class AssetsController < ApplicationController
                         else
                           :task_step_file_restored
                         end
-        log_restore_activity(
+        log_asset_activity(
           activity_type,
           @assoc.protocol,
           @assoc.protocol.team,
@@ -573,7 +591,7 @@ class AssetsController < ApplicationController
                         else
                           :result_file_restored
                         end
-        log_restore_activity(
+        log_asset_activity(
           activity_type,
           @assoc,
           @assoc.team,
@@ -627,6 +645,17 @@ class AssetsController < ApplicationController
 
   def check_read_permission
     render_403 and return unless can_read_asset?(@asset)
+  end
+
+  def move_target_manageable?(target)
+    case target
+    when Step
+      can_manage_step_attachments?(target)
+    when ResultBase
+      can_manage_result_attachments?(target)
+    else
+      false
+    end
   end
 
   def check_manage_permission
@@ -709,7 +738,7 @@ class AssetsController < ApplicationController
             }.merge(message_items))
   end
 
-  def log_restore_activity(type_of, subject, team, project = nil, message_items = {})
+  def log_asset_activity(type_of, subject, team, project = nil, message_items = {})
     Activities::CreateActivityService
       .call(activity_type: type_of,
             owner: current_user,
@@ -717,6 +746,42 @@ class AssetsController < ApplicationController
             team: team,
             project: project,
             message_items: message_items)
+  end
+
+  def log_asset_title_changed_activity(old_title, new_title)
+    message_items = {
+      file: @asset.file_name,
+      old_title: old_title.to_s,
+      new_title: new_title.to_s,
+      user: current_user.id
+    }
+
+    case @assoc
+    when Step
+      message_items[:my_module] = @assoc.my_module.id if @assoc.protocol.in_module?
+      log_step_activity(
+        "#{@assoc.protocol.in_module? ? 'task' : 'protocol'}_step_asset_title_changed",
+        @assoc,
+        @assoc.my_module&.project,
+        message_items
+      )
+    when Result
+      log_result_activity(
+        :result_asset_title_changed,
+        @assoc,
+        message_items.merge(my_module: @assoc.my_module.id)
+      )
+    when ResultTemplate
+      log_result_activity(
+        :result_template_asset_title_changed,
+        @assoc,
+        message_items
+      )
+    when RepositoryCell
+      message_items[:repository_column] = @assoc.repository_column.id
+      message_items[:repository_row] = @assoc.repository_row.id
+      log_asset_activity(:item_asset_title_changed, @repository, @repository.team, nil, message_items)
+    end
   end
 
   def type_of_delete_activity

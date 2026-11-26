@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Asset < ApplicationRecord
+  ID_PREFIX = 'FL'
+
+  include PrefixedIdModel
   include SearchableModel
   include DatabaseHelper
   include WopiUtil
@@ -28,6 +31,7 @@ class Asset < ApplicationRecord
   # assign it to result
   validate :step_or_result_or_repository_asset_value
   validate :check_file_size, on: :on_api_upload
+  validates :file_title, length: { maximum: 50 }, allow_blank: true
 
   belongs_to :created_by, class_name: 'User', optional: true
   belongs_to :last_modified_by, class_name: 'User', optional: true

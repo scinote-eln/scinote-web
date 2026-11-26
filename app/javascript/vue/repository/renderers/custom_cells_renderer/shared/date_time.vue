@@ -2,14 +2,15 @@
   <div>
     <div v-if="canManage" class="relative flex items-center gap-1" :title="mandatoryErrorTitle">
       <DateTimePicker
-        :class="{ 'borderless-input -mt-[1px]': !params.inSidebar }"
+        :class="{ 'borderless-input table-cell-input -mt-[1px]': !params.inSidebar }"
         :error="showError"
         :defaultValue="value"
         @change="updateValue"
         @closed="saveValue"
         :mode="mode"
         :placeholder="placeholder"
-        :customIcon="icon"
+        :noIcons="!hasReminder"
+        :customIcon="hasReminder ? reminderIcon : null"
         :customIconTitle="hasReminder ? reminderTitle : null"
         :range="isRange"
         valueType="stringWithoutTimezone"
@@ -104,19 +105,11 @@ export default {
         return this.i18n.t('repositories.table.date_time.add_time')
       }
     },
-    icon() {
-      if (this.hasReminder) {
-        return `sn-icon sn-icon-alert-warning ${this.reminderClass}`;
-      }
-
-      if (this.valueType.includes('RepositoryTime')) {
-        return 'sn-icon sn-icon-created';
-      } else {
-        return 'sn-icon sn-icon-calendar';
-      }
-    },
     hasReminder() {
       return !this.isRange && !!this.params.value?.value?.reminder;
+    },
+    reminderIcon() {
+      return `sn-icon sn-icon-alert-warning ${this.reminderClass}`;
     },
     reminderClass() {
       return this.params.value?.value?.days_left > 0 ? 'text-sn-alert-brittlebush' : 'text-sn-alert-passion';

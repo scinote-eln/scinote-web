@@ -35,6 +35,40 @@ describe SmartAnnotations::TextPreview do
     end
   end
 
+  context 'Asset annotations with type file' do
+    let(:protocol) { create :protocol, my_module: task }
+    let(:step) { create :step, protocol: protocol }
+    let(:step_asset) { create :step_asset, step: step }
+    let(:asset) { Asset.find(step_asset.asset_id) }
+
+    it 'returns a text snippet with the file name and code when there is no title' do
+      snippet = subject.text(nil, 'file', asset)
+      expect(snippet).to eq("#{asset.file_name}_#{asset.code}")
+    end
+
+    it 'returns a text snippet with the file title when one is set' do
+      asset.update!(file_title: 'My file title')
+      snippet = subject.text(nil, 'file', asset)
+      expect(snippet).to eq("My file title_#{asset.code}")
+    end
+
+    it 'appends the page number when a page is mentioned' do
+      snippet = subject.text(nil, 'file', asset, page: '12')
+      expect(snippet).to eq("#{asset.file_name}_#{asset.code}_p12")
+    end
+
+    it 'returns an archived snippet when the file is archived' do
+      asset.archive!(user)
+      snippet = subject.text(nil, 'file', asset)
+      expect(snippet).to eq("#{asset.file_name}_#{asset.code} (archived)")
+    end
+
+    it 'falls back to the tag-captured name when the file was deleted' do
+      snippet = subject.text('old_file.pdf', 'file', nil)
+      expect(snippet).to eq('old_file.pdf (deleted)')
+    end
+  end
+
   context 'Repository item annotations with type rep_item' do
     it 'returns a html snippet' do
       snippet = subject.text('my item', 'rep_item', nil)

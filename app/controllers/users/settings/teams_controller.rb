@@ -135,7 +135,7 @@ module Users
         )
 
         # Redirect back to all teams page
-        redirect_to action: :index
+        redirect_to teams_path
       end
 
       def switch

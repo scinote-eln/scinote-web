@@ -15,7 +15,7 @@ Canaid::Permissions.register_for(FormResponse) do
     case parent
     when Step
       next false unless parent.protocol.my_module # protocol template forms can't be submitted
-      next false if parent.protocol.my_module.archived
+      next false if parent.protocol.my_module.archived_branch?
       next false unless form_response.status_pending?
       next false if form_response.parent.archived?
       next false if form_response.archived?
@@ -29,7 +29,7 @@ Canaid::Permissions.register_for(FormResponse) do
     case parent
     when Step
       next false unless parent.protocol.my_module # protocol template forms can't be reset
-      next false if parent.protocol.my_module.archived
+      next false if parent.protocol.my_module.archived_branch?
       next false unless form_response.status_submitted?
       next false if form_response.parent.archived?
       next false if form_response.archived?

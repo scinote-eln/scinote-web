@@ -66,6 +66,7 @@
       <repository-table
         ref='tableContainer'
         :repository-id="<%= @repository.id %>"
+        repository-name="<%= @repository.name %>"
         :can-manage-repository="<%= can_manage_repository?(@repository) %>"
         :can-manage-filters="<%= can_manage_repository_filters?(@repository)%>"
         :duplicated-items-count="<%= RepositoryBase.inventory_integrity_enabled? && can_manage_repository_rows?(@repository) ? @repository.duplicated_items_count : 0 %>"

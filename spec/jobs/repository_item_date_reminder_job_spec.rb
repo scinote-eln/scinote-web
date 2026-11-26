@@ -84,4 +84,41 @@ describe RepositoryItemDateReminderJob, type: :job do
       expect(values).to_not include(repository_date_value_due_outside_buffer)
     end
   end
+
+  describe '#perform' do
+    it 'sends a notification for each due value' do
+      allow(RepositoryItemDateNotification).to receive(:send_notifications)
+
+      described_class.perform_now
+
+      [repository_date_value_due, repository_date_value_due_inside_buffer].each do |value|
+        expect(RepositoryItemDateNotification).to have_received(:send_notifications).with(
+          hash_including(repository_date_value_id: value.id,
+                         repository_row_id: value.repository_cell.repository_row_id,
+                         repository_column_id: date_column_with_reminder.id,
+                         repository_column_name: 'Custom items',
+                         reminder_unit: '86400',
+                         reminder_value: '5')
+        )
+      end
+      expect(RepositoryItemDateNotification).to have_received(:send_notifications).twice
+    end
+
+    it 'ignores values of archived rows' do
+      repository_date_value_due.repository_cell.repository_row.update_columns(archived: true)
+      allow(RepositoryItemDateNotification).to receive(:send_notifications)
+
+      described_class.perform_now
+
+      expect(RepositoryItemDateNotification).to have_received(:send_notifications).once
+    end
+
+    it 'ignores values that were already notified' do
+      repository_date_value_due.update_columns(notification_sent: true)
+      repository_date_value_due_inside_buffer.update_columns(notification_sent: true)
+      expect(RepositoryItemDateNotification).not_to receive(:send_notifications)
+
+      described_class.perform_now
+    end
+  end
 end

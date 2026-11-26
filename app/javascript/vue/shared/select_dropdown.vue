@@ -40,7 +40,7 @@
              v-else
              v-model="query"
              :placeholder="placeholderRender"
-             @keyup="reloadItems"
+             @keyup="searchKeyup"
              @change.stop
              class="w-full bg-transparent border-0 outline-none pl-0 placeholder:text-sn-grey" />
       </template>
@@ -330,6 +330,11 @@ export default {
     }
   },
   methods: {
+    searchKeyup(e) {
+      if (['Enter', 'ArrowDown', 'ArrowUp', 'Tab', 'Escape'].includes(e.key)) return;
+
+      this.reloadItems();
+    },
     reloadItems() {
       this.fetchedOptions = [];
       this.nextPage = 1;
@@ -494,6 +499,9 @@ export default {
           if (this.focusedOption < 0) this.focusedOption = this.$refs.options.length - 1;
         } else if (e.key === 'Enter' && this.focusedOption !== null) {
           this.handleOptionClick(this.filteredOptions[this.focusedOption]);
+        } else if (e.key === 'Enter' && this.isOpen) {
+          const firstOption = this.filteredOptions.find((option) => !option[2]?.disabled);
+          if (firstOption) this.handleOptionClick(firstOption);
         }
       }
       if (this.$refs.options) {

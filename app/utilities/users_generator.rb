@@ -43,7 +43,7 @@ module UsersGenerator
     # Assign user to additional teams
     team_ids.each do |team_id|
       team = Team.find(team_id)
-      UserAssignment.create!(user: nu, assignable: team, user_role: UserRole.owner_role) if team.present?
+      UserAssignment.create!(user: nu, assignable: team, user_role: UserRole.find_predefined_owner_role) if team.present?
     end
 
     # Assign user team as user current team

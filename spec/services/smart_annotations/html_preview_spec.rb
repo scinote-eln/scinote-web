@@ -13,12 +13,13 @@ describe SmartAnnotations::HtmlPreview do
                         last_modified_by: user
   end
   let(:task) { create :my_module, name: 'task', experiment: experiment, created_by: experiment.created_by }
+  let(:routes) { Rails.application.routes.url_helpers }
 
   describe 'Project annotations with type prj' do
     it 'returns a html snippet' do
       snippet = subject.html(nil, 'prj', project)
       expect(snippet).to eq(
-        "<a class='sa-link' href='/projects/#{project.id}/experiments'>" \
+        "<a class='sa-link' href='#{routes.experiments_url(project)}'>" \
         "<span class='sa-type'>Prj</span>my project</a>"
       )
     end
@@ -28,7 +29,7 @@ describe SmartAnnotations::HtmlPreview do
     it 'returns a html snippet' do
       snippet = subject.html(nil, 'exp', experiment)
       expect(snippet).to eq(
-        "<a class='sa-link' href='/experiments/#{experiment.id}/my_modules'>" \
+        "<a class='sa-link' href='#{routes.my_modules_experiment_url(experiment)}'>" \
         "<span class='sa-type'>Exp</span>my experiment</a>"
       )
     end
@@ -38,9 +39,52 @@ describe SmartAnnotations::HtmlPreview do
     it 'returns a html snippet' do
       snippet = subject.html(nil, 'tsk', task)
       expect(snippet).to eq(
-        "<a class='sa-link' href='/modules/#{task.id}/protocols'>" \
+        "<a class='sa-link' href='#{routes.protocols_my_module_url(task)}'>" \
         "<span class='sa-type'>Tsk</span>task</a>"
       )
+    end
+  end
+
+  context 'Asset annotations with type file' do
+    let(:protocol) { create :protocol, my_module: task }
+    let(:step) { create :step, protocol: protocol }
+    let(:step_asset) { create :step_asset, step: step }
+    let(:asset) { Asset.find(step_asset.asset_id) }
+
+    def file_link(asset, label, page: nil)
+      page_attr = page.nil? ? '' : " data-page='#{page}'"
+
+      "<a class='sa-link file-preview-link file-name' href='" \
+        "#{routes.rails_blob_url(asset.file, disposition: 'attachment')}' " \
+        "data-no-turbolink='true' data-id='#{asset.id}' data-preview-url='#{routes.asset_file_preview_url(asset, preview: true)}'#{page_attr}>" \
+        "<span class='sa-type'>Fl</span>#{label}</a>"
+    end
+
+    it 'returns a html snippet with the file name and code when there is no title' do
+      snippet = subject.html(nil, 'file', asset)
+      expect(snippet).to eq(file_link(asset, "#{asset.file_name}_#{asset.code}"))
+    end
+
+    it 'returns a html snippet with the file title when one is set' do
+      asset.update!(file_title: 'My file title')
+      snippet = subject.html(nil, 'file', asset)
+      expect(snippet).to eq(file_link(asset, "My file title_#{asset.code}"))
+    end
+
+    it 'appends the page number when a page is mentioned' do
+      snippet = subject.html(nil, 'file', asset, page: '12')
+      expect(snippet).to eq(file_link(asset, "#{asset.file_name}_#{asset.code}_p12", page: '12'))
+    end
+
+    it 'returns an archived snippet when the file is archived' do
+      asset.archive!(user)
+      snippet = subject.html(nil, 'file', asset)
+      expect(snippet).to eq("<span class='sa-type'>Fl</span>#{asset.file_name}_#{asset.code} (archived)")
+    end
+
+    it 'falls back to the tag-captured name when the file was deleted' do
+      snippet = subject.html('old_file.pdf', 'file', nil)
+      expect(snippet).to eq("<span class='sa-type'>Fl</span>old_file.pdf (deleted)")
     end
   end
 

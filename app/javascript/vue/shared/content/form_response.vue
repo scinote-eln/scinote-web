@@ -76,6 +76,7 @@
           :key="field.id"
           :field="field"
           :formResponse="formResponse"
+          :assignableMyModuleId="assignableMyModuleId"
           @save="saveValue"
           @validChanged="checkValidFormFields"
           :dataE2e="`${dataE2e}-formElement${element.id}-field${field.id}`"
@@ -157,6 +158,10 @@ export default {
     },
     reorderElementUrl: {
       type: String
+    },
+    assignableMyModuleId: {
+      type: Number,
+      default: null
     },
     dataE2e: {
       type: String,

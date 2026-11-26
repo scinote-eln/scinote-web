@@ -44,4 +44,13 @@ describe ProjectDueDateReminderJob, type: :job do
       expect(values).to_not include(project_notifcation_sent)
     end
   end
+
+  describe '#perform' do
+    it 'sends a notification only for the project that is due' do
+      expect(ProjectDueDateNotification).to receive(:send_notifications).once
+                                                                       .with({ project_id: project_due_in_one_day.id })
+
+      described_class.perform_now
+    end
+  end
 end

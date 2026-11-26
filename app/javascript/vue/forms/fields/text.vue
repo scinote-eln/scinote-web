@@ -12,6 +12,7 @@
         :value="value"
         ref="input"
         @blur="saveValue"
+        @input="$emit('inputLengthUpdated', $event.target.value?.length)"
         :placeholder="fieldDisabled ? '' : i18n.t('forms.fields.add_text')"
       ></textarea>
     </div>
@@ -72,6 +73,7 @@ export default {
   },
   mounted() {
     window.renderElementSmartAnnotations(this.$refs.fieldValue, 'span');
+    this.$emit('inputLengthUpdated', this.value?.length || 0);
   },
   methods: {
     saveValue(event) {
@@ -91,7 +93,7 @@ export default {
       if (!this.fieldDisabled) {
         this.editing = true;
         this.$nextTick(() => {
-          SmartAnnotation.init($(this.$refs.input), false);
+          SmartAnnotation.init($(this.$refs.input), false, this.assignableMyModuleId);
           this.$refs.input.focus();
         });
       }

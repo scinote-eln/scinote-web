@@ -64,7 +64,7 @@ module MarvinJsActions
       asset_type = 'asset_name'
     else
       asset_type = 'tiny_mce_asset_name'
-      step = asset.object.step
+      step = asset.object.is_a?(Step) ? asset.object : asset.object.step
     end
 
     protocol = step&.protocol
@@ -122,7 +122,7 @@ module MarvinJsActions
             owner: current_user,
             subject: result,
             team: parent.team,
-            project: parent.instance_of?(Result) ? parent.project : nil,
+            project: result.instance_of?(Result) ? parent.project : nil,
             message_items: message_items)
   end
 

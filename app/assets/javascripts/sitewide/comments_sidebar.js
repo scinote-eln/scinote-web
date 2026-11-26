@@ -1,4 +1,4 @@
-/* global SmartAnnotation */
+/* global SmartAnnotation HelperModule I18n */
 
 var CommentsSidebar = (function() {
   const SIDEBAR = '.comments-sidebar';
@@ -22,6 +22,9 @@ var CommentsSidebar = (function() {
         $(SIDEBAR).find('.comment-input-container').addClass('hidden');
         $(SIDEBAR).find('.comment-input-container').addClass('update-only');
       }
+    }).fail(function() {
+      $(SIDEBAR).removeClass('loading');
+      HelperModule.flashAlertMsg(I18n.t('errors.general'), 'danger');
     });
   }
 
@@ -104,7 +107,12 @@ var CommentsSidebar = (function() {
           $(this).removeClass('disable-click');
         },
         error: (result) => {
-          $('.error-container').text(result.responseJSON.errors.message);
+          const message = result.responseJSON?.errors?.message;
+          if (message) {
+            $('.error-container').text(message);
+          } else {
+            HelperModule.flashAlertMsg(I18n.t('errors.general'), 'danger');
+          }
           $(this).removeClass('disable-click');
         }
       });
@@ -133,6 +141,9 @@ var CommentsSidebar = (function() {
         success: () => {
           commentContainer.remove();
           updateCounter();
+        },
+        error: (result) => {
+          HelperModule.flashAlertMsg(result.responseJSON?.errors?.message || I18n.t('errors.general'), 'danger');
         }
       });
     });
@@ -156,7 +167,7 @@ var CommentsSidebar = (function() {
 
   function initInputField() {
     if ($(SIDEBAR).find('.comment-input-field').length) {
-      SmartAnnotation.init($(SIDEBAR).find('.comment-input-field'), false);
+      SmartAnnotation.init($(SIDEBAR).find('.comment-input-field'), false, document.querySelector('.my-module-content')?.dataset?.taskId);
     }
   }
 

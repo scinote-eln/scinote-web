@@ -52,7 +52,7 @@ var Comments = (function() {
             if (error.status === 403) {
               HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
             } else {
-              alert(error.responseJSON.errors.message);
+              HelperModule.flashAlertMsg(error.responseJSON?.errors?.message || I18n.t('errors.general'), 'danger');
             }
           }
         });
@@ -88,10 +88,13 @@ var Comments = (function() {
           newButton.disable = false;
           $el.find('textarea').focus().blur();
         }).fail((error) => {
+          const message = error.responseJSON?.errors?.message;
           if (error.status === 403) {
             HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
+          } else if (!message) {
+            HelperModule.flashAlertMsg(I18n.t('errors.general'), 'danger');
           }
-          errorField.text(error.responseJSON.errors.message);
+          errorField.text(message || '');
           newButton.disable = false;
         });
       });

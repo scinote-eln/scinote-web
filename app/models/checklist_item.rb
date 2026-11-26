@@ -37,7 +37,7 @@ class ChecklistItem < ApplicationRecord
     if with_paragraphs
       if new_record?
         save!
-        insert_at(at_position + 1) || 0
+        insert_at(at_position ? at_position + 1 : 0)
       else
         save!
       end

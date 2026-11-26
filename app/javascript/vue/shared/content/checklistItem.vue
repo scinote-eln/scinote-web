@@ -39,6 +39,7 @@
             :attributeName="`${i18n.t('ChecklistItem')} ${i18n.t('name')}`"
             :editOnload="checklistItem.attributes.isNew"
             :smartAnnotation="true"
+            :smartAnnotationAssignableObjectId="assignableMyModuleId"
             :allowNewLine="true"
             :dataE2e="dataE2e"
             @editingEnabled="enableTextEdit"
@@ -97,7 +98,11 @@ export default {
     dataE2e: {
       type: String,
       default: ''
-    }
+    },
+    assignableMyModuleId: {
+      type: Number,
+      required: false
+    },
   },
   data() {
     return {

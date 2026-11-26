@@ -1,4 +1,4 @@
-/* global I18n GLOBAL_CONSTANTS HelperModule SmartAnnotation TinyMCE */
+/* global I18n GLOBAL_CONSTANTS HelperModule SmartAnnotation TinyMCE Turbolinks */
 
 import tinyMCE from 'tinymce/tinymce';
 import 'tinymce/models/dom';
@@ -88,8 +88,18 @@ const image_upload_handler = (blobInfo, _progress) => {
 };
 
 const findEditorImageBySrc = (editor, src) => {
-  const iframe = $(`#${editor.id}`).next().find('.tox-edit-area iframe').contents()[0];
-  return iframe && iframe.querySelector(`img[src="${src}"]`);
+  if (editor.removed) return null;
+
+  return editor.dom.select('img').find((element) => element.getAttribute('src') === src);
+};
+
+// changes go through editor.dom and get their own undo level, so TinyMCE's undo history
+// matches the editor content (otherwise undo or smart paste restores the pasted images)
+const updateEditorImage = (editor, imageElement, update) => {
+  if (!imageElement) return;
+
+  update(imageElement);
+  editor.undoManager.add();
 };
 
 const extractAndUploadElementImage = async (editor, imageElement) => {
@@ -109,17 +119,18 @@ const extractAndUploadElementImage = async (editor, imageElement) => {
     blob.name = `image.${contentType.split('image/')[1] || 'png'}`;
 
     const image = await createTinyMceAsset(blob);
-    const liveElement = findEditorImageBySrc(editor, src);
 
-    if (!liveElement) return;
-
-    liveElement.setAttribute('src', image.url);
-    liveElement.setAttribute('data-mce-token', image.token);
-    liveElement.setAttribute('alt', `description-${image.token}`);
-    liveElement.setAttribute('class', 'img-responsive');
+    updateEditorImage(editor, findEditorImageBySrc(editor, src), (liveElement) => {
+      editor.dom.setAttribs(liveElement, {
+        src: image.url,
+        'data-mce-token': image.token,
+        alt: `description-${image.token}`,
+        class: 'img-responsive'
+      });
+    });
   } catch(error) {
     // remove the image so it's obvious to the user that the pasted image didn't come through
-    findEditorImageBySrc(editor, src)?.remove();
+    updateEditorImage(editor, findEditorImageBySrc(editor, src), (liveElement) => editor.dom.remove(liveElement));
     console.error(`Error uploading image: ${error}`);
   }
 };
@@ -345,6 +356,7 @@ window.TinyMCE = (() => {
           browser_spellcheck: true,
           branding: false,
           fixed_toolbar_container: '#mytoolbar',
+          custom_ui_selector: '.tinymce-co-editing-ui',
           autosave_restore_when_empty: false,
           autosave_interval: '1s',
           autosave_retention: '1440m',
@@ -442,7 +454,16 @@ window.TinyMCE = (() => {
 
             // After save action
             editorForm
-              .on('ajax:success', (_ev, data) => {
+              .off('ajax:send.tinymce ajax:complete.tinymce ajax:success.tinymce ajax:error.tinymce')
+              .on('ajax:send.tinymce', () => {
+                // A save that can come back as a conflict keeps its editor (and the page) until it settles
+                if (options.onConflictCallback) editor.savePending = true;
+              })
+              .on('ajax:complete.tinymce', () => {
+                editor.savePending = false;
+                editor.visitAfterSave = null;
+              })
+              .on('ajax:success.tinymce', (_ev, data) => {
                 editor.save();
                 editorForm.find('.tinymce-status-badge').removeClass('hidden');
                 editor.remove();
@@ -452,7 +473,16 @@ window.TinyMCE = (() => {
                 editor.plugins.autosave.removeDraft();
                 removeDraft(editor, textAreaObject);
                 if (options.onSaveCallback) { options.onSaveCallback(data); }
-              }).on('ajax:error', (_ev, data) => {
+                if (editor.visitAfterSave) Turbolinks.visit(editor.visitAfterSave);
+              }).on('ajax:error.tinymce', (_ev, data) => {
+                if (data.status === 409 && options.onConflictCallback) {
+                  editor.setProgressState(0);
+                  // saveAction's editor.save() marked the draft as saved, which it isn't
+                  editor.setDirty(true);
+                  options.onConflictCallback(data.responseJSON);
+                  return;
+                }
+
                 const model = editor.getElement().dataset.objectType;
                 let form = $(editor.getElement().closest('.form-group'));
                 form.renderFormErrors(model, data.responseJSON);
@@ -464,6 +494,8 @@ window.TinyMCE = (() => {
                   HelperModule.flashAlertMsg(I18n.t('general.no_permissions'), 'danger');
                 } else if (data.status === 422) {
                   HelperModule.flashAlertMsg(data.responseJSON ? Object.values(data.responseJSON).join(', ') : I18n.t('errors.general'), 'danger');
+                } else {
+                  HelperModule.flashAlertMsg(I18n.t('errors.general'), 'danger');
                 }
               });
 
@@ -503,7 +535,7 @@ window.TinyMCE = (() => {
             editor.isBlurTempDisabled = false;
 
             editor.on('keydown', (e) => {
-              if (e.key === 'Enter' && $(editor.contentDocument.activeElement).atwho('isSelecting')) {
+              if (e.key === 'Enter' && window.SmartAnnotation.isSelecting(editor.contentDocument.activeElement)) {
                 return false;
               }
               return true;
@@ -533,7 +565,7 @@ window.TinyMCE = (() => {
             });
 
             editor.on('blur', () => {
-              if (editor.isBlurTempDisabled || editor.blurDisabled) return false;
+              if (editor.isBlurTempDisabled || editor.blurDisabled || editor.savePending) return false;
 
               if ($('.atwho-view:visible').length || $('#MarvinJsModal:visible').length) return false;
               setTimeout(() => {
@@ -593,6 +625,9 @@ window.TinyMCE = (() => {
     makeItDirty: (editor) => {
       makeItDirty(editor);
     },
+    save: (editor) => {
+      saveAction(editor);
+    },
     wrapTables: (container) => {
       container.find('table').toArray().forEach((table) => {
         if ($(table).parents('table').length === 0) {
@@ -605,6 +640,13 @@ window.TinyMCE = (() => {
 })();
 
 $(document).on('turbolinks:before-visit', (e) => {
+  const savingEditor = tinyMCE.get().find((ed) => ed.savePending);
+  if (savingEditor) {
+    savingEditor.visitAfterSave = e.originalEvent.data.url;
+    e.preventDefault();
+    return false;
+  }
+
   const editor = tinyMCE.activeEditor;
 
   if (editor === null) return true;

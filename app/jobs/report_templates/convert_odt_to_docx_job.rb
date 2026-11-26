@@ -2,6 +2,8 @@
 
 module ReportTemplates
   class ConvertOdtToDocxJob < ApplicationJob
+    queue_as :high_priority
+
     def perform(report_template_id)
       report_template = ReportTemplate.find(report_template_id)
       blob = report_template.odt_template_file.blob

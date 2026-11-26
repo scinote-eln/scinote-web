@@ -65,6 +65,9 @@ export default {
           this.protocol.attributes.version_comment = response.data.version_comment;
           this.publishing = true;
         })
+        .catch(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+        });
     },
     openVersionsModal() {
       this.VersionsModalObject = {
@@ -104,6 +107,10 @@ export default {
         .then((response) => {
           window.location.replace(response.data.url);
         })
+        .catch((error) => {
+          this.publishing = false;
+          HelperModule.flashAlertMsg(error.response?.data?.error || this.i18n.t('errors.general'), 'danger');
+        });
     },
     reloadPage() {
       window.location.reload();

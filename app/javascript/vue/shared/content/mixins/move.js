@@ -18,6 +18,9 @@ export default {
         .then(() => {
           this.movingElement = false;
           this.$emit('moved', this.element.position, targetId);
+        })
+        .catch(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
     }
   }

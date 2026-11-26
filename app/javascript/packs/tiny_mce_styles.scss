@@ -1,1 +1,89 @@
 @import "tinymce/skins/ui/tinymce-5/skin.min.css";
+
+// TinyMCE modal override
+
+.tox-dialog {
+  border: 0 !important;
+  border-radius: .5rem !important;
+  padding: 1rem !important;
+
+  .tox-dialog__header {
+    padding: 0;
+  }
+
+  .tox-dialog__title {
+    font-weight: bold;
+  }
+
+  .tox-dialog__body-content {
+    padding: 1rem 0rem;
+  }
+
+  .tox-dialog__footer {
+    gap: .5rem;
+    padding: 0rem;
+    padding-top: 1rem;
+  }
+
+  .tox-label {
+    color: #475467;
+    font-weight: medium;
+  }
+
+  .tox-textarea {
+    border: 1px solid #D0D5DD;
+    border-radius: .25rem;
+    outline-width: 0;
+    padding: .5rem;
+
+    &:focus {
+      border-color: #3B99FD !important;
+      box-shadow: none !important;
+      outline-width: 0 !important;
+      padding: .5rem !important;
+    }
+  }
+
+  .tox-button {
+    background-color: #104DA9;
+    border: 1px solid #e5e7eb;
+    border-radius: .25rem;
+    cursor: pointer;
+    color: white;
+    flex-shrink: 0;
+    font-size: .875rem;
+    font-weight: normal;
+    height: 40px;
+    justify-content: center;
+    line-height: 1.25rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    white-space: nowrap;
+
+    &:hover {
+      background-color: #2D5FAA;
+    }
+    &.tox-button--secondary {
+      background-color: white;
+      border-color: #e5e7eb ;
+      color: #1D2939;
+
+      &:hover {
+        background-color: #F9F9F9;
+      }
+    }
+
+    &.tox-button--naked {
+      background-color: transparent !important;
+      border: 0;
+    }
+
+    &.tox-button--icon {
+      align-items: center;
+      color: #222f3e;
+      display: flex;
+      justify-content: center;
+      min-width: 40px;
+    }
+  }
+}

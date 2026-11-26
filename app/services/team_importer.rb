@@ -43,13 +43,13 @@ class TeamImporter
     @asset_counter = 0
     @user_counter = 0
     @mce_asset_counter = 0
+    @user_roles = UserRole.all
   end
 
   def import_from_dir(import_dir)
     MyModule.skip_callback(:create, :before, :create_blank_protocol)
     Activity.skip_callback(:create, :before, :add_user)
     Activity.skip_callback(:initialize, :after, :init_default_values)
-    @user_roles = UserRole.all
     @import_dir = import_dir
     team_json = JSON.parse(File.read("#{@import_dir}/team_export.json"))
     team = Team.new(team_json['team'].slice(*Team.column_names))
@@ -250,38 +250,26 @@ class TeamImporter
   def update_annotation(text)
     return false if text.nil?
 
+    mappings = { 'prj' => @project_mappings, 'exp' => @experiment_mappings, 'tsk' => @my_module_mappings,
+                 'rep_item' => @repository_row_mappings, 'rep' => @repository_mappings }
     updated = false
-    %w(prj exp tsk rep_item).each do |name|
-      text.scan(/~#{name}~\w+\]/).each do |text_match|
-        orig_id_encoded = text_match.match(/~#{name}~(\w+)\]/)[1]
-        orig_id = orig_id_encoded.base62_decode
-        new_id =
-          case name
-          when 'prj'
-            @project_mappings[orig_id]
-          when 'exp'
-            @experiment_mappings[orig_id]
-          when 'tsk'
-            @my_module_mappings[orig_id]
-          when 'rep_item'
-            @repository_row_mappings[orig_id]
-          end
-        next unless new_id
+    remapped = text.gsub(/~(prj|exp|tsk|rep_item|rep)~(\w+)\]/) do |token|
+      name, orig_id_encoded = Regexp.last_match.captures
+      new_id = mappings[name][orig_id_encoded.base62_decode]
+      next token unless new_id
 
-        new_id_encoded = new_id.base62_encode
-        text.sub!("~#{name}~#{orig_id_encoded}]", "~#{name}~#{new_id_encoded}]")
-        updated = true
-      end
-    end
-    text.scan(SmartAnnotations::TagToText::USER_REGEX).each do |user_match|
-      orig_id_encoded = user_match[1]
-      orig_id = orig_id_encoded.base62_decode
-      next unless @user_mappings[orig_id]
-
-      new_id_encoded = @user_mappings[orig_id].base62_encode
-      text.sub!("~#{orig_id_encoded}]", "~#{new_id_encoded}]")
       updated = true
+      "~#{name}~#{new_id.base62_encode}]"
     end
+    remapped = remapped.gsub(SmartAnnotations::TagToText::USER_REGEX) do |token|
+      name, orig_id_encoded = Regexp.last_match.captures
+      new_id = @user_mappings[orig_id_encoded.base62_decode]
+      next token unless new_id
+
+      updated = true
+      "[@#{name}~#{new_id.base62_encode}]"
+    end
+    text.replace(remapped) if updated
     updated
   end
 
@@ -642,8 +630,10 @@ class TeamImporter
     experiment.save!
     @experiment_mappings[orig_experiment_id] = experiment.id
 
-    create_user_assignments(experiment_json['user_assignments'], experiment)
-    create_team_assignments(experiment_json['team_assignments'], experiment)
+    unless @is_template
+      create_user_assignments(experiment_json['user_assignments'], experiment)
+      create_team_assignments(experiment_json['team_assignments'], experiment)
+    end
 
     experiment_json['my_module_groups'].each do |my_module_group_json|
       my_module_group = MyModuleGroup.new(my_module_group_json)
@@ -689,10 +679,9 @@ class TeamImporter
       @my_module_mappings[orig_my_module_id] = my_module.id
       @my_module_counter += 1
 
-      create_user_assignments(my_module_json['user_assignments'], my_module)
-      create_team_assignments(my_module_json['team_assignments'], my_module)
-
       unless @is_template
+        create_user_assignments(my_module_json['user_assignments'], my_module)
+        create_team_assignments(my_module_json['team_assignments'], my_module)
         my_module_json['taggings'].each do |tagging_json|
           tagging = Tagging.new(tagging_json)
           tagging.id = nil

@@ -20,6 +20,9 @@ export default {
             'component:delete',
             { id: this.element.id, type: this.element.type }
           );
+        })
+        .catch(() => {
+          HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         });
     }
   }

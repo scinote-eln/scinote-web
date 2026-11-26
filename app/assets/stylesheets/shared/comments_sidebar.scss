@@ -4,6 +4,7 @@
   --comments-sidebar-width: 280px;
   animation-timing-function: $timing-function-sharp;
   height: calc(100vh - var(--top-navigation-height));
+  overflow: hidden;
   position: fixed;
   right: 0;
   top: var(--top-navigation-height);

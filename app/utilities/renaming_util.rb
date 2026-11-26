@@ -25,7 +25,7 @@ module RenamingUtil
     max_length = Constants::INFINITY
     clazz
     .validators_on(name_col)
-    .select{ |v| v.class == ActiveModel::Validations::LengthValidator }
+    .select{ |v| v.is_a?(ActiveModel::Validations::LengthValidator) }
     .each do |v|
       max = v.options[:maximum]
       if max.present? && max < max_length

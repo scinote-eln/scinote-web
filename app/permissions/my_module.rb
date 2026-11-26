@@ -26,6 +26,8 @@ Canaid::Permissions.register_for(MyModule) do
      manage_my_module_steps
      complete_my_module_steps
      uncomplete_my_module_steps
+     unskip_my_module_steps
+     skip_my_module_steps
      check_my_module_steps
      uncheck_my_module_steps
      update_my_module_stock_consumption)

@@ -24,9 +24,9 @@ module InputSanitizeHelper
     CGI.unescapeHTML(text)
   end
 
-  def smart_annotation_text(text, sanitize_text: true)
+  def smart_annotation_text(text, user: nil, team: nil, sanitize_text: true, is_shared_object: true, add_prefix_type: false)
     if text =~ SmartAnnotations::TagToText::USER_REGEX || text =~ SmartAnnotations::TagToText::ITEMS_REGEX
-      text = SmartAnnotations::TagToText.new(nil, nil, text, is_shared_object: true).text
+      text = SmartAnnotations::TagToText.new(user, team, text, is_shared_object: is_shared_object, add_prefix_type: add_prefix_type).text
     end
 
     sanitize_text ? sanitize_input(text) : text

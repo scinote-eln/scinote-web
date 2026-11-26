@@ -9,9 +9,11 @@ var FilePreviewModal = (function() {
     $(document).on('click', '.file-preview-link', function(e) {
       var params = {};
       var galleryViewId = $(this).data('gallery-view-id');
+      var page = $(this).data('page');
       e.preventDefault();
       e.stopPropagation();
       if ($(this).closest('.attachments').data('preview')) params.preview = true;
+      if (page) params.page = page;
       params.gallery = Array.from(new Set(
         $(`.file-preview-link[data-gallery-view-id=${galleryViewId}]`)
           .toArray()

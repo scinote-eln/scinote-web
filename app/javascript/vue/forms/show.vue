@@ -205,6 +205,13 @@ export default {
     };
   },
   methods: {
+    flashError(error) {
+      const message = error.response?.data?.error || error.response?.data?.message;
+      HelperModule.flashAlertMsg(
+        (Array.isArray(message) ? message.join(', ') : message) || this.i18n.t('errors.general'),
+        'danger'
+      );
+    },
     isValidChanged() {
       this.$nextTick(() => {
         if (this.$refs.editField?.field) {
@@ -232,7 +239,7 @@ export default {
         if (this.form.attributes.published_on || !this.form.attributes.urls.create_field) {
           this.preview = true;
         }
-      });
+      }).catch(this.flashError);
     },
     addField(type) {
       if (this.submitting) {
@@ -252,7 +259,7 @@ export default {
         this.activeField = this.fields[this.fields.length - 1];
         this.$refs.addFieldDropdown.isOpen = false;
         this.syncSavedFields();
-      }).then(() => {
+      }).catch(this.flashError).finally(() => {
         this.submitting = false;
       });
     },
@@ -263,7 +270,7 @@ export default {
         }
       }).then(() => {
         this.form.attributes.name = name;
-      });
+      }).catch(this.flashError);
     },
     updateField(field) {
       const index = this.fields.findIndex((f) => f.id === field.id);
@@ -272,14 +279,14 @@ export default {
       }).then((response) => {
         this.fields.splice(index, 1, response.data.data);
         this.syncSavedFields();
-      });
+      }).catch(this.flashError);
     },
     saveOrder() {
       axios.post(this.form.attributes.urls.reorder_fields, {
         form_field_positions: this.fields.map((f, i) => ({ id: f.id, position: i }))
       }).then(() => {
         this.syncSavedFields();
-      });
+      }).catch(this.flashError);
     },
     duplicateField(field) {
       if (this.submitting) {
@@ -294,7 +301,7 @@ export default {
         this.fields.splice(index + 1, 0, response.data.data);
         this.activeField = response.data.data;
         this.syncSavedFields();
-      }).finally(() => {
+      }).catch(this.flashError).finally(() => {
         this.submitting = false;
       });
     },
@@ -318,7 +325,7 @@ export default {
           this.activeField = {};
         }
         this.syncSavedFields();
-      }).finally(() => {
+      }).catch(this.flashError).finally(() => {
         this.submitting = false;
       });
     },
@@ -333,7 +340,7 @@ export default {
         axios.post(this.form.attributes.urls.publish).then((response) => {
           this.form = response.data.data;
           this.preview = true;
-        }).finally(() => {
+        }).catch(this.flashError).finally(() => {
           this.submitting = false;
         });
       }
@@ -347,7 +354,7 @@ export default {
       axios.post(this.form.attributes.urls.unpublish).then((response) => {
         this.form = response.data.data;
         this.preview = false;
-      }).finally(() => {
+      }).catch(this.flashError).finally(() => {
         this.submitting = false;
       });
     }

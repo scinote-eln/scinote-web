@@ -46,6 +46,7 @@
       <span :class="{'truncate py-1': singleLine }" :title="sa_value || placeholder" v-if="smartAnnotation" v-html="sa_value || placeholder" ></span>
       <span :class="{'truncate py-1': singleLine}" :title="newValue || placeholder" v-else>{{newValue || placeholder}}</span>
     </div>
+    <slot v-if="!editing" name="suffix"></slot>
 
     <div
       class="mt-3 whitespace-nowrap truncate text-xs font-normal absolute bottom-[-1rem] w-full"
@@ -77,6 +78,7 @@ export default {
     allowNewLine: { type: Boolean, default: false },
     multilinePaste: { type: Boolean, default: false },
     smartAnnotation: { type: Boolean, default: false },
+    smartAnnotationAssignableObjectId: {type: String, default: '' },
     editOnload: { type: Boolean, default: false },
     defaultValue: { type: String, default: '' },
     singleLine: { type: Boolean, default: true },
@@ -243,7 +245,7 @@ export default {
           selection.addRange(range);
         }
         if (this.smartAnnotation) {
-          SmartAnnotation.init($(this.$refs.input), false);
+          SmartAnnotation.init($(this.$refs.input), false, this.smartAnnotationAssignableObjectId);
         }
       });
       this.$emit('editingEnabled');

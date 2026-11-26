@@ -50,4 +50,8 @@ if ENV['SCINOTE_SCHEDULER_ENABLED'] == 'true'
   schedule_task(scheduler, '1d') do
     NotificationCleanupJob.perform_now
   end
+
+  schedule_task(scheduler, '1m') do
+    EditingFlagCleanupJob.perform_now
+  end
 end

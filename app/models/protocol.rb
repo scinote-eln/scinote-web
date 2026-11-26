@@ -468,10 +468,10 @@ class Protocol < ApplicationRecord
       new_report_template.subject = dest
 
       ProtocolReportTemplates::TagService.new(dest).replace_tags(report_template, new_report_template, src.in_module? ? src.my_module : src, include_results: include_results)
-
       new_report_template.save!
-      new_report_template.generate_preview!
       ReportTemplates::ConvertOdtToDocxJob.perform_later(new_report_template.id) if report_template.docx_template_file.attached?
+
+      new_report_template.generate_preview!
     end
   end
 

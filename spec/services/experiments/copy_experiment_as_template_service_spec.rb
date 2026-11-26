@@ -55,6 +55,21 @@ describe Experiments::CopyExperimentAsTemplateService do
       expect(service_call.cloned_experiment.my_module_groups.count)
         .to be == experiment.my_module_groups.count
     end
+
+    # permission checks run in the controllers (can_clone_experiment?, can_create_project_experiments?)
+    # before the service is called, so the service itself adds no errors and clones into the target project
+    it 'returns no errors and clones the experiment into the target project' do
+      expect(service_call.errors).to be_empty
+      expect(service_call.cloned_experiment.project).to eq new_project
+    end
+  end
+
+  context 'when service call is not successful' do
+    # bug: nil experiment raises in initialize; valid? also never returns false (missing return), so errors[:invalid_arguments] is unreachable
+    it 'raises NoMethodError when experiment is nil' do
+      expect { described_class.call(experiment: nil, project: new_project, user: user) }
+        .to raise_error(NoMethodError)
+    end
   end
 
   context 'when service call is not successful' do

@@ -391,6 +391,9 @@ export default {
         }
       }).then(() => {
         this.updateTable();
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+        this.updateTable();
       });
     },
     updateProjectDescription(description) {
@@ -400,6 +403,8 @@ export default {
         }
       }).then(() => {
         this.loadProject();
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
       });
     },
     restore(event, rows) {
@@ -436,6 +441,9 @@ export default {
     updateField(url, params) {
       axios.put(url, params).then(() => {
         this.updateTable();
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
+        this.updateTable();
       });
     },
     changeStatus(value, params) {
@@ -450,6 +458,9 @@ export default {
     updateFavorite(value, params) {
       const url = value ? params.data.urls.favorite : params.data.urls.unfavorite;
       axios.post(url).then(() => {
+        this.updateTable();
+      }).catch(() => {
+        HelperModule.flashAlertMsg(this.i18n.t('errors.general'), 'danger');
         this.updateTable();
       });
     },

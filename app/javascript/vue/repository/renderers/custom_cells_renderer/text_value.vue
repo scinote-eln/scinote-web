@@ -1,24 +1,28 @@
 <template>
   <div :title="mandatoryErrorTitle">
     <div class="group relative flex items-center group-hover:marker text-xs h-full w-full leading-[unset]">
-      <div ref="descripitonBox" class="flex gap-2 w-full items-center text-sm leading-[unset]">
-        <template v-if="sanitizedTextValue && sanitizedTextValue.length > 0">
-          <span class="cursor-pointer line-clamp-1 leading-[unset] truncate"
-            @click.stop v-html="sanitizedTextValue">
+      <div ref="descripitonBox" class="flex gap-1 w-full items-center text-sm leading-[unset]">
+        <template v-if="hasValue">
+          <span v-if="sanitizedTextValue"
+                class="cursor-pointer line-clamp-1 leading-[unset] truncate grow"
+                @click="showTextCellModal"
+                v-html="sanitizedTextValue">
           </span>
-        </template>
-        <template v-else-if="textValue && textValue.length > 0">
-          <span class="cursor-pointer line-clamp-1 leading-[unset] truncate"
+          <span v-else
+                class="cursor-pointer line-clamp-1 leading-[unset] truncate grow"
                 @click="showTextCellModal">
-            {{ textValue}}
+            {{ textValue }}
           </span>
-          <span @click.stop="showTextCellModal" class="text-sn-blue cursor-pointer shrink-0 inline-block text-sm leading-[unset]">
-            {{ i18n.t('repositories.table.text.more') }}
-          </span>
+          <div v-if="canManage"
+               class="tw-hidden group-hover:block shrink-0 cursor-pointer"
+               :title="i18n.t('general.edit')"
+               @click.stop="showTextCellModal">
+            <i class="sn-icon sn-icon-edit"></i>
+          </div>
         </template>
         <template v-else-if="canManage">
           <span @click.stop="showTextCellModal"
-                class="text-sn-blue cursor-pointer shrink-0 inline-block text-sm leading-[unset]"
+                class="text-sn-grey cursor-pointer shrink-0 inline-block text-sm leading-[unset]"
                 :class="addTextClass">
             {{ i18n.t('repositories.table.text.add_text') }}
           </span>
@@ -50,6 +54,9 @@ export default {
   computed: {
     textValue() {
       return this.params?.value?.value?.edit || '';
+    },
+    hasValue() {
+      return this.sanitizedTextValue.length > 0 || this.textValue.length > 0;
     },
     sanitizedTextValue() {
       return this.params?.value?.value?.view_sanitized || '';

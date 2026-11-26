@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ExperimentReportsController < ApplicationController
+  include TeamsHelper
+
   before_action :check_experiment_reporting_enabled
   before_action :load_experiment
   before_action :check_view_permissions, except: %i(create destroy my_modules)
@@ -45,14 +47,16 @@ class ExperimentReportsController < ApplicationController
       partial: 'analytical_reports/preview',
       locals: {
         report: @analytical_report,
-        download_url: download_experiment_experiment_report_path(@experiment.id, @analytical_report)
+        download_url: download_experiment_experiment_report_path(@experiment.id, @analytical_report),
+        gallery: @experiment.analytical_reports.in_order_of(:id, params[:gallery]).pluck(:id),
+        preview_path: ->(r) { preview_experiment_experiment_report_path(@experiment, r) }
       },
       formats: :html
     ) }
   end
 
   def my_modules
-    @my_modules = @experiment.my_modules.active.readable_by_user(current_user).joins(:analytical_reports).distinct
+    @my_modules = @experiment.my_modules.active.readable_by_user(current_user).joins(:analytical_reports).distinct.order(name: :asc, id: :asc)
   end
 
   private

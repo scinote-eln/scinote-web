@@ -66,7 +66,7 @@ class Constants
   # Maximum number of users that can be invited in a single action
   INVITE_USERS_LIMIT = 20
   # Maximum nr. of search results for atwho (smart annotations)
-  ATWHO_SEARCH_LIMIT = 10
+  ATWHO_SEARCH_LIMIT = 20
   # Max characters for repository name in Atwho modal
   ATWHO_REP_NAME_LIMIT = 16
   # Results limited query/display elements for pages
@@ -195,6 +195,31 @@ class Constants
     #98A2B3
     #DCE0E7
   ).freeze
+
+  USER_AVATAR_DARK_TEXT_COLORS = %w(
+    #C4D3A0
+    #5EC66F
+    #46C3C8
+    #A3CCE4
+    #3B99FD
+    #FF69B4
+    #FF5C00
+    #E9A845
+    #98A2B3
+    #DCE0E7
+  ).freeze
+
+  USER_AVATAR_LIGHT_TEXT_COLORS = %w(
+    #104DA9
+    #6F2DC1
+    #DF3562
+    #B06500
+    #663300
+    #1D2939
+  ).freeze
+
+  # Changing this array will change the avatar colors for all users.
+  USER_AVATAR_COLORS = (USER_AVATAR_DARK_TEXT_COLORS + USER_AVATAR_LIGHT_TEXT_COLORS).freeze
 
   # Theme colors
   BRAND_PRIMARY = '#104da9'.freeze # $brand-primary
@@ -353,7 +378,10 @@ class Constants
   config[:attributes]['img'] << 'data-mce-token'
   config[:attributes]['img'] << 'data-source-type'
   config[:attributes]['a'] << 'data-turbolinks'
+  config[:attributes]['a'].merge(%w(data-no-turbolink data-id data-preview-url data-page))
   config[:protocols]['img']['src'] << 'data'
+  (config[:attributes]['span'] ||= []).concat(%w(class data-latex))
+
   INPUT_SANITIZE_CONFIG = Sanitize::Config.freeze_config(config)
 
   REPOSITORY_DEFAULT_PAGE_SIZE = 10
@@ -435,7 +463,6 @@ class Constants
   # my module report limits
   MY_MODULE_REPORT_HEADER_MAX_LENGTH = 140
   MY_MODULE_REPORT_HEADER_MAX_LINES = 3
-  MY_MODULE_REPORT_FOOTER_MAX_LENGTH = 80
 
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\
