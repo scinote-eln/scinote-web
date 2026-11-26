@@ -21,7 +21,7 @@ describe ProtocolsImporter do
     {
       'name' => 'Legacy protocol',
       'authors' => '',
-      'description' => +'<p>Intro [~tiny_mce_id:42]</p>',
+      'description' => +'<p>Intro <img data-mce-token="42"></p>',
       'descriptionAssets' => {
         '0' => { 'tokenId' => '42', 'signed_id' => description_blob.signed_id, 'fileMetadata' => '{"src":"v1"}' }
       },
@@ -58,12 +58,11 @@ describe ProtocolsImporter do
       expect(protocol.added_by).to eq user
     end
 
-    it 'converts old tiny mce tags and links imported images' do
+    it 'links imported images' do
       tiny_mce_asset = protocol.tiny_mce_assets.first
 
       expect(tiny_mce_asset.image.blob.metadata).to include('src' => 'v1')
       expect(protocol.description).to include("data-mce-token=\"#{Base62.encode(tiny_mce_asset.id)}\"")
-      expect(protocol.description).not_to include('[~tiny_mce_id:42]')
     end
 
     it 'imports steps with description texts, checklists, tables and assets' do

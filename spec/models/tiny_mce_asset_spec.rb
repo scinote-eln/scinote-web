@@ -61,6 +61,21 @@ describe TinyMceAsset, type: :model do
       end
     end
 
+    describe 'legacy [~tiny_mce_id:N] tokens' do
+      it 'are not resolved or cloned when rendering' do
+        foreign_result_text = create :result_text, result: create(:result, my_module: create(:my_module))
+        foreign_image = create :tiny_mce_asset, team_id: team.id, object: foreign_result_text
+
+        expect do
+          html = TinyMceAsset.generate_url("<p>[~tiny_mce_id:#{foreign_image.id}]</p>", result_text)
+          expect(html).not_to include 'test.jpg'
+          expect(html).not_to include 'data-mce-token'
+        end.not_to change(TinyMceAsset, :count)
+
+        expect(result_text.tiny_mce_assets.reload).to be_empty
+      end
+    end
+
     describe '#reassign_tiny_mce_image_references' do
       it 'change image token in rich text field' do
         new_result_text = result_text
