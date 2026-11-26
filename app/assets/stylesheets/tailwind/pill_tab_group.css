@@ -1,0 +1,59 @@
+@layer components {
+  /* Pill tab group: a grey track holding tabs, one of them selected.
+     Markup and keyboard handling live in app/javascript/vue/shared/pill_tab_group.vue.
+     The .hover, .focus and .disabled classes only exist so the design elements page can show those
+     states statically; they share each rule with the real :hover / :focus-visible. */
+  /* The group and its tabs hug their content. */
+  .sci-pill-tab-group {
+    @apply inline-flex w-fit max-w-full items-center rounded-[10px] bg-sn-super-light-grey p-0.5;
+  }
+
+  .sci-pill-tab-group .sci-pill-tab-item {
+    @apply flex h-10 min-w-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-lg border-0 bg-sn-super-light-grey px-4 py-2 text-base text-sn-grey-700 outline-none;
+  }
+
+  /* The label reserves its semibold width: an invisible semibold copy (::after, from data-label)
+     shares the grid cell with the visible text, so selecting a tab never changes its width.
+     visibility: hidden keeps the copy out of the accessibility tree. */
+  .sci-pill-tab-group .sci-pill-tab-item-label {
+    @apply inline-grid min-w-0;
+  }
+
+  .sci-pill-tab-group .sci-pill-tab-item-text,
+  .sci-pill-tab-group .sci-pill-tab-item-label::after {
+    @apply truncate;
+    grid-area: 1 / 1;
+  }
+
+  .sci-pill-tab-group .sci-pill-tab-item-label::after {
+    @apply invisible font-semibold;
+    content: attr(data-label);
+  }
+
+  .sci-pill-tab-group .sci-pill-tab-item:hover:not(.active):not([aria-disabled="true"]):not(.disabled),
+  .sci-pill-tab-group .sci-pill-tab-item.hover:not(.active):not(.disabled) {
+    @apply bg-sn-light-grey;
+  }
+
+  .sci-pill-tab-group .sci-pill-tab-item.active {
+    @apply bg-sn-white font-semibold text-sn-black shadow-flyout-shadow;
+  }
+
+  .sci-pill-tab-group .sci-pill-tab-item:focus-visible,
+  .sci-pill-tab-group .sci-pill-tab-item.focus {
+    @apply outline outline-4 outline-offset-0 outline-sn-science-blue-hover;
+  }
+
+  .sci-pill-tab-group .sci-pill-tab-item[aria-disabled="true"],
+  .sci-pill-tab-group .sci-pill-tab-item.disabled {
+    @apply cursor-not-allowed opacity-30;
+  }
+
+  .sci-pill-tab-group.sci-pill-tab-group-sm .sci-pill-tab-item {
+    @apply h-[26px] gap-1 py-1 text-xs leading-[18px];
+  }
+
+  .sci-pill-tab-group.sci-pill-tab-group-sm .sci-pill-tab-item .sn-icon {
+    @apply !text-[16px];
+  }
+}
