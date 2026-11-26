@@ -303,6 +303,10 @@ export default {
     if (!this.newValue && this.multiple) {
       this.newValue = [];
     }
+    window.addEventListener('sn-select-dropdown:open', this.closeOnOtherOpen);
+  },
+  beforeUnmount() {
+    window.removeEventListener('sn-select-dropdown:open', this.closeOnOtherOpen);
   },
   watch: {
     value(newValue) {
@@ -362,12 +366,16 @@ export default {
       if (this.disabled || this.isOpen) return;
 
       this.isOpen = true;
+      window.dispatchEvent(new CustomEvent('sn-select-dropdown:open', { detail: this }));
 
       if (this.optionsUrl) {
         this.fetchedOptions = [];
         this.nextPage = 1;
         this.fetchOptions();
       }
+    },
+    closeOnOtherOpen(e) {
+      if (e.detail !== this) this.close();
     },
     clear() {
       this.newValue = this.multiple ? [] : null;
