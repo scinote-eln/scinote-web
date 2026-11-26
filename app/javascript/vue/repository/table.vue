@@ -322,6 +322,8 @@ export default {
     },
     openManageColumnsModal() {
       const url = new URL(window.location.href);
+      if (!url.searchParams.has('open_manage_columns') || !this.$refs.repositoryTable?.tableState) return;
+
       url.searchParams.delete('open_manage_columns');
       window.history.replaceState(window.history.state, '', url);
       document.getElementById('manage-columns')?.click();
