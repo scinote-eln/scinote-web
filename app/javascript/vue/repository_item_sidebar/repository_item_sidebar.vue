@@ -10,6 +10,9 @@
       <NewItem v-if="newItemRepositoryId" ref="newItem" :key="newItemKey"
         :repositoryId="newItemRepositoryId"
         :rowToDuplicateId="newItemRowToDuplicateId"
+        :myModuleId="newItemTaskContext?.myModuleId || null"
+        :initialName="newItemTaskContext?.name || ''"
+        :initialMarkAsOutput="!!newItemTaskContext?.markAsOutput"
         @created="onNewItemCreated"
         @close="toggleShowHideSidebar(null)" />
 
@@ -330,6 +333,7 @@ export default {
       newItemRepositoryId: null,
       newItemKey: 0,
       newItemRowToDuplicateId: null,
+      newItemTaskContext: null,
       onNewItemCreated: null
     };
   },
@@ -436,7 +440,7 @@ export default {
       this.loadRepositoryRow(repositoryRowUrl);
       this.currentItemUrl = repositoryRowUrl;
     },
-    async openNewItemCard(repositoryId, onCreated, rowToDuplicateId = null) {
+    async openNewItemCard(repositoryId, onCreated, rowToDuplicateId = null, taskContext = null) {
       if (this.newItemRepositoryId && this.isShowing && !(await this.$refs.newItem.confirmDiscard())) return;
 
       this.currentItemUrl = null;
@@ -444,6 +448,7 @@ export default {
       this.onNewItemCreated = onCreated;
       this.newItemRepositoryId = repositoryId;
       this.newItemRowToDuplicateId = rowToDuplicateId;
+      this.newItemTaskContext = taskContext;
       this.newItemKey += 1;
       this.isShowing = true;
     },

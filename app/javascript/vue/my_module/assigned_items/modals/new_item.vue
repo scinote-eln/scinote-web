@@ -39,8 +39,6 @@
                 {{ i18n.t('my_modules.assigned_items.create_modal.inventory_item_name') }}
               </label>
               <div class="sci-input-container-v2"
-                   :class="{ error: itemNameError }"
-                   :data-error="itemNameError"
                    :data-e2e="`e2e-TX-${e2eValue}-itemNameError`">
                 <input
                   type="text"
@@ -73,10 +71,10 @@
             </button>
             <button
               class="btn btn-primary"
-              :disabled="submitting || !validObject" type="submit"
+              :disabled="!validObject" type="submit"
               :data-e2e="`e2e-BT-${e2eValue}-create`"
             >
-              {{ i18n.t('my_modules.assigned_items.create_modal.create_item') }}
+              {{ i18n.t('my_modules.assigned_items.create_modal.continue') }}
             </button>
           </div>
         </div>
@@ -87,12 +85,9 @@
 
 <script>
 
-import axios from '../../../../packs/custom_axios.js';
 import SelectDropdown from '../../../shared/select_dropdown.vue';
 import modalMixin from '../../../shared/modal_mixin.js';
 import {
-  repository_repository_rows_path,
-  repository_repository_row_path,
   list_repositories_path
 } from '../../../../routes.js';
 
@@ -106,6 +101,7 @@ export default {
       default: ''
     }
   },
+  emits: ['continue', 'close'],
   mixins: [modalMixin],
   components: {
     SelectDropdown
@@ -114,25 +110,15 @@ export default {
     return {
       selectedRepository: null,
       inventoryItemName: '',
-      outputMarked: false,
-      itemNameError: null,
-      submitting: false
+      outputMarked: false
     };
   },
   computed: {
     validObject() {
-      return this.selectedRepository && this.inventoryItemName && !this.itemNameError;
+      return this.selectedRepository && this.inventoryItemName.trim();
     },
     repositoriesUrl() {
       return list_repositories_path({ appendable: true });
-    }
-  },
-  watch: {
-    inventoryItemName() {
-      this.itemNameError = null;
-    },
-    selectedRepository() {
-      this.itemNameError = null;
     }
   },
   created() {
@@ -144,23 +130,12 @@ export default {
       this.selectedRepository = repository;
     },
     submit() {
-      this.submitting = true;
-      axios.post(repository_repository_rows_path(this.selectedRepository), {
-        repository_row: { name: this.inventoryItemName },
-        my_module_id: this.myModuleId,
-        is_output: this.outputMarked
-      }).then((data) => {
-        this.$emit(
-          'tableReloaded',
-          repository_repository_row_path(data.data.data.attributes.repository_id, data.data.data.id, { my_module_id: this.myModuleId }),
-          this.selectedRepository
-        );
-        this.submitting = false;
-        this.close();
-      }).catch((error) => {
-        this.submitting = false;
-        this.itemNameError = error.response?.data?.name?.[0] || null;
+      this.$emit('continue', {
+        repositoryId: this.selectedRepository,
+        name: this.inventoryItemName.trim(),
+        markAsOutput: this.outputMarked
       });
+      this.close();
     }
   }
 };

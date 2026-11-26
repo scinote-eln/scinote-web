@@ -69,13 +69,22 @@
     <div class="pr-6">
       <div class="bg-sn-light-grey h-px"></div>
       <div class="flex items-center justify-between h-[76px]">
-        <label class="flex items-center gap-2 mb-0 font-normal cursor-pointer">
-          <span class="sci-checkbox-container">
-            <input v-model="createAnother" type="checkbox" class="sci-checkbox" data-e2e="e2e-CB-itemCard-createAnother"/>
-            <span class="sci-checkbox-label"></span>
-          </span>
-          {{ i18n.t('repositories.item_card.new_item.create_another') }}
-        </label>
+        <div class="flex items-center gap-6">
+          <label v-if="myModuleId" class="flex items-center gap-2 mb-0 font-normal cursor-pointer">
+            <span class="sci-checkbox-container">
+              <input v-model="markAsOutput" type="checkbox" class="sci-checkbox" data-e2e="e2e-CB-itemCard-markAsOutput"/>
+              <span class="sci-checkbox-label"></span>
+            </span>
+            {{ i18n.t('repositories.item_card.new_item.mark_as_output') }}
+          </label>
+          <label class="flex items-center gap-2 mb-0 font-normal cursor-pointer">
+            <span class="sci-checkbox-container">
+              <input v-model="createAnother" type="checkbox" class="sci-checkbox" data-e2e="e2e-CB-itemCard-createAnother"/>
+              <span class="sci-checkbox-label"></span>
+            </span>
+            {{ i18n.t('repositories.item_card.new_item.create_another') }}
+          </label>
+        </div>
         <button type="button" class="btn btn-primary" :disabled="!canCreate" data-e2e="e2e-BT-itemCard-createItem"
           @click="createItem">
           {{ i18n.t(`repositories.item_card.new_item.${creating ? 'creating' : 'create_item'}`) }}
@@ -153,7 +162,10 @@ export default {
   },
   props: {
     repositoryId: { type: [Number, String], required: true },
-    rowToDuplicateId: { type: [Number, String], default: null }
+    rowToDuplicateId: { type: [Number, String], default: null },
+    myModuleId: { type: [Number, String], default: null },
+    initialName: { type: String, default: '' },
+    initialMarkAsOutput: { type: Boolean, default: false }
   },
   emits: ['created', 'close'],
   data() {
@@ -161,8 +173,9 @@ export default {
       loading: true,
       columns: [],
       canManageStock: false,
-      name: '',
-      nameTouched: false,
+      name: this.initialName,
+      nameTouched: !!this.initialName,
+      markAsOutput: this.initialMarkAsOutput,
       itemNameError: null,
       cellErrors: {},
       cells: {},
@@ -307,9 +320,11 @@ export default {
       const url = this.rowToDuplicate
         ? duplicate_repository_repository_row_path(this.repositoryId, this.rowToDuplicate.id)
         : repository_repository_rows_path(this.repositoryId);
+      const taskParams = this.myModuleId ? { my_module_id: this.myModuleId, is_output: this.markAsOutput } : {};
       const response = await axios.post(url, {
         repository_row: { name: this.name.trim() },
-        repository_cells: repositoryCells
+        repository_cells: repositoryCells,
+        ...taskParams
       });
       return response.data.data;
     },
@@ -325,6 +340,7 @@ export default {
       this.cellErrors = {};
       this.name = '';
       this.nameTouched = false;
+      this.markAsOutput = false;
       this.cells = {};
       this.formKey += 1;
     }

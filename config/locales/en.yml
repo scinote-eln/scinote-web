@@ -1585,7 +1585,7 @@ en:
         inventory_label: 'Inventory'
         inventory_placeholder: 'Select inventory'
         inventory_item_name: 'Item name'
-        create_item: 'Create item'
+        continue: 'Continue'
         checkbox_label: 'Mark as output'
       direct_assign:
         success: "Successfully assigned an item to the task."
@@ -3188,6 +3188,7 @@ en:
         create_item: "Create item"
         creating: "Creating..."
         create_another: "Create another"
+        mark_as_output: "Mark as output"
         discard_title: "Discard new item?"
         discard_description: "The information you entered will be lost and the item won't be created."
         discard_confirm: "Discard Item"

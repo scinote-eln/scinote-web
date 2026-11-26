@@ -443,6 +443,55 @@ describe RepositoryRowsController, type: :controller do
         end
       end
     end
+
+    context 'with a task (my_module_id)' do
+      # The item card opened from a task posts a JSON body, so is_output arrives as a real boolean.
+      let(:action) { post :create, params: params, as: :json }
+      let!(:project) { create :project, team: team, created_by: user }
+      let!(:experiment) { create :experiment, project: project, created_by: user }
+      let!(:my_module) { create :my_module, experiment: experiment, created_by: user }
+      let!(:text_column) { create :repository_column, :text_type, repository: repository, mandatory: true }
+      let(:is_output) { true }
+      let(:params) do
+        { repository_id: repository.id,
+          repository_row: { name: 'Task item' },
+          repository_cells: { text_column.id.to_s => 'Lot 7' },
+          my_module_id: my_module.id,
+          is_output: is_output }
+      end
+      let(:created_row) { repository.repository_rows.find_by!(name: 'Task item') }
+
+      it 'creates the item as an output of the task, assigns it and saves the cell value' do
+        expect { action }.to change { RepositoryRow.count }.by(1)
+
+        expect(response).to have_http_status(:ok)
+        expect(created_row.output?).to be(true)
+        expect(created_row.my_module_id).to eq(my_module.id)
+        expect(created_row.my_module_repository_rows.pluck(:my_module_id)).to eq([my_module.id])
+        expect(created_row.repository_cells.find_by!(repository_column: text_column).value.data).to eq('Lot 7')
+      end
+
+      context 'when is_output is false' do
+        let(:is_output) { false }
+
+        it 'assigns the item to the task without marking it as an output' do
+          expect { action }.to change { RepositoryRow.count }.by(1)
+
+          expect(response).to have_http_status(:ok)
+          expect(created_row.output?).to be(false)
+          expect(created_row.my_module_repository_rows.pluck(:my_module_id)).to eq([my_module.id])
+        end
+      end
+
+      it 'renders 400 and creates nothing when the mandatory column has no value' do
+        params[:repository_cells] = {}
+
+        expect { action }.not_to(change { [RepositoryRow.count, MyModuleRepositoryRow.count] })
+        expect(response).to have_http_status(:bad_request)
+        expect(response.parsed_body['repository_cells'])
+          .to eq([I18n.t('repositories.mandatory_column.missing_value', column: text_column.name)])
+      end
+    end
   end
 
   describe 'PUT update' do
