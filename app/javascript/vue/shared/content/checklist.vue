@@ -1,6 +1,6 @@
 <template>
   <div class="content__checklist-container pr-8" :data-e2e="`e2e-CO-${dataE2e}-checklist${element.id}`">
-    <div class="sci-divider my-6" v-if="!inRepository"></div>
+    <div class="sci-divider my-6"></div>
     <div :class="{'!bg-sn-background-brittlebush p-4': element.archived}">
       <div class="checklist-header flex rounded gap-2 mb-1 items-center relative w-full group/checklist-header"
         :class="{ 'editing-name': editingName, 'locked': !element.urls.update_url }">
@@ -54,7 +54,7 @@
           >
             <i class="sn-icon sn-icon-delete"></i>
           </button>
-          <MenuDropdown 
+          <MenuDropdown
             v-if="inRepository || !this.element.locked"
             class="ml-auto"
             :listItems="this.actionMenu"

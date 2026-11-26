@@ -2,7 +2,7 @@
   <div class="content__text-container pr-8"
     :data-e2e="`e2e-CO-${dataE2e}-textElement${element.id}`">
     <div :class="{'!bg-sn-background-brittlebush p-4': element.archived}">
-    <div class="sci-divider my-6" v-if="!inRepository"></div>
+    <div class="sci-divider my-6"></div>
       <div class="text-header h-9 flex rounded mb-1 gap-2 items-center relative w-full group/text-header"
         :class="{ 'editing-name': editingName,
         'locked': !element.urls.update_url }">

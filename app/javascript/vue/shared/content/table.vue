@@ -1,7 +1,7 @@
 <template>
   <div class="content__table-container pr-8"
     :data-e2e="`e2e-CO-${dataE2e}-${element.metadata.plateTemplate ? 'wellPlate' : 'table'}${element.id}`">
-    <div class="sci-divider my-6" v-if="!inRepository"></div>
+    <div class="sci-divider my-6"></div>
     <div :class="{'!bg-sn-background-brittlebush p-4': element.archived}">
       <div class="table-header h-9 flex rounded mb-3 items-center gap-2 relative w-full group/table-header" :class="{ 'editing-name': editingName, 'locked': locked }">
         <div v-if="!locked || element.name" :key="reloadHeader"
