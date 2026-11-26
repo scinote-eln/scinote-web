@@ -69,7 +69,7 @@
       <CreateItemModal
         v-if="openCreateItemModal"
         :myModuleId="myModuleId"
-        @tableReloaded="newCreatedRow"
+        @continue="openNewItemCard"
         :e2eValue="'task-assignedItems-createItemModal'"
         @close="openCreateItemModal = false"/>
       <AssignItemModal
@@ -142,9 +142,14 @@ export default {
         this.focusOnNewRepository(repositoryId);
       });
     },
-    newCreatedRow(repositoryRowSidebarUrl, repositoryId) {
-      this.focusOnNewRepository(repositoryId);
-      window.repositoryItemSidebarComponent.toggleShowHideSidebar(repositoryRowSidebarUrl, this.myModuleId, null);
+    openNewItemCard({ repositoryId, name, markAsOutput }) {
+      this.openCreateItemModal = false;
+      window.repositoryItemSidebarComponent.openNewItemCard(
+        repositoryId,
+        () => this.focusOnNewRepository(repositoryId),
+        null,
+        { myModuleId: this.myModuleId, name, markAsOutput }
+      );
     },
     focusOnNewRepository(repositoryId) {
       let assignedRepository = this.$refs.assignedRepositories?.find((repositoryComponent) => repositoryComponent.repositoryVersion.id == repositoryId);

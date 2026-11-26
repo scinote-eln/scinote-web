@@ -62,7 +62,7 @@
         @assign="openAssignItemModal = true"
         @unassign="unassignModalShow"
         @unassign_downstream="unassignModalDownstreamShow"
-        @create="openCreateItemModal = true"
+        @create="openNewItemCard"
         @tableReloaded="reloadingTable = false"
         @applyFilters="applyFilters"
         @selectVersion="loadVersion"
@@ -105,14 +105,6 @@
         @close="showUnassignModal = false"
         :e2eValue="'task-assignedItems-unassignItemModal'"
       ></UnassignItemModal>
-      <CreateItemModal
-        v-if="openCreateItemModal"
-        :myModuleId="myModuleId"
-        :selectedRepositoryValue="repositoryVersion.id"
-        @tableReloaded="newCreatedRow"
-        @close="openCreateItemModal = false"
-        :e2eValue="'task-assignedItems-createItemModal'"
-      ></CreateItemModal>
       <AssignItemModal
           v-if="openAssignItemModal"
           :myModuleId="myModuleId"
@@ -132,7 +124,6 @@ import ConfirmationModal from '../../shared/confirmation_modal.vue';
 import ExportConsumptionModal from '../../repository/modals/export_stock_consumption_modal.vue';
 import ColumnsMixin from '../../repository/columns_mixin.js';
 import UserStateMixin from '../../mixins/user_state_mixin.js';
-import CreateItemModal from '../assigned_items/modals/new_item.vue';
 import AssignItemModal from './modals/assign_item.vue';
 import UnassignItemModal from './modals/unassign_item.vue';
 import VersionDropdown from './version_dropdown.vue';
@@ -162,7 +153,6 @@ export default {
     DataTable,
     ConsumeModal,
     ConfirmationModal,
-    CreateItemModal,
     ExportConsumptionModal,
     AssignItemModal,
     UnassignItemModal,
@@ -181,7 +171,6 @@ export default {
     submitting: false,
     reloadingTable: false,
     openConsumeModal: false,
-    openCreateItemModal: false,
     repositoryVersion: null,
     textCellModalObject: null,
     activeFilter: [],
@@ -421,9 +410,13 @@ export default {
       this.loadRepositoryColumns();
       this.reloadingTable = true;
     },
-    newCreatedRow(repositoryRowSidebarUrl){
-      this.reloadingTable = true;
-      window.repositoryItemSidebarComponent.toggleShowHideSidebar(repositoryRowSidebarUrl, this.myModuleId, null);
+    openNewItemCard() {
+      window.repositoryItemSidebarComponent.openNewItemCard(
+        this.repositoryVersion.id,
+        () => { this.reloadingTable = true; },
+        null,
+        { myModuleId: this.myModuleId }
+      );
     },
     consume(row) {
       this.selectedRow = row;
