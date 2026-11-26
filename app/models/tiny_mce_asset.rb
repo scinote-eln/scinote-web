@@ -59,9 +59,6 @@ class TinyMceAsset < ApplicationRecord
   end
 
   def self.generate_url(description, obj = nil, is_shared_object: false)
-    # Check tinymce for old format
-    description = update_old_tinymce(description, obj)
-
     description = Nokogiri::HTML(description)
     tm_assets = description.css('img[data-mce-token]')
 
@@ -128,29 +125,6 @@ class TinyMceAsset < ApplicationRecord
     asset.team.save
   end
 
-  def self.update_old_tinymce(description, obj = nil, import = false)
-    return description unless description
-
-    description.scan(/\[~tiny_mce_id:(\w+)\]/).flatten.each do |token|
-      old_format = /\[~tiny_mce_id:#{token}\]/
-      new_format = "<img src=\"\" class=\"img-responsive\" data-mce-token=\"#{Base62.encode(token.to_i)}\"/>"
-
-      asset = find_by(id: token)
-      # impor flag only for import from file cases, because we don't have image in DB
-      unless asset || import
-        # remove tag if asset deleted
-        description.sub!(old_format, '')
-        next
-      end
-
-      # If object (step or result text) don't have direct assciation to tinyMCE image, we need copy it.
-      asset.clone_tinymce_asset(obj) if obj && obj != asset.object
-
-      description.sub!(old_format, new_format)
-    end
-    description
-  end
-
   def self.save_to_eln(ostream, dir)
     if exists?
       order(:id).each do |tiny_mce_asset|
@@ -190,11 +164,6 @@ class TinyMceAsset < ApplicationRecord
     # Prepare array of image to update
     cloned_img_ids = [[id, tiny_img_clone.id]]
 
-    obj_field = Extends::RICH_TEXT_FIELD_MAPPINGS[obj.class.name]
-
-    # Update description with new format
-    obj.update(obj_field => TinyMceAsset.update_old_tinymce(obj[obj_field]))
-
     # reassign images
     obj.reassign_tiny_mce_image_references(cloned_img_ids)
   end
@@ -229,8 +198,8 @@ class TinyMceAsset < ApplicationRecord
       can_read_protocol_in_module?(user, protocol) ||
         can_read_protocol_in_repository?(user, protocol)
     when 'Step'
-      can_read_protocol_in_module?(user, step.protocol) ||
-        can_read_protocol_in_repository?(user, step.protocol)
+      can_read_protocol_in_module?(user, object.protocol) ||
+        can_read_protocol_in_repository?(user, object.protocol)
     else
       false
     end

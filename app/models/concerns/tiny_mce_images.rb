@@ -17,9 +17,6 @@ module TinyMceImages
     def prepare_for_report(field, export_all: false)
       description = self[field]
 
-      # Check tinymce for old format
-      description = TinyMceAsset.update_old_tinymce(description, self)
-
       tiny_mce_assets.each do |tm_asset|
         next unless tm_asset&.image&.attached?
 
@@ -69,9 +66,6 @@ module TinyMceImages
       description = read_attribute(object_field)
 
       return unless description
-
-      # Check tinymce for old format
-      description = TinyMceAsset.update_old_tinymce(description, self)
 
       parsed_description = Nokogiri::HTML(description)
       images.each do |image|
