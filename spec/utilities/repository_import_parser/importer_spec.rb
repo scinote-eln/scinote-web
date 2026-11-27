@@ -152,6 +152,99 @@ describe RepositoryImportParser::Importer do
         expect(repository.repository_rows.count).to eq 0
       end
     end
+
+    context 'when importing into unique columns' do
+      let(:csv_rows) do
+        [
+          ['', 'Sample 1', 'Code A'],
+          ['', 'sample 1 ', 'code b'],
+          ['', 'Sample 3', ' Code B '],
+          ['', 'Sample 4', ''],
+          ['', 'Sample 5', '']
+        ]
+      end
+      let(:csv_file) do
+        file = Tempfile.new(['unique_import', '.csv'])
+        file.write(CSV.generate { |csv| ([['Item ID', 'Name', 'Custom items']] + csv_rows).each { |row| csv << row } })
+        file.rewind
+        file
+      end
+      let(:sheet) { SpreadsheetParser.open_spreadsheet(csv_file) }
+      let(:mappings) { { '0' => '0', '1' => '-1', '2' => custom_column.id.to_s } }
+      let(:preview_importer) { RepositoryImportParser::Importer.new(sheet, mappings, user, repository, true, true, true) }
+      let(:preview_rows) do
+        preview_importer.run[:changes][:data].index_by { |row| row[:attributes][:name] }
+      end
+
+      before do
+        repository.update!(enforce_unique_item_names: true)
+        custom_column.update!(enforce_unique: true)
+      end
+
+      after { csv_file.close! }
+
+      it 'marks all rows sharing a value in the file, ignoring case and surrounding whitespace' do
+        expect(preview_rows['Sample 1'][:attributes]).to include(import_status: 'invalid',
+                                                                 import_unique_violations: ['name'])
+        expect(preview_rows['sample 1 '][:attributes]).to include(
+          import_status: 'invalid',
+          import_unique_violations: match_array(['name', custom_column.id.to_s])
+        )
+        expect(preview_rows['Sample 3'][:attributes]).to include(import_status: 'invalid',
+                                                                 import_unique_violations: [custom_column.id.to_s])
+        expect(preview_rows['Sample 3'][:attributes][:import_message]).to eq 'duplicate value in unique column'
+      end
+
+      it 'does not treat empty values as duplicates' do
+        expect(preview_rows['Sample 4'][:attributes]).to include(import_status: 'created', import_unique_violations: [])
+        expect(preview_rows['Sample 5'][:attributes]).to include(import_status: 'created', import_unique_violations: [])
+      end
+
+      context 'when matching is case sensitive' do
+        before do
+          repository.update!(unique_item_names_case_sensitive: true)
+          custom_column.update!(unique_case_sensitive: true)
+        end
+
+        it 'only marks values with the same letter case' do
+          expect(preview_rows['Sample 1'][:attributes][:import_unique_violations]).to eq []
+          expect(preview_rows['sample 1 '][:attributes][:import_unique_violations]).to eq []
+          expect(preview_rows['Sample 3'][:attributes][:import_unique_violations]).to eq []
+        end
+      end
+
+      context 'when a value matches an existing item' do
+        let!(:existing_row) { create :repository_row, repository: repository, created_by: user, name: 'Sample 5' }
+
+        it 'marks the row' do
+          expect(preview_rows['Sample 5'][:attributes]).to include(import_status: 'invalid',
+                                                                   import_unique_violations: ['name'])
+        end
+
+        it 'marks the row when the existing item is archived' do
+          existing_row.update!(archived: true, archived_by: user, archived_on: Time.zone.now)
+
+          expect(preview_rows['Sample 5'][:attributes][:import_unique_violations]).to eq ['name']
+        end
+      end
+
+      context 'when a row updates an existing item with its unchanged value' do
+        let!(:existing_row) { create :repository_row, repository: repository, created_by: user, name: 'Sample 5' }
+        let(:csv_rows) { [[existing_row.code, 'Sample 5', ''], ['', 'Sample 6', '']] }
+
+        it 'does not mark the row' do
+          expect(preview_rows['Sample 5'][:attributes]).to include(import_status: 'unchanged',
+                                                                   import_unique_violations: [])
+        end
+      end
+
+      it 'does not import any row with a duplicate value' do
+        response = RepositoryImportParser::Importer.new(sheet, mappings, user, repository, true, true, false).run
+
+        expect(response).to include(status: :ok, created_rows_count: 2)
+        expect(repository.repository_rows.pluck(:name)).to match_array(['Sample 4', 'Sample 5'])
+      end
+    end
   end
 
   describe 'with custom sheets' do

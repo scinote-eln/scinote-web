@@ -17,7 +17,6 @@ module RepositoryImportParser
       @id_index = nil
       @created_rows_count = 0
       @updated_rows_count = 0
-      @header_skipped = false
       @repository = repository
       @sheet = sheet
       @rows = SpreadsheetParser.spreadsheet_enumerator(@sheet).reject { |r| r.all?(&:blank?) }
@@ -70,16 +69,10 @@ module RepositoryImportParser
     def import_rows!
       checked_rows = []
       duplicate_ids = SpreadsheetParser.duplicate_ids(@sheet)
+      incoming_rows = parse_incoming_rows
+      @in_file_duplicate_values = find_in_file_duplicate_values(incoming_rows)
 
-      @rows.each do |row|
-        unless @header_skipped
-          @header_skipped = true
-          next
-        end
-
-        incoming_row = SpreadsheetParser.parse_row(row, @sheet, date_format: @user.settings['date_format'])
-        next if incoming_row.compact.blank?
-
+      incoming_rows.each do |incoming_row|
         if @id_index
           id = incoming_row[@id_index].to_s.gsub(RepositoryRow::ID_PREFIX, '')
 
@@ -144,6 +137,7 @@ module RepositoryImportParser
         @cell_errors = {}
         @changed_columns = []
         @mandatory_missing = []
+        @unique_violations = []
         @updated = false
         repository_row_name = try_decimal_to_string(import_row[@name_index])
         if repository_row.present?
@@ -159,12 +153,19 @@ module RepositoryImportParser
         name_changed = repository_row.new_record? ? repository_row.name.present? : repository_row.name_changed?
         @changed_columns << 'name' if name_changed
 
+        if in_file_duplicate?('name', repository_row_name)
+          raise ActiveRecord::Rollback unless @preview
+
+          @unique_violations << 'name'
+        end
+
         if @preview
           repository_row.validate
           repository_row.id = SecureRandom.uuid.gsub(/[a-zA-Z-]/, '') unless repository_row.id.present?  # ID required for preview with serializer
         else
           repository_row.save!
         end
+        extract_unique_violation(repository_row.errors, :name, 'name')
         @errors << repository_row.errors.full_messages.join(',') if repository_row.errors.present?
         name_errors = repository_row.errors.full_messages_for(:name)
         @cell_errors['name'] = { message: name_errors.join(', ') } if name_errors.present?
@@ -178,6 +179,12 @@ module RepositoryImportParser
           value = try_decimal_to_string(value) unless column.repository_number_value?
 
           @mandatory_missing << column.id.to_s if column.mandatory? && value.blank?
+
+          if in_file_duplicate?(column.id.to_s, value)
+            raise ActiveRecord::Rollback unless @preview
+
+            @unique_violations << column.id.to_s
+          end
 
           cell_value = if value.present?
                          column.data_type.constantize.import_from_text(
@@ -219,6 +226,9 @@ module RepositoryImportParser
 
           next if existing_cell&.value&.errors.blank?
 
+          extract_unique_violation(existing_cell.value.errors, :data, column.id.to_s)
+          next if existing_cell.value.errors.blank?
+
           cell_error_message = existing_cell.value.errors.full_messages.join(',')
           @errors << cell_error_message
           @cell_errors[column.id.to_s] = { message: cell_error_message }
@@ -230,9 +240,15 @@ module RepositoryImportParser
           raise ActiveRecord::Rollback unless @preview
         end
 
+        if @unique_violations.present?
+          @errors << I18n.t('repositories.import_records.steps.step3.status_message.unique_violation')
+          raise ActiveRecord::Rollback unless @preview
+        end
+
         repository_row.import_cell_errors = @cell_errors
         repository_row.import_changed_columns = @changed_columns
         repository_row.import_mandatory_missing = @mandatory_missing
+        repository_row.import_unique_violations = @unique_violations.uniq
 
         repository_row.import_status = if @errors.present?
                                          'invalid'
@@ -250,6 +266,57 @@ module RepositoryImportParser
       rescue ActiveRecord::RecordInvalid
         raise ActiveRecord::Rollback
       end
+    end
+
+    def parse_incoming_rows
+      @rows.drop(1).filter_map do |row|
+        incoming_row = SpreadsheetParser.parse_row(row, @sheet, date_format: @user.settings['date_format'])
+        incoming_row if incoming_row.compact.present?
+      end
+    end
+
+    def find_in_file_duplicate_values(incoming_rows)
+      return {} unless RepositoryBase.inventory_integrity_enabled? && @repository.is_a?(Repository)
+
+      unique_import_fields.to_h do |key, index, case_sensitive|
+        values = incoming_rows.filter_map { |row| uniqueness_key(row[index], case_sensitive) }
+        [key, { case_sensitive: case_sensitive, values: values.tally.select { |_, count| count > 1 }.keys.to_set }]
+      end
+    end
+
+    def unique_import_fields
+      fields = []
+      if @name_index >= 0 && @repository.enforce_unique_item_names?
+        fields << ['name', @name_index, @repository.unique_item_names_case_sensitive?]
+      end
+      @columns.each_with_index do |column, index|
+        next unless column&.repository_text_value? && column.enforce_unique?
+
+        fields << [column.id.to_s, index, column.unique_case_sensitive?]
+      end
+      fields
+    end
+
+    def uniqueness_key(value, case_sensitive)
+      key = try_decimal_to_string(value).to_s.strip
+      return if key.empty?
+
+      case_sensitive ? key : key.downcase
+    end
+
+    def in_file_duplicate?(field_key, value)
+      field = @in_file_duplicate_values[field_key]
+      return false if field.nil?
+
+      key = uniqueness_key(value, field[:case_sensitive])
+      key.present? && field[:values].include?(key)
+    end
+
+    def extract_unique_violation(errors, attribute, field_key)
+      return unless errors.of_kind?(attribute, :not_unique)
+
+      errors.delete(attribute, :not_unique)
+      @unique_violations << field_key
     end
 
     def validate_unmapped_mandatory_columns(repository_row)

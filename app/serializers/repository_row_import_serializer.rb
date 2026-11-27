@@ -22,4 +22,8 @@ class RepositoryRowImportSerializer < ActiveModel::Serializer
   attribute :import_mandatory_missing do
     object.import_mandatory_missing || []
   end
+
+  attribute :import_unique_violations do
+    object.import_unique_violations || []
+  end
 end
