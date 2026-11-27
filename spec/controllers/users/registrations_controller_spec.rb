@@ -29,16 +29,20 @@ describe Users::RegistrationsController, type: :controller do
   end
 
   describe 'GET #avatar' do
-    it 'redirects to the avatar url of the requested user' do
+    it 'renders the initials svg of the requested user when no avatar is attached' do
       sign_in user
       get :avatar, params: { id: user.id, style: 'thumb' }
-      expect(response).to have_http_status(:redirect)
+      expect(response).to have_http_status(:ok)
+      expect(response.media_type).to eq 'image/svg+xml'
+      expect(response.headers['Content-Security-Policy']).to eq "default-src 'none'"
+      expect(response.body).to eq Users::InitialsAvatarService.new(user, :thumb).call
     end
 
     it 'falls back to current user when id is unknown' do
       sign_in user
       get :avatar, params: { id: 0, style: 'icon_small' }
-      expect(response).to have_http_status(:redirect)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to eq Users::InitialsAvatarService.new(user, :icon_small).call
     end
   end
 

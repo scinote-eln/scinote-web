@@ -133,7 +133,7 @@ describe Lists::MyModuleSerializer do
     expect(result[:comments]).to have_key(:count_unseen)
   end
 
-  it 'counts only active results for active tasks and all results for archived ones' do
+  it 'counts only active results for both active and archived tasks' do
     create :result, my_module: my_module, user: user
     create :result, my_module: my_module, user: user, archived: true, archived_on: Time.zone.now
     expect(result[:results]).to eq 1
@@ -141,7 +141,7 @@ describe Lists::MyModuleSerializer do
     my_module.update_columns(archived: true, archived_on: Time.zone.now)
     serialized = build_serializer(my_module.reload).attributes
     expect(serialized[:archived]).to be true
-    expect(serialized[:results]).to eq 2
+    expect(serialized[:results]).to eq 1
     expect(serialized[:archived_on]).to eq I18n.l(my_module.archived_on, format: :full_date)
     expect(serialized[:urls][:show]).to eq routes.protocols_my_module_path(my_module, view_mode: 'archived')
   end
