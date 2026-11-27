@@ -15,9 +15,7 @@ class EditingFlagsChannel < ApplicationCable::Channel
   private
 
   def find_subject
-    return unless EditingFlag::SUBJECT_TYPES.include?(params[:subject_type])
-
-    params[:subject_type].constantize.find_by(id: params[:subject_id])
+    EditingFlag::SUBJECT_TYPE_MAP[params[:subject_type]]&.find_by(id: params[:subject_id])
   end
 
   def can_read_subject?(subject)
