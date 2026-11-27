@@ -36,9 +36,7 @@ class EditingFlagController < ApplicationController
   private
 
   def load_subject
-    return render_404 unless EditingFlag::SUBJECT_TYPES.include?(params[:subject_type])
-
-    @subject = params[:subject_type].constantize.find_by(id: params[:subject_id])
+    @subject = EditingFlag::SUBJECT_TYPE_MAP[params[:subject_type]]&.find_by(id: params[:subject_id])
     render_404 unless @subject
   end
 

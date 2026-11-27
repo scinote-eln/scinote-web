@@ -2,14 +2,17 @@
 
 class EditingFlag < ApplicationRecord
   DEFAULT_DURATION = 30.seconds
-  SUBJECT_TYPES = %w(StepText ResultText).freeze
+  SUBJECT_TYPE_MAP = {
+    'StepText' => StepText,
+    'ResultText' => ResultText
+  }.freeze
 
   belongs_to :user
   belongs_to :subject, polymorphic: true
 
   validates :timeout_at, presence: true
   validates :user_id, uniqueness: { scope: %i(subject_type subject_id) }
-  validates :subject_type, inclusion: { in: SUBJECT_TYPES }
+  validates :subject_type, inclusion: { in: SUBJECT_TYPE_MAP.keys }
 
   scope :active, -> { where(timeout_at: Time.current..) }
   scope :expired, -> { where(timeout_at: ...Time.current) }
@@ -24,7 +27,7 @@ class EditingFlag < ApplicationRecord
   # nothing cascades that deletion to here, so broadcasting would try to stream to a nil
   # subject and raise. Skip it; the orphaned row still expires and gets cleaned up normally.
   def subject_present?
-    subject_type.constantize.exists?(subject_id)
+    SUBJECT_TYPE_MAP[subject_type]&.exists?(subject_id)
   end
 
   def broadcast_create
