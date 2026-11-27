@@ -327,7 +327,7 @@ class RepositoriesController < ApplicationController
         session: session
       )
       if parsed_file.too_large?
-        render json: { error: t('general.file.size_exceeded', file_size: Rails.configuration.x.file_max_size_mb) },
+        render json: { error: t('general.file.size_exceeded', file_size: Rails.configuration.x.inventory_import_max_size_mb) },
                status: :unprocessable_entity
       elsif parsed_file.has_too_many_rows?
         render json: { error: t('repositories.import_records.error_message.items_limit',

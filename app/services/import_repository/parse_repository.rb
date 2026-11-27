@@ -28,7 +28,7 @@ module ImportRepository
     end
 
     def too_large?
-      @file.size > Rails.configuration.x.file_max_size_mb.megabytes
+      @file.size > Rails.configuration.x.inventory_import_max_size_mb.megabytes
     end
 
     def has_too_many_rows?
