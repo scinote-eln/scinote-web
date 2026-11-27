@@ -222,7 +222,7 @@
 }
 
 @media (max-width: 1200px) {
-  .btn {
+  .btn:not(.icon-btn):has(> .sn-icon:first-child) {
     @apply !pr-2;
   }
 }
