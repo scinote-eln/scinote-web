@@ -60,8 +60,8 @@
           <button type="button" class="btn btn-secondary" @click="$emit('changeStep', 'MappingStep')">
             {{ i18n.t('general.cancel') }}
           </button>
-          <span :data-sn-tooltip="hasMandatoryErrors ? i18n.t('repositories.import_records.steps.step3.mandatory_columns_error') : null">
-            <button type="button" class="btn btn-primary" :disabled="hasMandatoryErrors" @click="$emit('importRows')">
+          <span :data-sn-tooltip="importBlockedMessage">
+            <button type="button" class="btn btn-primary" :disabled="!!importBlockedMessage" @click="$emit('importRows')">
               {{ i18n.t('repositories.import_records.steps.step3.import') }}
             </button>
           </span>
@@ -131,6 +131,18 @@ export default {
     },
     hasMandatoryErrors() {
       return this.params.preview.data.some((row) => row.attributes.import_mandatory_missing?.length > 0);
+    },
+    hasUniqueErrors() {
+      return this.params.preview.data.some((row) => row.attributes.import_unique_violations?.length > 0);
+    },
+    importBlockedMessage() {
+      const t = (key) => this.i18n.t(`repositories.import_records.steps.step3.${key}`);
+
+      if (this.hasMandatoryErrors && this.hasUniqueErrors) return t('mandatory_and_unique_columns_error');
+      if (this.hasMandatoryErrors) return t('mandatory_columns_error');
+      if (this.hasUniqueErrors) return t('unique_columns_error');
+
+      return null;
     },
     filteredTableData() {
       if (this.activeTab === 'all') return this.tableData;

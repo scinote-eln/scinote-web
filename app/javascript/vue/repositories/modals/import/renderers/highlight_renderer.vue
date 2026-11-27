@@ -2,6 +2,9 @@
   <span v-if="mandatoryMissing" class="text-sn-alert-passion">
     {{ i18n.t('repositories.import_records.steps.step3.mandatory_column') }}
   </span>
+  <span v-else-if="uniqueViolation" class="text-sn-alert-passion" :data-sn-tooltip="params.value">
+    {{ i18n.t('repositories.import_records.steps.step3.unique_column') }}
+  </span>
   <span v-else-if="cellError" class="text-sn-alert-passion" :data-sn-tooltip="cellError.message">
     {{ errorContent }}
   </span>
@@ -22,6 +25,9 @@ export default {
     },
     mandatoryMissing() {
       return (this.params.data.import_mandatory_missing || []).includes(this.columnKey);
+    },
+    uniqueViolation() {
+      return (this.params.data.import_unique_violations || []).includes(this.columnKey);
     },
     cellError() {
       return (this.params.data.import_cell_errors || {})[this.columnKey];

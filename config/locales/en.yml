@@ -2910,8 +2910,12 @@ en:
             invalid: 'invalid item'
             duplicated: 'item ID has duplicates in the imported file'
             mandatory_missing: 'Mandatory columns missing'
+            unique_violation: 'Duplicate value in unique column'
           mandatory_column: '*Mandatory column'
+          unique_column: '*Must be unique'
           mandatory_columns_error: 'Some of your items have empty mandatory columns'
+          unique_columns_error: 'Some of your items have duplicate values in unique columns'
+          mandatory_and_unique_columns_error: 'Some of your items have empty mandatory columns or duplicate values in unique columns'
         step4:
           title: 'Success report'
           subtitle: '%{inventory} was successfully updated.'
