@@ -4,6 +4,8 @@ require 'rails_helper'
 require 'zip'
 
 describe RepositoriesExportJob, type: :job do
+  include ActiveSupport::Testing::TimeHelpers
+
   let(:user) { create :user }
   let(:team) { create :team, created_by: user, name: 'Team X' }
   let!(:owner_role) { UserRole.find_by(name: I18n.t('user_roles.predefined.owner')) }
@@ -68,6 +70,24 @@ describe RepositoriesExportJob, type: :job do
     expect(entries.keys).to include('Team X/Inv One (0) attachments/test_0.jpg')
     csv = CSV.parse(entries['Team X/Inv One (0).csv'], headers: true)
     expect(csv.first['Files']).to include('Inv One (0) attachments/test_0.jpg')
+  end
+
+  it 'keeps its working directory separate from other exports started in the same second' do
+    pending 'bug: exports started in the same second share tmp/temp_zip_<second>'
+    other_export_dir = nil
+
+    travel_to(Time.zone.local(2001, 1, 1, 12)) do
+      other_export_dir = Rails.root.join("tmp/temp_zip_#{Time.now.to_i}")
+      FileUtils.mkdir_p(other_export_dir)
+      File.write(other_export_dir.join('other_export.csv'), 'other export')
+
+      described_class.perform_now(:csv, [repository.id], user_id: user.id, team_id: team.id)
+    end
+
+    expect(zip_contents.keys).not_to include('other_export.csv')
+    expect(other_export_dir.join('other_export.csv')).to exist
+  ensure
+    FileUtils.rm_rf(other_export_dir) if other_export_dir
   end
 
   it 'exports xlsx files' do

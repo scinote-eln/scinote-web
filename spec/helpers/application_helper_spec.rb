@@ -290,8 +290,8 @@ describe ApplicationHelper, type: :helper do
       expect(helper.user_avatar_absolute_url(user, :thumb)).to eq 'https://storage.example/avatar.png'
     end
 
-    it 'returns the default avatar path for the requested style when there is no avatar' do
-      expect(helper.user_avatar_absolute_url(user, :thumb)).to eq '/images/thumb/missing.svg'
+    it 'returns the initials avatar path for the requested style when there is no avatar' do
+      expect(helper.user_avatar_absolute_url(user, :thumb)).to eq "/avatar/#{user.id}/thumb"
     end
 
     it 'returns the default avatar as base64 svg when requested' do
@@ -300,6 +300,7 @@ describe ApplicationHelper, type: :helper do
     end
 
     it 'falls back to the missing avatar and logs when the avatar cannot be resolved' do
+      allow(user.avatar).to receive(:attached?).and_return(true)
       allow(user).to receive(:avatar_variant).and_raise(StandardError, 'boom')
       expect(Rails.logger).to receive(:error).with('boom')
 
