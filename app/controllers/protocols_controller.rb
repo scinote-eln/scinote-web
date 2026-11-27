@@ -1153,11 +1153,11 @@ class ProtocolsController < ApplicationController
 
   def check_copy_to_repository_permissions
     @protocol = Protocol.find_by(id: params[:id])
-    @my_module = @protocol.my_module
+    @my_module = @protocol&.my_module
 
     render_403 unless @my_module.present? &&
-                      (can_read_protocol_in_module?(@protocol) ||
-                       can_create_protocols_in_repository?(@protocol.team))
+                      can_read_protocol_in_module?(@protocol) &&
+                      can_create_protocols_in_repository?(@protocol.team)
   end
 
   def check_import_permissions
